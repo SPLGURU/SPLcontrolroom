@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>Fantasy SPL Manager Analyzer</title>
+    <title>Control Room V2</title> <!-- Changed title for the new site -->
+    <!-- Firebase SDK - Core -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <!-- Firebase SDK - Auth -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+    <!-- Firebase SDK - Firestore -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- html2canvas library for capturing screenshots -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
     <!-- NEW: gif.js library for GIF encoding -->
     <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <style id="main-styles">
         /* Base colors for light mode (current default) */
@@ -199,7 +207,9 @@
             transition: color 0.3s ease; /* Smooth transition */
         }
 
-        .input-section input[type="text"] {
+        .input-section input[type="text"],
+        .input-section input[type="email"],
+        .input-section input[type="password"] {
             padding: 12px 15px;
             border: 1px solid var(--spl-border-light);
             border-radius: 8px;
@@ -242,6 +252,21 @@
         .input-section button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
+        }
+
+        /* Specific styles for auth buttons to distinguish */
+        #loginButton, #signupButton {
+            background-color: #007bff; /* A distinct blue */
+        }
+        #logoutButton {
+            background-color: #DC3545; /* Red for logout */
+        }
+
+        #loginButton:hover, #signupButton:hover {
+            background-color: #0056b3;
+        }
+        #logoutButton:hover {
+            background-color: #C82333;
         }
 
         /* Styles for the Rank Journey button container */
@@ -326,6 +351,19 @@
         body.dark-mode #shareVideoButton:hover {
             background-color: #1aae88;
         }
+
+
+        .message-box { /* Adjusted to reuse for auth messages */
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+        .message-box.success { background-color: #d4edda; color: #155724; }
+        .message-box.error { background-color: #f8d7da; color: #721c24; }
+        .message-box.info { background-color: #d1ecf1; color: #0c5460; }
 
 
         .loading-message, .error-message, .video-loading-message, #videoGeneratingMessage { /* Added #videoGeneratingMessage */
@@ -682,17 +720,52 @@
     </div>
 
     <div class="container">
-        <h1>Fantasy SPL Manager Analyzer</h1>
+        <h1>Control Room V2</h1> <!-- Updated title for auth site -->
 
-        <div class="input-section">
-            <label for="managerIdInput">Enter Manager ID:</label>
-            <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
-            <button id="analyzeButton">Full Season Report</button>
+        <!-- Authentication Section -->
+        <div id="authSection">
+            <div id="loginForm" class="input-section">
+                <h2>Login</h2>
+                <input type="email" id="loginEmail" placeholder="Email Address">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button id="loginButton">Login</button>
+                <p>Don't have an account? <a href="#" id="showSignupLink">Sign Up</a></p>
+            </div>
+
+            <div id="signupForm" class="input-section" style="display: none;">
+                <h2>Sign Up</h2>
+                <input type="email" id="signupEmail" placeholder="Email Address">
+                <input type="password" id="signupPassword" placeholder="Password">
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
+                <!-- Manager ID moved here -->
+                <input type="text" id="signupManagerId" placeholder="Your SPL Manager ID" oninput="this.value = convertArabicToWesternNumerals(this.value)">
+                <button id="signupButton">Sign Up</button>
+                <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+            </div>
+            
+            <div id="authMessageBox" class="message-box"></div> <!-- Specific message box for auth -->
+        </div>
+
+        <!-- Logged In Content: The original Analyzer Section -->
+        <div id="loggedInContent" class="container" style="display: none;">
+            <!-- The entire content of the old analyzer goes here -->
+            <h2 id="loggedInUserGreeting">Welcome, User!</h2>
+            <p>Your Manager ID: <span id="displayLoggedInManagerId"></span></p>
+            <button id="logoutButton">Logout</button>
+            <hr style="margin: 20px 0; border-color: var(--spl-border-light);"> <!-- Separator -->
+
+            <!-- Original Analyzer Content Starts Here (Copied from previous index.html) -->
+            <div class="input-section" style="display: none;"> <!-- Hide this section as manager ID comes from auth -->
+                <label for="managerIdInput">Enter Manager ID:</label>
+                <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
+                <button id="analyzeButton">Full Season Report</button>
+            </div>
             
             <!-- Share Video Button - Initially hidden, text changed -->
             <button id="shareVideoButton" style="display: none;">Download/Share Report as GIF</button>
 
-            <div id="instructionsBox" class="instructions">
+            <!-- Instructions box, potentially hide/show as needed or remove if no longer relevant post-login -->
+            <div id="instructionsBox" class="instructions" style="display: none;"> 
                 <h3>How to get your Manager ID:</h3>
                 <ol>
                     <li>Go to <a href="https://fantasy.spl.com.sa/" target="_blank">https://fantasy.spl.com.sa/</a> from your browser (SPL app does not work to get your ID).</li>
@@ -701,216 +774,298 @@
                     <li>Check the address bar and look for the numbers after the word "/entry/". Copy that - it is your ID number.</li>
                 </ol>
             </div>
-        </div>
+        
+            <div id="loadingMessage" class="loading-message" style="display: none;">
+                Loading
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <!-- Video Generating Message - Initially hidden -->
+            <div id="videoGeneratingMessage" class="loading-message" style="display: none;">
+                Generating GIF... This might take a moment. Please keep this tab open.
+            </div>
 
-        <div id="loadingMessage" class="loading-message" style="display: none;">
-            Loading
-        </div>
-        <div id="errorMessage" class="error-message" style="display: none;"></div>
-        <!-- Video Generating Message - Initially hidden -->
-        <div id="videoGeneratingMessage" class="loading-message" style="display: none;">
-            Generating GIF... This might take a moment. Please keep this tab open.
-        </div>
+            <div id="managerStats" style="display: none;">
+                <!-- NEW: Wrapper for the first section of the report -->
+                <div id="managerSummarySection">
+                    <h2 id="managerName"></h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Overall Rank</h3>
+                            <p id="overallRank">N/A</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Best Overall Rank</h3>
+                            <p id="bestOverallRank">N/A</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Worst Overall Rank</h3>
+                            <p id="worstOverallRank">N/A</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Average Points Per Round</h3>
+                            <p id="averagePoints">N/A</p>
+                            <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Best Round</h3>
+                            <p id="bestRoundDisplay">N/A</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Worst Round</h3>
+                            <p id="worstRoundDisplay">N/A</p>
+                        </div>
+                        <!-- Total Green Arrows Card -->
+                        <div class="stat-card">
+                            <h3>Total Green Arrows</h3>
+                            <p id="greenArrowsCount">N/A 🟢</p>
+                        </div>
+                        <!-- Total Red Arrows Card -->
+                        <div class="stat-card">
+                            <h3>Total Red Arrows</h3>
+                            <p id="redArrowsCount">N/A 🔴</p>
+                        </div>
+                    </div>
+                </div> <!-- End of managerSummarySection -->
 
-        <div id="managerStats" style="display: none;">
-            <!-- NEW: Wrapper for the first section of the report -->
-            <div id="managerSummarySection">
-                <h2 id="managerName"></h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Overall Rank</h3>
-                        <p id="overallRank">N/A</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Best Overall Rank</h3>
-                        <p id="bestOverallRank">N/A</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Worst Overall Rank</h3>
-                        <p id="worstOverallRank">N/A</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Average Points Per Round</h3>
-                        <p id="averagePoints">N/A</p>
-                        <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Best Round</h3>
-                        <p id="bestRoundDisplay">N/A</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Worst Round</h3>
-                        <p id="worstRoundDisplay">N/A</p>
-                    </div>
-                    <!-- Total Green Arrows Card -->
-                    <div class="stat-card">
-                        <h3>Total Green Arrows</h3>
-                        <p id="greenArrowsCount">N/A 🟢</p>
-                    </div>
-                    <!-- Total Red Arrows Card -->
-                    <div class="stat-card">
-                        <h3>Total Red Arrows</h3>
-                        <p id="redArrowsCount">N/A 🔴</p>
-                    </div>
+                <!-- Rank Journey Box -->
+                <div id="rankJourneyBox" class="rank-journey-box">
+                    <h3>My Rank Journey</h3>
+                    <button id="createRankJourneyButton">Click Here</button>
                 </div>
-            </div> <!-- End of managerSummarySection -->
 
-            <!-- Rank Journey Box -->
-            <div id="rankJourneyBox" class="rank-journey-box">
-                <h3>My Rank Journey</h3>
-                <button id="createRankJourneyButton">Click Here</button>
-            </div>
-
-            <div class="chart-section" id="rankJourneyChartContainer" style="display: none;">
-                <h2>Overall Rank Journey</h2>
-                <div id="videoLoadingMessage" class="video-loading-message">
-                    Animating rank journey...
+                <div class="chart-section" id="rankJourneyChartContainer" style="display: none;">
+                    <h2>Overall Rank Journey</h2>
+                    <div id="videoLoadingMessage" class="video-loading-message">
+                        Animating rank journey...
+                    </div>
+                    <canvas id="rankJourneyChart"></canvas>
+                    <!-- NEW: Hidden canvas for Chart.js static capture -->
+                    <canvas id="hiddenChartCaptureCanvas" style="display: none;"></canvas>
                 </div>
-                <canvas id="rankJourneyChart"></canvas>
-                <!-- NEW: Hidden canvas for Chart.js static capture -->
-                <canvas id="hiddenChartCaptureCanvas" style="display: none;"></canvas>
-            </div>
-            
-            <!-- Added IDs to table-section divs for easier targeting by html2canvas -->
-            <div class="table-section" id="topCaptainsTableContainer">
-                <h2>Top 3 Captains</h2>
-                <table id="topCaptainsTable">
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>Times Captained</th>
-                            <th>Success</th>
-                            <th>Failed</th>
-                            <th>Captained Points</th>
-                            <th>Captained Rounds</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="table-section" id="bestPlayersTableContainer">
-                <h2>Top 5 Best Players</h2>
-                <table id="bestPlayersTable">
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>Started</th>
-                            <th>Auto Subbed In</th>
-                            <th>Points Gained</th>
-                            <th>Benched Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="table-section" id="worstPlayersTableContainer">
-                <h2>Top 5 Worst Players</h2>
-                <table id="worstPlayersTable">
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>Started</th>
-                            <th>Auto Subbed In</th>
-                            <th>Points Gained</th>
-                            <th>Benched Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be inserted here -->
-                    </tbody>
+                
+                <!-- Added IDs to table-section divs for easier targeting by html2canvas -->
+                <div class="table-section" id="topCaptainsTableContainer">
+                    <h2>Top 3 Captains</h2>
+                    <table id="topCaptainsTable">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Times Captained</th>
+                                <th>Success</th>
+                                <th>Failed</th>
+                                <th>Captained Points</th>
+                                <th>Captained Rounds</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be inserted here -->
+                        </tbody>
                     </table>
-            </div>
+                </div>
 
-            <div class="table-section" id="missedPointsTableContainer">
-                <h2>Top 5 Missed Points (Benched Players)</h2>
-                <table id="missedPointsTable">
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>Points</th>
-                            <th>Round</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
+                <div class="table-section" id="bestPlayersTableContainer">
+                    <h2>Top 5 Best Players</h2>
+                    <table id="bestPlayersTable">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Started</th>
+                                <th>Auto Subbed In</th>
+                                <th>Points Gained</th>
+                                <th>Benched Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Transfers Summary section - also given an ID -->
-            <div class="table-section" id="transfersSummaryContainer">
-                <h2>Transfers Summary</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Total Transfers</h3>
-                        <p id="totalTransfersCount">N/A</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Total Hits (Points Deducted)</h3>
-                        <p id="totalHitsPoints">N/A</p>
+                <div class="table-section" id="worstPlayersTableContainer">
+                    <h2>Top 5 Worst Players</h2>
+                    <table id="worstPlayersTable">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Started</th>
+                                <th>Auto Subbed In</th>
+                                <th>Points Gained</th>
+                                <th>Benched Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                        </table>
+                </div>
+
+                <div class="table-section" id="missedPointsTableContainer">
+                    <h2>Top 5 Missed Points (Benched Players)</h2>
+                    <table id="missedPointsTable">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Points</th>
+                                <th>Round</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Transfers Summary section - also given an ID -->
+                <div class="table-section" id="transfersSummaryContainer">
+                    <h2>Transfers Summary</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Transfers</h3>
+                            <p id="totalTransfersCount">N/A</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Hits (Points Deducted)</h3>
+                            <p id="totalHitsPoints">N/A</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Most Profitable Transfers Table - given an ID -->
-            <div class="table-section" id="profitableTransfersTableContainer">
-                <h2>Most Profitable Transfers</h2>
-                <table id="profitableTransfersTable">
-                    <thead>
-                        <tr>
-                            <th>IN</th>
-                            <th>OUT</th>
-                            <th>Round</th>
-                            <th>Profit/Loss</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
+                <!-- Most Profitable Transfers Table - given an ID -->
+                <div class="table-section" id="profitableTransfersTableContainer">
+                    <h2>Most Profitable Transfers</h2>
+                    <table id="profitableTransfersTable">
+                        <thead>
+                            <tr>
+                                <th>IN</th>
+                                <th>OUT</th>
+                                <th>Round</th>
+                                <th>Profit/Loss</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Most Loss-making Transfers Table - given an ID -->
-            <div class="table-section" id="lossMakingTransfersTableContainer">
-                <h2>Most Loss-making Transfers</h2>
-                <table id="lossMakingTransfersTable">
-                    <thead>
-                        <tr>
-                            <th>IN</th>
-                            <th>OUT</th>
-                            <th>Round</th>
-                            <th>Profit/Loss</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
+                <!-- Most Loss-making Transfers Table - given an ID -->
+                <div class="table-section" id="lossMakingTransfersTableContainer">
+                    <h2>Most Loss-making Transfers</h2>
+                    <table id="lossMakingTransfersTable">
+                        <thead>
+                            <tr>
+                                <th>IN</th>
+                                <th>OUT</th>
+                                <th>Round</th>
+                                <th>Profit/Loss</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
 
+            </div>
         </div>
     </div>
 
     <!-- Hidden canvas for GIF generation - positioned off-screen -->
     <canvas id="gifCaptureCanvas" style="position: absolute; left: -9999px; top: -9999px;"></canvas>
 
-    <script>
-        // THIS IS A DEBUGGING LINE - IF YOU SEE THIS, JS IS RUNNING!
-        console.log('DEBUG: Script loaded and running!');
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            sendEmailVerification, 
+            onAuthStateChanged, 
+            signOut,
+            reload // Needed for reloading user properties from Auth
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc,
+            collection, // To query collections
+            query,      // To build queries
+            where,      // To add conditions to queries
+            getDocs,    // To get multiple documents from a query
+            serverTimestamp, // For timestamping user creation
+            updateDoc // Needed for updating Firestore document
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+        // --- Your Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___",
+            authDomain: "splcontrolroom-c02c0.firebaseapp.com",
+            projectId: "splcontrolroom-c02c0",
+            storageBucket: "splcontrolroom-c02c0.firebasestorage.app",
+            messagingSenderId: "272416971084",
+            appId: "1:272416971084:web:57517048926e49720197e9"
+        };
+        // ------------------------------------
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+
+        // --- GLOBAL FLAGS / VARIABLES ---
+        let isProcessingAuth = false; // Prevents onAuthStateChanged from firing during manual auth calls
+        let rankJourneyChartInstance = null;
+        let managerOverallRankHistory = [];
+        let managerCurrentOverallRank = null;
+        const totalAnimationDurationMs = 10000;
+        let animationStartTime = null;
+        let animationFrameId = null;
+        const gifWidth = 1280;
+        const gifHeight = 720;
+        const sectionFrameDelay = 3000;
+        const chartFrameDelay = 3000;
+
 
         // --- DOM Element References ---
-        const managerIdInput = document.getElementById('managerIdInput');
-        const analyzeButton = document.getElementById('analyzeButton');
+        const mainLogo = document.getElementById('mainLogo');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const lightModeLogoSrc = 'unnamed.jpg'; 
+        const darkModeLogoSrc = 'dark mode logo.png'; 
+
+        // Authentication UI elements
+        const authSection = document.getElementById('authSection');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const authMessageBox = document.getElementById('authMessageBox'); // Message box specific to auth
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginButton = document.getElementById('loginButton');
+        const showSignupLink = document.getElementById('showSignupLink');
+        const signupEmailInput = document.getElementById('signupEmail');
+        const signupPasswordInput = document.getElementById('signupPassword');
+        const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
+        const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
+        const signupButton = document.getElementById('signupButton');
+        const showLoginLink = document.getElementById('showLoginLink');
+        const logoutButton = document.getElementById('logoutButton');
+
+        // Logged-in / Analyzer UI elements
+        const loggedInContent = document.getElementById('loggedInContent');
+        const loggedInUserGreeting = document.getElementById('loggedInUserGreeting');
+        const displayLoggedInManagerId = document.getElementById('displayLoggedInManagerId'); // Display saved manager ID
+
+        // Original Analyzer UI elements (some kept for reference, some hidden)
+        const managerIdInput = document.getElementById('managerIdInput'); // This will be hidden/unused when logged in
+        const analyzeButton = document.getElementById('analyzeButton'); // This will be hidden/unused when logged in
+        const instructionsBox = document.getElementById('instructionsBox'); // This will be hidden/unused when logged in
+
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
         const managerStatsDiv = document.getElementById('managerStats');
-        // NEW: Reference to the new summary section
         const managerSummarySection = document.getElementById('managerSummarySection'); 
         const managerNameElem = document.getElementById('managerName');
         const overallRankElem = document.getElementById('overallRank');
@@ -929,49 +1084,86 @@
         const bestPlayersTableBody = document.querySelector('#bestPlayersTable tbody');
         const worstPlayersTableBody = document.querySelector('#worstPlayersTable tbody');
         const missedPointsTableBody = document.querySelector('#missedPointsTable tbody');
-        
         const profitableTransfersTableBody = document.querySelector('#profitableTransfersTable tbody');
         const lossMakingTransfersTableBody = document.querySelector('#lossMakingTransfersTable tbody');
 
         const rankJourneyChartCanvas = document.getElementById('rankJourneyChart');
         const rankJourneyChartContainer = document.getElementById('rankJourneyChartContainer');
-        const videoLoadingMessage = document.getElementById('videoLoadingMessage'); // For chart animation loading
+        const videoLoadingMessage = document.getElementById('videoLoadingMessage');
         const createRankJourneyButton = document.getElementById('createRankJourneyButton');
         const rankJourneyBox = document.getElementById('rankJourneyBox');
-        const instructionsBox = document.getElementById('instructionsBox');
-
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const mainLogo = document.getElementById('mainLogo');
-
-        // NEW: Share Video Button & Video Generating Message & GIF Capture Canvas
         const shareVideoButton = document.getElementById('shareVideoButton');
-        const videoGeneratingMessage = document.getElementById('videoGeneratingMessage'); // Reusing this element
-        const gifCaptureCanvas = document.getElementById('gifCaptureCanvas'); // Renamed from videoRecordingCanvas
-        // NEW: Hidden canvas for chart static capture
+        const videoGeneratingMessage = document.getElementById('videoGeneratingMessage'); 
+        const gifCaptureCanvas = document.getElementById('gifCaptureCanvas'); 
         const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
-
-        const lightModeLogoSrc = 'unnamed.jpg';
-        const darkModeLogoSrc = 'dark mode logo.png';
-
-        let rankJourneyChartInstance = null;
-        let managerOverallRankHistory = [];
-        let managerCurrentOverallRank = null;
-        
-        // Animation variables for Rank Journey Chart
-        const totalAnimationDurationMs = 10000;
-        let animationStartTime = null;
-        let animationFrameId = null;
-
-        // --- GIF Generation Specific Variables ---
-        const gifWidth = 1280; // Standard HD width for GIF frames
-        const gifHeight = 720; // Standard HD height for GIF frames
-        const sectionFrameDelay = 3000; // 3 seconds in milliseconds for most sections (delay for GIF frames)
-        const chartFrameDelay = 3000; // 3 seconds in milliseconds for the chart section (delay for GIF frame)
-
 
         // --- Helper Functions ---
 
-        // Function to convert Arabic numerals to Western numerals
+        // Function to display messages in the authMessageBox
+        function showAuthMessage(message, type = 'info') {
+            authMessageBox.textContent = ''; 
+            authMessageBox.className = `message-box ${type}`; 
+            authMessageBox.textContent = message; 
+            authMessageBox.style.display = 'block'; 
+        }
+
+        // Function to display messages in the general errorMessage (for analyzer part)
+        function showAnalyzerMessage(message, type = 'info') {
+            errorMessage.textContent = ''; 
+            errorMessage.className = `error-message ${type}`; // Reusing error-message class for consistency
+            errorMessage.textContent = message; 
+            errorMessage.style.display = 'block'; 
+        }
+
+        // Function to hide all main content sections
+        function hideAllContent() {
+            authSection.style.display = 'none';
+            loggedInContent.style.display = 'none';
+            loadingMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            videoGeneratingMessage.style.display = 'none';
+            authMessageBox.style.display = 'none'; // Ensure auth message box is also hidden
+            managerStatsDiv.style.display = 'none'; // Hide analyzer reports
+            rankJourneyBox.style.display = 'none';
+            rankJourneyChartContainer.style.display = 'none';
+            shareVideoButton.style.display = 'none';
+            instructionsBox.style.display = 'none'; // Hide instructions
+        }
+
+        // Function to clear analyzer report data
+        function clearAnalyzerReport() {
+            managerNameElem.textContent = '';
+            overallRankElem.textContent = 'N/A';
+            bestOverallRankElem.textContent = 'N/A';
+            worstOverallRankElem.textContent = 'N/A';
+            averagePointsElem.textContent = 'N/A';
+            averagePointsFor1stPlaceElem.textContent = 'N/A';
+            totalTransfersCountElem.textContent = 'N/A';
+            totalHitsPointsElem.textContent = 'N/A';
+            bestRoundDisplayElem.textContent = 'N/A';
+            worstRoundDisplayElem.textContent = 'N/A';
+            greenArrowsCountElem.textContent = 'N/A 🟢';
+            redArrowsCountElem.textContent = 'N/A 🔴';
+
+            topCaptainsTableBody.innerHTML = '<tr><td colspan="6">No data available.</td></tr>';
+            bestPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
+            worstPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
+            missedPointsTableBody.innerHTML = '<tr><td colspan="3">No data available.</td></tr>';
+            profitableTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
+            lossMakingTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
+
+            managerOverallRankHistory = []; // Clear chart data
+            if (rankJourneyChartInstance) {
+                rankJourneyChartInstance.destroy();
+                rankJourneyChartInstance = null;
+            }
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            animationStartTime = null;
+        }
+
         function convertArabicToWesternNumerals(input) {
             const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
             const westernNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -983,7 +1175,6 @@
             return convertedInput;
         }
 
-        // Function to set the theme and persist in localStorage
         function setTheme(theme) {
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
@@ -997,140 +1188,287 @@
             localStorage.setItem('theme', theme);
         }
 
-        // --- Event Listeners (UI Interactions) ---
+        // --- Authentication Logic ---
 
-        // Check for saved theme preference on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            } else {
-                setTheme('light'); // Default to light mode if no preference saved
+        // Handle Signup
+        signupButton.addEventListener('click', async () => {
+            showAuthMessage("Processing...", "info");
+            isProcessingAuth = true; 
+
+            const email = signupEmailInput.value.trim();
+            const password = signupPasswordInput.value;
+            const confirmPassword = signupConfirmPasswordInput.value;
+            const managerId = convertArabicToWesternNumerals(signupManagerIdInput.value.trim());
+
+            if (!email || !password || !confirmPassword || !managerId) {
+                showAuthMessage("All fields are required.", "error");
+                isProcessingAuth = false;
+                return;
             }
-        });
-
-        // Listen for theme toggle changes
-        darkModeToggle.addEventListener('change', () => {
-            if (darkModeToggle.checked) {
-                setTheme('dark');
-            } else {
-                setTheme('light');
+            if (password !== confirmPassword) {
+                showAuthMessage("Passwords do not match.", "error");
+                isProcessingAuth = false; 
+                return;
             }
-        });
-
-        // Analyze Button click
-        analyzeButton.addEventListener('click', () => {
-            instructionsBox.style.display = 'none'; // Hide instructions when analysis starts
-            fetchManagerData();
-        });
-
-        // Enter key in Manager ID input
-        managerIdInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                instructionsBox.style.display = 'none';
-                fetchManagerData();
-                managerIdInput.blur(); // Remove focus from input
+            if (password.length < 6) {
+                showAuthMessage("Password must be at least 6 characters long.", "error");
+                isProcessingAuth = false; 
+                return;
             }
-        });
-
-        // Rank Journey Button click (for chart animation)
-        createRankJourneyButton.addEventListener('click', () => {
-            rankJourneyChartContainer.style.display = 'flex'; // Show chart container
-            createRankJourneyButton.textContent = 'Replay'; // Change button text to Replay
-
-            // Stop any ongoing chart animation before replaying
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            animationStartTime = null; // Reset start time for a fresh animation
-            renderRankJourneyChart(managerOverallRankHistory);
-        });
-
-        // Share Report as GIF Button Click Listener
-        shareVideoButton.addEventListener('click', async () => {
-            // Disable all interactive buttons during GIF generation
-            shareVideoButton.disabled = true;
-            analyzeButton.disabled = true;
-            createRankJourneyButton.disabled = true;
-            darkModeToggle.disabled = true;
-
-            // Show GIF generation loading message
-            videoGeneratingMessage.style.display = 'block'; 
-            errorMessage.style.display = 'none'; 
-
-            // Ensure the main manager stats are visible before trying to capture them
-            // This is handled by captureAndPrepareSectionsForGIF internally for its cloned DOM
-            
-            // Scroll to the top for consistent screenshots starting point
-            window.scrollTo({ top: 0, behavior: 'instant' });
-
-            // Give browser a moment to settle after layout changes/scroll
-            await new Promise(resolve => setTimeout(resolve, 500)); 
-            
-            try {
-                // Initialize and start the GIF generation process
-                await generateGIF();
-            } catch (error) {
-                console.error("Error generating GIF:", error);
-                errorMessage.textContent = `Failed to generate GIF: ${error.message}. Please try again.`;
-                errorMessage.style.display = 'block';
-            } finally {
-                // Always re-enable buttons and hide loading message, regardless of success/failure
-                shareVideoButton.disabled = false;
-                analyzeButton.disabled = false;
-                createRankJourneyButton.disabled = false;
-                darkModeToggle.disabled = false;
-                videoGeneratingMessage.style.display = 'none';
-            }
-        });
-
-
-        // --- Core Data Fetching Logic ---
-        async function fetchManagerData() {
-            console.log("DEBUG: fetchManagerData started.");
-            const managerId = convertArabicToWesternNumerals(managerIdInput.value);
-            if (!managerId || !/^\d+$/.test(managerId)) {
-                console.warn('DEBUG: Invalid Manager ID entered. Aborting fetch.');
-                errorMessage.textContent = 'Please enter a valid Manager ID (numbers only).';
-                errorMessage.style.display = 'block';
-                // Ensure all relevant sections are hidden on error/invalid input
-                managerStatsDiv.style.display = 'none';
-                rankJourneyBox.style.display = 'none';
-                shareVideoButton.style.display = 'none';
+            if (!/^\d+$/.test(managerId)) {
+                showAuthMessage("SPL Manager ID is required and must be a valid number.", "error");
+                isProcessingAuth = false; 
                 return;
             }
 
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Save user data to Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    splManagerId: managerId,
+                    createdAt: serverTimestamp(),
+                    emailVerified: false // Will be updated to true after verification
+                });
+
+                // Send email verification
+                await sendEmailVerification(user); 
+
+                // Log out the user immediately after signup to force email verification
+                await signOut(auth); 
+
+                showAuthMessage("Account created! Please verify your email and then log in.", "success");
+                
+                // Clear form fields
+                signupEmailInput.value = '';
+                signupPasswordInput.value = '';
+                signupConfirmPasswordInput.value = '';
+                signupManagerIdInput.value = '';
+                // Switch to login form
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+
+            } catch (error) {
+                console.error("Signup failed:", error);
+                let friendlyMessage = "Failed to create account. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    friendlyMessage = "That email address is already in use.";
+                } else if (error.code === 'auth/invalid-email') {
+                    friendlyMessage = "Please enter a valid email address.";
+                } else if (error.code === 'auth/weak-password') {
+                    friendlyMessage = "Password is too weak.";
+                }
+                showAuthMessage(friendlyMessage, "error");
+            } finally {
+                isProcessingAuth = false; 
+            }
+        });
+
+        // Handle Login
+        loginButton.addEventListener('click', async () => {
+            showAuthMessage("Logging in...", "info");
+            isProcessingAuth = true;
+
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                await reload(user); // Fetch latest user properties, including emailVerified
+
+                if (!user.emailVerified) {
+                    await signOut(auth); // Log out if email is not verified
+                    showAuthMessage("Please verify your email address before logging in.", "info"); 
+                    return;
+                }
+                
+                // Fetch user's manager ID from Firestore
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    console.log("User data from Firestore on login:", userData);
+
+                    // If email just got verified, update Firestore record
+                    if (!userData.emailVerified && user.emailVerified) {
+                        await updateDoc(userDocRef, { emailVerified: true });
+                        userData.emailVerified = true; 
+                    }
+
+                    // Store manager ID globally or pass directly to report function
+                    const userManagerId = userData.splManagerId;
+
+                    if (userManagerId && /^\d+$/.test(userManagerId)) {
+                        loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
+                        displayLoggedInManagerId.textContent = userManagerId;
+                        hideAllContent(); // Hide auth forms
+                        loggedInContent.style.display = 'block'; // Show analyzer content
+                        await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
+                    } else {
+                        showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
+                        await signOut(auth); // Log out if no manager ID or invalid
+                    }
+                } else {
+                    showAuthMessage("User data not found. Please contact support.", "error"); 
+                    await signOut(auth);
+                }
+                loginPasswordInput.value = ''; 
+
+            } catch (error) {
+                console.error("Login failed:", error);
+                let friendlyMessage = "Login failed. Please check your email and password.";
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    friendlyMessage = "Invalid email or password.";
+                }
+                showAuthMessage(friendlyMessage, "error"); 
+            } finally {
+                isProcessingAuth = false; 
+            }
+        });
+
+        // Handle Logout
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showAuthMessage("Logged out successfully.", "info"); 
+                // onAuthStateChanged will handle UI switch
+            } catch (error) {
+                console.error("Logout error:", error);
+                showAuthMessage("Failed to logout. Please try again.", "error"); 
+            }
+        });
+
+        // Toggle between Login and Signup forms
+        showSignupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'flex'; // Use flex for signup form
+            authMessageBox.style.display = 'none'; 
+            authMessageBox.textContent = ''; 
+        });
+
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'flex'; // Use flex for login form
+            signupForm.style.display = 'none';
+            authMessageBox.style.display = 'none'; 
+            authMessageBox.textContent = ''; 
+        });
+
+
+        // --- Authentication State Listener (Core UI Logic) ---
+        // This listener determines what the user sees based on their login status
+        onAuthStateChanged(auth, async (user) => {
+            // Prevent this from running during active signup/login processes to avoid race conditions
+            if (isProcessingAuth) { 
+                console.log("DEBUG: onAuthStateChanged deferred due to active auth process.");
+                return; 
+            }
+
+            hideAllContent(); // Start by hiding everything
+
+            if (user) {
+                // User is signed in
+                await reload(user); // Force reload to get latest email verification status
+
+                if (user.emailVerified) {
+                    // User is signed in and email is verified
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        
+                        // If email was just verified and Firestore not updated, update it
+                        if (!userData.emailVerified && user.emailVerified) {
+                            await updateDoc(userDocRef, { emailVerified: true });
+                            userData.emailVerified = true; 
+                        }
+
+                        const userManagerId = userData.splManagerId;
+
+                        if (userManagerId && /^\d+$/.test(userManagerId)) {
+                            loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
+                            displayLoggedInManagerId.textContent = userManagerId;
+                            loggedInContent.style.display = 'block'; // Show analyzer
+                            await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
+                        } else {
+                            // User logged in but no valid Manager ID in Firestore
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
+                            await signOut(auth); // Log them out
+                            authSection.style.display = 'block';
+                            loginForm.style.display = 'flex';
+                            signupForm.style.display = 'none';
+                        }
+                    } else {
+                        // User logged in but no Firestore document found (shouldn't happen with proper signup)
+                        console.warn("Firestore document for user does not exist. Logging out.");
+                        showAuthMessage("User data not found. Please contact support. Logging out.", "error");
+                        await signOut(auth); // Log them out
+                        authSection.style.display = 'block';
+                        loginForm.style.display = 'flex';
+                        signupForm.style.display = 'none';
+                    }
+                } else {
+                    // User is signed in but email not verified
+                    showAuthMessage("Please verify your email address to access the analyzer.", "info");
+                    authSection.style.display = 'block';
+                    loginForm.style.display = 'flex'; // Show login form so they can try again after verifying
+                    signupForm.style.display = 'none';
+                }
+            } else {
+                // User is signed out: show authentication forms
+                authSection.style.display = 'block'; 
+                loginForm.style.display = 'flex'; 
+                signupForm.style.display = 'none';
+                clearAnalyzerReport(); // Clear any old report data
+            }
+            // Ensure instructions are hidden as they're not needed for auth or logged-in automatic report
+            instructionsBox.style.display = 'none'; 
+        });
+
+
+        // --- Original Analyzer Data Fetching Logic (Modified to be called by Auth flow) ---
+        async function fetchAndDisplaySPLReport(managerId) {
+            console.log("DEBUG: fetchAndDisplaySPLReport started with ID:", managerId);
+            
+            // Re-hide/clear previous UI states
             loadingMessage.style.display = 'block';
             errorMessage.style.display = 'none';
-            managerStatsDiv.style.display = 'none'; // Hide before starting new load
+            managerStatsDiv.style.display = 'none'; 
             rankJourneyChartContainer.style.display = 'none';
             videoLoadingMessage.style.display = 'none';
             rankJourneyBox.style.display = 'none';
             createRankJourneyButton.textContent = 'Click Here';
             shareVideoButton.style.display = 'none';
+            clearAnalyzerReport(); // Clear old data
 
             if (rankJourneyChartInstance) {
-                console.log('DEBUG: Destroying existing chart instance.');
                 rankJourneyChartInstance.destroy();
                 rankJourneyChartInstance = null;
             }
             if (animationFrameId) {
-                console.log('DEBUG: Cancelling existing chart animation.');
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
             animationStartTime = null;
 
             try {
-                console.log(`DEBUG: Attempting to fetch data for manager ID: ${managerId}`);
+                console.log(`DEBUG: Attempting to fetch data for manager ID: ${managerId} from Netlify Function.`);
+                // The URL for Netlify Functions typically starts with /.netlify/functions/
                 const response = await fetch(`/.netlify/functions/fetch-spl-data?id=${managerId}`);
                 const data = await response.json();
-                console.log('DEBUG: Fetch response received.', { responseOk: response.ok, data: data });
+                console.log('DEBUG: Fetch response received from Netlify Function.', { responseOk: response.ok, data: data });
 
                 loadingMessage.style.display = 'none';
 
                 if (response.ok) {
-                    console.log('DEBUG: Response OK. Populating manager data...');
+                    console.log('DEBUG: Netlify Function Response OK. Populating manager data...');
                     managerOverallRankHistory = data.overallRankHistory || [];
                     
                     if (data.overallRank && data.overallRank !== 'N/A') {
@@ -1155,7 +1493,7 @@
                     worstOverallRankElem.textContent = `${worstRankNumeric} 🌏 ${worstRankRound}`;
 
                     averagePointsElem.textContent = data.averagePoints;
-                    averagePointsFor1stPlaceElem.textContent = averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
+                    averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
                     
                     const bestRound = data.bestRound;
                     bestRoundDisplayElem.textContent = bestRound.points !== 'N/A' 
@@ -1194,7 +1532,8 @@
                             row.insertCell().textContent = captain.captainedRounds ? captain.captainedRounds.join(', ') : 'N/A';
                             row.cells[5].setAttribute('data-label', 'Captained Rounds');
                         });
-                    } else {
+                    }
+                     else {
                         const row = topCaptainsTableBody.insertRow();
                         row.insertCell().textContent = 'No data available.';
                         row.cells[0].colSpan = 6;
@@ -1301,49 +1640,38 @@
                         row.cells[0].colSpan = 4;
                     }
 
-                    // Set display to block 
+                    // Set display to block for manager stats section
                     managerStatsDiv.style.display = 'block'; 
                     rankJourneyChartContainer.style.display = 'none'; 
                     shareVideoButton.style.display = 'block';
 
-                    console.log('DEBUG: managerStatsDiv display style AFTER JS set:', managerStatsDiv.style.display);
-                    console.log('DEBUG: managerStatsDiv computed display style AFTER JS set:', getComputedStyle(managerStatsDiv).display);
-                    console.log('DEBUG: managerStatsDiv innerHTML length:', managerStatsDiv.innerHTML.length);
-                    console.log('DEBUG: managerStatsDiv clientHeight:', managerStatsDiv.clientHeight);
-                    console.log('DEBUG: managerStatsDiv offsetHeight:', managerStatsDiv.offsetHeight);
-                    console.log('DEBUG: managerStatsDiv getBoundingClientRect:', managerStatsDiv.getBoundingClientRect());
-
                 } else {
                     console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
-                    errorMessage.textContent = data.error || 'An unknown error occurred.';
-                    errorMessage.style.display = 'block';
-                    // Hide all relevant sections on error
+                    showAnalyzerMessage(data.error || 'An unknown error occurred.', 'error');
                     managerStatsDiv.style.display = 'none';
                     rankJourneyBox.style.display = 'none';
                     shareVideoButton.style.display = 'none';
                 }
 
             } catch (error) {
-                console.error("DEBUG: Critical fetchManagerData error (outer catch):", error);
-                errorMessage.textContent = `Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`;
-                errorMessage.style.display = 'block';
-                loadingMessage.style.display = 'none'; // Ensure loading message is hidden
-                // Hide all relevant sections on error
+                console.error("DEBUG: Critical fetchAndDisplaySPLReport error (outer catch):", error);
+                showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, 'error');
+                loadingMessage.style.display = 'none';
                 managerStatsDiv.style.display = 'none';
                 rankJourneyBox.style.display = 'none';
                 shareVideoButton.style.display = 'none';
             }
-            console.log("DEBUG: fetchManagerData finished.");
+            console.log("DEBUG: fetchAndDisplaySPLReport finished.");
         }
 
-        // --- Chart Rendering Logic (Existing) ---
+        // --- Chart Rendering Logic (Existing - Unchanged) ---
         function extractAndFormatRound(rankValueString) {
             if (typeof rankValueString !== 'string' || rankValueString === 'N/A') {
                 return '';
             }
             const match = rankValueString.match(/\((R|RD)\s*(\d+)\)/i);
             if (match && match[2]) {
-                return `(In Round ${match[2]})`;
+                return `(Round ${match[2]})`;
             }
             return '';
         }
@@ -1604,7 +1932,7 @@
             animationFrameId = requestAnimationFrame(animateChart); // Start the animation
         }
 
-        // --- NEW: GIF Generation Logic ---
+        // --- NEW: GIF Generation Logic (Existing - Unchanged) ---
 
         /**
          * Renders the chart to its final state onto a hidden canvas for GIF capture.
@@ -1834,9 +2162,8 @@
             const originalDisplayStates = {};
             sectionsToCaptureConfig.forEach(config => {
                 const element = document.getElementById(config.id);
-                if (element && !config.specialHandling) { // Don't touch display for special handling elements yet
+                if (element && !config.specialHandling) { 
                     originalDisplayStates[config.id] = element.style.display;
-                    // Ensure elements are visible for html2canvas capture (will be handled by onclone for desktop size)
                     element.style.display = 'block'; 
                 }
             });
@@ -1851,7 +2178,7 @@
 
                 if (!element) {
                     console.warn(`DEBUG: Element with ID ${sectionConfig.id} not found, skipping capture for GIF.`);
-                    continue; // Skip if element not found
+                    continue; 
                 }
 
                 // Special handling for the chart: use the pre-rendered hidden canvas
@@ -1861,7 +2188,6 @@
                         console.log(`DEBUG: Using pre-rendered hidden canvas for ${sectionConfig.id}.`);
                     } else {
                         console.error(`ERROR: Pre-rendered chart canvas for ${sectionConfig.id} not available!`);
-                        // Fallback to error canvas
                         sourceCanvas = document.createElement('canvas');
                         sourceCanvas.width = gifWidth; sourceCanvas.height = gifHeight;
                         const errorCtx = sourceCanvas.getContext('2d');
@@ -1882,9 +2208,8 @@
                             scale: 2, // Capture at high resolution
                             backgroundColor: null, 
                             allowTaint: true, 
-                            // Force desktop-like dimensions for cloning context
                             windowWidth: gifWidth, 
-                            windowHeight: gifHeight * 2, // Give more height to avoid vertical clipping in cloned context initially
+                            windowHeight: gifHeight * 2, 
                             onclone: (clonedDoc) => {
                                 // Apply the current theme to the cloned document
                                 if (document.body.classList.contains('dark-mode')) {
@@ -1896,10 +2221,9 @@
                                 }
                                 
                                 // Make ALL content sections visible in the cloned DOM for capture
-                                // This ensures html2canvas renders them as if on a desktop, without hidden elements affecting layout.
                                 const elementsToDisplayInClone = [
                                     'managerStats', 
-                                    'managerSummarySection', // NEW: Specific section for first frame
+                                    'managerSummarySection', 
                                     'rankJourneyChartContainer',
                                     'topCaptainsTableContainer',
                                     'bestPlayersTableContainer',
@@ -1930,7 +2254,7 @@
                         });
                     } catch (e) {
                         console.error(`ERROR: Failed to capture section ${sectionConfig.id} for GIF:`, e);
-                        sourceCanvas = document.createElement('canvas'); // Create error canvas
+                        sourceCanvas = document.createElement('canvas'); 
                         sourceCanvas.width = gifWidth; sourceCanvas.height = gifHeight;
                         const errorCtx = sourceCanvas.getContext('2d');
                         errorCtx.fillStyle = '#333';
@@ -1943,18 +2267,15 @@
                     }
                 }
 
-                // If a canvas (either live chart or html2canvas output) was successfully generated/found
                 if (sourceCanvas) {
-                    // Create a new canvas with target GIF dimensions (1280x720)
                     const finalFrameCanvas = document.createElement('canvas');
                     finalFrameCanvas.width = gifWidth;
                     finalFrameCanvas.height = gifHeight;
                     const finalFrameCtx = finalFrameCanvas.getContext('2d');
 
-                    // Calculate scaling to fit sourceCanvas onto finalFrameCanvas maintaining aspect ratio
                     const hRatio = finalFrameCanvas.width / sourceCanvas.width;
                     const vRatio = finalFrameCanvas.height / sourceCanvas.height;
-                    const ratio = Math.min(hRatio, vRatio); // Use 'contain' logic
+                    const ratio = Math.min(hRatio, vRatio); 
 
                     const sx = 0;
                     const sy = 0;
@@ -1963,14 +2284,12 @@
 
                     const dWidth = sWidth * ratio;
                     const dHeight = sHeight * ratio;
-                    const dx = (finalFrameCanvas.width - dWidth) / 2; // Center horizontally
-                    const dy = (finalFrameCanvas.height - dHeight) / 2; // Center vertically
+                    const dx = (finalFrameCanvas.width - dWidth) / 2; 
+                    const dy = (finalFrameCanvas.height - dHeight) / 2; 
 
-                    // Draw background color first, based on current theme
                     finalFrameCtx.fillStyle = getComputedStyle(document.body).backgroundColor;
                     finalFrameCtx.fillRect(0, 0, finalFrameCanvas.width, finalFrameCanvas.height);
                     
-                    // Draw the captured content onto the new canvas, scaled and centered
                     finalFrameCtx.drawImage(sourceCanvas, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
                     capturedCanvases.push({
@@ -1980,7 +2299,6 @@
                 }
             }
             
-            // Revert original display states for elements captured via html2canvas
             for (const id in originalDisplayStates) {
                 const element = document.getElementById(id);
                 if (element) {
@@ -2039,21 +2357,29 @@
                 videoGeneratingMessage.textContent = 'GIF generated and download started!';
                 // Re-enable buttons
                 shareVideoButton.disabled = false;
-                analyzeButton.disabled = false;
+                analyzeButton.disabled = false; // Note: analyzeButton is hidden, but good to keep state consistent
                 createRankJourneyButton.disabled = false;
                 darkModeToggle.disabled = false;
             });
 
             gif.on('error', function(error) {
                 console.error("DEBUG: GIF generation error:", error);
-                errorMessage.textContent = `GIF generation failed: ${error.message}. Please try again.`;
-                errorMessage.style.display = 'block';
+                showAnalyzerMessage(`GIF generation failed: ${error.message}. Please try again.`, 'error');
                 videoGeneratingMessage.style.display = 'none'; 
             });
 
             gif.render(); 
         }
+
+        // --- Initial Load & Theme ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme('light'); 
+            }
+        });
     </script>
-<!-- Triggered deploy to verify functions are still working -->
 </body>
 </html>
