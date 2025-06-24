@@ -1061,7 +1061,9 @@
         const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
         const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
         const signupButton = document.getElementById('signupButton');
-        const showLoginLink = document.getElementById('loginLink');
+        // --- FIX: Corrected ID for showLoginLink ---
+        const showLoginLink = document.getElementById('showLoginLink'); // Corrected from 'loginLink'
+        // --- END FIX ---
         const logoutButton = document.getElementById('logoutButton');
 
         // Logged-in / Analyzer UI elements
@@ -1187,6 +1189,7 @@
         }
 
         function setTheme(theme) {
+            console.log("DEBUG: Setting theme to:", theme); // Debug log for dark mode
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
                 mainLogo.src = darkModeLogoSrc;
