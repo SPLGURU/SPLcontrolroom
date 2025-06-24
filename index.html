@@ -362,7 +362,7 @@
 
         #analyzeMyTeamButton,
         #myControlRoomButton,
-        #adminDashboardButton { /* Added admin button here */
+        #adminDashboardButton { 
             background-color: var(--spl-primary-accent); 
             color: white;
             padding: 12px 25px;
@@ -378,7 +378,7 @@
 
         #analyzeMyTeamButton:hover,
         #myControlRoomButton:hover,
-        #adminDashboardButton:hover { /* Added admin button hover */
+        #adminDashboardButton:hover { 
             background-color: #0056b3;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
@@ -423,7 +423,7 @@
             border: 1px solid var(--spl-border-light);
             border-radius: 6px;
             font-size: 1em;
-            background-color: var(--spl-table-bg); /* Use table bg for contrast */
+            background-color: var(--spl-table-bg); 
             color: var(--spl-text-dark);
             box-sizing: border-box;
             text-align: center;
@@ -431,7 +431,7 @@
 
         .admin-search-section button,
         .admin-edit-section button {
-            background-color: #6c757d; /* Grey for admin action buttons */
+            background-color: #6c757d; 
             color: white;
             padding: 10px 20px;
             border: none;
@@ -450,7 +450,7 @@
         }
         body.dark-mode .admin-search-section button,
         body.dark-mode .admin-edit-section button {
-             background-color: #6f42c1; /* Purple for dark mode admin buttons */
+             background-color: #6f42c1; 
              box-shadow: 0 4px 8px rgba(111, 66, 193, 0.2);
         }
         body.dark-mode .admin-search-section button:hover,
@@ -486,7 +486,7 @@
 
         /* Share Video Button Specific Styles (unrelated to auth forms, left as is) */
         #shareVideoButton {
-            background-color: #17A2B8; /* A vibrant blue for sharing */
+            background-color: #17A2B8; 
             color: white;
             padding: 12px 25px;
             border: none;
@@ -498,7 +498,7 @@
             width: 100%;
             max-width: 300px;
             display: block;
-            margin: 15px auto 0 auto; /* Margin top to separate from analyze button */
+            margin: 15px auto 0 auto; 
             text-align: center;
         }
 
@@ -507,7 +507,7 @@
             transform: translateY(-2px);
         }
         body.dark-mode #shareVideoButton {
-            background-color: #20c997; /* Teal for dark mode share button */
+            background-color: #20c997; 
             box-shadow: 0 4px 8px rgba(32, 201, 151, 0.2);
         }
         body.dark-mode #shareVideoButton:hover {
@@ -516,55 +516,55 @@
 
         /* Styles for the Rank Journey button container (unrelated to auth forms, left as is) */
         .rank-journey-box {
-            background-color: var(--spl-primary-accent); /* Dark blue background */
+            background-color: var(--spl-primary-accent); 
             border-radius: 12px;
-            box-shadow: 0 8px 16px var(--spl-shadow); /* Use shadow variable */
+            box-shadow: 0 8px 16px var(--spl-shadow); 
             padding: 25px;
-            margin: 30px auto; /* Center the box horizontally */
+            margin: 30px auto; 
             text-align: center;
             width: 100%;
-            max-width: 400px; /* Adjust max width for the box */
+            max-width: 400px; 
             box-sizing: border-box;
-            display: none; /* Hidden by default, shown with manager stats */
-            flex-direction: column; /* Ensure content stacks vertically */
-            align-items: center; /* Center content horizontally within the box */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
         .rank-journey-box h3 {
-            color: white; /* White text for the title inside the box */
+            color: white; 
             font-family: 'Oswald', sans-serif;
-            font-size: 1.8em; /* Large and prominent title */
+            font-size: 1.8em; 
             margin-top: 0;
-            margin-bottom: 20px; /* Space between title and button */
+            margin-bottom: 20px; 
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease; 
         }
 
         /* Styles for the button inside the Rank Journey box (unrelated to auth forms, left as is) */
-        #createRankJourneyButton { /* Reusing the ID, applying new styles */
-            background-color: white; /* White background */
-            color: var(--spl-primary-accent); /* Dark blue text */
-            padding: 15px 35px; /* More padding */
-            border: none; /* No border for a cleaner look */
-            border-radius: 10px; /* Rounded corners */
-            font-size: 1.2em; /* Larger font */
+        #createRankJourneyButton { 
+            background-color: white; 
+            color: var(--spl-primary-accent); 
+            padding: 15px 35px; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 1.2em; 
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
             cursor: pointer;
             transition: all 0.3s ease;
-            width: auto; /* Allow button to size based on content */
-            display: inline-block; /* Allow it to be centered easily */
+            width: auto; 
+            display: inline-block; 
         }
 
         #createRankJourneyButton:hover {
-            background-color: #f0f0f0; /* Slightly grey on hover */
-            color: #0056b3; /* Slightly darker blue text on hover */
-            transform: translateY(-2px); /* Slight lift */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Slightly larger shadow */
+            background-color: #f0f0f0; 
+            color: #0056b3; 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); 
         }
 
 
@@ -579,7 +579,7 @@
         .message-box.success { background-color: #d4edda; color: #155724; }
         .message-box.error { background-color: #f8d7da; color: #721c24; }
         .message-box.info { background-color: #d1ecf1; color: #0c5460; }
-        .message-box.warning { background-color: #fff3cd; color: #856404; } /* Added warning style */
+        .message-box.warning { background-color: #fff3cd; color: #856404; } 
 
 
         .loading-message, .error-message, .video-loading-message, #videoGeneratingMessage { 
@@ -1033,7 +1033,7 @@
                             <div class="stat-card">
                                 <h3>Average Points Per Round</h3>
                                 <p id="averagePoints">N/A</p>
-                                <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
+                            <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
                             </div>
                             <div class="stat-card">
                                 <h3>Best Round</h3>
@@ -1278,8 +1278,8 @@
         
         let currentManagerId = null; 
         let isAnalyzerReportDataFetched = false; 
-        let isAdminUser = false; // New global flag for admin status
-        let foundUserForAdminEdit = null; // Stores the user data found by admin search
+        let isAdminUser = false; 
+        let foundUserForAdminEdit = null; 
 
 
         // --- DOM Element References ---
@@ -1313,13 +1313,13 @@
         // New Navigation Buttons
         const analyzeMyTeamButton = document.getElementById('analyzeMyTeamButton');
         const myControlRoomButton = document.getElementById('myControlRoomButton');
-        const adminDashboardButton = document.getElementById('adminDashboardButton'); // New admin button
+        const adminDashboardButton = document.getElementById('adminDashboardButton'); 
         const mainNavigationButtons = document.getElementById('mainNavigationButtons'); 
 
         // Content areas to toggle
         const analyzerReportContent = document.getElementById('analyzerReportContent');
         const myControlRoomContent = document.getElementById('myControlRoomContent');
-        const adminDashboardContent = document.getElementById('adminDashboardContent'); // New admin content div
+        const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
         const managerIdInput = document.getElementById('managerIdInput'); 
         const analyzeButton = document.getElementById('analyzeButton'); 
@@ -1408,7 +1408,7 @@
             // Explicitly hide the dynamic content containers
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; // Hide new admin content
+            adminDashboardContent.style.display = 'none'; 
             
             shareVideoButton.style.display = 'none'; 
             instructionsBox.style.display = 'none'; 
@@ -1626,8 +1626,8 @@
                         displayLoggedInManagerId.textContent = userManagerId;
                         
                         hideAllContentSections(); 
-                        loggedInContent.style.display = 'block'; 
-
+                        loggedInContent.style.display = 'block'; // Make loggedInContent visible first
+                        
                         currentManagerId = userManagerId; 
                         isAnalyzerReportDataFetched = false; 
 
@@ -1635,6 +1635,7 @@
                         const adminDocRef = doc(db, "admins", user.uid);
                         const adminDocSnap = await getDoc(adminDocRef);
                         isAdminUser = adminDocSnap.exists();
+                        // Now set the display property after loggedInContent is block
                         adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                         console.log("DEBUG: Admin status after login:", isAdminUser);
 
@@ -1665,8 +1666,8 @@
             try {
                 await signOut(auth);
                 showAuthMessage("Logged out successfully.", "info"); 
-                // onAuthStateChanged will handle UI switch, including hiding admin button
-                isAdminUser = false; // Reset admin status
+                isAdminUser = false; 
+                adminDashboardButton.style.display = 'none'; 
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1731,6 +1732,7 @@
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
+                            // Now set the display property after loggedInContent is block
                             adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                             console.log("DEBUG: Admin status on auth state change:", isAdminUser);
 
@@ -1760,8 +1762,8 @@
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
                 clearAnalyzerReport(); 
-                isAdminUser = false; // Reset admin status on logout
-                adminDashboardButton.style.display = 'none'; // Ensure hidden on logout
+                isAdminUser = false; 
+                adminDashboardButton.style.display = 'none'; 
             }
         });
 
@@ -1788,12 +1790,11 @@
             } else if (sectionId === 'controlRoom') {
                 myControlRoomContent.style.display = 'block';
             } else if (sectionId === 'adminDashboard') {
-                if (isAdminUser) { // Only show if the user is truly an admin
-                    adminDashboardContent.style.display = 'flex'; // Use flex for column layout
-                    clearAdminSearchAndResults(); // Clear previous search results and inputs
+                if (isAdminUser) { 
+                    adminDashboardContent.style.display = 'flex'; 
+                    clearAdminSearchAndResults(); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
-                    // Optionally redirect or show an error, but hideAllContentSections already handles it
                     showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error");
                 }
             }
@@ -1982,7 +1983,7 @@
                         lossMakingTransfersTableBody.innerHTML = '';
                         if (data.top5LossMakingTransfers && data.top5LossMakingTransfers.length > 0) {
                             data.top5LossMakingTransfers.forEach(transfer => {
-                                const row = lossMakingTransfersTableBody.insertRow();
+                                const row = profitableTransfersTableBody.insertRow();
                                 row.insertCell().textContent = transfer.playerInName;
                                 row.cells[0].setAttribute('data-label', 'IN');
                                 row.insertCell().textContent = transfer.playerOutName;
@@ -2737,7 +2738,6 @@
                     const q = query(collection(db, "users"), where("email", "==", searchTerm));
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
-                        // Assuming email is unique, take the first result
                         userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
                         userDocId = querySnapshot.docs[0].id;
                         console.log("DEBUG: User found by Email:", userFound);
@@ -2751,13 +2751,10 @@
             if (!userFound) {
                 console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${searchTerm}`);
                 try {
-                    // Convert potential Arabic numerals in search term before querying
                     const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm);
                     const q = query(collection(db, "users"), where("splManagerId", "==", convertedSearchTerm));
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
-                        // If multiple users have the same SPL ID, pick the first one.
-                        // In a real scenario, you might want to display all matches.
                         userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
                         userDocId = querySnapshot.docs[0].id;
                         console.log("DEBUG: User found by SPL Manager ID:", userFound);
@@ -2768,11 +2765,11 @@
             }
 
             if (userFound) {
-                foundUserForAdminEdit = userFound; // Store for update operations
+                foundUserForAdminEdit = userFound; 
                 adminUserUidElem.textContent = userFound.id;
                 adminEditEmailInput.value = userFound.email || '';
                 adminEditSplManagerIdInput.value = userFound.splManagerId || '';
-                adminSearchResults.style.display = 'flex'; // Show the edit section
+                adminSearchResults.style.display = 'flex'; 
                 showAdminMessage("User found successfully.", "success");
             } else {
                 showAdminMessage("User not found. Please check the search term.", "error");
@@ -2808,10 +2805,8 @@
                     splManagerId: newSplManagerId
                 });
                 showAdminMessage("User updated successfully!", "success");
-                // Refresh the displayed data for the updated user
-                // Simulate re-searching for the user to update the displayed fields
-                adminSearchInput.value = userToUpdateUid; // Use UID to reliably re-search
-                await adminSearchButton.click(); // Trigger the search button click programmatically
+                adminSearchInput.value = userToUpdateUid; 
+                await adminSearchButton.click(); 
             } catch (error) {
                 console.error("Admin update failed:", error);
                 let friendlyMessage = "Failed to update user. Please try again.";
