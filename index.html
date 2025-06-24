@@ -221,20 +221,22 @@
             box-sizing: border-box; /* Include padding in width */
         }
 
-        /* Input fields within login/signup forms - Design and centering */
+        /* Input fields within login/signup forms - Design and explicit centering */
         #loginForm input[type="email"],
         #loginForm input[type="password"],
         #signupForm input[type="email"],
         #signupForm input[type="password"],
         #signupForm input[type="text"] { /* For Manager ID */
+            display: block; /* Important for margin:auto to work reliably */
             width: 100%; /* Take full width of their form container */
             max-width: 300px; /* Constrain individual input width */
+            margin: 0 auto; /* Explicitly center the input field itself */
             padding: 10px 12px; 
             border: 1px solid #ced4da; 
             border-radius: 4px; /* Original design: less rounded */
             font-size: 1em;
             box-sizing: border-box;
-            text-align: left; /* Original design: left-aligned text */
+            text-align: left; /* Original design: left-aligned text inside the field */
             background-color: var(--spl-container-bg);
             color: var(--spl-text-dark);
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -248,11 +250,13 @@
             margin: 0;
         }
 
-        /* Buttons within login/signup forms - Design and centering */
+        /* Buttons within login/signup forms - Design and explicit centering */
         #loginForm button,
         #signupForm button {
+            display: block; /* Important for margin:auto to work reliably */
             width: 100%; /* Take full width of their form container */
             max-width: 300px; /* Constrain individual button width */
+            margin: 0 auto; /* Explicitly center the button itself */
             background-color: #007bff; /* Original design: vibrant blue */
             color: white;
             padding: 10px 20px; 
@@ -262,8 +266,6 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Original design: subtle shadow */
-            display: block; /* Ensure it behaves as a block element for width/margin */
-            margin: 0 auto; /* Center the button within its flex container */
         }
 
         #loginForm button:hover,
