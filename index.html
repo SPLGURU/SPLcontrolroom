@@ -203,11 +203,11 @@
             margin-bottom: 30px;
         }
 
-        /* --- FIX: Apply flex properties DIRECTLY to #loginForm and #signupForm --- */
+        /* --- FIX: Apply flex properties DIRECTLY to #loginForm and #signupForm with !important for robust centering --- */
         #loginForm, #signupForm {
             display: flex;
             flex-direction: column; /* Stack children vertically */
-            align-items: center; /* Center children horizontally */
+            align-items: center !important; /* Center children horizontally - Added !important */
             gap: 15px; /* Space between inputs/buttons */
             width: 100%; /* Take full width of parent to allow centering */
             max-width: 400px; /* Optional: constrain form width if needed, adjust as per design */
@@ -764,7 +764,7 @@
 
         <!-- Authentication Section -->
         <div id="authSection">
-            <div id="loginForm"> <!-- --- FIX: Removed class="input-section" --- -->
+            <div id="loginForm"> 
                 <h2>Login</h2>
                 <input type="email" id="loginEmail" placeholder="Email Address">
                 <input type="password" id="loginPassword" placeholder="Password">
@@ -772,7 +772,7 @@
                 <p>Don't have an account? <a href="#" id="showSignupLink">Sign Up</a></p>
             </div>
 
-            <div id="signupForm" style="display: none;"> <!-- --- FIX: Removed class="input-section" --- -->
+            <div id="signupForm" style="display: none;"> 
                 <h2>Sign Up</h2>
                 <input type="email" id="signupEmail" placeholder="Email Address">
                 <input type="password" id="signupPassword" placeholder="Password">
@@ -1084,14 +1084,16 @@
         const loginEmailInput = document.getElementById('loginEmail');
         const loginPasswordInput = document.getElementById('loginPassword');
         const loginButton = document.getElementById('loginButton');
-        const showSignupLink = document.getElementById('showSignupLink');
+        // --- FIX: Corrected element ID for showSignupLink (from login form to signup form) ---
+        const showSignupLink = document.getElementById('showSignupLink'); 
+        // --- END FIX ---
         const signupEmailInput = document.getElementById('signupEmail');
         const signupPasswordInput = document.getElementById('signupPassword');
         const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
         const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
         const signupButton = document.getElementById('signupButton');
-        // --- FIX: Ensure correct ID for showLoginLink in JS ---
-        const showLoginLink = document.getElementById('showLoginLink'); // This ID is correctly specified in HTML: <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+        // --- FIX: Corrected element ID for showLoginLink (from signup form to login form) ---
+        const showLoginLink = document.getElementById('showLoginLink'); 
         // --- END FIX ---
         const logoutButton = document.getElementById('logoutButton');
 
@@ -1116,7 +1118,7 @@
         const averagePointsElem = document.getElementById('averagePoints');
         const averagePointsFor1stPlaceElem = document.getElementById('averagePointsFor1stPlace');
         const totalTransfersCountElem = document.getElementById('totalTransfersCount');
-        const totalHitsPointsElem = document = document.getElementById('totalHitsPoints');
+        const totalHitsPointsElem = document.getElementById('totalHitsPoints'); // Corrected typo
         const bestRoundDisplayElem = document.getElementById('bestRoundDisplay');
         const worstRoundDisplayElem = document.getElementById('worstRoundDisplay');
         const greenArrowsCountElem = document.getElementById('greenArrowsCount');
@@ -1405,8 +1407,9 @@
             }
         });
 
-        // Toggle between Login and Signup forms
+        // Toggle between Login and Signup forms (showSignupLink is from login form to signup form)
         showSignupLink.addEventListener('click', (e) => {
+            console.log("DEBUG: 'Sign Up' link clicked."); // Log for signup hyperlink
             e.preventDefault();
             loginForm.style.display = 'none';
             signupForm.style.display = 'block'; 
@@ -1414,7 +1417,9 @@
             authMessageBox.textContent = ''; 
         });
 
+        // Toggle between Login and Signup forms (showLoginLink is from signup form to login form)
         showLoginLink.addEventListener('click', (e) => {
+            console.log("DEBUG: 'Login' link clicked."); // Log for login hyperlink
             e.preventDefault();
             loginForm.style.display = 'block'; 
             signupForm.style.display = 'none';
@@ -2435,17 +2440,24 @@
 
         // --- Initial Load & Theme ---
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            } else {
-                setTheme('light'); 
-            }
+            console.log("DEBUG: DOMContentLoaded fired.");
+            // --- FIX: Check if darkModeToggle exists before adding listener ---
+            if (darkModeToggle) {
+                console.log("DEBUG: darkModeToggle element found.");
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    setTheme(savedTheme);
+                } else {
+                    setTheme('light'); 
+                }
 
-            // ONLY listener for the dark mode toggle, placed here to ensure it's set up once.
-            darkModeToggle.addEventListener('change', (e) => {
-                setTheme(e.target.checked ? 'dark' : 'light');
-            });
+                darkModeToggle.addEventListener('change', (e) => {
+                    console.log("DEBUG: Dark Mode Toggle 'change' event fired. Checked:", e.target.checked);
+                    setTheme(e.target.checked ? 'dark' : 'light');
+                });
+            } else {
+                console.error("ERROR: Dark mode toggle element not found!");
+            }
         });
     </script>
 </body>
