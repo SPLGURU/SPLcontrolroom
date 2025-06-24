@@ -1399,13 +1399,12 @@
         // Function to hide all main content sections (except logo and primary navigation)
         function hideAllContentSections() {
             authSection.style.display = 'none';
-            loggedInContent.style.display = 'none'; // Initially hide this, then show its sub-sections
+            loggedInContent.style.display = 'none'; 
             loadingMessage.style.display = 'none';
             errorMessage.style.display = 'none';
             videoGeneratingMessage.style.display = 'none';
             authMessageBox.style.display = 'none'; 
             
-            // Explicitly hide the dynamic content containers
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
             adminDashboardContent.style.display = 'none'; 
@@ -1416,7 +1415,6 @@
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
 
-            // Also hide admin search results and messages when switching sections
             adminSearchResults.style.display = 'none';
             adminMessage.style.display = 'none';
         }
@@ -1635,12 +1633,11 @@
                         const adminDocRef = doc(db, "admins", user.uid);
                         const adminDocSnap = await getDoc(adminDocRef);
                         isAdminUser = adminDocSnap.exists();
-                        console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
+                        console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                         
-                        setTimeout(() => {
-                            adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
-                            console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Timeout): Admin button visibility set to: ${adminDashboardButton.style.display}`);
-                        }, 50);
+                        // Set the display property directly without setTimeout
+                        adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
+                        console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
                     } else {
                         showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
@@ -1731,16 +1728,15 @@
                             
                             currentManagerId = userManagerId; 
 
-                            // Check admin status and show/hide button
+                            // Check if current user is an admin to show Admin Dashboard button
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
-                            console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
+                            console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
-                            setTimeout(() => {
-                                adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
-                                console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Timeout): Admin button visibility set to: ${adminDashboardButton.style.display}`);
-                            }, 50);
+                            // Set the display property directly without setTimeout
+                            adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
+                            console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
@@ -2712,8 +2708,8 @@
         // --- Admin Dashboard Logic ---
         adminSearchButton.addEventListener('click', async () => {
             showAdminMessage("Searching...", "info");
-            adminSearchResults.style.display = 'none'; // Hide previous results
-            foundUserForAdminEdit = null; // Clear previously found user
+            adminSearchResults.style.display = 'none'; 
+            foundUserForAdminEdit = null; 
 
             const searchTerm = adminSearchInput.value.trim();
             if (!searchTerm) {
