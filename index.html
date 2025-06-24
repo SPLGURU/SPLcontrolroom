@@ -194,8 +194,6 @@
 
         /* The main input-section class now primarily styles the wrapper around the forms */
         .input-section {
-            /* This class defines general input layout properties for other parts of the app,
-               but for auth forms, we're targeting their IDs directly for higher specificity */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -203,32 +201,40 @@
             margin-bottom: 30px;
         }
 
-        /* --- Start of Fix: Centering & Stacking with Original Design --- */
+        /* --- Start of Fix: Centering and Stacking for Login/Signup Forms --- */
+        #authSection { /* Ensure authSection itself allows for centering its child forms */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers loginForm/signupForm horizontally */
+            width: 100%; /* Take full width to allow centering of children */
+        }
+
         #loginForm, #signupForm {
             display: flex;
             flex-direction: column; /* Stack children vertically */
-            align-items: center !important; /* Center children horizontally */
+            align-items: center; /* Center children horizontally */
             gap: 15px; /* Space between inputs/buttons */
             width: 100%; /* Take full width of parent to allow centering */
-            max-width: 400px; /* Constrain form width */
-            margin: 0 auto; /* Center the form itself */
+            max-width: 400px; /* Constrain form width, this form itself will be centered by authSection */
+            margin: 0 auto; /* Center the form itself within its flex container */
             padding-bottom: 15px; 
+            box-sizing: border-box; /* Include padding in width */
         }
 
-        /* Input fields within login/signup forms - Adjusted border-radius to match screenshot */
+        /* Input fields within login/signup forms - Design and centering */
         #loginForm input[type="email"],
         #loginForm input[type="password"],
         #signupForm input[type="email"],
         #signupForm input[type="password"],
         #signupForm input[type="text"] { /* For Manager ID */
-            width: 100%;
-            max-width: 300px;
-            padding: 10px 12px; /* Slightly reduced padding to match screenshot aesthetics */
-            border: 1px solid #ced4da; /* Explicit light grey border from screenshot */
-            border-radius: 4px; /* Less rounded to match screenshot */
+            width: 100%; /* Take full width of their form container */
+            max-width: 300px; /* Constrain individual input width */
+            padding: 10px 12px; 
+            border: 1px solid #ced4da; 
+            border-radius: 4px; /* Original design: less rounded */
             font-size: 1em;
             box-sizing: border-box;
-            text-align: left; /* Text alignment from screenshot */
+            text-align: left; /* Original design: left-aligned text */
             background-color: var(--spl-container-bg);
             color: var(--spl-text-dark);
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -242,28 +248,28 @@
             margin: 0;
         }
 
-        /* Buttons within login/signup forms - Adjusted border-radius and background for original look */
+        /* Buttons within login/signup forms - Design and centering */
         #loginForm button,
         #signupForm button {
-            width: 100%;
-            max-width: 300px;
-            background-color: #007bff; /* Vibrant blue from screenshot */
+            width: 100%; /* Take full width of their form container */
+            max-width: 300px; /* Constrain individual button width */
+            background-color: #007bff; /* Original design: vibrant blue */
             color: white;
-            padding: 10px 20px; /* Adjusted padding to match screenshot */
+            padding: 10px 20px; 
             border: none;
-            border-radius: 4px; /* Less rounded to match screenshot */
+            border-radius: 4px; /* Original design: less rounded */
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjusted shadow for original look */
-            display: block;
-            margin: 0 auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Original design: subtle shadow */
+            display: block; /* Ensure it behaves as a block element for width/margin */
+            margin: 0 auto; /* Center the button within its flex container */
         }
 
         #loginForm button:hover,
         #signupForm button:hover {
-            background-color: #0056b3; /* Slightly darker blue on hover */
-            transform: translateY(-1px); /* Subtle lift */
+            background-color: #0056b3; 
+            transform: translateY(-1px); 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
         }
         /* --- End of Fix --- */
@@ -276,7 +282,7 @@
             transition: color 0.3s ease; /* Smooth transition */
         }
         
-        /* General input and button styles if not overridden by #loginForm/#signupForm */
+        /* General input and button styles (for non-auth forms, if any) */
         .input-section input[type="text"],
         .input-section input[type="email"],
         .input-section input[type="password"] {
@@ -291,7 +297,7 @@
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
-        .input-section button { /* Base style for all buttons in input section */
+        .input-section button { /* Base style for all buttons in input section (for non-auth forms) */
             background-color: var(--spl-primary-accent);
             color: white;
             padding: 12px 25px;
@@ -697,11 +703,8 @@
             h2 {
                 font-size: 1.4em;
             }
-            /* .input-section { // This class is no longer controlling login/signup form gaps directly
+            .input-section {
                 gap: 10px;
-            } */
-            #loginForm, #signupForm { /* Reduce gap for smaller screens */
-                gap: 10px; 
             }
             /* Further reduce font size for very small screens if necessary */
             table td {
@@ -1478,7 +1481,7 @@
                             await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
                         } else {
                             // User logged in but no valid Manager ID in Firestore
-                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
                             await signOut(auth); // Log them out
                             authSection.style.display = 'block';
                             loginForm.style.display = 'block'; 
@@ -2282,7 +2285,7 @@
                     try {
                         sourceCanvas = await html2canvas(element, {
                             useCORS: true, 
-                            scale: 2, // Capture at high resolution
+                            scale: 2, 
                             backgroundColor: null, 
                             allowTaint: true, 
                             windowWidth: gifWidth, 
@@ -2434,7 +2437,8 @@
                 videoGeneratingMessage.textContent = 'GIF generated and download started!';
                 // Re-enable buttons
                 shareVideoButton.disabled = false;
-                analyzeButton.disabled = false; // Note: analyzeButton is hidden, but good to keep state consistent
+                // Note: analyzeButton is hidden when logged in, but keeping state consistent
+                // createRankJourneyButton is also handled dynamically
                 createRankJourneyButton.disabled = false;
                 darkModeToggle.disabled = false;
             });
