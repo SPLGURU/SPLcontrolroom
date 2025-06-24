@@ -200,6 +200,15 @@
             margin-bottom: 30px;
         }
 
+        /* Apply flex properties directly to the forms for stacking and centering their inputs */
+        #loginForm, #signupForm {
+            display: flex; /* Make forms flex containers */
+            flex-direction: column; /* Stack children (inputs, button) vertically */
+            align-items: center; /* Center children horizontally */
+            gap: 15px; /* Maintain gap between form elements */
+            width: 100%; /* Allow forms to take full width of parent */
+        }
+
         .input-section label {
             font-weight: bold;
             color: var(--spl-text-medium);
@@ -1052,7 +1061,7 @@
         const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
         const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
         const signupButton = document.getElementById('signupButton');
-        const showLoginLink = document.getElementById('showLoginLink');
+        const showLoginLink = document.getElementById('loginLink');
         const logoutButton = document.getElementById('logoutButton');
 
         // Logged-in / Analyzer UI elements
@@ -1254,7 +1263,9 @@
                 await signOut(auth); 
                 console.log("DEBUG: User signed out after signup.");
 
-                showAuthMessage("Account created! Please verify your email and then log in.", "success");
+                // --- MODIFIED MESSAGE HERE ---
+                showAuthMessage("Account created! Please verify your email and then log in. If the confirmation e-mail is not in your inbox please check your spam folder", "success");
+                // -----------------------------
                 
                 // Clear form fields
                 signupEmailInput.value = '';
@@ -1262,7 +1273,7 @@
                 signupConfirmPasswordInput.value = '';
                 signupManagerIdInput.value = '';
                 // Switch to login form
-                loginForm.style.display = 'block'; // Ensure 'block' is used for visibility
+                loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
 
             } catch (error) {
@@ -1277,7 +1288,7 @@
                 } else if (error.code === 'auth/network-request-failed') {
                     friendlyMessage = "Network error. Please check your internet connection.";
                 } else {
-                    friendlyMessage = `Failed to create account: ${error.message}`; // More specific message for other errors
+                    friendlyMessage = `Failed to create account: ${error.message}`; 
                 }
                 showAuthMessage(friendlyMessage, "error");
             } finally {
@@ -1366,14 +1377,14 @@
         showSignupLink.addEventListener('click', (e) => {
             e.preventDefault();
             loginForm.style.display = 'none';
-            signupForm.style.display = 'block'; // Changed from 'flex' to 'block'
+            signupForm.style.display = 'block'; 
             authMessageBox.style.display = 'none'; 
             authMessageBox.textContent = ''; 
         });
 
         showLoginLink.addEventListener('click', (e) => {
             e.preventDefault();
-            loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
+            loginForm.style.display = 'block'; 
             signupForm.style.display = 'none';
             authMessageBox.style.display = 'none'; 
             authMessageBox.textContent = ''; 
@@ -1421,7 +1432,7 @@
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
                             await signOut(auth); // Log them out
                             authSection.style.display = 'block';
-                            loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
+                            loginForm.style.display = 'block'; 
                             signupForm.style.display = 'none';
                         }
                     } else {
@@ -1430,20 +1441,20 @@
                         showAuthMessage("User data not found. Please contact support. Logging out.", "error");
                         await signOut(auth); // Log them out
                         authSection.style.display = 'block';
-                        loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
+                        loginForm.style.display = 'block'; 
                         signupForm.style.display = 'none';
                     }
                 } else {
                     // User is signed in but email not verified
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
                     authSection.style.display = 'block';
-                    loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
+                    loginForm.style.display = 'block'; 
                     signupForm.style.display = 'none';
                 }
             } else {
                 // User is signed out: show authentication forms
                 authSection.style.display = 'block'; 
-                loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
+                loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
                 clearAnalyzerReport(); // Clear any old report data
             }
