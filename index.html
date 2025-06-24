@@ -192,22 +192,43 @@
         }
 
 
+        /* The main input-section class now primarily styles the wrapper around the forms */
         .input-section {
+            /* This class defines general input layout properties for other parts of the app,
+               but for auth forms, we're targeting their IDs directly for higher specificity */
             display: flex;
-            flex-direction: column; /* Ensure elements stack vertically */
-            align-items: center; /* Center items horizontally within the flex container */
+            flex-direction: column;
+            align-items: center;
             gap: 15px;
             margin-bottom: 30px;
         }
 
-        /* Apply flex properties directly to the forms for stacking and centering their inputs */
+        /* --- FIX: Apply flex properties DIRECTLY to #loginForm and #signupForm --- */
         #loginForm, #signupForm {
-            display: flex; /* Make forms flex containers */
-            flex-direction: column; /* Stack children (inputs, button) vertically */
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
             align-items: center; /* Center children horizontally */
-            gap: 15px; /* Maintain gap between form elements */
-            width: 100%; /* Allow forms to take full width of parent */
+            gap: 15px; /* Space between inputs/buttons */
+            width: 100%; /* Take full width of parent to allow centering */
+            max-width: 400px; /* Optional: constrain form width if needed, adjust as per design */
+            margin: 0 auto; /* Center the form itself if it has a max-width */
+            padding-bottom: 15px; /* Add some padding if needed at bottom of form */
         }
+
+        /* Ensure inputs and buttons inside these forms take appropriate width and remain centered */
+        #loginForm input[type="email"],
+        #loginForm input[type="password"],
+        #signupForm input[type="email"],
+        #signupForm input[type="password"],
+        #signupForm input[type="text"], /* For Manager ID */
+        #loginForm button,
+        #signupForm button {
+            width: 100%; /* Take full width of their flex parent (#loginForm / #signupForm) */
+            max-width: 300px; /* But don't exceed 300px */
+            box-sizing: border-box; /* Include padding and border in element's total width */
+        }
+        /* --- END FIX --- */
+
 
         .input-section label {
             font-weight: bold;
@@ -223,8 +244,8 @@
             border: 1px solid var(--spl-border-light);
             border-radius: 8px;
             font-size: 1em;
-            width: 100%;
-            max-width: 300px; /* Keep max-width for consistent sizing */
+            /* width: 100%; // Removed from here, handled by specific #form input rules above */
+            /* max-width: 300px; // Removed from here, handled by specific #form input rules above */
             box-sizing: border-box;
             text-align: center;
             background-color: var(--spl-container-bg); /* Match container background */
@@ -252,8 +273,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Smooth transition */
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-            width: 100%;
-            max-width: 300px;
+            /* width: 100%; // Removed from here, handled by specific #form button rules above */
+            /* max-width: 300px; // Removed from here, handled by specific #form button rules above */
             display: block;
             margin: 0 auto; /* Center the button */
         }
@@ -581,10 +602,15 @@
                 padding: 20px;
             }
 
-            .input-section input[type="text"],
-            .input-section input[type="email"], /* Added email to responsive input */
-            .input-section input[type="password"], /* Added password to responsive input */
-            .input-section button {
+            /* inputs and buttons inside specific forms */
+            #loginForm input[type="text"],
+            #loginForm input[type="email"],
+            #loginForm input[type="password"],
+            #signupForm input[type="text"],
+            #signupForm input[type="email"],
+            #signupForm input[type="password"],
+            #loginForm button,
+            #signupForm button {
                 font-size: 0.95em;
                 padding: 10px 20px;
             }
@@ -653,8 +679,11 @@
             h2 {
                 font-size: 1.4em;
             }
-            .input-section {
+            /* .input-section { // This class is no longer controlling login/signup form gaps directly
                 gap: 10px;
+            } */
+            #loginForm, #signupForm { /* Reduce gap for smaller screens */
+                gap: 10px; 
             }
             /* Further reduce font size for very small screens if necessary */
             table td {
@@ -735,7 +764,7 @@
 
         <!-- Authentication Section -->
         <div id="authSection">
-            <div id="loginForm" class="input-section">
+            <div id="loginForm"> <!-- --- FIX: Removed class="input-section" --- -->
                 <h2>Login</h2>
                 <input type="email" id="loginEmail" placeholder="Email Address">
                 <input type="password" id="loginPassword" placeholder="Password">
@@ -743,7 +772,7 @@
                 <p>Don't have an account? <a href="#" id="showSignupLink">Sign Up</a></p>
             </div>
 
-            <div id="signupForm" class="input-section" style="display: none;">
+            <div id="signupForm" style="display: none;"> <!-- --- FIX: Removed class="input-section" --- -->
                 <h2>Sign Up</h2>
                 <input type="email" id="signupEmail" placeholder="Email Address">
                 <input type="password" id="signupPassword" placeholder="Password">
@@ -766,7 +795,7 @@
             <hr style="margin: 20px 0; border-color: var(--spl-border-light);"> <!-- Separator -->
 
             <!-- Original Analyzer Content Starts Here (Copied from previous index.html) -->
-            <div class="input-section" style="display: none;"> <!-- Hide this section as manager ID comes from auth -->
+            <div class="input-section" style="display: none;"> <!-- This input-section is fine here -->
                 <label for="managerIdInput">Enter Manager ID:</label>
                 <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
                 <button id="analyzeButton">Full Season Report</button>
@@ -1061,8 +1090,8 @@
         const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
         const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
         const signupButton = document.getElementById('signupButton');
-        // --- FIX: Corrected ID for showLoginLink ---
-        const showLoginLink = document.getElementById('showLoginLink'); // Corrected from 'loginLink'
+        // --- FIX: Ensure correct ID for showLoginLink in JS ---
+        const showLoginLink = document.getElementById('showLoginLink'); // This ID is correctly specified in HTML: <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
         // --- END FIX ---
         const logoutButton = document.getElementById('logoutButton');
 
@@ -1087,7 +1116,7 @@
         const averagePointsElem = document.getElementById('averagePoints');
         const averagePointsFor1stPlaceElem = document.getElementById('averagePointsFor1stPlace');
         const totalTransfersCountElem = document.getElementById('totalTransfersCount');
-        const totalHitsPointsElem = document.getElementById('totalHitsPoints');
+        const totalHitsPointsElem = document = document.getElementById('totalHitsPoints');
         const bestRoundDisplayElem = document.getElementById('bestRoundDisplay');
         const worstRoundDisplayElem = document.getElementById('worstRoundDisplay');
         const greenArrowsCountElem = document.getElementById('greenArrowsCount');
