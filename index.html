@@ -274,6 +274,30 @@
             transform: translateY(-1px); 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
         }
+        
+        /* Centering the "Don't have an account?" and "Already have an account?" texts */
+        #loginForm p,
+        #signupForm p {
+            text-align: center; /* This will center the text inside the paragraph */
+            width: 100%; /* Ensure it takes full width to allow text-align to work */
+            max-width: 300px; /* Constrain width if necessary, matching input fields */
+            margin: 10px auto; /* Add margin and center the paragraph itself */
+            color: var(--spl-text-dark); /* Ensure text color changes with theme */
+            transition: color 0.3s ease; /* Smooth transition */
+        }
+
+        #loginForm p a,
+        #signupForm p a {
+            color: var(--spl-primary-accent); /* Maintain link color */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        #loginForm p a:hover,
+        #signupForm p a:hover {
+            text-decoration: underline;
+        }
         /* --- End of Fix --- */
 
 
@@ -1483,7 +1507,7 @@
                             await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
                         } else {
                             // User logged in but no valid Manager ID in Firestore
-                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
                             await signOut(auth); // Log them out
                             authSection.style.display = 'block';
                             loginForm.style.display = 'block'; 
