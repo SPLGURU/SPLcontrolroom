@@ -201,12 +201,12 @@
             margin-bottom: 30px;
         }
 
-        /* --- Start of Fix: Centering and Stacking for Login/Signup Forms --- */
-        #authSection { /* Ensure authSection itself allows for centering its child forms */
+        /* --- Login/Signup Forms Styling --- */
+        #authSection { 
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centers loginForm/signupForm horizontally */
-            width: 100%; /* Take full width to allow centering of children */
+            align-items: center; 
+            width: 100%; 
         }
 
         #loginForm, #signupForm {
@@ -214,11 +214,11 @@
             flex-direction: column; /* Stack children vertically */
             align-items: center; /* Center children horizontally */
             gap: 15px; /* Space between inputs/buttons */
-            width: 100%; /* Take full width of parent to allow centering */
-            max-width: 400px; /* Constrain form width, this form itself will be centered by authSection */
-            margin: 0 auto; /* Center the form itself within its flex container */
+            width: 100%; 
+            max-width: 400px; 
+            margin: 0 auto; 
             padding-bottom: 15px; 
-            box-sizing: border-box; /* Include padding in width */
+            box-sizing: border-box; 
         }
 
         /* Input fields within login/signup forms - Design and explicit centering */
@@ -227,16 +227,16 @@
         #signupForm input[type="email"],
         #signupForm input[type="password"],
         #signupForm input[type="text"] { /* For Manager ID */
-            display: block; /* Important for margin:auto to work reliably */
-            width: 100%; /* Take full width of their form container */
-            max-width: 300px; /* Constrain individual input width */
-            margin: 0 auto; /* Explicitly center the input field itself */
+            display: block; 
+            width: 100%; 
+            max-width: 300px; 
+            margin: 0 auto; 
             padding: 10px 12px; 
             border: 1px solid #ced4da; 
-            border-radius: 4px; /* Original design: less rounded */
+            border-radius: 4px; 
             font-size: 1em;
             box-sizing: border-box;
-            text-align: left; /* Original design: left-aligned text inside the field */
+            text-align: left; 
             background-color: var(--spl-container-bg);
             color: var(--spl-text-dark);
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -253,19 +253,19 @@
         /* Buttons within login/signup forms - Design and explicit centering */
         #loginForm button,
         #signupForm button {
-            display: block; /* Important for margin:auto to work reliably */
-            width: 100%; /* Take full width of their form container */
-            max-width: 300px; /* Constrain individual button width */
-            margin: 0 auto; /* Explicitly center the button itself */
-            background-color: #007bff; /* Original design: vibrant blue */
+            display: block; 
+            width: 100%; 
+            max-width: 300px; 
+            margin: 0 auto; 
+            background-color: #007bff; 
             color: white;
             padding: 10px 20px; 
             border: none;
-            border-radius: 4px; /* Original design: less rounded */
+            border-radius: 4px; 
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Original design: subtle shadow */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
         }
 
         #loginForm button:hover,
@@ -278,17 +278,17 @@
         /* Centering the "Don't have an account?" and "Already have an account?" texts */
         #loginForm p,
         #signupForm p {
-            text-align: center; /* This will center the text inside the paragraph */
+            text-align: center; /* This centers the text inside the paragraph */
             width: 100%; /* Ensure it takes full width to allow text-align to work */
             max-width: 300px; /* Constrain width if necessary, matching input fields */
             margin: 10px auto; /* Add margin and center the paragraph itself */
-            color: var(--spl-text-dark); /* Ensure text color changes with theme */
-            transition: color 0.3s ease; /* Smooth transition */
+            color: var(--spl-text-dark); 
+            transition: color 0.3s ease; 
         }
 
         #loginForm p a,
         #signupForm p a {
-            color: var(--spl-primary-accent); /* Maintain link color */
+            color: var(--spl-primary-accent); 
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s ease;
@@ -298,7 +298,7 @@
         #signupForm p a:hover {
             text-decoration: underline;
         }
-        /* --- End of Fix --- */
+        /* --- End Login/Signup Forms Styling --- */
 
 
         .input-section label {
@@ -348,6 +348,41 @@
         #logoutButton {
             background-color: #DC3545; /* Red for logout */
         }
+
+        /* --- New Navigation Buttons Styling --- */
+        #mainNavigationButtons {
+            display: flex; /* Arrange buttons side-by-side */
+            justify-content: center; /* Center horizontally */
+            gap: 20px; /* Space between buttons */
+            margin-top: 20px;
+            margin-bottom: 30px; /* Space below the buttons */
+            width: 100%;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        #analyzeMyTeamButton,
+        #myControlRoomButton {
+            background-color: var(--spl-primary-accent); /* Consistent accent color */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px; /* Consistent rounded corners */
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+            min-width: 180px; /* Ensure buttons don't get too small */
+            text-align: center;
+        }
+
+        #analyzeMyTeamButton:hover,
+        #myControlRoomButton:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        /* --- End New Navigation Buttons Styling --- */
+
 
         /* Share Video Button Specific Styles (unrelated to auth forms, left as is) */
         #shareVideoButton {
@@ -807,9 +842,9 @@
     </div>
 
     <div class="container">
-        <h1>Control Room V2</h1> <!-- Updated title for auth site -->
+        <h1>Control Room V2</h1> 
 
-        <!-- Authentication Section -->
+        <!-- Authentication Section (visible when logged out) -->
         <div id="authSection">
             <div id="loginForm"> 
                 <h2>Login</h2>
@@ -830,229 +865,235 @@
                 <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
             </div>
             
-            <div id="authMessageBox" class="message-box"></div> <!-- Specific message box for auth -->
+            <div id="authMessageBox" class="message-box"></div> 
         </div>
 
-        <!-- Logged In Content: The original Analyzer Section -->
+        <!-- Logged In Content (visible when logged in) -->
         <div id="loggedInContent" class="container" style="display: none;">
-            <!-- The entire content of the old analyzer goes here -->
+            <!-- User Info and Logout button -->
             <h2 id="loggedInUserGreeting">Welcome, User!</h2>
             <p>Your Manager ID: <span id="displayLoggedInManagerId"></span></p>
             <button id="logoutButton">Logout</button>
-            <hr style="margin: 20px 0; border-color: var(--spl-border-light);"> <!-- Separator -->
+            <hr style="margin: 20px 0; border-color: var(--spl-border-light);">
 
-            <!-- Original Analyzer Content Starts Here (Copied from previous index.html) -->
-            <div class="input-section" style="display: none;"> <!-- This input-section is fine here -->
-                <label for="managerIdInput">Enter Manager ID:</label>
-                <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
-                <button id="analyzeButton">Full Season Report</button>
-            </div>
-            
-            <!-- Share Video Button - Initially hidden, text changed -->
-            <button id="shareVideoButton" style="display: none;">Download/Share Report as GIF</button>
-
-            <!-- Instructions box, potentially hide/show as needed or remove if no longer relevant post-login -->
-            <div id="instructionsBox" class="instructions" style="display: none;"> 
-                <h3>How to get your Manager ID:</h3>
-                <ol>
-                    <li>Go to <a href="https://fantasy.spl.com.sa/" target="_blank">https://fantasy.spl.com.sa/</a> from your browser (SPL app does not work to get your ID).</li>
-                    <li>Login with your credentials.</li>
-                    <li>Click on "Points" in the top menu.</li>
-                    <li>Check the address bar and look for the numbers after the word "/entry/". Copy that - it is your ID number.</li>
-                </ol>
-            </div>
-        
-            <div id="loadingMessage" class="loading-message" style="display: none;">
-                Loading
-            </div>
-            <div id="errorMessage" class="error-message" style="display: none;"></div>
-            <!-- Video Generating Message - Initially hidden -->
-            <div id="videoGeneratingMessage" class="loading-message" style="display: none;">
-                Generating GIF... This might take a moment. Please keep this tab open.
+            <!-- New Navigation Buttons -->
+            <div id="mainNavigationButtons">
+                <button id="analyzeMyTeamButton">Analyze My Team</button>
+                <button id="myControlRoomButton">My Control Room</button>
             </div>
 
-            <div id="managerStats" style="display: none;">
-                <!-- NEW: Wrapper for the first section of the report -->
-                <div id="managerSummarySection">
-                    <h2 id="managerName"></h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Overall Rank</h3>
-                            <p id="overallRank">N/A</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Best Overall Rank</h3>
-                            <p id="bestOverallRank">N/A</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Worst Overall Rank</h3>
-                            <p id="worstOverallRank">N/A</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Average Points Per Round</h3>
-                            <p id="averagePoints">N/A</p>
-                            <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Best Round</h3>
-                            <p id="bestRoundDisplay">N/A</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Worst Round</h3>
-                            <p id="worstRoundDisplay">N/A</p>
-                        </div>
-                        <!-- Total Green Arrows Card -->
-                        <div class="stat-card">
-                            <h3>Total Green Arrows</h3>
-                            <p id="greenArrowsCount">N/A 🟢</p>
-                        </div>
-                        <!-- Total Red Arrows Card -->
-                        <div class="stat-card">
-                            <h3>Total Red Arrows</h3>
-                            <p id="redArrowsCount">N/A 🔴</p>
-                        </div>
-                    </div>
-                </div> <!-- End of managerSummarySection -->
-
-                <!-- Rank Journey Box -->
-                <div id="rankJourneyBox" class="rank-journey-box">
-                    <h3>My Rank Journey</h3>
-                    <button id="createRankJourneyButton">Click Here</button>
-                </div>
-
-                <div class="chart-section" id="rankJourneyChartContainer" style="display: none;">
-                    <h2>Overall Rank Journey</h2>
-                    <div id="videoLoadingMessage" class="video-loading-message">
-                        Animating rank journey...
-                    </div>
-                    <canvas id="rankJourneyChart"></canvas>
-                    <!-- NEW: Hidden canvas for Chart.js static capture -->
-                    <canvas id="hiddenChartCaptureCanvas" style="display: none;"></canvas>
+            <!-- Analyzer Report Content (initially hidden) -->
+            <div id="analyzerReportContent" style="display: none;">
+                <!-- Original Analyzer Content Starts Here -->
+                <!-- The input-section below is hidden as Manager ID comes from Firebase now -->
+                <div class="input-section" style="display: none;"> 
+                    <label for="managerIdInput">Enter Manager ID:</label>
+                    <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
+                    <button id="analyzeButton">Full Season Report</button>
                 </div>
                 
-                <!-- Added IDs to table-section divs for easier targeting by html2canvas -->
-                <div class="table-section" id="topCaptainsTableContainer">
-                    <h2>Top 3 Captains</h2>
-                    <table id="topCaptainsTable">
-                        <thead>
-                            <tr>
-                                <th>Player</th>
-                                <th>Times Captained</th>
-                                <th>Success</th>
-                                <th>Failed</th>
-                                <th>Captained Points</th>
-                                <th>Captained Rounds</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
+                <button id="shareVideoButton" style="display: none;">Download/Share Report as GIF</button>
+
+                <!-- Instructions box (can be hidden if not needed after login) -->
+                <div id="instructionsBox" class="instructions" style="display: none;"> 
+                    <h3>How to get your Manager ID:</h3>
+                    <ol>
+                        <li>Go to <a href="https://fantasy.spl.com.sa/" target="_blank">https://fantasy.spl.com.sa/</a> from your browser (SPL app does not work to get your ID).</li>
+                        <li>Login with your credentials.</li>
+                        <li>Click on "Points" in the top menu.</li>
+                        <li>Check the address bar and look for the numbers after the word "/entry/". Copy that - it is your ID number.</li>
+                    </ol>
+                </div>
+            
+                <div id="loadingMessage" class="loading-message" style="display: none;">
+                    Loading
+                </div>
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="videoGeneratingMessage" class="loading-message" style="display: none;">
+                    Generating GIF... This might take a moment. Please keep this tab open.
                 </div>
 
-                <div class="table-section" id="bestPlayersTableContainer">
-                    <h2>Top 5 Best Players</h2>
-                    <table id="bestPlayersTable">
-                        <thead>
-                            <tr>
-                                <th>Player</th>
-                                <th>Started</th>
-                                <th>Auto Subbed In</th>
-                                <th>Points Gained</th>
-                                <th>Benched Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-section" id="worstPlayersTableContainer">
-                    <h2>Top 5 Worst Players</h2>
-                    <table id="worstPlayersTable">
-                        <thead>
-                            <tr>
-                                <th>Player</th>
-                                <th>Started</th>
-                                <th>Auto Subbed In</th>
-                                <th>Points Gained</th>
-                                <th>Benched Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                        </table>
-                </div>
-
-                <div class="table-section" id="missedPointsTableContainer">
-                    <h2>Top 5 Missed Points (Benched Players)</h2>
-                    <table id="missedPointsTable">
-                        <thead>
-                            <tr>
-                                <th>Player</th>
-                                <th>Points</th>
-                                <th>Round</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Transfers Summary section - also given an ID -->
-                <div class="table-section" id="transfersSummaryContainer">
-                    <h2>Transfers Summary</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Total Transfers</h3>
-                            <p id="totalTransfersCount">N/A</p>
+                <div id="managerStats" style="display: none;">
+                    <div id="managerSummarySection">
+                        <h2 id="managerName"></h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3>Overall Rank</h3>
+                                <p id="overallRank">N/A</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Best Overall Rank</h3>
+                                <p id="bestOverallRank">N/A</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Worst Overall Rank</h3>
+                                <p id="worstOverallRank">N/A</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Average Points Per Round</h3>
+                                <p id="averagePoints">N/A</p>
+                                <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Best Round</h3>
+                                <p id="bestRoundDisplay">N/A</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Worst Round</h3>
+                                <p id="worstRoundDisplay">N/A</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Total Green Arrows</h3>
+                                <p id="greenArrowsCount">N/A 🟢</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Total Red Arrows</h3>
+                                <p id="redArrowsCount">N/A 🔴</p>
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <h3>Total Hits (Points Deducted)</h3>
-                            <p id="totalHitsPoints">N/A</p>
+                    </div> 
+
+                    <div id="rankJourneyBox" class="rank-journey-box">
+                        <h3>My Rank Journey</h3>
+                        <button id="createRankJourneyButton">Click Here</button>
+                    </div>
+
+                    <div class="chart-section" id="rankJourneyChartContainer" style="display: none;">
+                        <h2>Overall Rank Journey</h2>
+                        <div id="videoLoadingMessage" class="video-loading-message">
+                            Animating rank journey...
+                        </div>
+                        <canvas id="rankJourneyChart"></canvas>
+                        <canvas id="hiddenChartCaptureCanvas" style="display: none;"></canvas>
+                    </div>
+                    
+                    <div class="table-section" id="topCaptainsTableContainer">
+                        <h2>Top 3 Captains</h2>
+                        <table id="topCaptainsTable">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Times Captained</th>
+                                    <th>Success</th>
+                                    <th>Failed</th>
+                                    <th>Captained Points</th>
+                                    <th>Captained Rounds</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-section" id="bestPlayersTableContainer">
+                        <h2>Top 5 Best Players</h2>
+                        <table id="bestPlayersTable">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Started</th>
+                                    <th>Auto Subbed In</th>
+                                    <th>Points Gained</th>
+                                    <th>Benched Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-section" id="worstPlayersTableContainer">
+                        <h2>Top 5 Worst Players</h2>
+                        <table id="worstPlayersTable">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Started</th>
+                                    <th>Auto Subbed In</th>
+                                    <th>Points Gained</th>
+                                    <th>Benched Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                            </table>
+                    </div>
+
+                    <div class="table-section" id="missedPointsTableContainer">
+                        <h2>Top 5 Missed Points (Benched Players)</h2>
+                        <table id="missedPointsTable">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Points</th>
+                                    <th>Round</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-section" id="transfersSummaryContainer">
+                        <h2>Transfers Summary</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3>Total Transfers</h3>
+                                <p id="totalTransfersCount">N/A</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Total Hits (Points Deducted)</h3>
+                                <p id="totalHitsPoints">N/A</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Most Profitable Transfers Table - given an ID -->
-                <div class="table-section" id="profitableTransfersTableContainer">
-                    <h2>Most Profitable Transfers</h2>
-                    <table id="profitableTransfersTable">
-                        <thead>
-                            <tr>
-                                <th>IN</th>
-                                <th>OUT</th>
-                                <th>Round</th>
-                                <th>Profit/Loss</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="table-section" id="profitableTransfersTableContainer">
+                        <h2>Most Profitable Transfers</h2>
+                        <table id="profitableTransfersTable">
+                            <thead>
+                                <tr>
+                                    <th>IN</th>
+                                    <th>OUT</th>
+                                    <th>Round</th>
+                                    <th>Profit/Loss</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
 
-                <!-- Most Loss-making Transfers Table - given an ID -->
-                <div class="table-section" id="lossMakingTransfersTableContainer">
-                    <h2>Most Loss-making Transfers</h2>
-                    <table id="lossMakingTransfersTable">
-                        <thead>
-                            <tr>
-                                <th>IN</th>
-                                <th>OUT</th>
-                                <th>Round</th>
-                                <th>Profit/Loss</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="table-section" id="lossMakingTransfersTableContainer">
+                        <h2>Most Loss-making Transfers</h2>
+                        <table id="lossMakingTransfersTable">
+                            <thead>
+                                <tr>
+                                    <th>IN</th>
+                                    <th>OUT</th>
+                                    <th>Round</th>
+                                    <th>Profit/Loss</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
 
+                </div>
+            </div>
+
+            <!-- My Control Room Content (initially hidden) -->
+            <div id="myControlRoomContent" style="display: none;">
+                <p style="text-align: center; color: var(--spl-text-medium); margin-top: 50px;">
+                    More features coming soon to My Control Room!
+                </p>
             </div>
         </div>
     </div>
@@ -1070,25 +1111,25 @@
             sendEmailVerification, 
             onAuthStateChanged, 
             signOut,
-            reload // Needed for reloading user properties from Auth
+            reload 
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { 
             getFirestore, 
             doc, 
             setDoc, 
             getDoc,
-            collection, // To query collections
-            query,      // To build queries
-            where,      // To add conditions to queries
-            getDocs,    // To get multiple documents from a query
-            serverTimestamp, // For timestamping user creation
-            updateDoc // Needed for updating Firestore document
+            collection, 
+            query,      
+            where,      
+            getDocs,    
+            serverTimestamp, 
+            updateDoc 
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", // Placeholder for secure injection
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", 
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebasestorage.app",
@@ -1104,7 +1145,7 @@
 
 
         // --- GLOBAL FLAGS / VARIABLES ---
-        let isProcessingAuth = false; // Prevents onAuthStateChanged from firing during manual auth calls
+        let isProcessingAuth = false; 
         let rankJourneyChartInstance = null;
         let managerOverallRankHistory = [];
         let managerCurrentOverallRank = null;
@@ -1115,6 +1156,9 @@
         const gifHeight = 720;
         const sectionFrameDelay = 3000;
         const chartFrameDelay = 3000;
+        
+        let currentManagerId = null; // Stores the manager ID after successful login
+        let isAnalyzerReportDataFetched = false; // Flag to ensure report is fetched only once per login session or manual refresh
 
 
         // --- DOM Element References ---
@@ -1127,7 +1171,7 @@
         const authSection = document.getElementById('authSection');
         const loginForm = document.getElementById('loginForm');
         const signupForm = document.getElementById('signupForm');
-        const authMessageBox = document.getElementById('authMessageBox'); // Message box specific to auth
+        const authMessageBox = document.getElementById('authMessageBox'); 
         const loginEmailInput = document.getElementById('loginEmail');
         const loginPasswordInput = document.getElementById('loginPassword');
         const loginButton = document.getElementById('loginButton');
@@ -1135,7 +1179,7 @@
         const signupEmailInput = document.getElementById('signupEmail');
         const signupPasswordInput = document.getElementById('signupPassword');
         const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
-        const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
+        const signupManagerIdInput = document.getElementById('signupManagerId'); 
         const signupButton = document.getElementById('signupButton');
         const showLoginLink = document.getElementById('showLoginLink'); 
         const logoutButton = document.getElementById('logoutButton');
@@ -1143,12 +1187,21 @@
         // Logged-in / Analyzer UI elements
         const loggedInContent = document.getElementById('loggedInContent');
         const loggedInUserGreeting = document.getElementById('loggedInUserGreeting');
-        const displayLoggedInManagerId = document.getElementById('displayLoggedInManagerId'); // Display saved manager ID
+        const displayLoggedInManagerId = document.getElementById('displayLoggedInManagerId'); 
+
+        // New Navigation Buttons
+        const analyzeMyTeamButton = document.getElementById('analyzeMyTeamButton');
+        const myControlRoomButton = document.getElementById('myControlRoomButton');
+        const mainNavigationButtons = document.getElementById('mainNavigationButtons'); // Reference to the container for these buttons
+
+        // Content areas to toggle
+        const analyzerReportContent = document.getElementById('analyzerReportContent');
+        const myControlRoomContent = document.getElementById('myControlRoomContent');
 
         // Original Analyzer UI elements (some kept for reference, some hidden)
-        const managerIdInput = document.getElementById('managerIdInput'); // This will be hidden/unused when logged in
-        const analyzeButton = document.getElementById('analyzeButton'); // This will be hidden/unused when logged in
-        const instructionsBox = document.getElementById('instructionsBox'); // This will be hidden/unused when logged in
+        const managerIdInput = document.getElementById('managerIdInput'); 
+        const analyzeButton = document.getElementById('analyzeButton'); 
+        const instructionsBox = document.getElementById('instructionsBox'); 
 
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
@@ -1197,24 +1250,28 @@
         // Function to display messages in the general errorMessage (for analyzer part)
         function showAnalyzerMessage(message, type = 'info') {
             errorMessage.textContent = ''; 
-            errorMessage.className = `error-message ${type}`; // Reusing error-message class for consistency
+            errorMessage.className = `error-message ${type}`; 
             errorMessage.textContent = message; 
             errorMessage.style.display = 'block'; 
         }
 
-        // Function to hide all main content sections
-        function hideAllContent() {
+        // Function to hide all main content sections (except logo and primary navigation)
+        function hideAllContentSections() {
             authSection.style.display = 'none';
             loggedInContent.style.display = 'none';
             loadingMessage.style.display = 'none';
             errorMessage.style.display = 'none';
             videoGeneratingMessage.style.display = 'none';
-            authMessageBox.style.display = 'none'; // Ensure auth message box is also hidden
-            managerStatsDiv.style.display = 'none'; // Hide analyzer reports
-            rankJourneyBox.style.display = 'none';
-            rankJourneyChartContainer.style.display = 'none';
-            shareVideoButton.style.display = 'none';
+            authMessageBox.style.display = 'none'; 
+            
+            // Explicitly hide the dynamic content containers
+            analyzerReportContent.style.display = 'none';
+            myControlRoomContent.style.display = 'none';
+            shareVideoButton.style.display = 'none'; // Hide share button by default
             instructionsBox.style.display = 'none'; // Hide instructions
+            managerStatsDiv.style.display = 'none'; // Hide analyzer reports
+            rankJourneyBox.style.display = 'none'; // Hide rank journey button box
+            rankJourneyChartContainer.style.display = 'none'; // Hide chart container
         }
 
         // Function to clear analyzer report data
@@ -1249,6 +1306,7 @@
                 animationFrameId = null;
             }
             animationStartTime = null;
+            isAnalyzerReportDataFetched = false; // Reset flag when clearing data
         }
 
         function convertArabicToWesternNumerals(input) {
@@ -1321,7 +1379,7 @@
                     email: user.email,
                     splManagerId: managerId,
                     createdAt: serverTimestamp(),
-                    emailVerified: false // Will be updated to true after verification
+                    emailVerified: false 
                 });
                 console.log("DEBUG: User data saved to Firestore.");
 
@@ -1383,10 +1441,10 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                await reload(user); // Fetch latest user properties, including emailVerified
+                await reload(user); 
 
                 if (!user.emailVerified) {
-                    await signOut(auth); // Log out if email is not verified
+                    await signOut(auth); 
                     showAuthMessage("Please verify your email address before logging in.", "info"); 
                     return;
                 }
@@ -1399,24 +1457,27 @@
                     const userData = userDocSnap.data();
                     console.log("User data from Firestore on login:", userData);
 
-                    // If email just got verified, update Firestore record
                     if (!userData.emailVerified && user.emailVerified) {
                         await updateDoc(userDocRef, { emailVerified: true });
                         userData.emailVerified = true; 
                     }
 
-                    // Store manager ID globally or pass directly to report function
                     const userManagerId = userData.splManagerId;
 
                     if (userManagerId && /^\d+$/.test(userManagerId)) {
                         loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                         displayLoggedInManagerId.textContent = userManagerId;
-                        hideAllContent(); // Hide auth forms
-                        loggedInContent.style.display = 'block'; // Show analyzer content
-                        await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
+                        
+                        hideAllContentSections(); // Hide all content sections initially
+                        loggedInContent.style.display = 'block'; // Show the main logged-in container
+
+                        currentManagerId = userManagerId; // Set global manager ID for use by buttons
+                        isAnalyzerReportDataFetched = false; // Reset flag so report fetches on first click
+
+                        // No automatic report fetch here, user clicks button
                     } else {
                         showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
-                        await signOut(auth); // Log out if no manager ID or invalid
+                        await signOut(auth); 
                     }
                 } else {
                     showAuthMessage("User data not found. Please contact support.", "error"); 
@@ -1441,7 +1502,6 @@
             try {
                 await signOut(auth);
                 showAuthMessage("Logged out successfully.", "info"); 
-                // onAuthStateChanged will handle UI switch
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1472,27 +1532,23 @@
         // --- Authentication State Listener (Core UI Logic) ---
         // This listener determines what the user sees based on their login status
         onAuthStateChanged(auth, async (user) => {
-            // Prevent this from running during active signup/login processes to avoid race conditions
             if (isProcessingAuth) { 
                 console.log("DEBUG: onAuthStateChanged deferred due to active auth process.");
                 return; 
             }
 
-            hideAllContent(); // Start by hiding everything
+            hideAllContentSections(); // Start by hiding everything
 
             if (user) {
-                // User is signed in
-                await reload(user); // Force reload to get latest email verification status
+                await reload(user); 
 
                 if (user.emailVerified) {
-                    // User is signed in and email is verified
                     const userDocRef = doc(db, "users", user.uid);
                     const userDocSnap = await getDoc(userDocRef);
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
                         
-                        // If email was just verified and Firestore not updated, update it
                         if (!userData.emailVerified && user.emailVerified) {
                             await updateDoc(userDocRef, { emailVerified: true });
                             userData.emailVerified = true; 
@@ -1503,27 +1559,30 @@
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
                             loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                             displayLoggedInManagerId.textContent = userManagerId;
-                            loggedInContent.style.display = 'block'; // Show analyzer
-                            await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
+                            loggedInContent.style.display = 'block'; // Show the main logged-in container
+                            
+                            currentManagerId = userManagerId; // Update global manager ID
+
+                            // By default, initially show the Analyzer content (or keep it hidden and let user click)
+                            // The request is: "nothing else should be there in the page" (except logo and buttons) initially.
+                            // So, we just show loggedInContent, and its children (report/control room) will be hidden by default.
+
                         } else {
-                            // User logged in but no valid Manager ID in Firestore
-                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
-                            await signOut(auth); // Log them out
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
+                            await signOut(auth); 
                             authSection.style.display = 'block';
                             loginForm.style.display = 'block'; 
                             signupForm.style.display = 'none';
                         }
                     } else {
-                        // User logged in but no Firestore document found (shouldn't happen with proper signup)
                         console.warn("Firestore document for user does not exist. Logging out.");
                         showAuthMessage("User data not found. Please contact support. Logging out.", "error");
-                        await signOut(auth); // Log them out
+                        await signOut(auth); 
                         authSection.style.display = 'block';
                         loginForm.style.display = 'block'; 
                         signupForm.style.display = 'none';
                     }
                 } else {
-                    // User is signed in but email not verified
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
                     authSection.style.display = 'block';
                     loginForm.style.display = 'block'; 
@@ -1534,18 +1593,56 @@
                 authSection.style.display = 'block'; 
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
-                clearAnalyzerReport(); // Clear any old report data
+                clearAnalyzerReport(); 
             }
-            // Ensure instructions are hidden as they're not needed for auth or logged-in automatic report
-            instructionsBox.style.display = 'none'; 
         });
+
+        /**
+         * Manages the display of main content sections based on navigation button clicks.
+         * @param {string} sectionId - 'analyzerReport' or 'controlRoom'.
+         * @param {string} [managerId] - The SPL Manager ID, required for 'analyzerReport'.
+         */
+        async function showContentSection(sectionId) {
+            // Hide all dynamic content areas first
+            analyzerReportContent.style.display = 'none';
+            myControlRoomContent.style.display = 'none';
+            shareVideoButton.style.display = 'none'; // Hide share button unless it's the analyzer
+
+            // Also hide messages and chart when switching
+            loadingMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            videoGeneratingMessage.style.display = 'none';
+            managerStatsDiv.style.display = 'none';
+            rankJourneyBox.style.display = 'none';
+            rankJourneyChartContainer.style.display = 'none';
+            
+            if (sectionId === 'analyzerReport') {
+                analyzerReportContent.style.display = 'block';
+                shareVideoButton.style.display = 'block'; 
+
+                if (!isAnalyzerReportDataFetched && currentManagerId) {
+                    // Fetch report only if not already fetched and manager ID is available
+                    await fetchAndDisplaySPLReport(currentManagerId);
+                    isAnalyzerReportDataFetched = true;
+                } else if (isAnalyzerReportDataFetched) {
+                    // If already fetched, just ensure the relevant parts are displayed
+                    managerStatsDiv.style.display = 'block';
+                    rankJourneyBox.style.display = 'flex'; // Ensure button box is visible
+                } else {
+                    // This case implies currentManagerId is null, which shouldn't happen if logged in correctly
+                    showAnalyzerMessage("Error: Manager ID not available to fetch report. Please re-login.", "error");
+                }
+            } else if (sectionId === 'controlRoom') {
+                myControlRoomContent.style.display = 'block';
+                // No other specific actions for control room for now
+            }
+        }
 
 
         // --- Original Analyzer Data Fetching Logic (Modified to be called by Auth flow) ---
         async function fetchAndDisplaySPLReport(managerId) {
             console.log("DEBUG: fetchAndDisplaySPLReport started with ID:", managerId);
             
-            // Re-hide/clear previous UI states
             loadingMessage.style.display = 'block';
             errorMessage.style.display = 'none';
             managerStatsDiv.style.display = 'none'; 
@@ -1553,221 +1650,219 @@
             videoLoadingMessage.style.display = 'none';
             rankJourneyBox.style.display = 'none';
             createRankJourneyButton.textContent = 'Click Here';
-            shareVideoButton.style.display = 'none';
-            clearAnalyzerReport(); // Clear old data
+            shareVideoButton.disabled = false; // Enable share button
+            createRankJourneyButton.disabled = false; // Enable rank journey button
+            darkModeToggle.disabled = false; // Enable dark mode toggle
 
-            if (rankJourneyChartInstance) {
-                rankJourneyChartInstance.destroy();
-                rankJourneyChartInstance = null;
-            }
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-            animationStartTime = null;
+            clearAnalyzerReport(); // Clear old data, also resets isAnalyzerReportDataFetched
 
-            try {
-                console.log(`DEBUG: Attempting to fetch data for manager ID: ${managerId} from Netlify Function.`);
-                // The URL for Netlify Functions typically starts with /.netlify/functions/
-                const response = await fetch(`/.netlify/functions/fetch-spl-data?id=${managerId}`);
-                const data = await response.json();
-                console.log('DEBUG: Fetch response received from Netlify Function.', { responseOk: response.ok, data: data });
+            // Set the flag *after* clearing and before fetching to true
+            isAnalyzerReportDataFetched = false; // Reset to false
+            if (managerId) { // Only attempt fetch if managerId is present
+                try {
+                    console.log(`DEBUG: Attempting to fetch data for manager ID: ${managerId} from Netlify Function.`);
+                    const response = await fetch(`/.netlify/functions/fetch-spl-data?id=${managerId}`);
+                    const data = await response.json();
+                    console.log('DEBUG: Fetch response received from Netlify Function.', { responseOk: response.ok, data: data });
 
-                loadingMessage.style.display = 'none';
+                    loadingMessage.style.display = 'none';
 
-                if (response.ok) {
-                    console.log('DEBUG: Netlify Function Response OK. Populating manager data...');
-                    managerOverallRankHistory = data.overallRankHistory || [];
-                    
-                    if (data.overallRank && data.overallRank !== 'N/A') {
-                        const rankString = String(data.overallRank);
-                        managerCurrentOverallRank = Math.round(parseFloat(rankString.replace(/,/g, '')));
-                    } else {
-                        managerCurrentOverallRank = null; 
-                    }
+                    if (response.ok) {
+                        console.log('DEBUG: Netlify Function Response OK. Populating manager data...');
+                        managerOverallRankHistory = data.overallRankHistory || [];
+                        
+                        if (data.overallRank && data.overallRank !== 'N/A') {
+                            const rankString = String(data.overallRank);
+                            managerCurrentOverallRank = Math.round(parseFloat(rankString.replace(/,/g, '')));
+                        } else {
+                            managerCurrentOverallRank = null; 
+                        }
 
-                    managerNameElem.innerHTML = `Team Name: <span style="color: var(--spl-primary-accent);">${data.managerName || `Manager ID: ${managerId}`}</span><br>Rank & Points`;
-                    
-                    overallRankElem.textContent = `${data.overallRank} 🌏`;
-                    
-                    let bestRankRaw = String(data.bestOverallRank);
-                    let bestRankNumeric = bestRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
-                    let bestRankRound = extractAndFormatRound(bestRankRaw);
-                    bestOverallRankElem.textContent = `${bestRankNumeric} 🌏 ${bestRankRound}`;
+                        managerNameElem.innerHTML = `Team Name: <span style="color: var(--spl-primary-accent);">${data.managerName || `Manager ID: ${managerId}`}</span><br>Rank & Points`;
+                        
+                        overallRankElem.textContent = `${data.overallRank} 🌏`;
+                        
+                        let bestRankRaw = String(data.bestOverallRank);
+                        let bestRankNumeric = bestRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
+                        let bestRankRound = extractAndFormatRound(bestRankRaw);
+                        bestOverallRankElem.textContent = `${bestRankNumeric} 🌏 ${bestRankRound}`;
 
-                    let worstRankRaw = String(data.worstOverallRank);
-                    let worstRankNumeric = worstRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
-                    let worstRankRound = extractAndFormatRound(worstRankRaw);
-                    worstOverallRankElem.textContent = `${worstRankNumeric} 🌏 ${worstRankRound}`;
+                        let worstRankRaw = String(data.worstOverallRank);
+                        let worstRankNumeric = worstRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
+                        let worstRankRound = extractAndFormatRound(worstRankRaw);
+                        worstOverallRankElem.textContent = `${worstRankNumeric} 🌏 ${worstRankRound}`;
 
-                    averagePointsElem.textContent = data.averagePoints;
-                    averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
-                    
-                    const bestRound = data.bestRound;
-                    bestRoundDisplayElem.textContent = bestRound.points !== 'N/A' 
-                        ? `${bestRound.points} ${bestRound.deductions !== 0 ? `(-${bestRound.deductions})` : ''} Points in Round ${bestRound.round}`
-                        : 'N/A';
+                        averagePointsElem.textContent = data.averagePoints;
+                        averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
+                        
+                        const bestRound = data.bestRound;
+                        bestRoundDisplayElem.textContent = bestRound.points !== 'N/A' 
+                            ? `${bestRound.points} ${bestRound.deductions !== 0 ? `(-${bestRound.deductions})` : ''} Points in Round ${bestRound.round}`
+                            : 'N/A';
 
-                    const worstRound = data.worstRound;
-                    worstRoundDisplayElem.textContent = worstRound.points !== 'N/A' 
-                        ? `${worstRound.points} ${worstRound.deductions !== 0 ? `(-${worstRound.deductions})` : ''} Points in Round ${worstRound.round}`
-                        : 'N/A';
+                        const worstRound = data.worstRound;
+                        worstRoundDisplayElem.textContent = worstRound.points !== 'N/A' 
+                            ? `${worstRound.points} ${worstRound.deductions !== 0 ? `(-${worstRound.deductions})` : ''} Points in Round ${worstRound.round}`
+                            : 'N/A';
 
-                    totalTransfersCountElem.textContent = data.totalTransfersCount;
-                    totalHitsPointsElem.textContent = data.totalHitsPoints;
-                    
-                    greenArrowsCountElem.textContent = `${data.greenArrowsCount || 0} 🟢`;
-                    redArrowsCountElem.textContent = `${data.redArrowsCount || 0} 🔴`;
-                    
-                    rankJourneyBox.style.display = 'flex'; // Show the rank journey button box
+                        totalTransfersCountElem.textContent = data.totalTransfersCount;
+                        totalHitsPointsElem.textContent = data.totalHitsPoints;
+                        
+                        greenArrowsCountElem.textContent = `${data.greenArrowsCount || 0} 🟢`;
+                        redArrowsCountElem.textContent = `${data.redArrowsCount || 0} 🔴`;
+                        
+                        rankJourneyBox.style.display = 'flex'; 
 
-                    // Populate tables
-                    console.log('DEBUG: Populating topCaptainsTable...');
-                    topCaptainsTableBody.innerHTML = '';
-                    if (data.top3Captains && data.top3Captains.length > 0) {
-                        data.top3Captains.forEach(captain => {
+                        // Populate tables
+                        console.log('DEBUG: Populating topCaptainsTable...');
+                        topCaptainsTableBody.innerHTML = '';
+                        if (data.top3Captains && data.top3Captains.length > 0) {
+                            data.top3Captains.forEach(captain => {
+                                const row = topCaptainsTableBody.insertRow();
+                                row.insertCell().textContent = captain.name;
+                                row.cells[0].setAttribute('data-label', 'Player');
+                                row.insertCell().textContent = captain.times;
+                                row.cells[1].setAttribute('data-label', 'Times Captained');
+                                row.insertCell().textContent = captain.successful;
+                                row.cells[2].setAttribute('data-label', 'Success');
+                                row.insertCell().textContent = captain.failed;
+                                row.cells[3].setAttribute('data-label', 'Failed');
+                                row.insertCell().textContent = captain.totalCaptainedPoints;
+                                row.cells[4].setAttribute('data-label', 'Captained Points');
+                                row.insertCell().textContent = captain.captainedRounds ? captain.captainedRounds.join(', ') : 'N/A';
+                                row.cells[5].setAttribute('data-label', 'Captained Rounds');
+                            });
+                        }
+                        else {
                             const row = topCaptainsTableBody.insertRow();
-                            row.insertCell().textContent = captain.name;
-                            row.cells[0].setAttribute('data-label', 'Player');
-                            row.insertCell().textContent = captain.times;
-                            row.cells[1].setAttribute('data-label', 'Times Captained');
-                            row.insertCell().textContent = captain.successful;
-                            row.cells[2].setAttribute('data-label', 'Success');
-                            row.insertCell().textContent = captain.failed;
-                            row.cells[3].setAttribute('data-label', 'Failed');
-                            row.insertCell().textContent = captain.totalCaptainedPoints;
-                            row.cells[4].setAttribute('data-label', 'Captained Points');
-                            row.insertCell().textContent = captain.captainedRounds ? captain.captainedRounds.join(', ') : 'N/A';
-                            row.cells[5].setAttribute('data-label', 'Captained Rounds');
-                        });
-                    }
-                     else {
-                        const row = topCaptainsTableBody.insertRow();
-                        row.insertCell().textContent = 'No data available.';
-                        row.cells[0].colSpan = 6;
-                    }
-                    console.log('DEBUG: Populating bestPlayersTable...');
-                    bestPlayersTableBody.innerHTML = '';
-                    if (data.bestPlayers && data.bestPlayers.length > 0) {
-                        data.bestPlayers.forEach(player => {
+                            row.insertCell().textContent = 'No data available.';
+                            row.cells[0].colSpan = 6;
+                        }
+                        console.log('DEBUG: Populating bestPlayersTable...');
+                        bestPlayersTableBody.innerHTML = '';
+                        if (data.bestPlayers && data.bestPlayers.length > 0) {
+                            data.bestPlayers.forEach(player => {
+                                const row = bestPlayersTableBody.insertRow();
+                                row.insertCell().textContent = player.name;
+                                row.cells[0].setAttribute('data-label', 'Player');
+                                row.insertCell().textContent = player.started;
+                                row.cells[1].setAttribute('data-label', 'Started');
+                                row.insertCell().textContent = player.autoSubbed;
+                                row.cells[2].setAttribute('data-label', 'Auto Subbed In');
+                                row.insertCell().textContent = player.pointsGained;
+                                row.cells[3].setAttribute('data-label', 'Points Gained');
+                                row.insertCell().textContent = player.benchedPoints;
+                                row.cells[4].setAttribute('data-label', 'Benched Points');
+                            });
+                        } else {
                             const row = bestPlayersTableBody.insertRow();
-                            row.insertCell().textContent = player.name;
-                            row.cells[0].setAttribute('data-label', 'Player');
-                            row.insertCell().textContent = player.started;
-                            row.cells[1].setAttribute('data-label', 'Started');
-                            row.insertCell().textContent = player.autoSubbed;
-                            row.cells[2].setAttribute('data-label', 'Auto Subbed In');
-                            row.insertCell().textContent = player.pointsGained;
-                            row.cells[3].setAttribute('data-label', 'Points Gained');
-                            row.insertCell().textContent = player.benchedPoints;
-                            row.cells[4].setAttribute('data-label', 'Benched Points');
-                        });
-                    } else {
-                        const row = bestPlayersTableBody.insertRow();
-                        row.insertCell().textContent = 'No data available.';
-                        row.cells[0].colSpan = 5;
-                    }
-                    console.log('DEBUG: Populating worstPlayersTable...');
-                    worstPlayersTableBody.innerHTML = '';
-                    if (data.worstPlayers && data.worstPlayers.length > 0) {
-                        data.worstPlayers.forEach(player => {
+                            row.insertCell().textContent = 'No data available.';
+                            row.cells[0].colSpan = 5;
+                        }
+                        console.log('DEBUG: Populating worstPlayersTable...');
+                        worstPlayersTableBody.innerHTML = '';
+                        if (data.worstPlayers && data.worstPlayers.length > 0) {
+                            data.worstPlayers.forEach(player => {
+                                const row = worstPlayersTableBody.insertRow();
+                                row.insertCell().textContent = player.name;
+                                row.cells[0].setAttribute('data-label', 'Player');
+                                row.insertCell().textContent = player.started;
+                                row.cells[1].setAttribute('data-label', 'Started');
+                                row.insertCell().textContent = player.autoSubbed;
+                                row.cells[2].setAttribute('data-label', 'Auto Subbed In');
+                                row.insertCell().textContent = player.pointsGained;
+                                row.cells[3].setAttribute('data-label', 'Points Gained');
+                                row.insertCell().textContent = player.benchedPoints;
+                                row.cells[4].setAttribute('data-label', 'Benched Points');
+                            });
+                        } else {
                             const row = worstPlayersTableBody.insertRow();
-                            row.insertCell().textContent = player.name;
-                            row.cells[0].setAttribute('data-label', 'Player');
-                            row.insertCell().textContent = player.started;
-                            row.cells[1].setAttribute('data-label', 'Started');
-                            row.insertCell().textContent = player.autoSubbed;
-                            row.cells[2].setAttribute('data-label', 'Auto Subbed In');
-                            row.insertCell().textContent = player.pointsGained;
-                            row.cells[3].setAttribute('data-label', 'Points Gained');
-                            row.insertCell().textContent = player.benchedPoints;
-                            row.cells[4].setAttribute('data-label', 'Benched Points');
-                        });
-                    } else {
-                        const row = worstPlayersTableBody.insertRow();
-                        row.insertCell().textContent = 'No data available.';
-                        row.cells[0].colSpan = 5;
-                    }
-                    console.log('DEBUG: Populating missedPointsTable...');
-                    missedPointsTableBody.innerHTML = '';
-                    if (data.top5MissedPoints && data.top5MissedPoints.length > 0) {
-                        data.top5MissedPoints.forEach(item => {
+                            row.insertCell().textContent = 'No data available.';
+                            row.cells[0].colSpan = 5;
+                        }
+                        console.log('DEBUG: Populating missedPointsTable...');
+                        missedPointsTableBody.innerHTML = '';
+                        if (data.top5MissedPoints && data.top5MissedPoints.length > 0) {
+                            data.top5MissedPoints.forEach(item => {
+                                const row = missedPointsTableBody.insertRow();
+                                row.insertCell().textContent = item.playerName;
+                                row.cells[0].setAttribute('data-label', 'Player');
+                                row.insertCell().textContent = item.points;
+                                row.cells[1].setAttribute('data-label', 'Points');
+                                row.insertCell().textContent = item.round;
+                                row.cells[2].setAttribute('data-label', 'Round');
+                            });
+                        } else {
                             const row = missedPointsTableBody.insertRow();
-                            row.insertCell().textContent = item.playerName;
-                            row.cells[0].setAttribute('data-label', 'Player');
-                            row.insertCell().textContent = item.points;
-                            row.cells[1].setAttribute('data-label', 'Points');
-                            row.insertCell().textContent = item.round;
-                            row.cells[2].setAttribute('data-label', 'Round');
-                        });
-                    } else {
-                        const row = missedPointsTableBody.insertRow();
-                        row.insertCell().textContent = 'No data available.';
-                        row.cells[0].colSpan = 3;
-                    }
-                    console.log('DEBUG: Populating profitableTransfersTable...');
-                    profitableTransfersTableBody.innerHTML = '';
-                    if (data.top5ProfitableTransfers && data.top5ProfitableTransfers.length > 0) {
-                        data.top5ProfitableTransfers.forEach(transfer => {
+                            row.insertCell().textContent = 'No data available.';
+                            row.cells[0].colSpan = 3;
+                        }
+                        console.log('DEBUG: Populating profitableTransfersTable...');
+                        profitableTransfersTableBody.innerHTML = '';
+                        if (data.top5ProfitableTransfers && data.top5ProfitableTransfers.length > 0) {
+                            data.top5ProfitableTransfers.forEach(transfer => {
+                                const row = profitableTransfersTableBody.insertRow();
+                                row.insertCell().textContent = transfer.playerInName;
+                                row.cells[0].setAttribute('data-label', 'IN');
+                                row.insertCell().textContent = transfer.playerOutName;
+                                row.cells[1].setAttribute('data-label', 'OUT');
+                                row.insertCell().textContent = transfer.round;
+                                row.cells[2].setAttribute('data-label', 'Round');
+                                const profitLossCell = row.insertCell();
+                                profitLossCell.textContent = transfer.profitLoss;
+                                profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
+                                profitLossCell.setAttribute('data-label', 'Profit/Loss');
+                            });
+                        } else {
                             const row = profitableTransfersTableBody.insertRow();
-                            row.insertCell().textContent = transfer.playerInName;
-                            row.cells[0].setAttribute('data-label', 'IN');
-                            row.insertCell().textContent = transfer.playerOutName;
-                            row.cells[1].setAttribute('data-label', 'OUT');
-                            row.insertCell().textContent = transfer.round;
-                            row.cells[2].setAttribute('data-label', 'Round');
-                            const profitLossCell = row.insertCell();
-                            profitLossCell.textContent = transfer.profitLoss;
-                            profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
-                            profitLossCell.setAttribute('data-label', 'Profit/Loss');
-                        });
-                    } else {
-                        const row = profitableTransfersTableBody.insertRow();
-                        row.insertCell().textContent = 'No data available.';
-                        row.cells[0].colSpan = 4;
-                    }
-                    console.log('DEBUG: Populating lossMakingTransfersTable...');
-                    lossMakingTransfersTableBody.innerHTML = '';
-                    if (data.top5LossMakingTransfers && data.top5LossMakingTransfers.length > 0) {
-                        data.top5LossMakingTransfers.forEach(transfer => {
+                            row.insertCell().textContent = 'No data available.';
+                            row.cells[0].colSpan = 4;
+                        }
+                        console.log('DEBUG: Populating lossMakingTransfersTable...');
+                        lossMakingTransfersTableBody.innerHTML = '';
+                        if (data.top5LossMakingTransfers && data.top5LossMakingTransfers.length > 0) {
+                            data.top5LossMakingTransfers.forEach(transfer => {
+                                const row = lossMakingTransfersTableBody.insertRow();
+                                row.insertCell().textContent = transfer.playerInName;
+                                row.cells[0].setAttribute('data-label', 'IN');
+                                row.insertCell().textContent = transfer.playerOutName;
+                                row.cells[1].setAttribute('data-label', 'OUT');
+                                row.insertCell().textContent = transfer.round;
+                                row.cells[2].setAttribute('data-label', 'Round');
+                                const profitLossCell = row.insertCell();
+                                profitLossCell.textContent = transfer.profitLoss;
+                                profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
+                                profitLossCell.setAttribute('data-label', 'Profit/Loss');
+                            });
+                        } else {
                             const row = lossMakingTransfersTableBody.insertRow();
-                            row.insertCell().textContent = transfer.playerInName;
-                            row.cells[0].setAttribute('data-label', 'IN');
-                            row.insertCell().textContent = transfer.playerOutName;
-                            row.cells[1].setAttribute('data-label', 'OUT');
-                            row.insertCell().textContent = transfer.round;
-                            row.cells[2].setAttribute('data-label', 'Round');
-                            const profitLossCell = row.insertCell();
-                            profitLossCell.textContent = transfer.profitLoss;
-                            profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
-                            profitLossCell.setAttribute('data-label', 'Profit/Loss');
-                        });
+                            row.insertCell().textContent = 'No data available.';
+                            row.cells[0].colSpan = 4;
+                        }
+
+                        managerStatsDiv.style.display = 'block'; 
+                        rankJourneyBox.style.display = 'flex'; 
+                        shareVideoButton.style.display = 'block';
+                        isAnalyzerReportDataFetched = true; // Mark report as fetched
+
                     } else {
-                        const row = lossMakingTransfersTableBody.insertRow();
-                        row.insertCell().textContent = 'No data available.';
-                        row.cells[0].colSpan = 4;
+                        console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
+                        showAnalyzerMessage(data.error || 'An unknown error occurred.', 'error');
+                        managerStatsDiv.style.display = 'none';
+                        rankJourneyBox.style.display = 'none';
+                        shareVideoButton.style.display = 'none';
                     }
 
-                    // Set display to block for manager stats section
-                    managerStatsDiv.style.display = 'block'; 
-                    rankJourneyChartContainer.style.display = 'none'; 
-                    shareVideoButton.style.display = 'block';
-
-                } else {
-                    console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
-                    showAnalyzerMessage(data.error || 'An unknown error occurred.', 'error');
+                } catch (error) {
+                    console.error("DEBUG: Critical fetchAndDisplaySPLReport error (outer catch):", error);
+                    showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, 'error');
+                    loadingMessage.style.display = 'none';
                     managerStatsDiv.style.display = 'none';
                     rankJourneyBox.style.display = 'none';
                     shareVideoButton.style.display = 'none';
                 }
-
-            } catch (error) {
-                console.error("DEBUG: Critical fetchAndDisplaySPLReport error (outer catch):", error);
-                showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, 'error');
-                loadingMessage.style.display = 'none';
-                managerStatsDiv.style.display = 'none';
-                rankJourneyBox.style.display = 'none';
-                shareVideoButton.style.display = 'none';
+            } else {
+                showAnalyzerMessage("No Manager ID found for report generation. Please ensure your account has a valid Manager ID.", "error");
             }
             console.log("DEBUG: fetchAndDisplaySPLReport finished.");
         }
@@ -2022,14 +2117,13 @@
                     videoLoadingMessage.style.display = 'none';
                     // Ensure the full line is visible and all its points are shown at the end
                     rankJourneyChartInstance.data.datasets[0].data = fullRankHistoryData.map(d => ({ x: d.round, y: d.rank }));
-                    rankJourneyChartInstance.data.datasets[0].pointRadius = 3; // Show points at the end
+                    rankJourneyChartInstance.data.datasets[0].pointRadius = 3; 
                     
-                    // Ensure the dot is at the final position
                     const lastDataPoint = fullRankHistoryData[fullRankHistoryData.length - 1];
                     if (lastDataPoint) {
                         rankJourneyChartInstance.data.datasets[1].data = [{ x: lastDataPoint.round, y: lastDataPoint.rank }];
                     } else {
-                        rankJourneyChartInstance.data.datasets[1].data = []; // Hide dot if no data
+                        rankJourneyChartInstance.data.datasets[1].data = []; 
                     }
                     rankJourneyChartInstance.update();
                     animationStartTime = null;
@@ -2037,13 +2131,11 @@
                 }
             }
 
-            animationFrameId = requestAnimationFrame(animateChart); // Start the animation
+            animationFrameId = requestAnimationFrame(animateChart); 
         }
 
         /**
          * Renders the chart to its final state onto a hidden canvas for GIF capture.
-         * Ensures the Chart.js canvas is updated with all data points visible.
-         * @returns {HTMLCanvasElement|null} The hidden canvas containing the final chart image.
          */
         async function prepareChartForCapture() {
             if (!managerOverallRankHistory || managerOverallRankHistory.length === 0) {
@@ -2051,28 +2143,20 @@
                 return null;
             }
             
-            // Ensure the main chart canvas is visible so Chart.js can render to it first
-            // This is crucial because Chart.js needs a visible canvas to calculate dimensions and render properly
             const originalChartContainerDisplay = rankJourneyChartContainer.style.display;
             rankJourneyChartContainer.style.display = 'flex';
-            rankJourneyChartCanvas.style.display = 'block'; // Make sure the original canvas is visible
+            rankJourneyChartCanvas.style.display = 'block'; 
             
-            // Temporarily set dimensions for the original chart canvas for consistent rendering if needed
-            // This can help Chart.js render properly before capturing
-            rankJourneyChartCanvas.width = 900; // Use max-width from CSS as a reference
-            rankJourneyChartCanvas.height = rankJourneyChartCanvas.width / (window.innerWidth <= 950 ? 1.5 : 2); // Maintain aspect ratio
+            rankJourneyChartCanvas.width = 900; 
+            rankJourneyChartCanvas.height = rankJourneyChartCanvas.width / (window.innerWidth <= 950 ? 1.5 : 2); 
 
-            // Ensure the chart instance exists and is up-to-date
             if (rankJourneyChartInstance) {
-                rankJourneyChartInstance.destroy(); // Destroy existing instance to ensure fresh render
+                rankJourneyChartInstance.destroy(); 
             }
 
-            // Re-create chart instance to its final state on the *original* canvas
-            // Use the same options as renderRankJourneyChart but with animation: false
             const isMobile = window.innerWidth <= 950;
             const ctx = rankJourneyChartCanvas.getContext('2d');
             
-            // Populate data for the final state
             const labels = Array.from({ length: 34 + 1 }, (_, i) => `Round ${i}`);
             const fullRankHistoryData = managerOverallRankHistory.map(d => ({ x: d.round, y: d.rank }));
 
@@ -2101,10 +2185,10 @@
                     datasets: [
                         {
                             label: 'Overall Rank',
-                            data: fullRankHistoryData, // Full data for static image
+                            data: fullRankHistoryData, 
                             tension: 0.1,
                             spanGaps: true,
-                            pointRadius: 3, // Show points
+                            pointRadius: 3, 
                             borderColor: (context) => {
                                 const currentPoint = context.dataset.data[context.dataIndex];
                                 const previousPoint = context.dataset.data[context.dataIndex - 1];
@@ -2122,7 +2206,7 @@
                         },
                         {
                             label: 'Current Rank',
-                            data: [fullRankHistoryData[fullRankHistoryData.length - 1]], // Only the last point
+                            data: [fullRankHistoryData[fullRankHistoryData.length - 1]], 
                             pointRadius: 8,
                             pointBackgroundColor: 'red',
                             pointBorderColor: 'white',
@@ -2138,7 +2222,7 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     aspectRatio: isMobile ? 1.5 : 2,
-                    animation: false, // No animation for static capture
+                    animation: false, 
                     plugins: {
                         legend: {
                             display: true,
@@ -2206,21 +2290,17 @@
                     }
                 }
             });
-            rankJourneyChartInstance.update('resize'); // Force update to ensure rendering
+            rankJourneyChartInstance.update('resize'); 
 
-            await new Promise(resolve => setTimeout(resolve, 500)); // Give some time for Chart.js to render
+            await new Promise(resolve => setTimeout(resolve, 500)); 
 
-            // Now, draw the content of the visible chart canvas onto the hidden canvas
-            // Ensure the hidden canvas has the same dimensions as the intended GIF frame
             hiddenChartCaptureCanvas.width = gifWidth;
             hiddenChartCaptureCanvas.height = gifHeight;
             const hiddenCtx = hiddenChartCaptureCanvas.getContext('2d');
             
-            // Draw background color first
             hiddenCtx.fillStyle = getComputedStyle(document.body).backgroundColor;
             hiddenCtx.fillRect(0, 0, hiddenChartCaptureCanvas.width, hiddenChartCaptureCanvas.height);
 
-            // Calculate scale to fit the original chart canvas into the hidden canvas
             const chartRatio = Math.min(hiddenChartCaptureCanvas.width / rankJourneyChartCanvas.width, hiddenChartCaptureCanvas.height / rankJourneyChartCanvas.height);
             const chartWidth = rankJourneyChartCanvas.width * chartRatio;
             const chartHeight = rankJourneyChartCanvas.height * chartRatio;
@@ -2229,26 +2309,20 @@
 
             hiddenCtx.drawImage(rankJourneyChartCanvas, chartX, chartY, chartWidth, chartHeight);
 
-            // Hide the original chart container again after capturing
             rankJourneyChartContainer.style.display = originalChartContainerDisplay;
 
             console.log('DEBUG: Chart prepared and copied to hidden canvas for GIF.');
-            return hiddenChartCaptureCanvas; // Return the hidden canvas which html2canvas will now target
+            return hiddenChartCaptureCanvas; 
         }
 
 
         /**
          * Captures specified sections as high-resolution canvases using html2canvas.
-         * Draws the captured content onto a standardized GIF frame canvas to ensure correct sizing and aspect ratio.
-         * @returns {Promise<Array<Object>>} An array of objects, each containing a canvas and its display duration.
          */
         async function captureAndPrepareSectionsForGIF() {
             console.log("DEBUG: Starting captureAndPrepareSectionsForGIF...");
-            // Define the sections to capture and their durations
             const sectionsToCaptureConfig = [
-                // First section to capture: managerSummarySection
                 { id: 'managerSummarySection', duration: sectionFrameDelay },
-                // Chart section will be handled specially
                 { id: 'rankJourneyChartContainer', duration: chartFrameDelay, specialHandling: true }, 
                 { id: 'topCaptainsTableContainer', duration: sectionFrameDelay },
                 { id: 'bestPlayersTableContainer', duration: sectionFrameDelay },
@@ -2261,10 +2335,8 @@
 
             const capturedCanvases = [];
 
-            // Prepare the chart (ensure final state and copy to hidden canvas) before any capture happens
             const preparedChartCanvas = await prepareChartForCapture();
 
-            // Store original display states to revert after capture
             const originalDisplayStates = {};
             sectionsToCaptureConfig.forEach(config => {
                 const element = document.getElementById(config.id);
@@ -2273,10 +2345,9 @@
                     element.style.display = 'block'; 
                 }
             });
-            // Also ensure the managerStatsDiv is visible as a parent for some elements
             originalDisplayStates['managerStats'] = managerStatsDiv.style.display;
             managerStatsDiv.style.display = 'block'; 
-            await new Promise(resolve => setTimeout(resolve, 100)); // Allow layout to settle
+            await new Promise(resolve => setTimeout(resolve, 100)); 
 
             for (const sectionConfig of sectionsToCaptureConfig) {
                 let sourceCanvas = null;
@@ -2287,7 +2358,6 @@
                     continue; 
                 }
 
-                // Special handling for the chart: use the pre-rendered hidden canvas
                 if (sectionConfig.specialHandling && sectionConfig.id === 'rankJourneyChartContainer') {
                     if (preparedChartCanvas) {
                         sourceCanvas = preparedChartCanvas;
@@ -2306,7 +2376,6 @@
                         errorCtx.fillText(`Chart not found: ${sectionConfig.id}`, gifWidth / 2, gifHeight / 2);
                     }
                 } else {
-                    // For all other sections, use html2canvas as usual
                     console.log(`DEBUG: Capturing section with html2canvas: ${sectionConfig.id}`);
                     try {
                         sourceCanvas = await html2canvas(element, {
@@ -2317,7 +2386,6 @@
                             windowWidth: gifWidth, 
                             windowHeight: gifHeight * 2, 
                             onclone: (clonedDoc) => {
-                                // Apply the current theme to the cloned document
                                 if (document.body.classList.contains('dark-mode')) {
                                     clonedDoc.body.classList.add('dark-mode');
                                 }
@@ -2326,7 +2394,6 @@
                                     clonedMainLogo.src = mainLogo.src; 
                                 }
                                 
-                                // Make ALL content sections visible in the cloned DOM for capture
                                 const elementsToDisplayInClone = [
                                     'managerStats', 
                                     'managerSummarySection', 
@@ -2351,7 +2418,6 @@
                                 clonedDoc.body.style.overflow = 'visible';
                                 clonedDoc.body.style.height = 'auto';
 
-                                // Hide animation message in cloned context
                                 const clonedVideoLoadingMessage = clonedDoc.getElementById('videoLoadingMessage');
                                 if (clonedVideoLoadingMessage) {
                                     clonedVideoLoadingMessage.style.display = 'none';
@@ -2463,8 +2529,6 @@
                 videoGeneratingMessage.textContent = 'GIF generated and download started!';
                 // Re-enable buttons
                 shareVideoButton.disabled = false;
-                // Note: analyzeButton is hidden when logged in, but keeping state consistent
-                // createRankJourneyButton is also handled dynamically
                 createRankJourneyButton.disabled = false;
                 darkModeToggle.disabled = false;
             });
@@ -2496,6 +2560,18 @@
                 });
             } else {
                 console.error("ERROR: Dark mode toggle element not found!");
+            }
+
+            // Add event listeners for new navigation buttons
+            if (analyzeMyTeamButton) {
+                analyzeMyTeamButton.addEventListener('click', () => {
+                    showContentSection('analyzerReport');
+                });
+            }
+            if (myControlRoomButton) {
+                myControlRoomButton.addEventListener('click', () => {
+                    showContentSection('controlRoom');
+                });
             }
         });
     </script>
