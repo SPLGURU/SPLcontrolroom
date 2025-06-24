@@ -194,8 +194,8 @@
 
         .input-section {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: column; /* Ensure elements stack vertically */
+            align-items: center; /* Center items horizontally within the flex container */
             gap: 15px;
             margin-bottom: 30px;
         }
@@ -215,7 +215,7 @@
             border-radius: 8px;
             font-size: 1em;
             width: 100%;
-            max-width: 300px;
+            max-width: 300px; /* Keep max-width for consistent sizing */
             box-sizing: border-box;
             text-align: center;
             background-color: var(--spl-container-bg); /* Match container background */
@@ -573,6 +573,8 @@
             }
 
             .input-section input[type="text"],
+            .input-section input[type="email"], /* Added email to responsive input */
+            .input-section input[type="password"], /* Added password to responsive input */
             .input-section button {
                 font-size: 0.95em;
                 padding: 10px 20px;
@@ -1222,22 +1224,35 @@
             }
 
             try {
+                console.log("DEBUG: Attempting to create user with email:", email);
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
+                console.log("DEBUG: User created successfully. UID:", user.uid, "Email:", user.email);
 
                 // Save user data to Firestore
+                console.log("DEBUG: Attempting to save user data to Firestore for UID:", user.uid);
                 await setDoc(doc(db, "users", user.uid), {
                     email: user.email,
                     splManagerId: managerId,
                     createdAt: serverTimestamp(),
                     emailVerified: false // Will be updated to true after verification
                 });
+                console.log("DEBUG: User data saved to Firestore.");
 
                 // Send email verification
-                await sendEmailVerification(user); 
-
+                console.log("DEBUG: Attempting to send email verification for user:", user.email, "UID:", user.uid);
+                try {
+                    await sendEmailVerification(user); 
+                    console.log("DEBUG: Email verification sent successfully (Firebase API acknowledged request).");
+                } catch (emailError) {
+                    console.error("ERROR: Failed to send email verification during signup:", emailError);
+                    showAuthMessage(`Account created, but failed to send verification email: ${emailError.message}. Please check your email's spam folder or try logging in after a few minutes to trigger resend.`, "warning");
+                }
+                
                 // Log out the user immediately after signup to force email verification
+                console.log("DEBUG: Signing user out after signup to force verification flow.");
                 await signOut(auth); 
+                console.log("DEBUG: User signed out after signup.");
 
                 showAuthMessage("Account created! Please verify your email and then log in.", "success");
                 
@@ -1247,11 +1262,11 @@
                 signupConfirmPasswordInput.value = '';
                 signupManagerIdInput.value = '';
                 // Switch to login form
-                loginForm.style.display = 'block';
+                loginForm.style.display = 'block'; // Ensure 'block' is used for visibility
                 signupForm.style.display = 'none';
 
             } catch (error) {
-                console.error("Signup failed:", error);
+                console.error("Signup failed (main try-catch):", error);
                 let friendlyMessage = "Failed to create account. Please try again.";
                 if (error.code === 'auth/email-already-in-use') {
                     friendlyMessage = "That email address is already in use.";
@@ -1259,6 +1274,10 @@
                     friendlyMessage = "Please enter a valid email address.";
                 } else if (error.code === 'auth/weak-password') {
                     friendlyMessage = "Password is too weak.";
+                } else if (error.code === 'auth/network-request-failed') {
+                    friendlyMessage = "Network error. Please check your internet connection.";
+                } else {
+                    friendlyMessage = `Failed to create account: ${error.message}`; // More specific message for other errors
                 }
                 showAuthMessage(friendlyMessage, "error");
             } finally {
@@ -1347,14 +1366,14 @@
         showSignupLink.addEventListener('click', (e) => {
             e.preventDefault();
             loginForm.style.display = 'none';
-            signupForm.style.display = 'flex'; // Use flex for signup form
+            signupForm.style.display = 'block'; // Changed from 'flex' to 'block'
             authMessageBox.style.display = 'none'; 
             authMessageBox.textContent = ''; 
         });
 
         showLoginLink.addEventListener('click', (e) => {
             e.preventDefault();
-            loginForm.style.display = 'flex'; // Use flex for login form
+            loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
             signupForm.style.display = 'none';
             authMessageBox.style.display = 'none'; 
             authMessageBox.textContent = ''; 
@@ -1402,7 +1421,7 @@
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
                             await signOut(auth); // Log them out
                             authSection.style.display = 'block';
-                            loginForm.style.display = 'flex';
+                            loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
                             signupForm.style.display = 'none';
                         }
                     } else {
@@ -1411,20 +1430,20 @@
                         showAuthMessage("User data not found. Please contact support. Logging out.", "error");
                         await signOut(auth); // Log them out
                         authSection.style.display = 'block';
-                        loginForm.style.display = 'flex';
+                        loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
                         signupForm.style.display = 'none';
                     }
                 } else {
                     // User is signed in but email not verified
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
                     authSection.style.display = 'block';
-                    loginForm.style.display = 'flex'; // Show login form so they can try again after verifying
+                    loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
                     signupForm.style.display = 'none';
                 }
             } else {
                 // User is signed out: show authentication forms
                 authSection.style.display = 'block'; 
-                loginForm.style.display = 'flex'; 
+                loginForm.style.display = 'block'; // Changed from 'flex' to 'block'
                 signupForm.style.display = 'none';
                 clearAnalyzerReport(); // Clear any old report data
             }
@@ -2379,6 +2398,11 @@
             } else {
                 setTheme('light'); 
             }
+
+            // ONLY listener for the dark mode toggle, placed here to ensure it's set up once.
+            darkModeToggle.addEventListener('change', (e) => {
+                setTheme(e.target.checked ? 'dark' : 'light');
+            });
         });
     </script>
 </body>
