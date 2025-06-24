@@ -203,57 +203,37 @@
             margin-bottom: 30px;
         }
 
-        /* --- FIX: Apply flex properties DIRECTLY to #loginForm and #signupForm with !important for robust centering --- */
+        /* --- Start of Fix: Centering & Stacking with Original Design --- */
         #loginForm, #signupForm {
             display: flex;
             flex-direction: column; /* Stack children vertically */
-            align-items: center !important; /* Center children horizontally - Added !important */
+            align-items: center !important; /* Center children horizontally */
             gap: 15px; /* Space between inputs/buttons */
             width: 100%; /* Take full width of parent to allow centering */
-            max-width: 400px; /* Optional: constrain form width if needed, adjust as per design */
-            margin: 0 auto; /* Center the form itself if it has a max-width */
-            padding-bottom: 15px; /* Add some padding if needed at bottom of form */
+            max-width: 400px; /* Constrain form width */
+            margin: 0 auto; /* Center the form itself */
+            padding-bottom: 15px; 
         }
 
-        /* Ensure inputs and buttons inside these forms take appropriate width and remain centered */
+        /* Input fields within login/signup forms - Adjusted border-radius to match screenshot */
         #loginForm input[type="email"],
         #loginForm input[type="password"],
         #signupForm input[type="email"],
         #signupForm input[type="password"],
-        #signupForm input[type="text"], /* For Manager ID */
-        #loginForm button,
-        #signupForm button {
-            width: 100%; /* Take full width of their flex parent (#loginForm / #signupForm) */
-            max-width: 300px; /* But don't exceed 300px */
-            box-sizing: border-box; /* Include padding and border in element's total width */
-        }
-        /* --- END FIX --- */
-
-
-        .input-section label {
-            font-weight: bold;
-            color: var(--spl-text-medium);
-            font-size: 1.1em;
-            transition: color 0.3s ease; /* Smooth transition */
-        }
-
-        .input-section input[type="text"],
-        .input-section input[type="email"],
-        .input-section input[type="password"] {
-            padding: 12px 15px;
-            border: 1px solid var(--spl-border-light);
-            border-radius: 8px;
+        #signupForm input[type="text"] { /* For Manager ID */
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 12px; /* Slightly reduced padding to match screenshot aesthetics */
+            border: 1px solid #ced4da; /* Explicit light grey border from screenshot */
+            border-radius: 4px; /* Less rounded to match screenshot */
             font-size: 1em;
-            /* width: 100%; // Removed from here, handled by specific #form input rules above */
-            /* max-width: 300px; // Removed from here, handled by specific #form input rules above */
             box-sizing: border-box;
-            text-align: center;
-            background-color: var(--spl-container-bg); /* Match container background */
-            color: var(--spl-text-dark); /* Match text color */
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+            text-align: left; /* Text alignment from screenshot */
+            background-color: var(--spl-container-bg);
+            color: var(--spl-text-dark);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 
-            /* Hide spinner arrows for number input (even though type is text now, some browsers might add them if it looks like a number) */
-            -moz-appearance: textfield; /* Firefox */
+            -moz-appearance: textfield;
         }
         /* Webkit browsers (Chrome, Safari, Edge) for hiding arrows */
         .input-section input::-webkit-outer-spin-button,
@@ -262,29 +242,74 @@
             margin: 0;
         }
 
+        /* Buttons within login/signup forms - Adjusted border-radius and background for original look */
+        #loginForm button,
+        #signupForm button {
+            width: 100%;
+            max-width: 300px;
+            background-color: #007bff; /* Vibrant blue from screenshot */
+            color: white;
+            padding: 10px 20px; /* Adjusted padding to match screenshot */
+            border: none;
+            border-radius: 4px; /* Less rounded to match screenshot */
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjusted shadow for original look */
+            display: block;
+            margin: 0 auto;
+        }
+
+        #loginForm button:hover,
+        #signupForm button:hover {
+            background-color: #0056b3; /* Slightly darker blue on hover */
+            transform: translateY(-1px); /* Subtle lift */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        }
+        /* --- End of Fix --- */
+
+
+        .input-section label {
+            font-weight: bold;
+            color: var(--spl-text-medium);
+            font-size: 1.1em;
+            transition: color 0.3s ease; /* Smooth transition */
+        }
+        
+        /* General input and button styles if not overridden by #loginForm/#signupForm */
+        .input-section input[type="text"],
+        .input-section input[type="email"],
+        .input-section input[type="password"] {
+            padding: 12px 15px;
+            border: 1px solid var(--spl-border-light);
+            border-radius: 8px; /* Default for other inputs */
+            font-size: 1em;
+            box-sizing: border-box;
+            text-align: center;
+            background-color: var(--spl-container-bg);
+            color: var(--spl-text-dark);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
 
         .input-section button { /* Base style for all buttons in input section */
             background-color: var(--spl-primary-accent);
             color: white;
             padding: 12px 25px;
             border: none;
-            border-radius: 8px;
+            border-radius: 8px; /* Default for other buttons */
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Smooth transition */
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-            /* width: 100%; // Removed from here, handled by specific #form button rules above */
-            /* max-width: 300px; // Removed from here, handled by specific #form button rules above */
             display: block;
             margin: 0 auto; /* Center the button */
         }
-
         .input-section button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
 
-        /* Specific styles for auth buttons to distinguish */
+        /* Specific styles for auth buttons to distinguish (will be overridden by more specific #loginForm/#signupForm rules above) */
         #loginButton, #signupButton {
             background-color: #007bff; /* A distinct blue */
         }
@@ -292,67 +317,7 @@
             background-color: #DC3545; /* Red for logout */
         }
 
-        #loginButton:hover, #signupButton:hover {
-            background-color: #0056b3;
-        }
-        #logoutButton:hover {
-            background-color: #C82333;
-        }
-
-        /* Styles for the Rank Journey button container */
-        .rank-journey-box {
-            background-color: var(--spl-primary-accent); /* Dark blue background */
-            border-radius: 12px;
-            box-shadow: 0 8px 16px var(--spl-shadow); /* Use shadow variable */
-            padding: 25px;
-            margin: 30px auto; /* Center the box horizontally */
-            text-align: center;
-            width: 100%;
-            max-width: 400px; /* Adjust max width for the box */
-            box-sizing: border-box;
-            display: none; /* Hidden by default, shown with manager stats */
-            flex-direction: column; /* Ensure content stacks vertically */
-            align-items: center; /* Center content horizontally within the box */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-        }
-
-        .rank-journey-box h3 {
-            color: white; /* White text for the title inside the box */
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.8em; /* Large and prominent title */
-            margin-top: 0;
-            margin-bottom: 20px; /* Space between title and button */
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s ease; /* Smooth transition */
-        }
-
-        /* Styles for the button inside the Rank Journey box */
-        #createRankJourneyButton { /* Reusing the ID, applying new styles */
-            background-color: white; /* White background */
-            color: var(--spl-primary-accent); /* Dark blue text */
-            padding: 15px 35px; /* More padding */
-            border: none; /* No border for a cleaner look */
-            border-radius: 10px; /* Rounded corners */
-            font-size: 1.2em; /* Larger font */
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: auto; /* Allow button to size based on content */
-            display: inline-block; /* Allow it to be centered easily */
-        }
-
-        #createRankJourneyButton:hover {
-            background-color: #f0f0f0; /* Slightly grey on hover */
-            color: #0056b3; /* Slightly darker blue text on hover */
-            transform: translateY(-2px); /* Slight lift */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Slightly larger shadow */
-        }
-
-        /* Share Video Button Specific Styles */
+        /* Share Video Button Specific Styles (unrelated to auth forms, left as is) */
         #shareVideoButton {
             background-color: #17A2B8; /* A vibrant blue for sharing */
             color: white;
@@ -380,6 +345,59 @@
         }
         body.dark-mode #shareVideoButton:hover {
             background-color: #1aae88;
+        }
+
+        /* Styles for the Rank Journey button container (unrelated to auth forms, left as is) */
+        .rank-journey-box {
+            background-color: var(--spl-primary-accent); /* Dark blue background */
+            border-radius: 12px;
+            box-shadow: 0 8px 16px var(--spl-shadow); /* Use shadow variable */
+            padding: 25px;
+            margin: 30px auto; /* Center the box horizontally */
+            text-align: center;
+            width: 100%;
+            max-width: 400px; /* Adjust max width for the box */
+            box-sizing: border-box;
+            display: none; /* Hidden by default, shown with manager stats */
+            flex-direction: column; /* Ensure content stacks vertically */
+            align-items: center; /* Center content horizontally within the box */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+        }
+
+        .rank-journey-box h3 {
+            color: white; /* White text for the title inside the box */
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8em; /* Large and prominent title */
+            margin-top: 0;
+            margin-bottom: 20px; /* Space between title and button */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease; /* Smooth transition */
+        }
+
+        /* Styles for the button inside the Rank Journey box (unrelated to auth forms, left as is) */
+        #createRankJourneyButton { /* Reusing the ID, applying new styles */
+            background-color: white; /* White background */
+            color: var(--spl-primary-accent); /* Dark blue text */
+            padding: 15px 35px; /* More padding */
+            border: none; /* No border for a cleaner look */
+            border-radius: 10px; /* Rounded corners */
+            font-size: 1.2em; /* Larger font */
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: auto; /* Allow button to size based on content */
+            display: inline-block; /* Allow it to be centered easily */
+        }
+
+        #createRankJourneyButton:hover {
+            background-color: #f0f0f0; /* Slightly grey on hover */
+            color: #0056b3; /* Slightly darker blue text on hover */
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* Slightly larger shadow */
         }
 
 
@@ -1084,17 +1102,13 @@
         const loginEmailInput = document.getElementById('loginEmail');
         const loginPasswordInput = document.getElementById('loginPassword');
         const loginButton = document.getElementById('loginButton');
-        // --- FIX: Corrected element ID for showSignupLink (from login form to signup form) ---
         const showSignupLink = document.getElementById('showSignupLink'); 
-        // --- END FIX ---
         const signupEmailInput = document.getElementById('signupEmail');
         const signupPasswordInput = document.getElementById('signupPassword');
         const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
         const signupManagerIdInput = document.getElementById('signupManagerId'); // Manager ID in signup form
         const signupButton = document.getElementById('signupButton');
-        // --- FIX: Corrected element ID for showLoginLink (from signup form to login form) ---
         const showLoginLink = document.getElementById('showLoginLink'); 
-        // --- END FIX ---
         const logoutButton = document.getElementById('logoutButton');
 
         // Logged-in / Analyzer UI elements
@@ -1118,7 +1132,7 @@
         const averagePointsElem = document.getElementById('averagePoints');
         const averagePointsFor1stPlaceElem = document.getElementById('averagePointsFor1stPlace');
         const totalTransfersCountElem = document.getElementById('totalTransfersCount');
-        const totalHitsPointsElem = document.getElementById('totalHitsPoints'); // Corrected typo
+        const totalHitsPointsElem = document.getElementById('totalHitsPoints'); 
         const bestRoundDisplayElem = document.getElementById('bestRoundDisplay');
         const worstRoundDisplayElem = document.getElementById('worstRoundDisplay');
         const greenArrowsCountElem = document.getElementById('greenArrowsCount');
@@ -1220,7 +1234,7 @@
         }
 
         function setTheme(theme) {
-            console.log("DEBUG: Setting theme to:", theme); // Debug log for dark mode
+            console.log("DEBUG: Setting theme to:", theme); 
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
                 mainLogo.src = darkModeLogoSrc;
@@ -1297,9 +1311,7 @@
                 await signOut(auth); 
                 console.log("DEBUG: User signed out after signup.");
 
-                // --- MODIFIED MESSAGE HERE ---
                 showAuthMessage("Account created! Please verify your email and then log in. If the confirmation e-mail is not in your inbox please check your spam folder", "success");
-                // -----------------------------
                 
                 // Clear form fields
                 signupEmailInput.value = '';
@@ -1409,7 +1421,7 @@
 
         // Toggle between Login and Signup forms (showSignupLink is from login form to signup form)
         showSignupLink.addEventListener('click', (e) => {
-            console.log("DEBUG: 'Sign Up' link clicked."); // Log for signup hyperlink
+            console.log("DEBUG: 'Sign Up' link clicked."); 
             e.preventDefault();
             loginForm.style.display = 'none';
             signupForm.style.display = 'block'; 
@@ -1419,7 +1431,7 @@
 
         // Toggle between Login and Signup forms (showLoginLink is from signup form to login form)
         showLoginLink.addEventListener('click', (e) => {
-            console.log("DEBUG: 'Login' link clicked."); // Log for login hyperlink
+            console.log("DEBUG: 'Login' link clicked."); 
             e.preventDefault();
             loginForm.style.display = 'block'; 
             signupForm.style.display = 'none';
@@ -1466,7 +1478,7 @@
                             await fetchAndDisplaySPLReport(userManagerId); // Trigger report with saved ID
                         } else {
                             // User logged in but no valid Manager ID in Firestore
-                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
                             await signOut(auth); // Log them out
                             authSection.style.display = 'block';
                             loginForm.style.display = 'block'; 
@@ -1999,8 +2011,6 @@
             animationFrameId = requestAnimationFrame(animateChart); // Start the animation
         }
 
-        // --- NEW: GIF Generation Logic (Existing - Unchanged) ---
-
         /**
          * Renders the chart to its final state onto a hidden canvas for GIF capture.
          * Ensures the Chart.js canvas is updated with all data points visible.
@@ -2441,7 +2451,6 @@
         // --- Initial Load & Theme ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DEBUG: DOMContentLoaded fired.");
-            // --- FIX: Check if darkModeToggle exists before adding listener ---
             if (darkModeToggle) {
                 console.log("DEBUG: darkModeToggle element found.");
                 const savedTheme = localStorage.getItem('theme');
