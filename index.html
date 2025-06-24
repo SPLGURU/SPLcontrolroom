@@ -212,8 +212,8 @@
         #loginForm, #signupForm {
             display: flex;
             flex-direction: column; /* Stack children vertically */
-            align-items: center; /* Center children horizontally */
-            gap: 15px; /* Space between inputs/buttons */
+            align-items: center; 
+            gap: 15px; 
             width: 100%; 
             max-width: 400px; 
             margin: 0 auto; 
@@ -278,10 +278,10 @@
         /* Centering the "Don't have an account?" and "Already have an account?" texts */
         #loginForm p,
         #signupForm p {
-            text-align: center; /* This centers the text inside the paragraph */
-            width: 100%; /* Ensure it takes full width to allow text-align to work */
-            max-width: 300px; /* Constrain width if necessary, matching input fields */
-            margin: 10px auto; /* Add margin and center the paragraph itself */
+            text-align: center; 
+            width: 100%; 
+            max-width: 300px; 
+            margin: 10px auto; 
             color: var(--spl-text-dark); 
             transition: color 0.3s ease; 
         }
@@ -343,45 +343,145 @@
 
         /* Specific styles for auth buttons to distinguish (will be overridden by more specific #loginForm/#signupForm rules above) */
         #loginButton, #signupButton {
-            background-color: #007bff; /* A distinct blue */
+            background-color: #007bff; 
         }
         #logoutButton {
-            background-color: #DC3545; /* Red for logout */
+            background-color: #DC3545; 
         }
 
         /* --- New Navigation Buttons Styling --- */
         #mainNavigationButtons {
-            display: flex; /* Arrange buttons side-by-side */
-            justify-content: center; /* Center horizontally */
-            gap: 20px; /* Space between buttons */
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
             margin-top: 20px;
-            margin-bottom: 30px; /* Space below the buttons */
+            margin-bottom: 30px; 
             width: 100%;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap; 
         }
 
         #analyzeMyTeamButton,
-        #myControlRoomButton {
-            background-color: var(--spl-primary-accent); /* Consistent accent color */
+        #myControlRoomButton,
+        #adminDashboardButton { /* Added admin button here */
+            background-color: var(--spl-primary-accent); 
             color: white;
             padding: 12px 25px;
             border: none;
-            border-radius: 8px; /* Consistent rounded corners */
+            border-radius: 8px; 
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-            min-width: 180px; /* Ensure buttons don't get too small */
+            min-width: 180px; 
             text-align: center;
         }
 
         #analyzeMyTeamButton:hover,
-        #myControlRoomButton:hover {
+        #myControlRoomButton:hover,
+        #adminDashboardButton:hover { /* Added admin button hover */
             background-color: #0056b3;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
         }
         /* --- End New Navigation Buttons Styling --- */
+
+        /* --- Admin Dashboard Specific Styles --- */
+        #adminDashboardContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            background-color: var(--spl-container-bg);
+            box-shadow: 0 4px 8px var(--spl-shadow);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        #adminDashboardContent h2 {
+            color: var(--spl-primary-accent);
+            margin-bottom: 15px;
+        }
+
+        .admin-search-section, .admin-edit-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-search-section input[type="text"],
+        .admin-edit-section input[type="email"],
+        .admin-edit-section input[type="text"] {
+            width: 100%;
+            max-width: 350px;
+            padding: 10px 12px;
+            border: 1px solid var(--spl-border-light);
+            border-radius: 6px;
+            font-size: 1em;
+            background-color: var(--spl-table-bg); /* Use table bg for contrast */
+            color: var(--spl-text-dark);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .admin-search-section button,
+        .admin-edit-section button {
+            background-color: #6c757d; /* Grey for admin action buttons */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+        }
+        .admin-search-section button:hover,
+        .admin-edit-section button:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+        body.dark-mode .admin-search-section button,
+        body.dark-mode .admin-edit-section button {
+             background-color: #6f42c1; /* Purple for dark mode admin buttons */
+             box-shadow: 0 4px 8px rgba(111, 66, 193, 0.2);
+        }
+        body.dark-mode .admin-search-section button:hover,
+        body.dark-mode .admin-edit-section button:hover {
+            background-color: #5e35b1;
+        }
+
+        #adminSearchResults p {
+            font-size: 1em;
+            color: var(--spl-text-dark);
+            margin-bottom: 5px;
+            text-align: center;
+            width: 100%;
+        }
+        #adminSearchResults strong {
+            color: var(--spl-primary-accent);
+        }
+
+        /* Separate message box for admin actions */
+        #adminMessage {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+            width: 100%;
+            max-width: 350px;
+            box-sizing: border-box;
+        }
+        /* --- End Admin Dashboard Specific Styles --- */
 
 
         /* Share Video Button Specific Styles (unrelated to auth forms, left as is) */
@@ -468,26 +568,27 @@
         }
 
 
-        .message-box { /* Adjusted to reuse for auth messages */
+        .message-box { 
             text-align: center;
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
             font-weight: bold;
-            display: none; /* Hidden by default */
+            display: none; 
         }
         .message-box.success { background-color: #d4edda; color: #155724; }
         .message-box.error { background-color: #f8d7da; color: #721c24; }
         .message-box.info { background-color: #d1ecf1; color: #0c5460; }
+        .message-box.warning { background-color: #fff3cd; color: #856404; } /* Added warning style */
 
 
-        .loading-message, .error-message, .video-loading-message, #videoGeneratingMessage { /* Added #videoGeneratingMessage */
+        .loading-message, .error-message, .video-loading-message, #videoGeneratingMessage { 
             text-align: center;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
             font-weight: bold;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease, color 0.3s ease; 
         }
 
         .loading-message {
@@ -504,17 +605,16 @@
         .video-loading-message {
             background-color: #fff3cd;
             color: #856404;
-            display: none; /* Hidden by default */
+            display: none; 
         }
-        /* Style for the new video generation loading message */
         #videoGeneratingMessage {
-            background-color: #cfe2ff; /* Light blue */
-            color: #0056b3; /* Dark blue text */
-            display: none; /* Hidden by default */
+            background-color: #cfe2ff; 
+            color: #0056b3; 
+            display: none; 
         }
         body.dark-mode #videoGeneratingMessage {
-            background-color: #0a1c2a; /* Dark background */
-            color: #ffffff; /* White text */
+            background-color: #0a1c2a; 
+            color: #ffffff; 
         }
 
 
@@ -526,12 +626,12 @@
         }
 
         .stat-card {
-            background-color: var(--spl-table-bg); /* Use a slightly darker background for cards */
+            background-color: var(--spl-table-bg); 
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 8px var(--spl-shadow); /* Use shadow variable */
+            box-shadow: 0 4px 8px var(--spl-shadow); 
             text-align: center;
-            transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
         .stat-card:hover {
@@ -543,7 +643,7 @@
             margin-top: 0;
             font-size: 1.3em;
             margin-bottom: 10px;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease; 
         }
 
         .stat-card p {
@@ -551,14 +651,14 @@
             font-weight: bold;
             color: var(--spl-text-dark);
             margin: 0;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease; 
         }
 
         .stat-card .small-text {
             font-size: 0.9em;
             color: var(--spl-text-medium);
             margin-top: 5px;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease; 
         }
 
         .chart-section {
@@ -569,8 +669,8 @@
             box-shadow: 0 6px 12px var(--spl-shadow);
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center horizontally */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            align-items: center; 
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
         .chart-section h2 {
@@ -578,9 +678,9 @@
         }
 
         #rankJourneyChart {
-            width: 100%; /* Take full width of its container */
-            max-width: 900px; /* Limit max width on large screens */
-            height: auto; /* Height will be controlled by aspect ratio in JS */
+            width: 100%; 
+            max-width: 900px; 
+            height: auto; 
             box-sizing: border-box;
         }
 
@@ -590,7 +690,7 @@
             background-color: var(--spl-container-bg);
             border-radius: 12px;
             box-shadow: 0 6px 12px var(--spl-shadow);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
         .table-section h2 {
@@ -601,16 +701,16 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            table-layout: fixed; /* Ensures columns respect defined widths */
+            table-layout: fixed; 
         }
 
         th, td {
             padding: 12px 15px;
             border: 1px solid var(--spl-border-light);
             text-align: left;
-            word-break: break-word; /* Allow long words to break */
-            white-space: normal; /* Ensure text wraps */
-            transition: border-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            word-break: break-word; 
+            white-space: normal; 
+            transition: border-color 0.3s ease, color 0.3s ease; 
         }
 
         th {
@@ -619,7 +719,7 @@
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.9em;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease, color 0.3s ease; 
         }
 
         tr:nth-child(even) {
@@ -880,6 +980,7 @@
             <div id="mainNavigationButtons">
                 <button id="analyzeMyTeamButton">Analyze My Team</button>
                 <button id="myControlRoomButton">My Control Room</button>
+                <button id="adminDashboardButton" style="display: none;">Admin Dashboard</button> <!-- Hidden by default, shown to admins -->
             </div>
 
             <!-- Analyzer Report Content (initially hidden) -->
@@ -1095,6 +1196,24 @@
                     More features coming soon to My Control Room!
                 </p>
             </div>
+
+            <!-- Admin Dashboard Content (initially hidden) -->
+            <div id="adminDashboardContent" style="display: none;">
+                <h2>Admin Dashboard</h2>
+                <div class="admin-search-section">
+                    <input type="text" id="adminSearchInput" placeholder="Search by Email, SPL ID, or UID">
+                    <button id="adminSearchButton">Search User</button>
+                    <div id="adminMessage" class="message-box"></div>
+                </div>
+
+                <div id="adminSearchResults" class="admin-edit-section" style="display: none;">
+                    <h3>User Found:</h3>
+                    <p>User ID: <strong id="adminUserUid">N/A</strong></p>
+                    <p>Current Email: <input type="email" id="adminEditEmail"></p>
+                    <p>Current SPL Manager ID: <input type="text" id="adminEditSplManagerId" oninput="this.value = convertArabicToWesternNumerals(this.value)"></p>
+                    <button id="adminUpdateUserButton">Update User</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1157,8 +1276,10 @@
         const sectionFrameDelay = 3000;
         const chartFrameDelay = 3000;
         
-        let currentManagerId = null; // Stores the manager ID after successful login
-        let isAnalyzerReportDataFetched = false; // Flag to ensure report is fetched only once per login session or manual refresh
+        let currentManagerId = null; 
+        let isAnalyzerReportDataFetched = false; 
+        let isAdminUser = false; // New global flag for admin status
+        let foundUserForAdminEdit = null; // Stores the user data found by admin search
 
 
         // --- DOM Element References ---
@@ -1192,13 +1313,14 @@
         // New Navigation Buttons
         const analyzeMyTeamButton = document.getElementById('analyzeMyTeamButton');
         const myControlRoomButton = document.getElementById('myControlRoomButton');
-        const mainNavigationButtons = document.getElementById('mainNavigationButtons'); // Reference to the container for these buttons
+        const adminDashboardButton = document.getElementById('adminDashboardButton'); // New admin button
+        const mainNavigationButtons = document.getElementById('mainNavigationButtons'); 
 
         // Content areas to toggle
         const analyzerReportContent = document.getElementById('analyzerReportContent');
         const myControlRoomContent = document.getElementById('myControlRoomContent');
+        const adminDashboardContent = document.getElementById('adminDashboardContent'); // New admin content div
 
-        // Original Analyzer UI elements (some kept for reference, some hidden)
         const managerIdInput = document.getElementById('managerIdInput'); 
         const analyzeButton = document.getElementById('analyzeButton'); 
         const instructionsBox = document.getElementById('instructionsBox'); 
@@ -1237,6 +1359,17 @@
         const gifCaptureCanvas = document.getElementById('gifCaptureCanvas'); 
         const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
 
+        // Admin Dashboard specific elements
+        const adminSearchInput = document.getElementById('adminSearchInput');
+        const adminSearchButton = document.getElementById('adminSearchButton');
+        const adminSearchResults = document.getElementById('adminSearchResults');
+        const adminUserUidElem = document.getElementById('adminUserUid');
+        const adminEditEmailInput = document.getElementById('adminEditEmail');
+        const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId');
+        const adminUpdateUserButton = document.getElementById('adminUpdateUserButton');
+        const adminMessage = document.getElementById('adminMessage');
+
+
         // --- Helper Functions ---
 
         // Function to display messages in the authMessageBox
@@ -1255,10 +1388,18 @@
             errorMessage.style.display = 'block'; 
         }
 
+        // Function to display messages specific to Admin Dashboard
+        function showAdminMessage(message, type = 'info') {
+            adminMessage.textContent = '';
+            adminMessage.className = `message-box ${type}`;
+            adminMessage.textContent = message;
+            adminMessage.style.display = 'block';
+        }
+
         // Function to hide all main content sections (except logo and primary navigation)
         function hideAllContentSections() {
             authSection.style.display = 'none';
-            loggedInContent.style.display = 'none';
+            loggedInContent.style.display = 'none'; // Initially hide this, then show its sub-sections
             loadingMessage.style.display = 'none';
             errorMessage.style.display = 'none';
             videoGeneratingMessage.style.display = 'none';
@@ -1267,11 +1408,17 @@
             // Explicitly hide the dynamic content containers
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
-            shareVideoButton.style.display = 'none'; // Hide share button by default
-            instructionsBox.style.display = 'none'; // Hide instructions
-            managerStatsDiv.style.display = 'none'; // Hide analyzer reports
-            rankJourneyBox.style.display = 'none'; // Hide rank journey button box
-            rankJourneyChartContainer.style.display = 'none'; // Hide chart container
+            adminDashboardContent.style.display = 'none'; // Hide new admin content
+            
+            shareVideoButton.style.display = 'none'; 
+            instructionsBox.style.display = 'none'; 
+            managerStatsDiv.style.display = 'none'; 
+            rankJourneyBox.style.display = 'none';
+            rankJourneyChartContainer.style.display = 'none';
+
+            // Also hide admin search results and messages when switching sections
+            adminSearchResults.style.display = 'none';
+            adminMessage.style.display = 'none';
         }
 
         // Function to clear analyzer report data
@@ -1296,7 +1443,7 @@
             profitableTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
             lossMakingTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
 
-            managerOverallRankHistory = []; // Clear chart data
+            managerOverallRankHistory = []; 
             if (rankJourneyChartInstance) {
                 rankJourneyChartInstance.destroy();
                 rankJourneyChartInstance = null;
@@ -1306,7 +1453,18 @@
                 animationFrameId = null;
             }
             animationStartTime = null;
-            isAnalyzerReportDataFetched = false; // Reset flag when clearing data
+            isAnalyzerReportDataFetched = false; 
+        }
+
+        // Function to clear admin search results and input fields
+        function clearAdminSearchAndResults() {
+            adminSearchInput.value = '';
+            adminUserUidElem.textContent = 'N/A';
+            adminEditEmailInput.value = '';
+            adminEditSplManagerIdInput.value = '';
+            foundUserForAdminEdit = null;
+            adminSearchResults.style.display = 'none';
+            adminMessage.style.display = 'none';
         }
 
         function convertArabicToWesternNumerals(input) {
@@ -1449,7 +1607,6 @@
                     return;
                 }
                 
-                // Fetch user's manager ID from Firestore
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
@@ -1468,13 +1625,19 @@
                         loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                         displayLoggedInManagerId.textContent = userManagerId;
                         
-                        hideAllContentSections(); // Hide all content sections initially
-                        loggedInContent.style.display = 'block'; // Show the main logged-in container
+                        hideAllContentSections(); 
+                        loggedInContent.style.display = 'block'; 
 
-                        currentManagerId = userManagerId; // Set global manager ID for use by buttons
-                        isAnalyzerReportDataFetched = false; // Reset flag so report fetches on first click
+                        currentManagerId = userManagerId; 
+                        isAnalyzerReportDataFetched = false; 
 
-                        // No automatic report fetch here, user clicks button
+                        // Check if current user is an admin to show Admin Dashboard button
+                        const adminDocRef = doc(db, "admins", user.uid);
+                        const adminDocSnap = await getDoc(adminDocRef);
+                        isAdminUser = adminDocSnap.exists();
+                        adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
+                        console.log("DEBUG: Admin status after login:", isAdminUser);
+
                     } else {
                         showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
                         await signOut(auth); 
@@ -1502,6 +1665,8 @@
             try {
                 await signOut(auth);
                 showAuthMessage("Logged out successfully.", "info"); 
+                // onAuthStateChanged will handle UI switch, including hiding admin button
+                isAdminUser = false; // Reset admin status
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1530,14 +1695,13 @@
 
 
         // --- Authentication State Listener (Core UI Logic) ---
-        // This listener determines what the user sees based on their login status
         onAuthStateChanged(auth, async (user) => {
             if (isProcessingAuth) { 
                 console.log("DEBUG: onAuthStateChanged deferred due to active auth process.");
                 return; 
             }
 
-            hideAllContentSections(); // Start by hiding everything
+            hideAllContentSections(); 
 
             if (user) {
                 await reload(user); 
@@ -1559,13 +1723,16 @@
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
                             loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                             displayLoggedInManagerId.textContent = userManagerId;
-                            loggedInContent.style.display = 'block'; // Show the main logged-in container
+                            loggedInContent.style.display = 'block'; 
                             
-                            currentManagerId = userManagerId; // Update global manager ID
+                            currentManagerId = userManagerId; 
 
-                            // By default, initially show the Analyzer content (or keep it hidden and let user click)
-                            // The request is: "nothing else should be there in the page" (except logo and buttons) initially.
-                            // So, we just show loggedInContent, and its children (report/control room) will be hidden by default.
+                            // Check admin status and show/hide button
+                            const adminDocRef = doc(db, "admins", user.uid);
+                            const adminDocSnap = await getDoc(adminDocRef);
+                            isAdminUser = adminDocSnap.exists();
+                            adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
+                            console.log("DEBUG: Admin status on auth state change:", isAdminUser);
 
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
@@ -1589,57 +1756,51 @@
                     signupForm.style.display = 'none';
                 }
             } else {
-                // User is signed out: show authentication forms
                 authSection.style.display = 'block'; 
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
                 clearAnalyzerReport(); 
+                isAdminUser = false; // Reset admin status on logout
+                adminDashboardButton.style.display = 'none'; // Ensure hidden on logout
             }
         });
 
         /**
          * Manages the display of main content sections based on navigation button clicks.
-         * @param {string} sectionId - 'analyzerReport' or 'controlRoom'.
-         * @param {string} [managerId] - The SPL Manager ID, required for 'analyzerReport'.
+         * @param {string} sectionId - 'analyzerReport', 'controlRoom', or 'adminDashboard'.
          */
         async function showContentSection(sectionId) {
-            // Hide all dynamic content areas first
-            analyzerReportContent.style.display = 'none';
-            myControlRoomContent.style.display = 'none';
-            shareVideoButton.style.display = 'none'; // Hide share button unless it's the analyzer
-
-            // Also hide messages and chart when switching
-            loadingMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            videoGeneratingMessage.style.display = 'none';
-            managerStatsDiv.style.display = 'none';
-            rankJourneyBox.style.display = 'none';
-            rankJourneyChartContainer.style.display = 'none';
+            hideAllContentSections(); 
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
                 shareVideoButton.style.display = 'block'; 
 
                 if (!isAnalyzerReportDataFetched && currentManagerId) {
-                    // Fetch report only if not already fetched and manager ID is available
                     await fetchAndDisplaySPLReport(currentManagerId);
                     isAnalyzerReportDataFetched = true;
                 } else if (isAnalyzerReportDataFetched) {
-                    // If already fetched, just ensure the relevant parts are displayed
                     managerStatsDiv.style.display = 'block';
-                    rankJourneyBox.style.display = 'flex'; // Ensure button box is visible
+                    rankJourneyBox.style.display = 'flex'; 
                 } else {
-                    // This case implies currentManagerId is null, which shouldn't happen if logged in correctly
                     showAnalyzerMessage("Error: Manager ID not available to fetch report. Please re-login.", "error");
                 }
             } else if (sectionId === 'controlRoom') {
                 myControlRoomContent.style.display = 'block';
-                // No other specific actions for control room for now
+            } else if (sectionId === 'adminDashboard') {
+                if (isAdminUser) { // Only show if the user is truly an admin
+                    adminDashboardContent.style.display = 'flex'; // Use flex for column layout
+                    clearAdminSearchAndResults(); // Clear previous search results and inputs
+                } else {
+                    console.warn("Attempted to access Admin Dashboard without admin privileges.");
+                    // Optionally redirect or show an error, but hideAllContentSections already handles it
+                    showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error");
+                }
             }
         }
 
 
-        // --- Original Analyzer Data Fetching Logic (Modified to be called by Auth flow) ---
+        // --- Original Analyzer Data Fetching Logic ---
         async function fetchAndDisplaySPLReport(managerId) {
             console.log("DEBUG: fetchAndDisplaySPLReport started with ID:", managerId);
             
@@ -1650,15 +1811,14 @@
             videoLoadingMessage.style.display = 'none';
             rankJourneyBox.style.display = 'none';
             createRankJourneyButton.textContent = 'Click Here';
-            shareVideoButton.disabled = false; // Enable share button
-            createRankJourneyButton.disabled = false; // Enable rank journey button
-            darkModeToggle.disabled = false; // Enable dark mode toggle
+            shareVideoButton.disabled = false; 
+            createRankJourneyButton.disabled = false; 
+            darkModeToggle.disabled = false; 
 
-            clearAnalyzerReport(); // Clear old data, also resets isAnalyzerReportDataFetched
+            clearAnalyzerReport(); 
 
-            // Set the flag *after* clearing and before fetching to true
-            isAnalyzerReportDataFetched = false; // Reset to false
-            if (managerId) { // Only attempt fetch if managerId is present
+            isAnalyzerReportDataFetched = false; 
+            if (managerId) { 
                 try {
                     console.log(`DEBUG: Attempting to fetch data for manager ID: ${managerId} from Netlify Function.`);
                     const response = await fetch(`/.netlify/functions/fetch-spl-data?id=${managerId}`);
@@ -1843,7 +2003,7 @@
                         managerStatsDiv.style.display = 'block'; 
                         rankJourneyBox.style.display = 'flex'; 
                         shareVideoButton.style.display = 'block';
-                        isAnalyzerReportDataFetched = true; // Mark report as fetched
+                        isAnalyzerReportDataFetched = true; 
 
                     } else {
                         console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
@@ -2364,7 +2524,7 @@
                         console.log(`DEBUG: Using pre-rendered hidden canvas for ${sectionConfig.id}.`);
                     } else {
                         console.error(`ERROR: Pre-rendered chart canvas for ${sectionConfig.id} not available!`);
-                        sourceCanvas = document.createElement('canvas');
+                        sourceCanvas = document.createElement('canvas'); 
                         sourceCanvas.width = gifWidth; sourceCanvas.height = gifHeight;
                         const errorCtx = sourceCanvas.getContext('2d');
                         errorCtx.fillStyle = '#333';
@@ -2542,6 +2702,129 @@
             gif.render(); 
         }
 
+        // --- Admin Dashboard Logic ---
+        adminSearchButton.addEventListener('click', async () => {
+            showAdminMessage("Searching...", "info");
+            adminSearchResults.style.display = 'none'; // Hide previous results
+            foundUserForAdminEdit = null; // Clear previously found user
+
+            const searchTerm = adminSearchInput.value.trim();
+            if (!searchTerm) {
+                showAdminMessage("Please enter a search term (Email, SPL ID, or UID).", "error");
+                return;
+            }
+
+            let userFound = null;
+            let userDocId = null;
+
+            // 1. Try searching by UID directly
+            console.log(`DEBUG: Admin search: Attempting to search by UID: ${searchTerm}`);
+            try {
+                const docSnap = await getDoc(doc(db, "users", searchTerm));
+                if (docSnap.exists()) {
+                    userFound = { id: docSnap.id, ...docSnap.data() };
+                    userDocId = docSnap.id;
+                    console.log("DEBUG: User found by UID:", userFound);
+                }
+            } catch (error) {
+                console.warn("DEBUG: Error searching by UID, continuing to other search methods:", error.message);
+            }
+
+            // 2. If not found by UID, try searching by Email
+            if (!userFound) {
+                console.log(`DEBUG: Admin search: Attempting to search by Email: ${searchTerm}`);
+                try {
+                    const q = query(collection(db, "users"), where("email", "==", searchTerm));
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        // Assuming email is unique, take the first result
+                        userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                        userDocId = querySnapshot.docs[0].id;
+                        console.log("DEBUG: User found by Email:", userFound);
+                    }
+                } catch (error) {
+                    console.warn("DEBUG: Error searching by Email, continuing to other search methods:", error.message);
+                }
+            }
+
+            // 3. If not found by Email, try searching by SPL Manager ID
+            if (!userFound) {
+                console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${searchTerm}`);
+                try {
+                    // Convert potential Arabic numerals in search term before querying
+                    const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm);
+                    const q = query(collection(db, "users"), where("splManagerId", "==", convertedSearchTerm));
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        // If multiple users have the same SPL ID, pick the first one.
+                        // In a real scenario, you might want to display all matches.
+                        userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                        userDocId = querySnapshot.docs[0].id;
+                        console.log("DEBUG: User found by SPL Manager ID:", userFound);
+                    }
+                } catch (error) {
+                    console.warn("DEBUG: Error searching by SPL Manager ID:", error.message);
+                }
+            }
+
+            if (userFound) {
+                foundUserForAdminEdit = userFound; // Store for update operations
+                adminUserUidElem.textContent = userFound.id;
+                adminEditEmailInput.value = userFound.email || '';
+                adminEditSplManagerIdInput.value = userFound.splManagerId || '';
+                adminSearchResults.style.display = 'flex'; // Show the edit section
+                showAdminMessage("User found successfully.", "success");
+            } else {
+                showAdminMessage("User not found. Please check the search term.", "error");
+                adminSearchResults.style.display = 'none';
+            }
+        });
+
+        adminUpdateUserButton.addEventListener('click', async () => {
+            if (!foundUserForAdminEdit) {
+                showAdminMessage("No user selected for update. Please search for a user first.", "error");
+                return;
+            }
+
+            showAdminMessage("Updating user...", "info");
+
+            const newEmail = adminEditEmailInput.value.trim();
+            const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim());
+            const userToUpdateUid = foundUserForAdminEdit.id;
+
+            if (!newEmail || !newSplManagerId) {
+                showAdminMessage("Email and SPL Manager ID cannot be empty.", "error");
+                return;
+            }
+            if (!/^\d+$/.test(newSplManagerId)) {
+                showAdminMessage("SPL Manager ID must be a valid number.", "error");
+                return;
+            }
+
+            try {
+                const userDocRef = doc(db, "users", userToUpdateUid);
+                await updateDoc(userDocRef, {
+                    email: newEmail,
+                    splManagerId: newSplManagerId
+                });
+                showAdminMessage("User updated successfully!", "success");
+                // Refresh the displayed data for the updated user
+                // Simulate re-searching for the user to update the displayed fields
+                adminSearchInput.value = userToUpdateUid; // Use UID to reliably re-search
+                await adminSearchButton.click(); // Trigger the search button click programmatically
+            } catch (error) {
+                console.error("Admin update failed:", error);
+                let friendlyMessage = "Failed to update user. Please try again.";
+                if (error.code === 'permission-denied') {
+                    friendlyMessage = "Permission denied. You might not have the necessary admin rights or the security rules prevented the update.";
+                } else if (error.code === 'invalid-argument') {
+                    friendlyMessage = "Invalid data provided. Please check the email format or SPL Manager ID.";
+                }
+                showAdminMessage(`Update failed: ${friendlyMessage} Details: ${error.message}`, "error");
+            }
+        });
+
+
         // --- Initial Load & Theme ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DEBUG: DOMContentLoaded fired.");
@@ -2562,7 +2845,7 @@
                 console.error("ERROR: Dark mode toggle element not found!");
             }
 
-            // Add event listeners for new navigation buttons
+            // Add event listeners for navigation buttons
             if (analyzeMyTeamButton) {
                 analyzeMyTeamButton.addEventListener('click', () => {
                     showContentSection('analyzerReport');
@@ -2571,6 +2854,12 @@
             if (myControlRoomButton) {
                 myControlRoomButton.addEventListener('click', () => {
                     showContentSection('controlRoom');
+                });
+            }
+            // Add event listener for Admin Dashboard button
+            if (adminDashboardButton) {
+                adminDashboardButton.addEventListener('click', () => {
+                    showContentSection('adminDashboard');
                 });
             }
         });
