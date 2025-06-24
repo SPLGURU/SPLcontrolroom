@@ -1626,7 +1626,7 @@
                         displayLoggedInManagerId.textContent = userManagerId;
                         
                         hideAllContentSections(); 
-                        loggedInContent.style.display = 'block'; // Make loggedInContent visible first
+                        loggedInContent.style.display = 'block'; 
                         
                         currentManagerId = userManagerId; 
                         isAnalyzerReportDataFetched = false; 
@@ -1635,9 +1635,12 @@
                         const adminDocRef = doc(db, "admins", user.uid);
                         const adminDocSnap = await getDoc(adminDocRef);
                         isAdminUser = adminDocSnap.exists();
-                        // Now set the display property after loggedInContent is block
-                        adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
-                        console.log("DEBUG: Admin status after login:", isAdminUser);
+                        console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
+                        
+                        setTimeout(() => {
+                            adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
+                            console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Timeout): Admin button visibility set to: ${adminDashboardButton.style.display}`);
+                        }, 50);
 
                     } else {
                         showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
@@ -1732,9 +1735,12 @@
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
-                            // Now set the display property after loggedInContent is block
-                            adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
-                            console.log("DEBUG: Admin status on auth state change:", isAdminUser);
+                            console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
+                            
+                            setTimeout(() => {
+                                adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
+                                console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Timeout): Admin button visibility set to: ${adminDashboardButton.style.display}`);
+                            }, 50);
 
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
