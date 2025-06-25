@@ -387,7 +387,7 @@
 
         /* --- Admin Dashboard Specific Styles --- */
         #adminDashboardContent {
-            display: flex;
+            display: flex; /* Changed from 'none' to 'flex' for visibility control by JS */
             flex-direction: column;
             align-items: center;
             gap: 20px;
@@ -1197,8 +1197,8 @@
                 </p>
             </div>
 
-            <!-- Admin Dashboard Content (initially hidden) -->
-            <div id="adminDashboardContent" style="display: none;">
+            <!-- Admin Dashboard Content (initially hidden by default, now controlled by JS) -->
+            <div id="adminDashboardContent" style="display: none;"> 
                 <h2>Admin Dashboard</h2>
                 <div class="admin-search-section">
                     <input type="text" id="adminSearchInput" placeholder="Search by Email, SPL ID, or UID">
@@ -1407,7 +1407,7 @@
             
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; 
+            adminDashboardContent.style.display = 'none'; // Ensure admin dashboard is hidden when switching away
             
             shareVideoButton.style.display = 'none'; 
             instructionsBox.style.display = 'none'; 
@@ -1724,7 +1724,7 @@
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
                             loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                             displayLoggedInManagerId.textContent = userManagerId;
-                            loggedInContent.style.display = 'block'; 
+                            loggedInContent.style.display = 'block'; // Show the main logged-in container
                             
                             currentManagerId = userManagerId; 
 
@@ -1734,7 +1734,7 @@
                             isAdminUser = adminDocSnap.exists();
                             console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
-                            // Set the display property directly without setTimeout
+                            // Set the display property directly for the admin button
                             adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                             console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
@@ -1774,11 +1774,12 @@
          * @param {string} sectionId - 'analyzerReport', 'controlRoom', or 'adminDashboard'.
          */
         async function showContentSection(sectionId) {
-            hideAllContentSections(); 
+            hideAllContentSections(); // Hide all content sections first
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
                 shareVideoButton.style.display = 'block'; 
+                instructionsBox.style.display = 'block'; // Show instructions again if needed for analyzer
 
                 if (!isAnalyzerReportDataFetched && currentManagerId) {
                     await fetchAndDisplaySPLReport(currentManagerId);
@@ -1793,11 +1794,11 @@
                 myControlRoomContent.style.display = 'block';
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
-                    adminDashboardContent.style.display = 'flex'; 
-                    clearAdminSearchAndResults(); 
+                    adminDashboardContent.style.display = 'flex'; // Make the Admin Dashboard content visible
+                    clearAdminSearchAndResults(); // Clear previous search results when opening
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
-                    showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error");
+                    showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error"); // Use general error message for this case
                 }
             }
         }
@@ -2708,8 +2709,8 @@
         // --- Admin Dashboard Logic ---
         adminSearchButton.addEventListener('click', async () => {
             showAdminMessage("Searching...", "info");
-            adminSearchResults.style.display = 'none'; 
-            foundUserForAdminEdit = null; 
+            adminSearchResults.style.display = 'none'; // Hide previous results
+            foundUserForAdminEdit = null; // Clear previously found user
 
             const searchTerm = adminSearchInput.value.trim();
             if (!searchTerm) {
@@ -2771,7 +2772,7 @@
                 adminUserUidElem.textContent = userFound.id;
                 adminEditEmailInput.value = userFound.email || '';
                 adminEditSplManagerIdInput.value = userFound.splManagerId || '';
-                adminSearchResults.style.display = 'flex'; 
+                adminSearchResults.style.display = 'flex'; // Show the search results section
                 showAdminMessage("User found successfully.", "success");
             } else {
                 showAdminMessage("User not found. Please check the search term.", "error");
@@ -2807,8 +2808,8 @@
                     splManagerId: newSplManagerId
                 });
                 showAdminMessage("User updated successfully!", "success");
-                adminSearchInput.value = userToUpdateUid; 
-                await adminSearchButton.click(); 
+                adminSearchInput.value = userToUpdateUid; // Re-populate search with UID to show updated results
+                await adminSearchButton.click(); // Re-run search to display updated info
             } catch (error) {
                 console.error("Admin update failed:", error);
                 let friendlyMessage = "Failed to update user. Please try again.";
