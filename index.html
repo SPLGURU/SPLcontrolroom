@@ -272,7 +272,7 @@
         #signupForm button:hover {
             background-color: #0056b3; 
             transform: translateY(-1px); 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 44px 8px rgba(0, 0, 0, 0.25);
         }
         
         /* Centering the "Don't have an account?" and "Already have an account?" texts */
@@ -394,11 +394,19 @@
             padding: 20px;
             margin-top: 20px;
             border-radius: 12px;
-            background-color: var(--spl-container-bg);
+            background-color: var(--spl-container-bg); /* Use the container background */
             box-shadow: 0 4px 8px var(--spl-shadow);
             width: 100%;
             max-width: 600px;
             box-sizing: border-box;
+            /* TEMPORARY DEBUGGING BACKGROUND/BORDER */
+            background-color: #F0F8FF !important; /* A light blue to make it stand out */
+            border: 2px dashed #007bff !important; /* A dashed blue border */
+            /* END TEMPORARY DEBUGGING */
+        }
+        body.dark-mode #adminDashboardContent {
+            background-color: #2a5275 !important; /* Darker blue for dark mode debugging */
+            border: 2px dashed #00d4ff !important;
         }
 
         #adminDashboardContent h2 {
@@ -1407,7 +1415,7 @@
             
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; // Ensure admin dashboard is hidden when switching away
+            adminDashboardContent.style.display = 'none'; 
             
             shareVideoButton.style.display = 'none'; 
             instructionsBox.style.display = 'none'; 
@@ -1774,6 +1782,7 @@
          * @param {string} sectionId - 'analyzerReport', 'controlRoom', or 'adminDashboard'.
          */
         async function showContentSection(sectionId) {
+            console.log(`DEBUG: showContentSection called for section: ${sectionId}`);
             hideAllContentSections(); // Hide all content sections first
             
             if (sectionId === 'analyzerReport') {
@@ -1795,7 +1804,10 @@
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
                     adminDashboardContent.style.display = 'flex'; // Make the Admin Dashboard content visible
+                    console.log(`DEBUG: Admin Dashboard content display set to: ${adminDashboardContent.style.display}`);
+                    console.log(`DEBUG: Admin Dashboard computed style display: ${getComputedStyle(adminDashboardContent).display}`);
                     clearAdminSearchAndResults(); // Clear previous search results when opening
+                    showAdminMessage("Admin Dashboard loaded. Enter a search term.", "info"); // Provide initial message
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
                     showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error"); // Use general error message for this case
@@ -2857,6 +2869,7 @@
             // Add event listener for Admin Dashboard button
             if (adminDashboardButton) {
                 adminDashboardButton.addEventListener('click', () => {
+                    console.trace("DEBUG: Admin Dashboard button clicked!"); // Trace the call stack
                     showContentSection('adminDashboard');
                 });
             }
