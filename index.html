@@ -973,6 +973,17 @@
                 <input type="text" id="signupManagerId" placeholder="Your SPL Manager ID" oninput="this.value = convertArabicToWesternNumerals(this.value)">
                 <button id="signupButton">Sign Up</button>
                 <p>Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+
+                <!-- Instructions box - now exclusively part of the signup form -->
+                <div id="instructionsBox" class="instructions" style="display: none;"> 
+                    <h3>How to get your Manager ID:</h3>
+                    <ol>
+                        <li>Go to <a href="https://fantasy.spl.com.sa/" target="_blank">https://fantasy.spl.com.sa/</a> from your browser (SPL app does not work to get your ID).</li>
+                        <li>Login with your credentials.</li>
+                        <li>Click on "Points" in the top menu.</li>
+                        <li>Check the address bar and look for the numbers after the word "/entry/". Copy that - it is your ID number.</li>
+                    </ol>
+                </div>
             </div>
             
             <div id="authMessageBox" class="message-box"></div> 
@@ -1005,17 +1016,6 @@
                 </div>
                 
                 <button id="shareVideoButton" style="display: none;">Download/Share Report as GIF</button>
-
-                <!-- Instructions box (can be hidden if not needed after login) -->
-                <div id="instructionsBox" class="instructions" style="display: block;"> <!-- Always display instructions initially in this section -->
-                    <h3>How to get your Manager ID:</h3>
-                    <ol>
-                        <li>Go to <a href="https://fantasy.spl.com.sa/" target="_blank">https://fantasy.spl.com.sa/</a> from your browser (SPL app does not work to get your ID).</li>
-                        <li>Login with your credentials.</li>
-                        <li>Click on "Points" in the top menu.</li>
-                        <li>Check the address bar and look for the numbers after the word "/entry/". Copy that - it is your ID number.</li>
-                    </ol>
-                </div>
             
                 <div id="loadingMessage" class="loading-message" style="display: none;">
                     Loading
@@ -1335,7 +1335,7 @@
 
         const managerIdInput = document.getElementById('managerIdInput'); 
         const analyzeButton = document.getElementById('analyzeButton'); 
-        const instructionsBox = document.getElementById('instructionsBox'); 
+        const instructionsBox = document.getElementById('instructionsBox'); // Moved to be inside signupForm
 
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
@@ -1416,7 +1416,7 @@
             
             // Also hide specific elements that show up in sub-sections
             shareVideoButton.style.display = 'none'; 
-            // instructionsBox.style.display = 'none'; // Keep visible if no data has been fetched yet
+            // instructionsBox.style.display = 'none'; // instructionsBox is now managed by auth forms directly
             managerStatsDiv.style.display = 'none'; 
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
@@ -1465,7 +1465,7 @@
             }
             animationStartTime = null;
             isAnalyzerReportDataFetched = false; 
-            instructionsBox.style.display = 'block'; // Ensure instructions are visible when data is cleared
+            // instructionsBox visibility is no longer handled here
         }
 
         // Function to clear admin search results and input fields
@@ -1578,6 +1578,7 @@
                 // Switch to login form
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
+                instructionsBox.style.display = 'none'; // Hide instructions after successful signup
 
             } catch (error) {
                 console.error("Signup failed (main try-catch):", error);
@@ -1689,6 +1690,7 @@
                 authSection.style.display = 'block'; 
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
+                instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1703,6 +1705,7 @@
             signupForm.style.display = 'block'; 
             authMessageBox.style.display = 'none'; 
             authMessageBox.textContent = ''; 
+            instructionsBox.style.display = 'block'; // Show instructions when signup form is active
         });
 
         // Toggle between Login and Signup forms (showLoginLink is from signup form to login form)
@@ -1713,6 +1716,7 @@
             signupForm.style.display = 'none';
             authMessageBox.style.display = 'none'; 
             authMessageBox.textContent = ''; 
+            instructionsBox.style.display = 'none'; // Hide instructions when login form is active
         });
 
 
@@ -1769,6 +1773,7 @@
                             loginForm.style.display = 'block'; 
                             signupForm.style.display = 'none';
                             loggedInContent.style.display = 'none'; 
+                            instructionsBox.style.display = 'none'; 
                         }
                     } else {
                         console.warn("Firestore document for user does not exist. Logging out.");
@@ -1778,6 +1783,7 @@
                         loginForm.style.display = 'block'; 
                         signupForm.style.display = 'none';
                         loggedInContent.style.display = 'none'; 
+                        instructionsBox.style.display = 'none'; 
                     }
                 } else {
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
@@ -1785,6 +1791,7 @@
                     loginForm.style.display = 'block'; 
                     signupForm.style.display = 'none';
                     loggedInContent.style.display = 'none'; 
+                    instructionsBox.style.display = 'none'; 
                 }
             } else {
                 // User is not logged in
@@ -1795,6 +1802,7 @@
                 clearAnalyzerReport(); // Clear any previous report data when logging out
                 isAdminUser = false; 
                 adminDashboardButton.style.display = 'none'; 
+                instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
             }
         });
 
@@ -1808,8 +1816,11 @@
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
-                // Only show instructions initially. Data fetch will happen on button click.
-                instructionsBox.style.display = 'block'; 
+                // Only show instructions if data has not been fetched yet
+                if (!isAnalyzerReportDataFetched) {
+                    // instructionsBox is now part of signupForm, not directly managed here for analyzer section
+                    // instructionsBox.style.display = 'block'; 
+                }
                 shareVideoButton.style.display = 'none'; // Hide this button until data is loaded
                 managerStatsDiv.style.display = 'none'; // Hide stats until loaded
                 rankJourneyBox.style.display = 'none'; // Hide rank journey until loaded
@@ -1819,10 +1830,10 @@
                     managerStatsDiv.style.display = 'block';
                     rankJourneyBox.style.display = 'flex'; 
                     shareVideoButton.style.display = 'block';
-                    instructionsBox.style.display = 'none'; // Hide instructions once data is present
                 } else {
-                    // If not fetched, keep instructions visible and wait for button click.
-                    console.log("DEBUG: Analyzer report data not fetched yet, displaying instructions.");
+                    // If not fetched, nothing to do here other than hide other content sections.
+                    // The analyzerReportContent will show its empty state or placeholder.
+                    console.log("DEBUG: Analyzer report data not fetched yet, waiting for 'Analyze My Team' button click.");
                 }
 
             } else if (sectionId === 'controlRoom') {
@@ -1844,18 +1855,16 @@
 
         // Event listener for "Analyze My Team" button
         analyzeMyTeamButton.addEventListener('click', async () => {
+            console.log("DEBUG: 'Analyze My Team' button clicked.");
             if (currentManagerId && !isAnalyzerReportDataFetched) {
-                // When "Analyze My Team" is clicked, fetch and display the report
                 await fetchAndDisplaySPLReport(currentManagerId);
-                instructionsBox.style.display = 'none'; // Hide instructions once report is fetched
             } else if (isAnalyzerReportDataFetched) {
                 // If data is already fetched, just ensure the correct sections are visible
-                hideAllContentSections();
+                hideAllContentSections(); // Hide all content subsections except analyzer
                 analyzerReportContent.style.display = 'block';
                 managerStatsDiv.style.display = 'block';
                 rankJourneyBox.style.display = 'flex'; 
                 shareVideoButton.style.display = 'block';
-                instructionsBox.style.display = 'none';
             } else {
                 showAnalyzerMessage("Please login with a valid Manager ID to analyze your team.", "error");
             }
@@ -1877,7 +1886,7 @@
             createRankJourneyButton.disabled = false; 
             darkModeToggle.disabled = false; 
 
-            clearAnalyzerReport(); // Clear previous data and ensure instructions are initially visible
+            clearAnalyzerReport(); // Clear previous data. Note: instructionsBox is no longer cleared here.
 
             isAnalyzerReportDataFetched = false; 
             if (managerId) { 
@@ -2066,7 +2075,6 @@
                         rankJourneyBox.style.display = 'flex'; 
                         shareVideoButton.style.display = 'block';
                         isAnalyzerReportDataFetched = true; 
-                        instructionsBox.style.display = 'none'; // Hide instructions after data is fetched
 
                     } else {
                         console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
@@ -2074,7 +2082,6 @@
                         managerStatsDiv.style.display = 'none';
                         rankJourneyBox.style.display = 'none';
                         shareVideoButton.style.display = 'none';
-                        instructionsBox.style.display = 'block'; // Show instructions if error occurred
                     }
 
                 } catch (error) {
@@ -2084,11 +2091,9 @@
                     managerStatsDiv.style.display = 'none';
                     rankJourneyBox.style.display = 'none';
                     shareVideoButton.style.display = 'none';
-                    instructionsBox.style.display = 'block'; // Show instructions if error occurred
                 }
             } else {
                 showAnalyzerMessage("No Manager ID found for report generation. Please ensure your account has a valid Manager ID.", "error");
-                instructionsBox.style.display = 'block'; // Show instructions if no manager ID
             }
             console.log("DEBUG: fetchAndDisplaySPLReport finished.");
         }
@@ -2777,7 +2782,6 @@
             }
 
             let userFound = null;
-            let userDocId = null;
 
             try {
                 // 1. Try searching by UID directly
@@ -2785,22 +2789,22 @@
                 const docSnap = await getDoc(doc(db, "users", searchTerm));
                 if (docSnap.exists()) {
                     userFound = { id: docSnap.id, ...docSnap.data() };
-                    userDocId = docSnap.id;
                     console.log("DEBUG: User found by UID:", userFound);
                 }
             } catch (error) {
-                console.warn("DEBUG: Error during UID search:", error.message);
+                console.warn("DEBUG: Error during UID search (might be invalid UID format or network issue):", error.message);
+                // Continue to other search methods if UID search fails
             }
 
             // 2. If not found by UID, try searching by Email
-            if (!userFound && searchTerm.includes('@')) { // Only try email search if it looks like an email
+            // Simple regex for email validation to avoid unnecessary Firestore queries on non-email strings
+            if (!userFound && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm)) { 
                 console.log(`DEBUG: Admin search: Attempting to search by Email: ${searchTerm}`);
                 try {
                     const q = query(collection(db, "users"), where("email", "==", searchTerm));
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
                         userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-                        userDocId = querySnapshot.docs[0].id;
                         console.log("DEBUG: User found by Email:", userFound);
                     }
                 } catch (error) {
@@ -2808,7 +2812,7 @@
                 }
             }
 
-            // 3. If not found, try searching by SPL Manager ID (only if it's a number)
+            // 3. If not found by Email, try searching by SPL Manager ID (only if it's a number)
             if (!userFound && /^\d+$/.test(searchTerm)) {
                 console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${searchTerm}`);
                 try {
@@ -2817,7 +2821,6 @@
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
                         userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-                        userDocId = querySnapshot.docs[0].id;
                         console.log("DEBUG: User found by SPL Manager ID:", userFound);
                     }
                 } catch (error) {
