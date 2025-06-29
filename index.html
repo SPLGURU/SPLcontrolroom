@@ -1416,7 +1416,6 @@
             
             // Also hide specific elements that show up in sub-sections
             shareVideoButton.style.display = 'none'; 
-            // instructionsBox.style.display = 'none'; // instructionsBox is now managed by auth forms directly
             managerStatsDiv.style.display = 'none'; 
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
@@ -1465,7 +1464,6 @@
             }
             animationStartTime = null;
             isAnalyzerReportDataFetched = false; 
-            // instructionsBox visibility is no longer handled here
         }
 
         // Function to clear admin search results and input fields
@@ -1816,11 +1814,9 @@
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
-                // Only show instructions if data has not been fetched yet
-                if (!isAnalyzerReportDataFetched) {
-                    // instructionsBox is now part of signupForm, not directly managed here for analyzer section
-                    // instructionsBox.style.display = 'block'; 
-                }
+                // instructionsBox is now part of signupForm, not directly managed here for analyzer section.
+                // It should only be shown there.
+                
                 shareVideoButton.style.display = 'none'; // Hide this button until data is loaded
                 managerStatsDiv.style.display = 'none'; // Hide stats until loaded
                 rankJourneyBox.style.display = 'none'; // Hide rank journey until loaded
@@ -2781,59 +2777,61 @@
                 return;
             }
 
-            let userFound = null;
+            let userFoundData = null; // This will hold the user data if found
 
             try {
-                // 1. Try searching by UID directly
+                // Attempt 1: Search by UID (direct document lookup)
                 console.log(`DEBUG: Admin search: Attempting to search by UID: ${searchTerm}`);
-                const docSnap = await getDoc(doc(db, "users", searchTerm));
+                const userDocRef = doc(db, "users", searchTerm);
+                const docSnap = await getDoc(userDocRef);
+
                 if (docSnap.exists()) {
-                    userFound = { id: docSnap.id, ...docSnap.data() };
-                    console.log("DEBUG: User found by UID:", userFound);
+                    userFoundData = { id: docSnap.id, ...docSnap.data() };
+                    console.log("DEBUG: User found by UID:", userFoundData);
                 }
             } catch (error) {
-                console.warn("DEBUG: Error during UID search (might be invalid UID format or network issue):", error.message);
-                // Continue to other search methods if UID search fails
+                console.warn("DEBUG: Error during UID search (this might be expected if not a UID):", error.message);
             }
 
-            // 2. If not found by UID, try searching by Email
-            // Simple regex for email validation to avoid unnecessary Firestore queries on non-email strings
-            if (!userFound && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm)) { 
+            // Attempt 2: Search by Email (if not found by UID AND search term looks like an email)
+            // Using a more robust email regex for initial check
+            if (!userFoundData && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm)) { 
                 console.log(`DEBUG: Admin search: Attempting to search by Email: ${searchTerm}`);
                 try {
                     const q = query(collection(db, "users"), where("email", "==", searchTerm));
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
-                        userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-                        console.log("DEBUG: User found by Email:", userFound);
+                        userFoundData = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                        console.log("DEBUG: User found by Email:", userFoundData);
                     }
                 } catch (error) {
                     console.warn("DEBUG: Error during Email search:", error.message);
                 }
             }
 
-            // 3. If not found by Email, try searching by SPL Manager ID (only if it's a number)
-            if (!userFound && /^\d+$/.test(searchTerm)) {
-                console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${searchTerm}`);
+            // Attempt 3: Search by SPL Manager ID (if not found by previous methods AND search term is numeric)
+            // Ensure Arabic numeral conversion before querying
+            if (!userFoundData && /^\d+$/.test(searchTerm)) {
+                const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm);
+                console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${convertedSearchTerm}`);
                 try {
-                    const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm); // Ensure conversion
                     const q = query(collection(db, "users"), where("splManagerId", "==", convertedSearchTerm));
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
-                        userFound = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-                        console.log("DEBUG: User found by SPL Manager ID:", userFound);
+                        userFoundData = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                        console.log("DEBUG: User found by SPL Manager ID:", userFoundData);
                     }
                 } catch (error) {
                     console.warn("DEBUG: Error during SPL Manager ID search:", error.message);
                 }
             }
 
-
-            if (userFound) {
-                foundUserForAdminEdit = userFound; 
-                adminUserUidElem.textContent = userFound.id;
-                adminEditEmailInput.value = userFound.email || '';
-                adminEditSplManagerIdInput.value = userFound.splManagerId || '';
+            // Display results based on whether userFoundData was populated
+            if (userFoundData) {
+                foundUserForAdminEdit = userFoundData; 
+                adminUserUidElem.textContent = userFoundData.id;
+                adminEditEmailInput.value = userFoundData.email || '';
+                adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
                 adminSearchResults.style.display = 'flex'; // Show the search results section
                 showAdminMessage("User found successfully.", "success");
             } else {
