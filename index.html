@@ -2766,77 +2766,117 @@
         }
 
         // --- Admin Dashboard Logic ---
+
+        // Helper function to search by UID
+        async function searchUserByUid(uid) {
+            console.log(`DEBUG: Attempting search by UID: ${uid}`);
+            try {
+                const userDocRef = doc(db, "users", uid);
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    console.log("DEBUG: User found by UID:", docSnap.data());
+                    return { id: docSnap.id, ...docSnap.data() };
+                }
+                console.log("DEBUG: No user found for UID:", uid);
+                return null;
+            } catch (error) {
+                console.error("ERROR: Failed to search user by UID:", error.code, error.message);
+                // Important: Do not display this as a user-facing error unless it's the final failure.
+                // It might just mean the search term wasn't a valid UID.
+                return null;
+            }
+        }
+
+        // Helper function to search by Email
+        async function searchUserByEmail(email) {
+            // Basic regex to validate email format before querying
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                console.log(`DEBUG: Not a valid email format for search: ${email}`);
+                return null;
+            }
+            console.log(`DEBUG: Attempting search by Email: ${email}`);
+            try {
+                const q = query(collection(db, "users"), where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    console.log("DEBUG: User found by Email:", querySnapshot.docs[0].data());
+                    return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                }
+                console.log("DEBUG: No user found for email:", email);
+                return null;
+            } catch (error) {
+                console.error("ERROR: Failed to search user by Email:", error.code, error.message);
+                return null;
+            }
+        }
+
+        // Helper function to search by SPL Manager ID
+        async function searchUserBySplManagerId(splManagerId) {
+            const convertedSplId = convertArabicToWesternNumerals(splManagerId);
+            // Ensure it's purely numeric after conversion
+            if (!/^\d+$/.test(convertedSplId)) {
+                console.log(`DEBUG: Not a valid numeric SPL Manager ID after conversion: ${splManagerId} -> ${convertedSplId}`);
+                return null;
+            }
+            console.log(`DEBUG: Attempting search by SPL Manager ID: ${convertedSplId}`);
+            try {
+                const q = query(collection(db, "users"), where("splManagerId", "==", convertedSplId));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    console.log("DEBUG: User found by SPL Manager ID:", querySnapshot.docs[0].data());
+                    return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
+                }
+                console.log("DEBUG: No user found for SPL Manager ID:", convertedSplId);
+                return null;
+            } catch (error) {
+                console.error("ERROR: Failed to search user by SPL Manager ID:", error.code, error.message);
+                return null;
+            }
+        }
+
         adminSearchButton.addEventListener('click', async () => {
             showAdminMessage("Searching...", "info");
             adminSearchResults.style.display = 'none'; // Hide previous results
-            foundUserForAdminEdit = null; // Clear previously found user
+            foundUserForAdminEdit = null; // Clear previously found user data
 
             const searchTerm = adminSearchInput.value.trim();
             if (!searchTerm) {
                 showAdminMessage("Please enter a search term (Email, SPL ID, or UID).", "error");
                 return;
             }
+            
+            let userFoundData = null;
 
-            let userFoundData = null; // This will hold the user data if found
+            // --- Search Priority: UID -> Email -> SPL Manager ID ---
 
-            try {
-                // Attempt 1: Search by UID (direct document lookup)
-                console.log(`DEBUG: Admin search: Attempting to search by UID: ${searchTerm}`);
-                const userDocRef = doc(db, "users", searchTerm);
-                const docSnap = await getDoc(userDocRef);
+            // 1. Try searching by UID
+            // Assumes UID is an exact match for a document ID.
+            userFoundData = await searchUserByUid(searchTerm);
 
-                if (docSnap.exists()) {
-                    userFoundData = { id: docSnap.id, ...docSnap.data() };
-                    console.log("DEBUG: User found by UID:", userFoundData);
-                }
-            } catch (error) {
-                console.warn("DEBUG: Error during UID search (this might be expected if not a UID):", error.message);
+            // 2. If not found by UID, try searching by Email
+            // Only proceed if a user wasn't found yet AND the search term resembles an email.
+            if (!userFoundData && searchTerm.includes('@')) { 
+                userFoundData = await searchUserByEmail(searchTerm);
             }
 
-            // Attempt 2: Search by Email (if not found by UID AND search term looks like an email)
-            // Using a more robust email regex for initial check
-            if (!userFoundData && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm)) { 
-                console.log(`DEBUG: Admin search: Attempting to search by Email: ${searchTerm}`);
-                try {
-                    const q = query(collection(db, "users"), where("email", "==", searchTerm));
-                    const querySnapshot = await getDocs(q);
-                    if (!querySnapshot.empty) {
-                        userFoundData = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-                        console.log("DEBUG: User found by Email:", userFoundData);
-                    }
-                } catch (error) {
-                    console.warn("DEBUG: Error during Email search:", error.message);
-                }
-            }
-
-            // Attempt 3: Search by SPL Manager ID (if not found by previous methods AND search term is numeric)
-            // Ensure Arabic numeral conversion before querying
+            // 3. If not found by Email, try searching by SPL Manager ID
+            // Only proceed if a user wasn't found yet AND the search term consists of digits.
             if (!userFoundData && /^\d+$/.test(searchTerm)) {
-                const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm);
-                console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${convertedSearchTerm}`);
-                try {
-                    const q = query(collection(db, "users"), where("splManagerId", "==", convertedSearchTerm));
-                    const querySnapshot = await getDocs(q);
-                    if (!querySnapshot.empty) {
-                        userFoundData = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-                        console.log("DEBUG: User found by SPL Manager ID:", userFoundData);
-                    }
-                } catch (error) {
-                    console.warn("DEBUG: Error during SPL Manager ID search:", error.message);
-                }
+                userFoundData = await searchUserBySplManagerId(searchTerm);
             }
-
-            // Display results based on whether userFoundData was populated
+            
+            // --- Display Results ---
             if (userFoundData) {
-                foundUserForAdminEdit = userFoundData; 
+                foundUserForAdminEdit = userFoundData; // Store the found user's data
                 adminUserUidElem.textContent = userFoundData.id;
                 adminEditEmailInput.value = userFoundData.email || '';
                 adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
-                adminSearchResults.style.display = 'flex'; // Show the search results section
+                adminSearchResults.style.display = 'flex'; // Show the edit section
                 showAdminMessage("User found successfully.", "success");
             } else {
-                showAdminMessage("User not found. Please check the search term.", "error");
-                adminSearchResults.style.display = 'none';
+                // If no user was found after all attempts
+                showAdminMessage("User not found. Please check the search term or if the user exists.", "error");
+                adminSearchResults.style.display = 'none'; // Ensure edit section is hidden
             }
         });
 
@@ -2865,11 +2905,12 @@
                 const userDocRef = doc(db, "users", userToUpdateUid);
                 await updateDoc(userDocRef, {
                     email: newEmail,
-                    splManagerId: newSplManagerId
+                    splManagerId: newSplManagerId // Ensure it's stored as a string matching the format searched
                 });
                 showAdminMessage("User updated successfully!", "success");
-                adminSearchInput.value = userToUpdateUid; // Re-populate search with UID to show updated results
-                await adminSearchButton.click(); // Re-run search to display updated info
+                // Re-run search using the UID to display the updated information
+                adminSearchInput.value = userToUpdateUid; 
+                await adminSearchButton.click(); 
             } catch (error) {
                 console.error("Admin update failed:", error);
                 let friendlyMessage = "Failed to update user. Please try again.";
