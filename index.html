@@ -343,13 +343,6 @@
             transform: translateY(-2px);
         }
 
-        /* Specific styles for auth buttons to distinguish (will be overridden by more specific #loginForm/#signupForm rules above) */
-        #loginButton, #signupButton {
-            background-color: #007bff; 
-        }
-        #logoutButton {
-            background-color: #DC3545; 
-        }
 
         /* --- NEW MENU STYLES --- */
         #menuToggle {
@@ -377,10 +370,11 @@
             box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             transition: left 0.3s ease-in-out;
-            padding-top: 80px; /* Space for the toggle icon and top content */
+            padding-top: 20px; /* Initial padding at the top */
             display: flex;
             flex-direction: column;
             gap: 10px; /* Space between menu items */
+            box-sizing: border-box; /* Include padding in width */
         }
         body.dark-mode #sidebarMenu {
             background-color: var(--spl-container-bg); /* Match dark container background */
@@ -410,6 +404,79 @@
             background-color: var(--spl-table-row-hover); /* Dark hover */
             color: var(--spl-primary-accent); /* Light accent hover */
         }
+
+        /* Red button style for Logout */
+        .red-button {
+            background-color: #DC3545 !important; /* Red */
+            color: white !important;
+            padding: 10px 20px !important; /* Match other buttons */
+            border: none !important;
+            border-radius: 4px !important;
+            font-size: 1.1em !important;
+            cursor: pointer !important;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease !important;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+            display: block; /* Make it a block element to take full width of container */
+            width: calc(100% - 50px); /* Adjusted width to account for sidebar padding (25px left + 25px right) */
+            margin: 10px auto; /* Center within sidebar */
+        }
+        .red-button:hover {
+            background-color: #c82333 !important; /* Darker red on hover */
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+        }
+        body.dark-mode .red-button {
+            background-color: #f44336 !important; /* Brighter red in dark mode */
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2) !important;
+        }
+        body.dark-mode .red-button:hover {
+            background-color: #d32f2f !important;
+        }
+
+        /* Sidebar Header for Team Name */
+        #sidebarHeader {
+            padding: 15px 25px 10px; /* Top padding, matches menu item horizontal padding */
+            font-family: 'Oswald', sans-serif;
+            color: var(--spl-primary-accent); /* Color for the header */
+            font-size: 1.2em;
+            font-weight: bold;
+            border-bottom: 1px solid var(--spl-border-light); /* Separator */
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center content within header */
+            text-align: center;
+        }
+        body.dark-mode #sidebarHeader {
+            color: var(--spl-text-dark); /* Light text for dark mode */
+            border-bottom-color: var(--spl-border-light);
+        }
+
+        #sidebarTeamName {
+            color: var(--spl-primary-accent); /* Accent color for the actual team name */
+            display: block; 
+            margin-top: 5px; 
+        }
+        body.dark-mode #sidebarTeamName {
+            color: #FFD700; /* Gold for team name in dark mode */
+        }
+
+        /* Manager ID Text in Sidebar */
+        #sidebarManagerIdText {
+            padding: 10px 25px; /* Match menu item padding */
+            font-size: 0.95em;
+            color: var(--spl-text-medium);
+            margin-top: 10px; /* Space from menu items above */
+            margin-bottom: 10px;
+            text-align: center; /* Center the ID text */
+            border-top: 1px solid var(--spl-border-light); /* Separator */
+            padding-top: 15px;
+        }
+        body.dark-mode #sidebarManagerIdText {
+            color: var(--spl-text-medium);
+            border-top-color: var(--spl-border-light);
+        }
+
 
         /* This is the overlay when menu is open */
         #overlay {
@@ -532,6 +599,36 @@
         body.dark-mode #adminMessage {
             background-color: #1f3d54;
             color: #b0e0e6;
+        }
+        /* New Admin Dashboard internal navigation buttons */
+        .admin-dashboard-nav-buttons {
+            display: flex;
+            justify-content: center; /* Center the buttons */
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .admin-dashboard-nav-buttons button {
+            background-color: var(--spl-primary-accent);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+        }
+        .admin-dashboard-nav-buttons button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        body.dark-mode .admin-dashboard-nav-buttons button {
+            background-color: #007bff;
+        }
+        body.dark-mode .admin-dashboard-nav-buttons button:hover {
+            background-color: #0056b3;
         }
         /* --- End Admin Dashboard Specific Styles --- */
 
@@ -1037,17 +1134,20 @@
             <!-- Hamburger Icon (Menu Toggle) -->
             <i class="fas fa-bars" id="menuToggle"></i>
 
-            <!-- User Info and Logout button -->
-            <h2 id="loggedInUserGreeting">Welcome, User!</h2>
-            <p>Your Manager ID: <span id="displayLoggedInManagerId"></span></p>
-            <button id="logoutButton">Logout</button>
+            <!-- User Info and Logout button removed from here -->
             <hr style="margin: 20px 0; border-color: var(--spl-border-light);">
 
             <!-- Sidebar Menu -->
             <nav id="sidebarMenu">
+                <!-- Team Name display within sidebar header -->
+                <div id="sidebarHeader">
+                    <span id="sidebarTeamName">Your Team</span>
+                </div>
                 <a href="#" id="menuAnalyzeMyTeam">Analyze My Team</a>
                 <a href="#" id="menuMyControlRoom">My Control Room</a>
                 <a href="#" id="menuAdminDashboard" style="display: none;">Admin Dashboard</a> <!-- Hidden by default, shown to admins -->
+                <p id="sidebarManagerIdText">Manager ID: <span id="displayLoggedInManagerId"></span></p>
+                <button id="logoutButton" class="red-button">Logout</button>
             </nav>
             <!-- Overlay to close menu when clicking outside -->
             <div id="overlay"></div>
@@ -1259,12 +1359,16 @@
             <!-- Admin Dashboard Content (initially hidden) -->
             <div id="adminDashboardContent" style="display: none;"> 
                 <h2>Admin Dashboard</h2>
-                <div class="admin-search-section">
+                <div class="admin-dashboard-nav-buttons"> <!-- New wrapper for Admin buttons -->
+                    <button id="adminUsersButton">Users</button>
+                    <button id="adminDataButton">Data</button>
+                </div>
+                <div class="admin-search-section" style="display: none;"> <!-- Initially hidden -->
                     <input type="text" id="adminSearchInput" placeholder="Search by Email, SPL ID, or UID">
                     <button id="adminSearchButton">Search User</button>
                 </div>
 
-                <div id="adminSearchResults" class="admin-edit-section" style="display: none;">
+                <div id="adminSearchResults" class="admin-edit-section" style="display: none;"> <!-- Initially hidden -->
                     <h3>User Found:</h3>
                     <p>User ID: <strong id="adminUserUid">N/A</strong></p>
                     <p>Current Email: <input type="email" id="adminEditEmail"></p>
@@ -1311,7 +1415,7 @@
             apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", 
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
-            storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
+            storageBucket: "splcontrolroom-c02c0.firebasestorage.app",
             messagingSenderId: "272416971084",
             appId: "1:272416971084:web:57517048926e49720197e9"
         };
@@ -1363,20 +1467,22 @@
         const signupManagerIdInput = document.getElementById('signupManagerId'); 
         const signupButton = document.getElementById('signupButton');
         const showLoginLink = document.getElementById('showLoginLink'); 
-        const logoutButton = document.getElementById('logoutButton');
 
         // Logged-in / Analyzer UI elements
         const loggedInContent = document.getElementById('loggedInContent');
-        const loggedInUserGreeting = document.getElementById('loggedInUserGreeting');
-        const displayLoggedInManagerId = document.getElementById('displayLoggedInManagerId'); 
-
+        // const loggedInUserGreeting = document.getElementById('loggedInUserGreeting'); // REMOVED
+        
         // NEW Menu Elements
         const menuToggle = document.getElementById('menuToggle');
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
+        const sidebarTeamName = document.getElementById('sidebarTeamName'); // New element
         const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam');
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
+        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); // New element
+        const displayLoggedInManagerId = sidebarManagerIdText.querySelector('span'); // Span inside the new P tag
+        const logoutButton = document.getElementById('logoutButton'); // Moved to sidebar
         
         // Content areas to toggle
         const analyzerReportContent = document.getElementById('analyzerReportContent');
@@ -1422,6 +1528,10 @@
         const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
 
         // Admin Dashboard specific elements
+        const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons'); // New wrapper
+        const adminUsersButton = document.getElementById('adminUsersButton'); // New button
+        const adminDataButton = document.getElementById('adminDataButton'); // New button
+        const adminSearchSection = document.querySelector('.admin-search-section'); // Now a reference to the container
         const adminSearchInput = document.getElementById('adminSearchInput');
         const adminSearchButton = document.getElementById('adminSearchButton');
         const adminSearchResults = document.getElementById('adminSearchResults');
@@ -1471,7 +1581,9 @@
             rankJourneyChartContainer.style.display = 'none';
 
             // Admin Dashboard specific elements to manage
-            adminSearchResults.style.display = 'none'; 
+            adminDashboardNavButtons.style.display = 'none'; // Hide Admin buttons initially
+            adminSearchSection.style.display = 'none'; // Hide search input/button
+            adminSearchResults.style.display = 'none'; // Hide search results
             adminMessage.style.display = 'none';      
 
             // General messages/loading indicators
@@ -1523,6 +1635,7 @@
             adminEditEmailInput.value = '';
             adminEditSplManagerIdInput.value = '';
             foundUserForAdminEdit = null;
+            adminSearchSection.style.display = 'none'; // Ensure search is hidden
             adminSearchResults.style.display = 'none'; 
             adminMessage.style.display = 'none';      
         }
@@ -1681,10 +1794,12 @@
                     }
 
                     const userManagerId = userData.splManagerId;
+                    const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
 
                     if (userManagerId && /^\d+$/.test(userManagerId)) {
-                        loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
+                        // loggedInUserGreeting.textContent = `Welcome, ${user.email}!`; // REMOVED
                         displayLoggedInManagerId.textContent = userManagerId;
+                        sidebarTeamName.textContent = teamName; // Set team name in sidebar
                         
                         authSection.style.display = 'none'; // Hide auth section
                         loggedInContent.style.display = 'block'; // Show the main logged-in container
@@ -1746,6 +1861,8 @@
                 instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
                 sidebarMenu.classList.remove('open'); // Close sidebar on logout
                 overlay.style.display = 'none'; // Hide overlay on logout
+                sidebarTeamName.textContent = 'Your Team'; // Reset team name
+                displayLoggedInManagerId.textContent = ''; // Clear manager ID
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1798,10 +1915,12 @@
                         }
 
                         const userManagerId = userData.splManagerId;
+                        const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
 
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
-                            loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
+                            // loggedInUserGreeting.textContent = `Welcome, ${user.email}!`; // REMOVED
                             displayLoggedInManagerId.textContent = userManagerId;
+                            sidebarTeamName.textContent = teamName; // Set team name in sidebar
                             
                             authSection.style.display = 'none'; 
                             loggedInContent.style.display = 'block'; 
@@ -1865,6 +1984,8 @@
                 instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
                 sidebarMenu.classList.remove('open'); // Close sidebar on logout
                 overlay.style.display = 'none'; // Hide overlay on logout
+                sidebarTeamName.textContent = 'Your Team'; // Reset team name
+                displayLoggedInManagerId.textContent = ''; // Clear manager ID
             }
         });
 
@@ -1896,9 +2017,10 @@
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
                     adminDashboardContent.style.display = 'flex'; 
+                    adminDashboardNavButtons.style.display = 'flex'; // Show Users/Data buttons
                     console.log(`DEBUG: Admin Dashboard content display set to: ${adminDashboardContent.style.display}`);
-                    clearAdminSearchAndResults(); 
-                    showAdminMessage("Admin Dashboard loaded. Enter a search term.", "info"); 
+                    clearAdminSearchAndResults(); // Clear any previous search results
+                    showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
                     showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error"); 
@@ -1944,7 +2066,9 @@
                         } else {
                             managerCurrentOverallRank = null; 
                         }
-
+                        
+                        // Update team name in sidebar as well if analyzer fetches it
+                        sidebarTeamName.textContent = data.managerName || 'Your Team'; 
                         managerNameElem.innerHTML = `Team Name: <span style="color: var(--spl-primary-accent);">${data.managerName || `Manager ID: ${managerId}`}</span><br>Rank & Points`;
                         
                         overallRankElem.textContent = `${data.overallRank} 🌏`;
@@ -2955,6 +3079,22 @@
                 }
                 showAdminMessage(`Update failed: ${friendlyMessage} Details: ${error.message}`, "error");
             }
+        });
+
+        // Admin Dashboard Sub-Navigation Logic
+        adminUsersButton.addEventListener('click', () => {
+            adminSearchSection.style.display = 'flex'; // Show search input/button
+            adminSearchResults.style.display = 'none'; // Hide results until search is run
+            adminMessage.style.display = 'none'; // Clear previous messages
+            showAdminMessage("Enter user details to search.", "info");
+        });
+
+        adminDataButton.addEventListener('click', () => {
+            adminSearchSection.style.display = 'none'; // Hide search input/button
+            adminSearchResults.style.display = 'none'; // Hide results
+            adminMessage.style.display = 'none'; // Clear previous messages
+            showAdminMessage("Data features coming soon!", "info");
+            // In the future, this is where you'd show your data management interface
         });
 
 
