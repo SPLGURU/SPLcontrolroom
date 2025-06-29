@@ -1408,27 +1408,28 @@
             adminMessage.style.display = 'block';
         }
 
-        // Function to hide all main content sections (except logo and primary navigation)
+        // Function to hide all main content sub-sections within loggedInContent
         function hideAllContentSections() {
-            authSection.style.display = 'none';
-            loggedInContent.style.display = 'none'; // Controlled by JS in onAuthStateChanged
-            loadingMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            videoGeneratingMessage.style.display = 'none';
-            authMessageBox.style.display = 'none'; 
-            
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
             adminDashboardContent.style.display = 'none'; 
             
+            // Also hide specific elements that show up in sub-sections
             shareVideoButton.style.display = 'none'; 
             instructionsBox.style.display = 'none'; 
             managerStatsDiv.style.display = 'none'; 
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
 
+            // Admin Dashboard specific elements to manage
             adminSearchResults.style.display = 'none'; 
             adminMessage.style.display = 'none';      
+
+            // General messages/loading indicators
+            loadingMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            videoGeneratingMessage.style.display = 'none';
+            authMessageBox.style.display = 'none'; 
         }
 
         // Function to clear analyzer report data
@@ -1635,7 +1636,7 @@
                         loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                         displayLoggedInManagerId.textContent = userManagerId;
                         
-                        hideAllContentSections(); // Hide everything first
+                        authSection.style.display = 'none'; // Hide auth section
                         loggedInContent.style.display = 'block'; // Show the main logged-in container
                         
                         currentManagerId = userManagerId; 
@@ -1647,7 +1648,6 @@
                         isAdminUser = adminDocSnap.exists();
                         console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                         
-                        // Set the display property directly without setTimeout
                         adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                         console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
@@ -1683,6 +1683,8 @@
                 showAuthMessage("Logged out successfully.", "info"); 
                 isAdminUser = false; 
                 adminDashboardButton.style.display = 'none'; 
+                // Explicitly hide loggedInContent when logging out
+                loggedInContent.style.display = 'none'; 
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1717,8 +1719,6 @@
                 return; 
             }
 
-            hideAllContentSections(); 
-
             if (user) {
                 await reload(user); 
 
@@ -1739,7 +1739,10 @@
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
                             loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                             displayLoggedInManagerId.textContent = userManagerId;
-                            loggedInContent.style.display = 'block'; // Show the main logged-in container
+                            
+                            // Make sure auth section is hidden and loggedInContent is shown
+                            authSection.style.display = 'none'; 
+                            loggedInContent.style.display = 'block'; 
                             
                             currentManagerId = userManagerId; 
 
@@ -1749,7 +1752,6 @@
                             isAdminUser = adminDocSnap.exists();
                             console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
-                            // Set the display property directly for the admin button
                             adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                             console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
@@ -1762,6 +1764,7 @@
                             authSection.style.display = 'block';
                             loginForm.style.display = 'block'; 
                             signupForm.style.display = 'none';
+                            loggedInContent.style.display = 'none'; // Ensure content hidden if manager ID invalid
                         }
                     } else {
                         console.warn("Firestore document for user does not exist. Logging out.");
@@ -1770,17 +1773,21 @@
                         authSection.style.display = 'block';
                         loginForm.style.display = 'block'; 
                         signupForm.style.display = 'none';
+                        loggedInContent.style.display = 'none'; // Ensure content hidden if user doc missing
                     }
                 } else {
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
                     authSection.style.display = 'block';
                     loginForm.style.display = 'block'; 
                     signupForm.style.display = 'none';
+                    loggedInContent.style.display = 'none'; // Ensure content hidden if email not verified
                 }
             } else {
+                // User is not logged in
                 authSection.style.display = 'block'; 
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
+                loggedInContent.style.display = 'none'; // Ensure loggedInContent is hidden when logged out
                 clearAnalyzerReport(); 
                 isAdminUser = false; 
                 adminDashboardButton.style.display = 'none'; 
@@ -1793,7 +1800,7 @@
          */
         async function showContentSection(sectionId) {
             console.log(`DEBUG: showContentSection called for section: ${sectionId}`);
-            hideAllContentSections(); // Hide all content sections first
+            hideAllContentSections(); // Hide all content sub-sections first
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
@@ -2491,7 +2498,7 @@
             const chartWidth = rankJourneyChartCanvas.width * chartRatio;
             const chartHeight = rankJourneyChartCanvas.height * chartRatio;
             const chartX = (hiddenChartCaptureCanvas.width - chartWidth) / 2;
-            const chartY = (hiddenChartCaptureCanvas.height - chartHeight) / 2;
+            const chartY = (hiddenChartCaptureCanvas.height - dHeight) / 2;
 
             hiddenCtx.drawImage(rankJourneyChartCanvas, chartX, chartY, chartWidth, chartHeight);
 
@@ -2686,10 +2693,6 @@
                 transparent: 'rgba(0,0,0,0)', 
                 background: getComputedStyle(document.body).backgroundColor, 
                 workerScript: './gif.worker.js' 
-            });
-
-            sections.forEach(section => {
-                gif.addFrame(section.canvas, { delay: section.delay });
             });
 
             gif.on('start', function() {
