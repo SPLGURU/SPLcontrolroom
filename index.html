@@ -1007,7 +1007,7 @@
                 <button id="shareVideoButton" style="display: none;">Download/Share Report as GIF</button>
 
                 <!-- Instructions box (can be hidden if not needed after login) -->
-                <div id="instructionsBox" class="instructions" style="display: none;"> 
+                <div id="instructionsBox" class="instructions" style="display: block;"> <!-- Always display instructions initially in this section -->
                     <h3>How to get your Manager ID:</h3>
                     <ol>
                         <li>Go to <a href="https://fantasy.spl.com.sa/" target="_blank">https://fantasy.spl.com.sa/</a> from your browser (SPL app does not work to get your ID).</li>
@@ -1416,7 +1416,7 @@
             
             // Also hide specific elements that show up in sub-sections
             shareVideoButton.style.display = 'none'; 
-            instructionsBox.style.display = 'none'; 
+            // instructionsBox.style.display = 'none'; // Keep visible if no data has been fetched yet
             managerStatsDiv.style.display = 'none'; 
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
@@ -1465,6 +1465,7 @@
             }
             animationStartTime = null;
             isAnalyzerReportDataFetched = false; 
+            instructionsBox.style.display = 'block'; // Ensure instructions are visible when data is cleared
         }
 
         // Function to clear admin search results and input fields
@@ -1640,7 +1641,7 @@
                         loggedInContent.style.display = 'block'; // Show the main logged-in container
                         
                         currentManagerId = userManagerId; 
-                        isAnalyzerReportDataFetched = false; 
+                        isAnalyzerReportDataFetched = false; // Reset this flag for new login
 
                         // Check if current user is an admin to show Admin Dashboard button
                         const adminDocRef = doc(db, "admins", user.uid);
@@ -1651,7 +1652,7 @@
                         adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                         console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
-                        // Default to Analyzer Report after successful login
+                        // Only show Analyzer Report section, do NOT fetch data yet
                         showContentSection('analyzerReport');
 
                     } else {
@@ -1683,8 +1684,11 @@
                 showAuthMessage("Logged out successfully.", "info"); 
                 isAdminUser = false; 
                 adminDashboardButton.style.display = 'none'; 
-                // Explicitly hide loggedInContent when logging out
                 loggedInContent.style.display = 'none'; 
+                // Restore auth section and login form after logout
+                authSection.style.display = 'block'; 
+                loginForm.style.display = 'block'; 
+                signupForm.style.display = 'none';
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1740,11 +1744,11 @@
                             loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                             displayLoggedInManagerId.textContent = userManagerId;
                             
-                            // Make sure auth section is hidden and loggedInContent is shown
                             authSection.style.display = 'none'; 
                             loggedInContent.style.display = 'block'; 
                             
                             currentManagerId = userManagerId; 
+                            isAnalyzerReportDataFetched = false; // Ensure flag is reset on fresh login
 
                             // Check if current user is an admin to show Admin Dashboard button
                             const adminDocRef = doc(db, "admins", user.uid);
@@ -1755,7 +1759,7 @@
                             adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                             console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
-                            // Default to Analyzer Report after successful login
+                            // Only show Analyzer Report section initially, do NOT fetch data yet
                             showContentSection('analyzerReport');
 
                         } else {
@@ -1764,7 +1768,7 @@
                             authSection.style.display = 'block';
                             loginForm.style.display = 'block'; 
                             signupForm.style.display = 'none';
-                            loggedInContent.style.display = 'none'; // Ensure content hidden if manager ID invalid
+                            loggedInContent.style.display = 'none'; 
                         }
                     } else {
                         console.warn("Firestore document for user does not exist. Logging out.");
@@ -1773,22 +1777,22 @@
                         authSection.style.display = 'block';
                         loginForm.style.display = 'block'; 
                         signupForm.style.display = 'none';
-                        loggedInContent.style.display = 'none'; // Ensure content hidden if user doc missing
+                        loggedInContent.style.display = 'none'; 
                     }
                 } else {
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
                     authSection.style.display = 'block';
                     loginForm.style.display = 'block'; 
                     signupForm.style.display = 'none';
-                    loggedInContent.style.display = 'none'; // Ensure content hidden if email not verified
+                    loggedInContent.style.display = 'none'; 
                 }
             } else {
                 // User is not logged in
                 authSection.style.display = 'block'; 
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
-                loggedInContent.style.display = 'none'; // Ensure loggedInContent is hidden when logged out
-                clearAnalyzerReport(); 
+                loggedInContent.style.display = 'none'; 
+                clearAnalyzerReport(); // Clear any previous report data when logging out
                 isAdminUser = false; 
                 adminDashboardButton.style.display = 'none'; 
             }
@@ -1804,18 +1808,23 @@
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
-                shareVideoButton.style.display = 'block'; 
+                // Only show instructions initially. Data fetch will happen on button click.
                 instructionsBox.style.display = 'block'; 
+                shareVideoButton.style.display = 'none'; // Hide this button until data is loaded
+                managerStatsDiv.style.display = 'none'; // Hide stats until loaded
+                rankJourneyBox.style.display = 'none'; // Hide rank journey until loaded
 
-                if (!isAnalyzerReportDataFetched && currentManagerId) {
-                    await fetchAndDisplaySPLReport(currentManagerId);
-                    isAnalyzerReportDataFetched = true;
-                } else if (isAnalyzerReportDataFetched) {
+                if (isAnalyzerReportDataFetched) {
+                    // If data was already fetched, display it directly
                     managerStatsDiv.style.display = 'block';
                     rankJourneyBox.style.display = 'flex'; 
+                    shareVideoButton.style.display = 'block';
+                    instructionsBox.style.display = 'none'; // Hide instructions once data is present
                 } else {
-                    showAnalyzerMessage("Error: Manager ID not available to fetch report. Please re-login.", "error");
+                    // If not fetched, keep instructions visible and wait for button click.
+                    console.log("DEBUG: Analyzer report data not fetched yet, displaying instructions.");
                 }
+
             } else if (sectionId === 'controlRoom') {
                 myControlRoomContent.style.display = 'block';
             } else if (sectionId === 'adminDashboard') {
@@ -1833,6 +1842,26 @@
         }
 
 
+        // Event listener for "Analyze My Team" button
+        analyzeMyTeamButton.addEventListener('click', async () => {
+            if (currentManagerId && !isAnalyzerReportDataFetched) {
+                // When "Analyze My Team" is clicked, fetch and display the report
+                await fetchAndDisplaySPLReport(currentManagerId);
+                instructionsBox.style.display = 'none'; // Hide instructions once report is fetched
+            } else if (isAnalyzerReportDataFetched) {
+                // If data is already fetched, just ensure the correct sections are visible
+                hideAllContentSections();
+                analyzerReportContent.style.display = 'block';
+                managerStatsDiv.style.display = 'block';
+                rankJourneyBox.style.display = 'flex'; 
+                shareVideoButton.style.display = 'block';
+                instructionsBox.style.display = 'none';
+            } else {
+                showAnalyzerMessage("Please login with a valid Manager ID to analyze your team.", "error");
+            }
+        });
+
+
         // --- Original Analyzer Data Fetching Logic ---
         async function fetchAndDisplaySPLReport(managerId) {
             console.log("DEBUG: fetchAndDisplaySPLReport started with ID:", managerId);
@@ -1848,7 +1877,7 @@
             createRankJourneyButton.disabled = false; 
             darkModeToggle.disabled = false; 
 
-            clearAnalyzerReport(); 
+            clearAnalyzerReport(); // Clear previous data and ensure instructions are initially visible
 
             isAnalyzerReportDataFetched = false; 
             if (managerId) { 
@@ -2037,6 +2066,7 @@
                         rankJourneyBox.style.display = 'flex'; 
                         shareVideoButton.style.display = 'block';
                         isAnalyzerReportDataFetched = true; 
+                        instructionsBox.style.display = 'none'; // Hide instructions after data is fetched
 
                     } else {
                         console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
@@ -2044,6 +2074,7 @@
                         managerStatsDiv.style.display = 'none';
                         rankJourneyBox.style.display = 'none';
                         shareVideoButton.style.display = 'none';
+                        instructionsBox.style.display = 'block'; // Show instructions if error occurred
                     }
 
                 } catch (error) {
@@ -2053,9 +2084,11 @@
                     managerStatsDiv.style.display = 'none';
                     rankJourneyBox.style.display = 'none';
                     shareVideoButton.style.display = 'none';
+                    instructionsBox.style.display = 'block'; // Show instructions if error occurred
                 }
             } else {
                 showAnalyzerMessage("No Manager ID found for report generation. Please ensure your account has a valid Manager ID.", "error");
+                instructionsBox.style.display = 'block'; // Show instructions if no manager ID
             }
             console.log("DEBUG: fetchAndDisplaySPLReport finished.");
         }
@@ -2746,9 +2779,9 @@
             let userFound = null;
             let userDocId = null;
 
-            // 1. Try searching by UID directly
-            console.log(`DEBUG: Admin search: Attempting to search by UID: ${searchTerm}`);
             try {
+                // 1. Try searching by UID directly
+                console.log(`DEBUG: Admin search: Attempting to search by UID: ${searchTerm}`);
                 const docSnap = await getDoc(doc(db, "users", searchTerm));
                 if (docSnap.exists()) {
                     userFound = { id: docSnap.id, ...docSnap.data() };
@@ -2756,11 +2789,11 @@
                     console.log("DEBUG: User found by UID:", userFound);
                 }
             } catch (error) {
-                console.warn("DEBUG: Error searching by UID, continuing to other search methods:", error.message);
+                console.warn("DEBUG: Error during UID search:", error.message);
             }
 
             // 2. If not found by UID, try searching by Email
-            if (!userFound) {
+            if (!userFound && searchTerm.includes('@')) { // Only try email search if it looks like an email
                 console.log(`DEBUG: Admin search: Attempting to search by Email: ${searchTerm}`);
                 try {
                     const q = query(collection(db, "users"), where("email", "==", searchTerm));
@@ -2771,15 +2804,15 @@
                         console.log("DEBUG: User found by Email:", userFound);
                     }
                 } catch (error) {
-                    console.warn("DEBUG: Error searching by Email, continuing to other search methods:", error.message);
+                    console.warn("DEBUG: Error during Email search:", error.message);
                 }
             }
 
-            // 3. If not found by Email, try searching by SPL Manager ID
-            if (!userFound) {
+            // 3. If not found, try searching by SPL Manager ID (only if it's a number)
+            if (!userFound && /^\d+$/.test(searchTerm)) {
                 console.log(`DEBUG: Admin search: Attempting to search by SPL Manager ID: ${searchTerm}`);
                 try {
-                    const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm);
+                    const convertedSearchTerm = convertArabicToWesternNumerals(searchTerm); // Ensure conversion
                     const q = query(collection(db, "users"), where("splManagerId", "==", convertedSearchTerm));
                     const querySnapshot = await getDocs(q);
                     if (!querySnapshot.empty) {
@@ -2788,9 +2821,10 @@
                         console.log("DEBUG: User found by SPL Manager ID:", userFound);
                     }
                 } catch (error) {
-                    console.warn("DEBUG: Error searching by SPL Manager ID:", error.message);
+                    console.warn("DEBUG: Error during SPL Manager ID search:", error.message);
                 }
             }
+
 
             if (userFound) {
                 foundUserForAdminEdit = userFound; 
