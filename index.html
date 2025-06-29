@@ -387,7 +387,7 @@
 
         /* --- Admin Dashboard Specific Styles --- */
         #adminDashboardContent {
-            display: flex; 
+            display: flex; /* Default display for JS to toggle */
             flex-direction: column;
             align-items: center;
             gap: 20px;
@@ -399,15 +399,10 @@
             width: 100%;
             max-width: 600px;
             box-sizing: border-box;
-            /* TEMPORARY DEBUGGING BACKGROUND/BORDER */
-            background-color: #F0F8FF !important; /* A light blue to make it stand out */
-            border: 2px dashed #007bff !important; /* A dashed blue border */
             min-height: 200px; /* Ensure it has some height even if content is tiny */
-            /* END TEMPORARY DEBUGGING */
         }
         body.dark-mode #adminDashboardContent {
-            background-color: #2a5275 !important; /* Darker blue for dark mode debugging */
-            border: 2px dashed #00d4ff !important;
+            background-color: var(--spl-container-bg);
         }
 
         #adminDashboardContent h2 {
@@ -490,8 +485,7 @@
             width: 100%;
             max-width: 350px;
             box-sizing: border-box;
-            /* Debugging: Display by default until JS hides it */
-            display: block; /* TEMP: Ensure this is visible if JS doesn't explicitly hide it */
+            display: none; /* Controlled by JS */
         }
         body.dark-mode #adminMessage {
             background-color: #1f3d54;
@@ -590,7 +584,7 @@
             border-radius: 8px;
             margin-top: 15px;
             font-weight: bold;
-            display: none; /* Controlled by JS based on message type */
+            display: none; 
         }
         .message-box.success { background-color: #d4edda; color: #155724; }
         .message-box.error { background-color: #f8d7da; color: #721c24; }
@@ -941,18 +935,6 @@
         body.dark-mode .instructions a {
             color: #FFD700; /* Bright gold for heading and links in dark mode */
         }
-        /* Temporary debugging styles for loggedInContent */
-        #loggedInContent {
-            /* This was display: none; by default.
-            Now, for debugging, let's make sure it's always block and visible.*/
-            display: block !important; 
-            background-color: #e6ffe6 !important; /* Very light green to make it obvious */
-            border: 3px dashed green !important; /* Thick dashed green border */
-        }
-        body.dark-mode #loggedInContent {
-            background-color: #0c331a !important; /* Darker green for dark mode */
-            border: 3px dashed #32cd32 !important; /* Lime green for dark mode */
-        }
     </style>
 </head>
 <body>
@@ -997,8 +979,8 @@
         </div>
 
         <!-- Logged In Content (visible when logged in) -->
-        <!-- For debugging, we are temporarily forcing this to display: block in CSS -->
-        <div id="loggedInContent" class="container">
+        <!-- This container is initially hidden and shown by JS upon successful login -->
+        <div id="loggedInContent" class="container" style="display: none;">
             <!-- User Info and Logout button -->
             <h2 id="loggedInUserGreeting">Welcome, User!</h2>
             <p>Your Manager ID: <span id="displayLoggedInManagerId"></span></p>
@@ -1226,7 +1208,7 @@
                 </p>
             </div>
 
-            <!-- Admin Dashboard Content (will be explicitly hidden/shown by JS) -->
+            <!-- Admin Dashboard Content (initially hidden) -->
             <div id="adminDashboardContent" style="display: none;"> 
                 <h2>Admin Dashboard</h2>
                 <div class="admin-search-section">
@@ -1234,8 +1216,7 @@
                     <button id="adminSearchButton">Search User</button>
                 </div>
 
-                <!-- These are now visible by default in HTML for debugging, but JS will hide/show as needed -->
-                <div id="adminSearchResults" class="admin-edit-section">
+                <div id="adminSearchResults" class="admin-edit-section" style="display: none;">
                     <h3>User Found:</h3>
                     <p>User ID: <strong id="adminUserUid">N/A</strong></p>
                     <p>Current Email: <input type="email" id="adminEditEmail"></p>
@@ -1243,7 +1224,7 @@
                     <button id="adminUpdateUserButton">Update User</button>
                 </div>
 
-                <div id="adminMessage" class="message-box"></div>
+                <div id="adminMessage" class="message-box" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -1430,7 +1411,7 @@
         // Function to hide all main content sections (except logo and primary navigation)
         function hideAllContentSections() {
             authSection.style.display = 'none';
-            // loggedInContent.style.display is now handled by CSS !important for debugging
+            loggedInContent.style.display = 'none'; // Controlled by JS in onAuthStateChanged
             loadingMessage.style.display = 'none';
             errorMessage.style.display = 'none';
             videoGeneratingMessage.style.display = 'none';
@@ -1438,7 +1419,7 @@
             
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; // Ensure admin dashboard is hidden when switching away
+            adminDashboardContent.style.display = 'none'; 
             
             shareVideoButton.style.display = 'none'; 
             instructionsBox.style.display = 'none'; 
@@ -1446,8 +1427,8 @@
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
 
-            adminSearchResults.style.display = 'none'; // Re-hide results section after clearing
-            adminMessage.style.display = 'none';      // Re-hide message section after clearing
+            adminSearchResults.style.display = 'none'; 
+            adminMessage.style.display = 'none';      
         }
 
         // Function to clear analyzer report data
@@ -1492,8 +1473,8 @@
             adminEditEmailInput.value = '';
             adminEditSplManagerIdInput.value = '';
             foundUserForAdminEdit = null;
-            adminSearchResults.style.display = 'none'; // Re-hide results section after clearing
-            adminMessage.style.display = 'none';      // Re-hide message section after clearing
+            adminSearchResults.style.display = 'none'; 
+            adminMessage.style.display = 'none';      
         }
 
         function convertArabicToWesternNumerals(input) {
@@ -1654,7 +1635,7 @@
                         loggedInUserGreeting.textContent = `Welcome, ${user.email}!`;
                         displayLoggedInManagerId.textContent = userManagerId;
                         
-                        hideAllContentSections(); 
+                        hideAllContentSections(); // Hide everything first
                         loggedInContent.style.display = 'block'; // Show the main logged-in container
                         
                         currentManagerId = userManagerId; 
@@ -1669,6 +1650,9 @@
                         // Set the display property directly without setTimeout
                         adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                         console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
+
+                        // Default to Analyzer Report after successful login
+                        showContentSection('analyzerReport');
 
                     } else {
                         showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
@@ -1769,6 +1753,9 @@
                             adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
                             console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
 
+                            // Default to Analyzer Report after successful login
+                            showContentSection('analyzerReport');
+
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
                             await signOut(auth); 
@@ -1811,7 +1798,7 @@
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
                 shareVideoButton.style.display = 'block'; 
-                instructionsBox.style.display = 'block'; // Show instructions again if needed for analyzer
+                instructionsBox.style.display = 'block'; 
 
                 if (!isAnalyzerReportDataFetched && currentManagerId) {
                     await fetchAndDisplaySPLReport(currentManagerId);
@@ -1826,14 +1813,14 @@
                 myControlRoomContent.style.display = 'block';
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
-                    adminDashboardContent.style.display = 'flex'; // Make the Admin Dashboard content visible
+                    adminDashboardContent.style.display = 'flex'; 
                     console.log(`DEBUG: Admin Dashboard content display set to: ${adminDashboardContent.style.display}`);
                     console.log(`DEBUG: Admin Dashboard computed style display: ${getComputedStyle(adminDashboardContent).display}`);
-                    clearAdminSearchAndResults(); // Clear previous search results and messages when opening dashboard
-                    showAdminMessage("Admin Dashboard loaded. Enter a search term.", "info"); // Provide initial message
+                    clearAdminSearchAndResults(); 
+                    showAdminMessage("Admin Dashboard loaded. Enter a search term.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
-                    showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error"); // Use general error message for this case
+                    showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error"); 
                 }
             }
         }
@@ -2892,7 +2879,7 @@
             // Add event listener for Admin Dashboard button
             if (adminDashboardButton) {
                 adminDashboardButton.addEventListener('click', () => {
-                    console.trace("DEBUG: Admin Dashboard button clicked!"); // Trace the call stack
+                    console.trace("DEBUG: Admin Dashboard button clicked!"); 
                     showContentSection('adminDashboard');
                 });
             }
