@@ -402,6 +402,7 @@
             /* TEMPORARY DEBUGGING BACKGROUND/BORDER */
             background-color: #F0F8FF !important; /* A light blue to make it stand out */
             border: 2px dashed #007bff !important; /* A dashed blue border */
+            min-height: 200px; /* Ensure it has some height even if content is tiny */
             /* END TEMPORARY DEBUGGING */
         }
         body.dark-mode #adminDashboardContent {
@@ -484,10 +485,17 @@
             border-radius: 6px;
             margin-top: 10px;
             font-weight: bold;
-            display: none;
+            /* Initially hidden, will be shown by JS */
+            /* REMOVED style="display: none;" from HTML for debugging */ 
+            background-color: #d1ecf1; /* Light info background */
+            color: #0c5460; /* Darker info text */
             width: 100%;
             max-width: 350px;
             box-sizing: border-box;
+        }
+        body.dark-mode #adminMessage {
+            background-color: #1f3d54;
+            color: #b0e0e6;
         }
         /* --- End Admin Dashboard Specific Styles --- */
 
@@ -582,7 +590,7 @@
             border-radius: 8px;
             margin-top: 15px;
             font-weight: bold;
-            display: none; 
+            display: none; /* Controlled by JS based on message type */
         }
         .message-box.success { background-color: #d4edda; color: #155724; }
         .message-box.error { background-color: #f8d7da; color: #721c24; }
@@ -1211,16 +1219,19 @@
                 <div class="admin-search-section">
                     <input type="text" id="adminSearchInput" placeholder="Search by Email, SPL ID, or UID">
                     <button id="adminSearchButton">Search User</button>
-                    <div id="adminMessage" class="message-box"></div>
                 </div>
 
-                <div id="adminSearchResults" class="admin-edit-section" style="display: none;">
+                <!-- Debugging: Removed style="display: none;" here -->
+                <div id="adminSearchResults" class="admin-edit-section">
                     <h3>User Found:</h3>
                     <p>User ID: <strong id="adminUserUid">N/A</strong></p>
                     <p>Current Email: <input type="email" id="adminEditEmail"></p>
                     <p>Current SPL Manager ID: <input type="text" id="adminEditSplManagerId" oninput="this.value = convertArabicToWesternNumerals(this.value)"></p>
                     <button id="adminUpdateUserButton">Update User</button>
                 </div>
+
+                <!-- Debugging: Removed style="display: none;" here -->
+                <div id="adminMessage" class="message-box"></div>
             </div>
         </div>
     </div>
@@ -1423,8 +1434,9 @@
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
 
-            adminSearchResults.style.display = 'none';
-            adminMessage.style.display = 'none';
+            // IMPORTANT: These are now always visible for debugging, but hidden by default in showContentSection
+            // adminSearchResults.style.display = 'none'; // Not needed anymore here
+            // adminMessage.style.display = 'none';      // Not needed anymore here
         }
 
         // Function to clear analyzer report data
@@ -1469,8 +1481,8 @@
             adminEditEmailInput.value = '';
             adminEditSplManagerIdInput.value = '';
             foundUserForAdminEdit = null;
-            adminSearchResults.style.display = 'none';
-            adminMessage.style.display = 'none';
+            adminSearchResults.style.display = 'none'; // Re-hide results section after clearing
+            adminMessage.style.display = 'none';      // Re-hide message section after clearing
         }
 
         function convertArabicToWesternNumerals(input) {
@@ -1806,7 +1818,7 @@
                     adminDashboardContent.style.display = 'flex'; // Make the Admin Dashboard content visible
                     console.log(`DEBUG: Admin Dashboard content display set to: ${adminDashboardContent.style.display}`);
                     console.log(`DEBUG: Admin Dashboard computed style display: ${getComputedStyle(adminDashboardContent).display}`);
-                    clearAdminSearchAndResults(); // Clear previous search results when opening
+                    clearAdminSearchAndResults(); // Clear previous search results and messages when opening dashboard
                     showAdminMessage("Admin Dashboard loaded. Enter a search term.", "info"); // Provide initial message
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
