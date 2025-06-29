@@ -18,6 +18,8 @@
     <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Hamburger Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style id="main-styles">
         /* Base colors for light mode (current default) */
         :root {
@@ -349,47 +351,85 @@
             background-color: #DC3545; 
         }
 
-        /* --- New Navigation Buttons Styling --- */
-        #mainNavigationButtons {
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-            margin-top: 20px;
-            margin-bottom: 30px; 
-            width: 100%;
-            flex-wrap: wrap; 
-        }
-
-        #analyzeMyTeamButton,
-        #myControlRoomButton,
-        #adminDashboardButton { 
-            background-color: var(--spl-primary-accent); 
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px; 
-            font-size: 1.1em;
+        /* --- NEW MENU STYLES --- */
+        #menuToggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001; /* Above other content */
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-            min-width: 180px; 
-            text-align: center;
+            font-size: 2em; /* Size of the hamburger icon */
+            color: var(--spl-primary-accent); /* Icon color */
+            transition: color 0.3s ease;
+            display: none; /* Hidden by default, shown when logged in */
+        }
+        body.dark-mode #menuToggle {
+            color: #fff; /* White icon in dark mode */
         }
 
-        #analyzeMyTeamButton:hover,
-        #myControlRoomButton:hover,
-        #adminDashboardButton:hover { 
-            background-color: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        #sidebarMenu {
+            position: fixed;
+            top: 0;
+            left: -300px; /* Hidden off-screen */
+            width: 280px; /* Width of the sidebar */
+            height: 100%;
+            background-color: var(--spl-container-bg); /* Match container background */
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: left 0.3s ease-in-out;
+            padding-top: 80px; /* Space for the toggle icon and top content */
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between menu items */
         }
-        /* --- End New Navigation Buttons Styling --- */
+        body.dark-mode #sidebarMenu {
+            background-color: var(--spl-container-bg); /* Match dark container background */
+        }
+
+        #sidebarMenu.open {
+            left: 0; /* Slide in */
+        }
+
+        #sidebarMenu a {
+            padding: 15px 25px;
+            text-decoration: none;
+            color: var(--spl-text-dark); /* Text color for menu items */
+            font-size: 1.1em;
+            display: block;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            border-left: 5px solid transparent; /* For active indicator */
+        }
+        #sidebarMenu a:hover {
+            background-color: var(--spl-table-row-hover); /* Hover state */
+            color: var(--spl-primary-accent);
+        }
+        body.dark-mode #sidebarMenu a {
+            color: var(--spl-text-dark); /* Light text for dark mode menu */
+        }
+        body.dark-mode #sidebarMenu a:hover {
+            background-color: var(--spl-table-row-hover); /* Dark hover */
+            color: var(--spl-primary-accent); /* Light accent hover */
+        }
+
+        /* This is the overlay when menu is open */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        /* --- END NEW MENU STYLES --- */
+
 
         /* --- Admin Dashboard Specific Styles --- */
         #adminDashboardContent {
             display: flex; /* Default display for JS to toggle */
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* Center horizontally */
             gap: 20px;
             padding: 20px;
             margin-top: 20px;
@@ -397,9 +437,11 @@
             background-color: var(--spl-container-bg); 
             box-shadow: 0 4px 8px var(--spl-shadow);
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; /* Limits width and centers with margin: auto */
             box-sizing: border-box;
             min-height: 200px; /* Ensure it has some height even if content is tiny */
+            margin-left: auto; /* Center the content */
+            margin-right: auto; /* Center the content */
         }
         body.dark-mode #adminDashboardContent {
             background-color: var(--spl-container-bg);
@@ -992,23 +1034,29 @@
         <!-- Logged In Content (visible when logged in) -->
         <!-- This container is initially hidden and shown by JS upon successful login -->
         <div id="loggedInContent" class="container" style="display: none;">
+            <!-- Hamburger Icon (Menu Toggle) -->
+            <i class="fas fa-bars" id="menuToggle"></i>
+
             <!-- User Info and Logout button -->
             <h2 id="loggedInUserGreeting">Welcome, User!</h2>
             <p>Your Manager ID: <span id="displayLoggedInManagerId"></span></p>
             <button id="logoutButton">Logout</button>
             <hr style="margin: 20px 0; border-color: var(--spl-border-light);">
 
-            <!-- New Navigation Buttons -->
-            <div id="mainNavigationButtons">
-                <button id="analyzeMyTeamButton">Analyze My Team</button>
-                <button id="myControlRoomButton">My Control Room</button>
-                <button id="adminDashboardButton" style="display: none;">Admin Dashboard</button> <!-- Hidden by default, shown to admins -->
-            </div>
+            <!-- Sidebar Menu -->
+            <nav id="sidebarMenu">
+                <a href="#" id="menuAnalyzeMyTeam">Analyze My Team</a>
+                <a href="#" id="menuMyControlRoom">My Control Room</a>
+                <a href="#" id="menuAdminDashboard" style="display: none;">Admin Dashboard</a> <!-- Hidden by default, shown to admins -->
+            </nav>
+            <!-- Overlay to close menu when clicking outside -->
+            <div id="overlay"></div>
+
+            <!-- Content areas remain the same -->
 
             <!-- Analyzer Report Content (initially hidden) -->
             <div id="analyzerReportContent" style="display: none;">
                 <!-- Original Analyzer Content Starts Here -->
-                <!-- The input-section below is hidden as Manager ID comes from Firebase now -->
                 <div class="input-section" style="display: none;"> 
                     <label for="managerIdInput">Enter Manager ID:</label>
                     <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
@@ -1263,7 +1311,7 @@
             apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", 
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
-            storageBucket: "splcontrolroom-c02c0.firebasestorage.app",
+            storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
             messagingSenderId: "272416971084",
             appId: "1:272416971084:web:57517048926e49720197e9"
         };
@@ -1322,12 +1370,14 @@
         const loggedInUserGreeting = document.getElementById('loggedInUserGreeting');
         const displayLoggedInManagerId = document.getElementById('displayLoggedInManagerId'); 
 
-        // New Navigation Buttons
-        const analyzeMyTeamButton = document.getElementById('analyzeMyTeamButton');
-        const myControlRoomButton = document.getElementById('myControlRoomButton');
-        const adminDashboardButton = document.getElementById('adminDashboardButton'); 
-        const mainNavigationButtons = document.getElementById('mainNavigationButtons'); 
-
+        // NEW Menu Elements
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('overlay');
+        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam');
+        const menuMyControlRoom = document.getElementById('menuMyControlRoom');
+        const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
+        
         // Content areas to toggle
         const analyzerReportContent = document.getElementById('analyzerReportContent');
         const myControlRoomContent = document.getElementById('myControlRoomContent');
@@ -1335,7 +1385,7 @@
 
         const managerIdInput = document.getElementById('managerIdInput'); 
         const analyzeButton = document.getElementById('analyzeButton'); 
-        const instructionsBox = document.getElementById('instructionsBox'); // Moved to be inside signupForm
+        const instructionsBox = document.getElementById('instructionsBox'); 
 
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
@@ -1642,16 +1692,20 @@
                         currentManagerId = userManagerId; 
                         isAnalyzerReportDataFetched = false; // Reset this flag for new login
 
-                        // Check if current user is an admin to show Admin Dashboard button
+                        // Check if current user is an admin to show Admin Dashboard menu item
                         const adminDocRef = doc(db, "admins", user.uid);
                         const adminDocSnap = await getDoc(adminDocRef);
                         isAdminUser = adminDocSnap.exists();
                         console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                         
-                        adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
-                        console.log(`DEBUG ADMIN BUTTON RENDER (Login Button Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
+                        // Update visibility of the Admin Dashboard menu item
+                        menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
+                        console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
-                        // Only show Analyzer Report section, do NOT fetch data yet
+                        // Show menu toggle icon
+                        menuToggle.style.display = 'block';
+
+                        // Default to Analyzer Report section
                         showContentSection('analyzerReport');
 
                     } else {
@@ -1682,13 +1736,16 @@
                 await signOut(auth);
                 showAuthMessage("Logged out successfully.", "info"); 
                 isAdminUser = false; 
-                adminDashboardButton.style.display = 'none'; 
+                menuAdminDashboard.style.display = 'none'; // Hide admin menu item
+                menuToggle.style.display = 'none'; // Hide menu toggle
                 loggedInContent.style.display = 'none'; 
                 // Restore auth section and login form after logout
                 authSection.style.display = 'block'; 
                 loginForm.style.display = 'block'; 
                 signupForm.style.display = 'none';
                 instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
+                sidebarMenu.classList.remove('open'); // Close sidebar on logout
+                overlay.style.display = 'none'; // Hide overlay on logout
             } catch (error) {
                 console.error("Logout error:", error);
                 showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1752,16 +1809,20 @@
                             currentManagerId = userManagerId; 
                             isAnalyzerReportDataFetched = false; // Ensure flag is reset on fresh login
 
-                            // Check if current user is an admin to show Admin Dashboard button
+                            // Check if current user is an admin to show Admin Dashboard menu item
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
                             console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
-                            adminDashboardButton.style.display = isAdminUser ? 'block' : 'none';
-                            console.log(`DEBUG ADMIN BUTTON RENDER (onAuthStateChanged Direct): Admin button visibility set to: ${adminDashboardButton.style.display}`);
+                            // Update visibility of the Admin Dashboard menu item
+                            menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
+                            console.log(`DEBUG ADMIN MENU ITEM RENDER (onAuthStateChanged Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
-                            // Only show Analyzer Report section initially, do NOT fetch data yet
+                            // Show menu toggle icon
+                            menuToggle.style.display = 'block';
+
+                            // Default to Analyzer Report section
                             showContentSection('analyzerReport');
 
                         } else {
@@ -1799,8 +1860,11 @@
                 loggedInContent.style.display = 'none'; 
                 clearAnalyzerReport(); // Clear any previous report data when logging out
                 isAdminUser = false; 
-                adminDashboardButton.style.display = 'none'; 
+                menuAdminDashboard.style.display = 'none'; // Hide admin menu item
+                menuToggle.style.display = 'none'; // Hide menu toggle
                 instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
+                sidebarMenu.classList.remove('open'); // Close sidebar on logout
+                overlay.style.display = 'none'; // Hide overlay on logout
             }
         });
 
@@ -1814,22 +1878,17 @@
             
             if (sectionId === 'analyzerReport') {
                 analyzerReportContent.style.display = 'block';
-                // instructionsBox is now part of signupForm, not directly managed here for analyzer section.
-                // It should only be shown there.
                 
-                shareVideoButton.style.display = 'none'; // Hide this button until data is loaded
-                managerStatsDiv.style.display = 'none'; // Hide stats until loaded
-                rankJourneyBox.style.display = 'none'; // Hide rank journey until loaded
+                shareVideoButton.style.display = 'none'; 
+                managerStatsDiv.style.display = 'none'; 
+                rankJourneyBox.style.display = 'none';
 
                 if (isAnalyzerReportDataFetched) {
-                    // If data was already fetched, display it directly
                     managerStatsDiv.style.display = 'block';
                     rankJourneyBox.style.display = 'flex'; 
                     shareVideoButton.style.display = 'block';
                 } else {
-                    // If not fetched, nothing to do here other than hide other content sections.
-                    // The analyzerReportContent will show its empty state or placeholder.
-                    console.log("DEBUG: Analyzer report data not fetched yet, waiting for 'Analyze My Team' button click.");
+                    console.log("DEBUG: Analyzer report data not fetched yet, waiting for 'Analyze My Team' menu click.");
                 }
 
             } else if (sectionId === 'controlRoom') {
@@ -1838,7 +1897,6 @@
                 if (isAdminUser) { 
                     adminDashboardContent.style.display = 'flex'; 
                     console.log(`DEBUG: Admin Dashboard content display set to: ${adminDashboardContent.style.display}`);
-                    console.log(`DEBUG: Admin Dashboard computed style display: ${getComputedStyle(adminDashboardContent).display}`);
                     clearAdminSearchAndResults(); 
                     showAdminMessage("Admin Dashboard loaded. Enter a search term.", "info"); 
                 } else {
@@ -1847,24 +1905,6 @@
                 }
             }
         }
-
-
-        // Event listener for "Analyze My Team" button
-        analyzeMyTeamButton.addEventListener('click', async () => {
-            console.log("DEBUG: 'Analyze My Team' button clicked.");
-            if (currentManagerId && !isAnalyzerReportDataFetched) {
-                await fetchAndDisplaySPLReport(currentManagerId);
-            } else if (isAnalyzerReportDataFetched) {
-                // If data is already fetched, just ensure the correct sections are visible
-                hideAllContentSections(); // Hide all content subsections except analyzer
-                analyzerReportContent.style.display = 'block';
-                managerStatsDiv.style.display = 'block';
-                rankJourneyBox.style.display = 'flex'; 
-                shareVideoButton.style.display = 'block';
-            } else {
-                showAnalyzerMessage("Please login with a valid Manager ID to analyze your team.", "error");
-            }
-        });
 
 
         // --- Original Analyzer Data Fetching Logic ---
@@ -1882,7 +1922,7 @@
             createRankJourneyButton.disabled = false; 
             darkModeToggle.disabled = false; 
 
-            clearAnalyzerReport(); // Clear previous data. Note: instructionsBox is no longer cleared here.
+            clearAnalyzerReport(); 
 
             isAnalyzerReportDataFetched = false; 
             if (managerId) { 
@@ -2781,8 +2821,6 @@
                 return null;
             } catch (error) {
                 console.error("ERROR: Failed to search user by UID:", error.code, error.message);
-                // Important: Do not display this as a user-facing error unless it's the final failure.
-                // It might just mean the search term wasn't a valid UID.
                 return null;
             }
         }
@@ -2836,8 +2874,8 @@
 
         adminSearchButton.addEventListener('click', async () => {
             showAdminMessage("Searching...", "info");
-            adminSearchResults.style.display = 'none'; // Hide previous results
-            foundUserForAdminEdit = null; // Clear previously found user data
+            adminSearchResults.style.display = 'none'; 
+            foundUserForAdminEdit = null; 
 
             const searchTerm = adminSearchInput.value.trim();
             if (!searchTerm) {
@@ -2847,36 +2885,33 @@
             
             let userFoundData = null;
 
-            // --- Search Priority: UID -> Email -> SPL Manager ID ---
-
-            // 1. Try searching by UID
-            // Assumes UID is an exact match for a document ID.
             userFoundData = await searchUserByUid(searchTerm);
 
-            // 2. If not found by UID, try searching by Email
-            // Only proceed if a user wasn't found yet AND the search term resembles an email.
             if (!userFoundData && searchTerm.includes('@')) { 
                 userFoundData = await searchUserByEmail(searchTerm);
             }
 
-            // 3. If not found by Email, try searching by SPL Manager ID
-            // Only proceed if a user wasn't found yet AND the search term consists of digits.
             if (!userFoundData && /^\d+$/.test(searchTerm)) {
                 userFoundData = await searchUserBySplManagerId(searchTerm);
             }
             
-            // --- Display Results ---
             if (userFoundData) {
-                foundUserForAdminEdit = userFoundData; // Store the found user's data
+                foundUserForAdminEdit = userFoundData; 
                 adminUserUidElem.textContent = userFoundData.id;
                 adminEditEmailInput.value = userFoundData.email || '';
                 adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
-                adminSearchResults.style.display = 'flex'; // Show the edit section
+                adminSearchResults.style.display = 'flex'; 
                 showAdminMessage("User found successfully.", "success");
             } else {
-                // If no user was found after all attempts
                 showAdminMessage("User not found. Please check the search term or if the user exists.", "error");
-                adminSearchResults.style.display = 'none'; // Ensure edit section is hidden
+                adminSearchResults.style.display = 'none'; 
+            }
+        });
+
+        adminSearchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); 
+                adminSearchButton.click(); 
             }
         });
 
@@ -2905,10 +2940,9 @@
                 const userDocRef = doc(db, "users", userToUpdateUid);
                 await updateDoc(userDocRef, {
                     email: newEmail,
-                    splManagerId: newSplManagerId // Ensure it's stored as a string matching the format searched
+                    splManagerId: newSplManagerId 
                 });
                 showAdminMessage("User updated successfully!", "success");
-                // Re-run search using the UID to display the updated information
                 adminSearchInput.value = userToUpdateUid; 
                 await adminSearchButton.click(); 
             } catch (error) {
@@ -2944,22 +2978,48 @@
                 console.error("ERROR: Dark mode toggle element not found!");
             }
 
-            // Add event listeners for navigation buttons
-            if (analyzeMyTeamButton) {
-                analyzeMyTeamButton.addEventListener('click', () => {
+            // --- Menu Toggle Logic ---
+            if (menuToggle && sidebarMenu && overlay) {
+                menuToggle.addEventListener('click', () => {
+                    sidebarMenu.classList.toggle('open');
+                    overlay.style.display = sidebarMenu.classList.contains('open') ? 'block' : 'none';
+                });
+
+                overlay.addEventListener('click', () => {
+                    sidebarMenu.classList.remove('open');
+                    overlay.style.display = 'none';
+                });
+            } else {
+                console.error("ERROR: Menu toggle or sidebar elements not found!");
+            }
+
+            // --- Menu Item Click Listeners ---
+            if (menuAnalyzeMyTeam) {
+                menuAnalyzeMyTeam.addEventListener('click', (e) => {
+                    e.preventDefault();
                     showContentSection('analyzerReport');
+                    sidebarMenu.classList.remove('open'); // Close menu after click
+                    overlay.style.display = 'none';
+                    if (currentManagerId && !isAnalyzerReportDataFetched) {
+                        fetchAndDisplaySPLReport(currentManagerId);
+                    }
                 });
             }
-            if (myControlRoomButton) {
-                myControlRoomButton.addEventListener('click', () => {
+            if (menuMyControlRoom) {
+                menuMyControlRoom.addEventListener('click', (e) => {
+                    e.preventDefault();
                     showContentSection('controlRoom');
+                    sidebarMenu.classList.remove('open'); // Close menu after click
+                    overlay.style.display = 'none';
                 });
             }
-            // Add event listener for Admin Dashboard button
-            if (adminDashboardButton) {
-                adminDashboardButton.addEventListener('click', () => {
-                    console.trace("DEBUG: Admin Dashboard button clicked!"); 
+            if (menuAdminDashboard) {
+                menuAdminDashboard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.trace("DEBUG: Admin Dashboard menu item clicked!"); 
                     showContentSection('adminDashboard');
+                    sidebarMenu.classList.remove('open'); // Close menu after click
+                    overlay.style.display = 'none';
                 });
             }
         });
