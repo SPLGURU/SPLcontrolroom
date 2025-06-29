@@ -387,14 +387,14 @@
 
         /* --- Admin Dashboard Specific Styles --- */
         #adminDashboardContent {
-            display: flex; /* Changed from 'none' to 'flex' for visibility control by JS */
+            display: flex; 
             flex-direction: column;
             align-items: center;
             gap: 20px;
             padding: 20px;
             margin-top: 20px;
             border-radius: 12px;
-            background-color: var(--spl-container-bg); /* Use the container background */
+            background-color: var(--spl-container-bg); 
             box-shadow: 0 4px 8px var(--spl-shadow);
             width: 100%;
             max-width: 600px;
@@ -485,13 +485,13 @@
             border-radius: 6px;
             margin-top: 10px;
             font-weight: bold;
-            /* Initially hidden, will be shown by JS */
-            /* REMOVED style="display: none;" from HTML for debugging */ 
             background-color: #d1ecf1; /* Light info background */
             color: #0c5460; /* Darker info text */
             width: 100%;
             max-width: 350px;
             box-sizing: border-box;
+            /* Debugging: Display by default until JS hides it */
+            display: block; /* TEMP: Ensure this is visible if JS doesn't explicitly hide it */
         }
         body.dark-mode #adminMessage {
             background-color: #1f3d54;
@@ -941,6 +941,18 @@
         body.dark-mode .instructions a {
             color: #FFD700; /* Bright gold for heading and links in dark mode */
         }
+        /* Temporary debugging styles for loggedInContent */
+        #loggedInContent {
+            /* This was display: none; by default.
+            Now, for debugging, let's make sure it's always block and visible.*/
+            display: block !important; 
+            background-color: #e6ffe6 !important; /* Very light green to make it obvious */
+            border: 3px dashed green !important; /* Thick dashed green border */
+        }
+        body.dark-mode #loggedInContent {
+            background-color: #0c331a !important; /* Darker green for dark mode */
+            border: 3px dashed #32cd32 !important; /* Lime green for dark mode */
+        }
     </style>
 </head>
 <body>
@@ -985,7 +997,8 @@
         </div>
 
         <!-- Logged In Content (visible when logged in) -->
-        <div id="loggedInContent" class="container" style="display: none;">
+        <!-- For debugging, we are temporarily forcing this to display: block in CSS -->
+        <div id="loggedInContent" class="container">
             <!-- User Info and Logout button -->
             <h2 id="loggedInUserGreeting">Welcome, User!</h2>
             <p>Your Manager ID: <span id="displayLoggedInManagerId"></span></p>
@@ -1213,7 +1226,7 @@
                 </p>
             </div>
 
-            <!-- Admin Dashboard Content (initially hidden by default, now controlled by JS) -->
+            <!-- Admin Dashboard Content (will be explicitly hidden/shown by JS) -->
             <div id="adminDashboardContent" style="display: none;"> 
                 <h2>Admin Dashboard</h2>
                 <div class="admin-search-section">
@@ -1221,7 +1234,7 @@
                     <button id="adminSearchButton">Search User</button>
                 </div>
 
-                <!-- Debugging: Removed style="display: none;" here -->
+                <!-- These are now visible by default in HTML for debugging, but JS will hide/show as needed -->
                 <div id="adminSearchResults" class="admin-edit-section">
                     <h3>User Found:</h3>
                     <p>User ID: <strong id="adminUserUid">N/A</strong></p>
@@ -1230,7 +1243,6 @@
                     <button id="adminUpdateUserButton">Update User</button>
                 </div>
 
-                <!-- Debugging: Removed style="display: none;" here -->
                 <div id="adminMessage" class="message-box"></div>
             </div>
         </div>
@@ -1418,7 +1430,7 @@
         // Function to hide all main content sections (except logo and primary navigation)
         function hideAllContentSections() {
             authSection.style.display = 'none';
-            loggedInContent.style.display = 'none'; 
+            // loggedInContent.style.display is now handled by CSS !important for debugging
             loadingMessage.style.display = 'none';
             errorMessage.style.display = 'none';
             videoGeneratingMessage.style.display = 'none';
@@ -1426,7 +1438,7 @@
             
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; 
+            adminDashboardContent.style.display = 'none'; // Ensure admin dashboard is hidden when switching away
             
             shareVideoButton.style.display = 'none'; 
             instructionsBox.style.display = 'none'; 
@@ -1434,9 +1446,8 @@
             rankJourneyBox.style.display = 'none';
             rankJourneyChartContainer.style.display = 'none';
 
-            // IMPORTANT: These are now always visible for debugging, but hidden by default in showContentSection
-            // adminSearchResults.style.display = 'none'; // Not needed anymore here
-            // adminMessage.style.display = 'none';      // Not needed anymore here
+            adminSearchResults.style.display = 'none'; // Re-hide results section after clearing
+            adminMessage.style.display = 'none';      // Re-hide message section after clearing
         }
 
         // Function to clear analyzer report data
@@ -1644,7 +1655,7 @@
                         displayLoggedInManagerId.textContent = userManagerId;
                         
                         hideAllContentSections(); 
-                        loggedInContent.style.display = 'block'; 
+                        loggedInContent.style.display = 'block'; // Show the main logged-in container
                         
                         currentManagerId = userManagerId; 
                         isAnalyzerReportDataFetched = false; 
