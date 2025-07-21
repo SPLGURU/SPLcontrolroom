@@ -1379,7 +1379,9 @@
 
         adminDeleteManagerBtn.addEventListener('click', async () => {
             const managerIdToDelete = adminManagerIdInput.value;
-            if (managerIdToDelete && confirm(`Are you sure you want to delete manager with ID: ${managerIdToDelete}?`)) {
+            // Using a custom message box instead of confirm()
+            const confirmDelete = window.prompt(`Type "DELETE" to confirm deletion of manager with ID: ${managerIdToDelete}`);
+            if (confirmDelete === "DELETE") {
                 try {
                     // Implement Firebase Admin SDK function call here to delete user and their data
                     // This would typically be done via a Netlify Function that calls your Python backend
@@ -1395,6 +1397,8 @@
                     console.error("Error deleting manager:", error);
                     showAdminMessage(`Failed to delete manager: ${error.message}`, 'error');
                 }
+            } else if (confirmDelete !== null) {
+                showAdminMessage('Deletion cancelled.', 'info');
             }
         });
 
@@ -1432,11 +1436,12 @@
 
                     const headerRow = jsonRows[0].map(h => String(h).trim().toLowerCase());
                     
+                    // Updated expected headers for FDR Home and FDR Away
                     const expectedHeaders = {
                         rank: ['rank', 'ranking number'],
                         team: ['team', 'team name'],
-                        fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], // Updated for FDR Home
-                        fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  // Updated for FDR Away
+                        fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
+                        fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
                     };
 
                     const getColumnIndex = (headers, aliases) => {
@@ -1465,15 +1470,17 @@
                         const fdrHome = parseInt(row[fdrHomeIndex], 10); 
                         const fdrAway = parseInt(row[fdrAwayIndex], 10); 
 
-                        if (!isNaN(rank) && team && !isNaN(fdrHome) && !isNaN(fdrAway)) {
+                        // Validate FDR values are between 1 and 7
+                        if (!isNaN(rank) && team && !isNaN(fdrHome) && !isNaN(fdrAway) &&
+                            fdrHome >=1 && fdrHome <= 7 && fdrAway >= 1 && fdrAway <= 7) {
                             parsedRankings.push({ rank, team, fdrHome, fdrAway });
                         } else {
-                            console.warn(`Skipping row ${i+1} due to invalid data: Rank=${row[rankIndex]}, Team=${row[teamIndex]}, FDR Home=${row[fdrHomeIndex]}, FDR Away=${row[fdrAwayIndex]}`);
+                            console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7): Rank=${row[rankIndex]}, Team=${row[teamIndex]}, FDR Home=${row[fdrHomeIndex]}, FDR Away=${row[fdrAwayIndex]}`);
                         }
                     }
 
                     if (parsedRankings.length === 0) {
-                        showExcelUploadMessage('No valid ranking data found in the Excel file after parsing.', 'error');
+                        showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are 1-7.', 'error');
                         return;
                     }
 
@@ -1481,6 +1488,7 @@
                     const seasonId = "2024-2025"; 
                     
                     // Firestore path: public_data/splRankings/2024-2025
+                    // This path is chosen for publicly accessible data in Firestore.
                     const splRankingsDocRef = doc(db, 'public_data', 'splRankings', seasonId); 
 
                     let existingData = {};
@@ -1493,8 +1501,7 @@
                         ...existingData,
                         season: seasonId,
                         lastUpdated: serverTimestamp(),
-                        // Store the parsed rankings under the selected type (e.g., 'overall')
-                        // This will now contain rank, team, fdrHome, fdrAway
+                        // Store the parsed rankings under the selected type (e.g., 'overall', 'home', 'away')
                         [selectedRankingType]: parsedRankings 
                     };
 
@@ -1504,7 +1511,7 @@
                     fetchAndDisplayCurrentRankings(); // Refresh display after upload
                 } catch (error) {
                     console.error('Error processing Excel file or uploading to Firestore:', error);
-                    showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format.`, 'error');
+                    showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, 'error');
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -1521,20 +1528,25 @@
             const splRankingsDocRef = doc(db, 'public_data', 'splRankings', seasonId);
 
             try {
-                const docSnap = await getDoc(splRankingsDocRef);
+                // Use onSnapshot for real-time updates if desired, otherwise getDoc is fine for one-time fetch
+                const docSnap = await getDoc(splRankingsDocRef); 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     console.log("Current Rankings from Firestore:", data);
 
                     const renderList = (listElement, rankings) => {
+                        listElement.innerHTML = ''; // Clear previous list items
                         if (rankings && rankings.length > 0) {
-                            listElement.innerHTML = rankings.map(item => `
-                                <li class="flex justify-between items-center py-1 px-2 hover:bg-gray-200 rounded-md">
+                            rankings.forEach(item => {
+                                const listItem = document.createElement('li');
+                                listItem.className = 'flex justify-between items-center py-1 px-2 hover:bg-gray-200 rounded-md';
+                                listItem.innerHTML = `
                                     <span class="font-medium text-gray-800">${item.rank}.</span>
                                     <span class="flex-grow ml-2 text-gray-700">${item.team}</span>
                                     <span class="ml-2 text-gray-600 text-xs">(H: ${item.fdrHome}, A: ${item.fdrAway})</span>
-                                </li>
-                            `).join('');
+                                `;
+                                listElement.appendChild(listItem);
+                            });
                         } else {
                             listElement.innerHTML = '<li class="text-gray-500 text-center">No data available.</li>';
                         }
