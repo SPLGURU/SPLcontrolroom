@@ -1,0 +1,7 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  # This command runs our script to inject the Firebase API key into index.html
+  command = "node scripts/inject-firebase-api-key.js" 
+
+# No changes needed for functions or redirects for this fix.

@@ -1,0 +1,16 @@
+{
+  "name": "fantasysplanalyzer",
+  "version": "1.0.0",
+  "description": "A web app to analyze Fantasy SPL manager performance.",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
