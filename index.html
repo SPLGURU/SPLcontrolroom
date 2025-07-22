@@ -3286,11 +3286,11 @@
                     }
 
                     const selectedRankingType = rankingTypeSelect.value; 
-                    const seasonId = "2024-2025"; 
+                    const seasonId = "2025-2026"; 
                     
                     // Firestore path: public_data/splRankings/2024-2025
                     // This path is chosen for publicly accessible data in Firestore.
-                    const splRankingsDocRef = doc(db, 'public_data', 'splRankings', seasonId); 
+                    const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
 
                     let existingData = {};
                     const docSnap = await getDoc(splRankingsDocRef);
@@ -3325,8 +3325,8 @@
             homeRankingsList.innerHTML = '';
             awayRankingsList.innerHTML = '';
 
-            const seasonId = "2024-2025";
-            const splRankingsDocRef = doc(db, 'public_data', 'splRankings', seasonId);
+            const seasonId = "2025-2026";
+            const splRankingsDocRef = doc(db, 'splRankings', seasonId);
 
             try {
                 // Use onSnapshot for real-time updates if desired, otherwise getDoc is fine for one-time fetch
