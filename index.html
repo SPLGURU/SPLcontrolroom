@@ -1127,51 +1127,84 @@
         body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
         body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
 
+        /* NEW: Styles for the horizontal stacked FDR display */
+        .fdr-teams-horizontal-scroll {
+            display: flex; /* Arrange team columns horizontally */
+            overflow-x: auto; /* Enable horizontal scrolling if content overflows */
+            padding-bottom: 10px; /* Space for scrollbar */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #888 #f1f1f1; /* Firefox */
+            border: 1px solid var(--spl-border-light); /* Outer border for the scrollable area */
+            border-radius: 8px;
+            overflow-y: hidden; /* Hide vertical scrollbar */
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* Inner shadow for depth */
+        }
+        /* Webkit browsers (Chrome, Safari, Edge) scrollbar styles */
+        .fdr-teams-horizontal-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .fdr-teams-horizontal-scroll::-webkit-scrollbar-track {
+            background: var(--spl-table-row-even);
+            border-radius: 10px;
+        }
+        .fdr-teams-horizontal-scroll::-webkit-scrollbar-thumb {
+            background: var(--spl-text-medium);
+            border-radius: 10px;
+        }
+        .fdr-teams-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--spl-primary-accent);
+        }
+        body.dark-mode .fdr-teams-horizontal-scroll::-webkit-scrollbar-track {
+            background: #0d283c; /* Dark mode scrollbar track */
+        }
+        body.dark-mode .fdr-teams-horizontal-scroll::-webkit-scrollbar-thumb {
+            background: #555; /* Dark mode scrollbar thumb */
+        }
+        body.dark-mode .fdr-teams-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
 
-        /* Styles for the new list items in current rankings display */
-        .fdr-list-item {
+
+        .team-fdr-column {
+            display: flex;
+            flex-direction: column; /* Stack Home and Away vertically */
+            flex-shrink: 0; /* Prevent items from shrinking */
+            width: 120px; /* Fixed width for each team column, adjust as needed */
+            border-right: 1px solid var(--spl-border-light); /* Separator between team columns */
+            transition: border-color 0.3s ease;
+        }
+        .team-fdr-column:last-child {
+            border-right: none; /* No border on the last column */
+        }
+        body.dark-mode .team-fdr-column {
+            border-right-color: rgba(255,255,255,0.1);
+        }
+
+        .fdr-block {
+            padding: 10px 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9em;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            border-bottom: 1px solid var(--spl-border-light);
-        }
-        .fdr-list-item:last-child {
-            border-bottom: none;
-        }
-        .fdr-list-item:hover {
-            background-color: var(--spl-table-row-hover);
-        }
-        .fdr-list-item .rank-team {
-            font-weight: bold;
-            color: var(--spl-text-dark);
-            flex-grow: 1;
-        }
-        .fdr-list-item .fdr-badge-container {
-            display: flex;
+            justify-content: center;
             gap: 5px;
-            margin-left: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: black; /* Default text color for light backgrounds */
+            min-height: 40px; /* Ensure consistent height for blocks */
+            box-sizing: border-box; /* Include padding in height/width */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .fdr-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            color: black; /* Default text color for badges */
+        .fdr-block.fdr-away {
+            border-bottom: 1px solid var(--spl-border-light); /* Separator between Away and Home for a team */
+            transition: border-color 0.3s ease;
         }
-        .fdr-badge.home-badge {
-            background-color: #f0f0f0; /* Placeholder, actual color from JS */
+        body.dark-mode .fdr-block.fdr-away {
+            border-bottom-color: rgba(255,255,255,0.1);
         }
-        .fdr-badge.away-badge {
-            background-color: #f0f0f0; /* Placeholder, actual color from JS */
-        }
-        body.dark-mode .fdr-badge {
-            color: white; /* Default text color for badges in dark mode */
-        }
-
+        
     </style>
 </head>
 <body>
@@ -1508,31 +1541,21 @@
 
                     <!-- Display Current Rankings -->
                     <div id="currentRankingsDisplay" class="mt-8">
-                                            <!-- FDR Difficulty Scale Display -->
-                    <div class="fdr-scale">
-                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                        <div class="fdr-level fdr-2">2</div>
-                        <div class="fdr-level fdr-3">3</div>
-                        <div class="fdr-level fdr-4">4</div>
-                        <div class="fdr-level fdr-5">5</div>
-                        <div class="fdr-level fdr-6">6</div>
-                        <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
-                    </div>
+                        <h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
+                        <!-- FDR Difficulty Scale Display -->
+                        <div class="fdr-scale">
+                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                            <div class="fdr-level fdr-2">2</div>
+                            <div class="fdr-level fdr-3">3</div>
+                            <div class="fdr-level fdr-4">4</div>
+                            <div class="fdr-level fdr-5">5</div>
+                            <div class="fdr-level fdr-6">6</div>
+                            <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                        </div>
 
-			<h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="bg-gray-100 p-3 rounded-md">
-                                <h5 class="font-medium text-gray-800 mb-2">Overall</h5>
-                                <ul id="overallRankingsList" class="list-none p-0 max-h-40 overflow-y-auto text-sm"></ul>
-                            </div>
-                            <div class="bg-gray-100 p-3 rounded-md">
-                                <h5 class="font-medium text-gray-800 mb-2">Home</h5>
-                                <ul id="homeRankingsList" class="list-none p-0 max-h-40 overflow-y-auto text-sm"></ul>
-                            </div>
-                            <div class="bg-gray-100 p-3 rounded-md">
-                                <h5 class="font-medium text-gray-800 mb-2">Away</h5>
-                                <ul id="awayRankingsList" class="list-none p-0 max-h-40 overflow-y-auto text-sm"></ul>
-                            </div>
+                        <!-- NEW: Horizontal FDR Display Container -->
+                        <div class="fdr-teams-horizontal-scroll" id="fdrTeamsDisplay">
+                            <!-- Team FDR blocks will be dynamically inserted here by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -1574,7 +1597,7 @@
             apiKey: "AIzaSyABljnM2tU8eANL6Eblx_howQDPjB3X7VQ", 
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
-            storageBucket: "splcontrolroom-c02c0.firebasestorage.app",
+            storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
             messagingSenderId: "272416971084",
             appId: "1:272416971084:web:57517048926e49720197e9"
         };
@@ -1705,9 +1728,8 @@
         const excelFileUploadInput = document.getElementById('excelFileUploadInput');
         const excelUploadMessage = document.getElementById('excelUploadMessage');
         const currentRankingsDisplay = document.getElementById('currentRankingsDisplay');
-        const overallRankingsList = document.getElementById('overallRankingsList');
-        const homeRankingsList = document.getElementById('homeRankingsList');
-        const awayRankingsList = document.getElementById('awayRankingsList');
+        // Removed individual lists, now using a single container for the new grid
+        const fdrTeamsDisplay = document.getElementById('fdrTeamsDisplay');
 
 
         // --- Helper Functions ---
@@ -2422,6 +2444,10 @@
                             row.cells[0].colSpan = 4;
                         }
 
+                        greenArrowsCountElem.textContent = `${data.greenArrowsCount || 0} 🟢`;
+                        redArrowsCountElem.textContent = `${data.redArrowsCount || 0} 🔴`;
+
+
                         managerStatsDiv.style.display = 'block'; 
                         rankJourneyBox.style.display = 'flex'; 
                         shareVideoButton.style.display = 'block';
@@ -2642,9 +2668,6 @@
 
                 let currentRoundForDot = firstDataRound + (progress * dataRoundRange);
                 currentRoundForDot = Math.min(currentRoundForDot, lastDataRound);
-
-                let interpolatedRank = null;
-                let dotXPosition = currentRoundForDot;
 
                 let prevDataPoint = null;
                 let nextDataPoint = null;
@@ -3394,7 +3417,7 @@
                     const selectedRankingType = rankingTypeSelect.value; 
                     const seasonId = "2025-2026"; 
                     
-                    // Firestore path: public_data/splRankings/2024-2025
+                    // Firestore path: splRankings/2025-2026
                     // This path is chosen for publicly accessible data in Firestore.
                     const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
 
@@ -3427,54 +3450,56 @@
         // --- Fetch and Display Current Rankings from Firestore (NEW) ---
         async function fetchAndDisplayCurrentRankings() {
             showExcelUploadMessage('Fetching current rankings...', 'info');
-            overallRankingsList.innerHTML = '';
-            homeRankingsList.innerHTML = '';
-            awayRankingsList.innerHTML = '';
+            fdrTeamsDisplay.innerHTML = ''; // Clear previous display
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
 
             try {
-                // Use onSnapshot for real-time updates if desired, otherwise getDoc is fine for one-time fetch
                 const docSnap = await getDoc(splRankingsDocRef); 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     console.log("Current Rankings from Firestore:", data);
 
-                    const renderList = (listElement, rankings) => {
-                        listElement.innerHTML = ''; // Clear previous list items
-                        if (rankings && rankings.length > 0) {
-                            rankings.forEach(item => {
-                                const listItem = document.createElement('li');
-                                listItem.className = 'flex justify-between items-center py-1 px-2 hover:bg-gray-200 rounded-md';
-                                                                listItem.innerHTML = `
-                                    <span class="rank-team">${item.rank}. ${item.team}</span>
-                                    <div class="fdr-badge-container">
-                                        <span class="fdr-badge home-badge fdr-${item.fdrHome}">🏠</span>
-                                        <span class="fdr-badge away-badge fdr-${item.fdrAway}">✈️</span>
-                                    </div>
-                                `;
+                    const rankings = data.overall; // Always display 'overall' for this section
 
-                                listElement.appendChild(listItem);
-                            });
-                        } else {
-                            listElement.innerHTML = '<li class="text-gray-500 text-center">No data available.</li>';
-                        }
-                    };
+                    if (rankings && rankings.length > 0) {
+                        // Sort teams by difficulty: highest FDR Home, then highest FDR Away, then by Rank
+                        rankings.sort((a, b) => {
+                            // Primary sort: FDR Home (descending)
+                            if (b.fdrHome !== a.fdrHome) {
+                                return b.fdrHome - a.fdrHome;
+                            }
+                            // Secondary sort: FDR Away (descending)
+                            if (b.fdrAway !== a.fdrAway) {
+                                return b.fdrAway - a.fdrAway;
+                            }
+                            // Tertiary sort: Rank (ascending)
+                            return a.rank - b.rank;
+                        });
 
-                    renderList(overallRankingsList, data.overall);
-                    renderList(homeRankingsList, data.home);
-                    renderList(awayRankingsList, data.away);
-                    showExcelUploadMessage('Current rankings loaded.', 'success');
+                        rankings.forEach(item => {
+                            const teamColumn = document.createElement('div');
+                            teamColumn.className = 'team-fdr-column';
+                            teamColumn.innerHTML = `
+                                <div class="fdr-block fdr-away fdr-${item.fdrAway}">${item.team} ✈️</div>
+                                <div class="fdr-block fdr-home fdr-${item.fdrHome}">${item.team} 🏠</div>
+                            `;
+                            fdrTeamsDisplay.appendChild(teamColumn);
+                        });
+                        showExcelUploadMessage('Current rankings loaded.', 'success');
+                    } else {
+                        fdrTeamsDisplay.innerHTML = '<div style="width:100%; text-align:center; padding: 20px; color: var(--spl-text-medium);">No overall rankings data available. Please upload an Excel file.</div>';
+                        showExcelUploadMessage('No overall rankings data found in Firestore for 2025-2026 season.', 'info');
+                    }
                 } else {
-                    showExcelUploadMessage('No rankings data found in Firestore for 2024-2025 season.', 'info');
-                    overallRankingsList.innerHTML = '<li class="text-gray-500 text-center">No data available.</li>';
-                    homeRankingsList.innerHTML = '<li class="text-gray-500 text-center">No data available.</li>';
-                    awayRankingsList.innerHTML = '<li class="text-gray-500 text-center">No data available.</li>';
+                    fdrTeamsDisplay.innerHTML = '<div style="width:100%; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
+                    showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', 'info');
                 }
             } catch (error) {
                 console.error("Error fetching current rankings for display:", error);
                 showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, 'error');
+                fdrTeamsDisplay.innerHTML = '<div style="width:100%; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
             }
         }
 
