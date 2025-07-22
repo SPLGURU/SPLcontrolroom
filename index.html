@@ -1127,7 +1127,7 @@
         body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
         body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
 
-        /* NEW: Styles for the two-column FDR display */
+        /* Styles for the two-column FDR display (Overall) */
         .fdr-data-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; /* Two equal columns */
@@ -1138,6 +1138,21 @@
             box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* Inner shadow for depth */
         }
         body.dark-mode .fdr-data-grid {
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
+        }
+
+        /* Styles for single-column FDR display (Home/Away) */
+        .fdr-single-column-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column */
+            gap: 0;
+            border: 1px solid var(--spl-border-light);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+        body.dark-mode .fdr-single-column-grid {
             border-color: rgba(255,255,255,0.1);
             box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
         }
@@ -1165,17 +1180,20 @@
             border-bottom-color: rgba(255,255,255,0.1);
         }
 
-        /* Vertical separator for the left column items */
-        .fdr-grid-item:nth-child(2n-1) { /* Applies to 1st, 3rd, 5th... items (left column) */
+        /* Vertical separator for the left column items (only applies to two-column grids) */
+        .fdr-data-grid .fdr-grid-item:nth-child(2n-1) { /* Applies to 1st, 3rd, 5th... items (left column) */
             border-right: 1px solid var(--spl-border-light);
             transition: border-color 0.3s ease;
         }
-        body.dark-mode .fdr-grid-item:nth-child(2n-1) {
+        body.dark-mode .fdr-data-grid .fdr-grid-item:nth-child(2n-1) {
             border-right-color: rgba(255,255,255,0.1);
         }
 
-        /* Remove bottom border for items in the last "row" (last two items) */
+        /* Remove bottom border for items in the last "row" (last two items for 2-col, last item for 1-col) */
         .fdr-data-grid > :nth-last-child(-n + 2) { 
+            border-bottom: none;
+        }
+        .fdr-single-column-grid > :last-child {
             border-bottom: none;
         }
 
@@ -1561,8 +1579,8 @@
                                 <div class="fdr-level fdr-5">5</div>
                                 <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
                             </div>
-                            <!-- Two-column FDR Display Container for Home -->
-                            <div class="fdr-data-grid" id="homeFDRGrid">
+                            <!-- Single-column FDR Display Container for Home -->
+                            <div class="fdr-single-column-grid" id="homeFDRGrid">
                                 <!-- Team FDR items will be dynamically inserted here by JavaScript -->
                             </div>
                         </div>
@@ -1579,8 +1597,8 @@
                                 <div class="fdr-level fdr-5">5</div>
                                 <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
                             </div>
-                            <!-- Two-column FDR Display Container for Away -->
-                            <div class="fdr-data-grid" id="awayFDRGrid">
+                            <!-- Single-column FDR Display Container for Away -->
+                            <div class="fdr-single-column-grid" id="awayFDRGrid">
                                 <!-- Team FDR items will be dynamically inserted here by JavaScript -->
                             </div>
                         </div>
@@ -1622,7 +1640,7 @@
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "AIzaSyABljnM2tU8eANL6Eblx_howQDPjB3X7VQ", 
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", // IMPORTANT: This is a placeholder. Netlify will inject the actual key.
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
@@ -2263,6 +2281,9 @@
                     adminMessage.style.display = 'none'; 
                     dataUploadSection.style.display = 'none'; // Hide data upload by default when entering admin
                     currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
+                    overallFDRSection.style.display = 'none'; // Hide all FDR sections
+                    homeFDRSection.style.display = 'none';
+                    awayFDRSection.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -3492,9 +3513,9 @@
                             if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
                                 fdrValue1 >=1 && fdrValue1 <= 6) { // FDR 1-6 for Home/Away
                                 if (selectedRankingType === 'home') {
-                                    parsedRankings.push({ rank, team, fdrAway: fdrValue1 });
+                                    parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); // Store as fdrAway for Home rankings
                                 } else if (selectedRankingType === 'away') {
-                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1 });
+                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); // Store as fdrHome for Away rankings
                                 }
                                 isValid = true;
                             }
@@ -3583,7 +3604,7 @@
                         overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
                     }
 
-                    // --- Render Home Rankings ---
+                    // --- Render Home Rankings (Single Column) ---
                     const homeRankings = data.home;
                     if (homeRankings && homeRankings.length > 0) {
                         homeRankings.sort((a, b) => {
@@ -3594,28 +3615,19 @@
 
                         homeRankings.forEach(item => {
                             const teamName = item.team;
-                            const fdrAway = item.fdrAway; // This is the opponent's away FDR
+                            const fdrAway = item.fdrAway; 
                             
-                            // Display the team and its corresponding FDR
-                            const awayItem = document.createElement('div');
-                            awayItem.className = `fdr-grid-item fdr-${fdrAway}`;
-                            awayItem.innerHTML = `${teamName} ✈️`; // Use airplane for opponent's away
-                            homeFDRGrid.appendChild(awayItem);
-
-                            // For the second column, we need a placeholder or a different interpretation
-                            // Since Home sheet only has one FDR, we can duplicate the value or use a placeholder
-                            // For now, let's just duplicate the value for visual consistency in the 2-column grid
-                            const homeItem = document.createElement('div');
-                            homeItem.className = `fdr-grid-item fdr-${fdrAway}`; // Using the same FDR for visual consistency
-                            homeItem.innerHTML = `${teamName} 🏠`; // Use house for home
-                            homeFDRGrid.appendChild(homeItem);
+                            const teamItem = document.createElement('div');
+                            teamItem.className = `fdr-grid-item fdr-${fdrAway}`;
+                            teamItem.innerHTML = `${teamName} 🏠`; // Display with house emoji for Home rankings
+                            homeFDRGrid.appendChild(teamItem);
                         });
                         homeFDRSection.style.display = 'block';
                     } else {
                         homeFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
                     }
 
-                    // --- Render Away Rankings ---
+                    // --- Render Away Rankings (Single Column) ---
                     const awayRankings = data.away;
                     if (awayRankings && awayRankings.length > 0) {
                         awayRankings.sort((a, b) => {
@@ -3626,17 +3638,12 @@
 
                         awayRankings.forEach(item => {
                             const teamName = item.team;
-                            const fdrHome = item.fdrHome; // This is the opponent's home FDR
+                            const fdrHome = item.fdrHome; 
 
-                            const awayItem = document.createElement('div');
-                            awayItem.className = `fdr-grid-item fdr-${fdrHome}`; // Using this FDR for visual consistency
-                            awayItem.innerHTML = `${teamName} ✈️`; // Use airplane for away
-                            awayFDRGrid.appendChild(awayItem);
-
-                            const homeItem = document.createElement('div');
-                            homeItem.className = `fdr-grid-item fdr-${fdrHome}`;
-                            homeItem.innerHTML = `${teamName} 🏠`; // Use house for opponent's home
-                            awayFDRGrid.appendChild(homeItem);
+                            const teamItem = document.createElement('div');
+                            teamItem.className = `fdr-grid-item fdr-${fdrHome}`;
+                            teamItem.innerHTML = `${teamName} ✈️`; // Display with airplane emoji for Away rankings
+                            awayFDRGrid.appendChild(teamItem);
                         });
                         awayFDRSection.style.display = 'block';
                     } else {
