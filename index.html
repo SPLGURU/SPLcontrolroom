@@ -1494,11 +1494,15 @@
 
                 <!-- Data Upload Section (NEW) -->
                 <div id="dataUploadSection" style="display: none;" class="p-4 bg-white rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Upload League Table (Excel)</h3>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Upload League Tables</h3>
                     <p class="text-sm text-gray-600 mb-4">
-                        Upload an Excel file with columns: "Rank", "Team" (or "Team Name"), "FDR Home", and "FDR Away". FDRs should be numbers between 1-7.
+                        Upload Excel files for Overall, Home, or Away rankings.
+                        Overall FDR sheet: "Rank", "Team", "FDR Home", "FDR Away".
+                        Home FDR sheet: "Rank", "Team", "FDR Away".
+                        Away FDR sheet: "Rank", "Team", "FDR Home".
+                        FDRs should be numbers between 1-7 (Overall) or 1-6 (Home/Away).
                     </p>
-                    <div class="mb-3">
+                    <div class="mb-3 input-group">
                         <label for="rankingTypeSelect" class="block text-gray-700 text-sm font-bold mb-2">
                             Select Ranking Type for Upload:
                         </label>
@@ -1511,7 +1515,7 @@
                             <option value="away">Away Ranking</option>
                         </select>
                     </div>
-                    <label class="block text-white font-bold py-2 px-4 rounded-lg cursor-pointer text-center transition duration-300 transform hover:scale-105" style="background-color: #6f42c1; /* Purple */">
+                    <label class="upload-button-label">
                         Upload Excel File
                         <input
                             type="file"
@@ -1525,21 +1529,62 @@
                     <!-- Display Current Rankings -->
                     <div id="currentRankingsDisplay" class="mt-8">
                         <h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
-                        <!-- FDR Difficulty Scale Display -->
-                        <div class="fdr-scale">
-                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                            <div class="fdr-level fdr-2">2</div>
-                            <div class="fdr-level fdr-3">3</div>
-                            <div class="fdr-level fdr-4">4</div>
-                            <div class="fdr-level fdr-5">5</div>
-                            <div class="fdr-level fdr-6">6</div>
-                            <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                        
+                        <!-- Overall FDR Display Section -->
+                        <div id="overallFDRSection" style="display: none;">
+                            <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Overall Rankings</h5>
+                            <!-- FDR Difficulty Scale for Overall (1-7) -->
+                            <div class="fdr-scale">
+                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                                <div class="fdr-level fdr-2">2</div>
+                                <div class="fdr-level fdr-3">3</div>
+                                <div class="fdr-level fdr-4">4</div>
+                                <div class="fdr-level fdr-5">5</div>
+                                <div class="fdr-level fdr-6">6</div>
+                                <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                            </div>
+                            <!-- Two-column FDR Display Container for Overall -->
+                            <div class="fdr-data-grid" id="overallFDRGrid">
+                                <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                            </div>
                         </div>
 
-                        <!-- NEW: Two-column FDR Display Container -->
-                        <div class="fdr-data-grid" id="fdrDataGrid">
-                            <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                        <!-- Home FDR Display Section -->
+                        <div id="homeFDRSection" style="display: none; margin-top: 30px;">
+                            <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Home Rankings</h5>
+                            <!-- FDR Difficulty Scale for Home/Away (1-6) -->
+                            <div class="fdr-scale">
+                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                                <div class="fdr-level fdr-2">2</div>
+                                <div class="fdr-level fdr-3">3</div>
+                                <div class="fdr-level fdr-4">4</div>
+                                <div class="fdr-level fdr-5">5</div>
+                                <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                            </div>
+                            <!-- Two-column FDR Display Container for Home -->
+                            <div class="fdr-data-grid" id="homeFDRGrid">
+                                <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                            </div>
                         </div>
+
+                        <!-- Away FDR Display Section -->
+                        <div id="awayFDRSection" style="display: none; margin-top: 30px;">
+                            <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Away Rankings</h5>
+                            <!-- FDR Difficulty Scale for Home/Away (1-6) -->
+                            <div class="fdr-scale">
+                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                                <div class="fdr-level fdr-2">2</div>
+                                <div class="fdr-level fdr-3">3</div>
+                                <div class="fdr-level fdr-4">4</div>
+                                <div class="fdr-level fdr-5">5</div>
+                                <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                            </div>
+                            <!-- Two-column FDR Display Container for Away -->
+                            <div class="fdr-data-grid" id="awayFDRGrid">
+                                <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -1711,7 +1756,14 @@
         const excelFileUploadInput = document.getElementById('excelFileUploadInput');
         const excelUploadMessage = document.getElementById('excelUploadMessage');
         const currentRankingsDisplay = document.getElementById('currentRankingsDisplay');
-        const fdrDataGrid = document.getElementById('fdrDataGrid'); // Changed to fdrDataGrid
+        
+        // Specific FDR grid containers
+        const overallFDRSection = document.getElementById('overallFDRSection');
+        const overallFDRGrid = document.getElementById('overallFDRGrid');
+        const homeFDRSection = document.getElementById('homeFDRSection');
+        const homeFDRGrid = document.getElementById('homeFDRGrid');
+        const awayFDRSection = document.getElementById('awayFDRSection');
+        const awayFDRGrid = document.getElementById('awayFDRGrid');
 
 
         // --- Helper Functions ---
@@ -1770,6 +1822,9 @@
             dataUploadSection.style.display = 'none';
             currentRankingsDisplay.style.display = 'none';
             excelUploadMessage.style.display = 'none';
+            overallFDRSection.style.display = 'none'; // Hide all FDR sections
+            homeFDRSection.style.display = 'none';
+            awayFDRSection.style.display = 'none';
 
 
             // General messages/loading indicators
@@ -1995,7 +2050,7 @@
 
                         // Check if current user is an admin to show Admin Dashboard menu item
                         const adminDocRef = doc(db, "admins", user.uid);
-                        const adminDocSnap = await getGDoc(adminDocRef);
+                        const adminDocSnap = await getDoc(adminDocRef);
                         isAdminUser = adminDocSnap.exists();
                         console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                         
@@ -2206,6 +2261,8 @@
                     adminSearchSection.style.display = 'flex'; 
                     adminSearchResults.style.display = 'none'; 
                     adminMessage.style.display = 'none'; 
+                    dataUploadSection.style.display = 'none'; // Hide data upload by default when entering admin
+                    currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -3297,8 +3354,11 @@
             adminSearchSection.style.display = 'flex'; // Show search input/button
             adminSearchResults.style.display = 'none'; // Hide results until search is run
             adminMessage.style.display = 'none'; // Clear previous messages
-            dataUploadSection.style.display = 'none'; // NEW: Hide data upload section
-            currentRankingsDisplay.style.display = 'none'; // NEW: Hide display
+            dataUploadSection.style.display = 'none'; // Hide data upload section
+            currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
+            overallFDRSection.style.display = 'none'; // Hide all FDR sections
+            homeFDRSection.style.display = 'none';
+            awayFDRSection.style.display = 'none';
             showAdminMessage("Enter user details to search.", "info");
         });
 
@@ -3347,13 +3407,38 @@
 
                     const headerRow = jsonRows[0].map(h => String(h).trim().toLowerCase());
                     
-                    // Updated expected headers for FDR Home and FDR Away
-                    const expectedHeaders = {
-                        rank: ['rank', 'ranking number'],
-                        team: ['team', 'team name'],
-                        fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
-                        fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
-                    };
+                    const selectedRankingType = rankingTypeSelect.value; 
+                    let expectedHeaders;
+                    let fdrColumnName1, fdrColumnName2; // For overall
+                    let fdrColumnNameSingle; // For home/away
+
+                    if (selectedRankingType === 'overall') {
+                        expectedHeaders = {
+                            rank: ['rank', 'ranking number'],
+                            team: ['team', 'team name'],
+                            fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
+                            fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
+                        };
+                        fdrColumnName1 = 'fdrHome';
+                        fdrColumnName2 = 'fdrAway';
+                    } else if (selectedRankingType === 'home') {
+                        expectedHeaders = {
+                            rank: ['rank', 'ranking number'],
+                            team: ['team', 'team name'],
+                            fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] // Home sheet has FDR Away
+                        };
+                        fdrColumnNameSingle = 'fdrAway';
+                    } else if (selectedRankingType === 'away') {
+                        expectedHeaders = {
+                            rank: ['rank', 'ranking number'],
+                            team: ['team', 'team name'],
+                            fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] // Away sheet has FDR Home
+                        };
+                        fdrColumnNameSingle = 'fdrHome';
+                    } else {
+                        showExcelUploadMessage('Invalid ranking type selected.', 'error');
+                        return;
+                    }
 
                     const getColumnIndex = (headers, aliases) => {
                         for (const alias of aliases) {
@@ -3365,12 +3450,24 @@
 
                     const rankIndex = getColumnIndex(headerRow, expectedHeaders.rank);
                     const teamIndex = getColumnIndex(headerRow, expectedHeaders.team);
-                    const fdrHomeIndex = getColumnIndex(headerRow, expectedHeaders.fdrHome);
-                    const fdrAwayIndex = getColumnIndex(headerRow, expectedHeaders.fdrAway);
 
-                    if (rankIndex === -1 || teamIndex === -1 || fdrHomeIndex === -1 || fdrAwayIndex === -1) {
-                        showExcelUploadMessage('Invalid Excel headers. Expected "Rank", "Team", "FDR Home", and "FDR Away".', 'error');
-                        return;
+                    let fdrCol1Index = -1;
+                    let fdrCol2Index = -1;
+                    let fdrColSingleIndex = -1;
+
+                    if (selectedRankingType === 'overall') {
+                        fdrCol1Index = getColumnIndex(headerRow, expectedHeaders.fdrHome);
+                        fdrCol2Index = getColumnIndex(headerRow, expectedHeaders.fdrAway);
+                        if (rankIndex === -1 || teamIndex === -1 || fdrCol1Index === -1 || fdrCol2Index === -1) {
+                            showExcelUploadMessage('Invalid Excel headers for Overall Ranking. Expected "Rank", "Team", "FDR Home", and "FDR Away".', 'error');
+                            return;
+                        }
+                    } else {
+                        fdrColSingleIndex = getColumnIndex(headerRow, expectedHeaders[fdrColumnNameSingle]);
+                        if (rankIndex === -1 || teamIndex === -1 || fdrColSingleIndex === -1) {
+                            showExcelUploadMessage(`Invalid Excel headers for ${selectedRankingType.charAt(0).toUpperCase() + selectedRankingType.slice(1)} Ranking. Expected "Rank", "Team", and "FDR ${fdrColumnNameSingle === 'fdrHome' ? 'Home' : 'Away'}".`, 'error');
+                            return;
+                        }
                     }
 
                     const parsedRankings = [];
@@ -3378,28 +3475,42 @@
                         const row = jsonRows[i];
                         const rank = parseInt(row[rankIndex], 10);
                         const team = String(row[teamIndex]).trim();
-                        const fdrHome = parseInt(row[fdrHomeIndex], 10); 
-                        const fdrAway = parseInt(row[fdrAwayIndex], 10); 
+                        let fdrValue1, fdrValue2;
 
-                        // Validate FDR values are between 1 and 7
-                        if (!isNaN(rank) && team && !isNaN(fdrHome) && !isNaN(fdrAway) &&
-                            fdrHome >=1 && fdrHome <= 7 && fdrAway >= 1 && fdrAway <= 7) {
-                            parsedRankings.push({ rank, team, fdrHome, fdrAway });
+                        let isValid = false;
+
+                        if (selectedRankingType === 'overall') {
+                            fdrValue1 = parseInt(row[fdrCol1Index], 10);
+                            fdrValue2 = parseInt(row[fdrCol2Index], 10);
+                            if (!isNaN(rank) && team && !isNaN(fdrValue1) && !isNaN(fdrValue2) &&
+                                fdrValue1 >=1 && fdrValue1 <= 7 && fdrValue2 >= 1 && fdrValue2 <= 7) {
+                                parsedRankings.push({ rank, team, fdrHome: fdrValue1, fdrAway: fdrValue2 });
+                                isValid = true;
+                            }
                         } else {
-                            console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7): Rank=${row[rankIndex]}, Team=${row[teamIndex]}, FDR Home=${row[fdrHomeIndex]}, FDR Away=${row[fdrAwayIndex]}`);
+                            fdrValue1 = parseInt(row[fdrColSingleIndex], 10);
+                            if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
+                                fdrValue1 >=1 && fdrValue1 <= 6) { // FDR 1-6 for Home/Away
+                                if (selectedRankingType === 'home') {
+                                    parsedRankings.push({ rank, team, fdrAway: fdrValue1 });
+                                } else if (selectedRankingType === 'away') {
+                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1 });
+                                }
+                                isValid = true;
+                            }
+                        }
+
+                        if (!isValid) {
+                            console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7 for Overall, 1-6 for Home/Away): Row Data:`, row);
                         }
                     }
 
                     if (parsedRankings.length === 0) {
-                        showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are 1-7.', 'error');
+                        showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are in the correct range (1-7 for Overall, 1-6 for Home/Away).', 'error');
                         return;
                     }
 
-                    const selectedRankingType = rankingTypeSelect.value; 
                     const seasonId = "2025-2026"; 
-                    
-                    // Firestore path: splRankings/2025-2026
-                    // This path is chosen for publicly accessible data in Firestore.
                     const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
 
                     let existingData = {};
@@ -3412,7 +3523,6 @@
                         ...existingData,
                         season: seasonId,
                         lastUpdated: serverTimestamp(),
-                        // Store the parsed rankings under the selected type (e.g., 'overall', 'home', 'away')
                         [selectedRankingType]: parsedRankings 
                     };
 
@@ -3431,7 +3541,13 @@
         // --- Fetch and Display Current Rankings from Firestore (NEW) ---
         async function fetchAndDisplayCurrentRankings() {
             showExcelUploadMessage('Fetching current rankings...', 'info');
-            fdrDataGrid.innerHTML = ''; // Clear previous display (changed from fdrTeamsDisplay)
+            // Clear all grids and hide sections initially
+            overallFDRGrid.innerHTML = '';
+            homeFDRGrid.innerHTML = '';
+            awayFDRGrid.innerHTML = '';
+            overallFDRSection.style.display = 'none';
+            homeFDRSection.style.display = 'none';
+            awayFDRSection.style.display = 'none';
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -3442,48 +3558,100 @@
                     const data = docSnap.data();
                     console.log("Current Rankings from Firestore:", data);
 
-                    const rankings = data.overall; // Always display 'overall' for this section
-
-                    if (rankings && rankings.length > 0) {
-                        // Sort teams by difficulty: highest FDR Away, then highest FDR Home, then by Rank
-                        rankings.sort((a, b) => {
-                            // Primary sort: FDR Away (descending)
-                            if (b.fdrAway !== a.fdrAway) {
-                                return b.fdrAway - a.fdrAway;
-                            }
-                            // Secondary sort: FDR Home (descending)
-                            if (b.fdrHome !== a.fdrHome) {
-                                return b.fdrHome - a.fdrHome;
-                            }
-                            // Tertiary sort: Rank (ascending)
+                    // --- Render Overall Rankings ---
+                    const overallRankings = data.overall;
+                    if (overallRankings && overallRankings.length > 0) {
+                        overallRankings.sort((a, b) => {
+                            if (b.fdrAway !== a.fdrAway) return b.fdrAway - a.fdrAway;
+                            if (b.fdrHome !== a.fdrHome) return b.fdrHome - a.fdrHome;
                             return a.rank - b.rank;
                         });
 
-                        rankings.forEach(item => {
-                            // Create two grid items for each team: one for Away, one for Home
+                        overallRankings.forEach(item => {
                             const awayItem = document.createElement('div');
                             awayItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
                             awayItem.innerHTML = `${item.team} ✈️`;
-                            fdrDataGrid.appendChild(awayItem);
+                            overallFDRGrid.appendChild(awayItem);
 
                             const homeItem = document.createElement('div');
                             homeItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
                             homeItem.innerHTML = `${item.team} 🏠`;
-                            fdrDataGrid.appendChild(homeItem);
+                            overallFDRGrid.appendChild(homeItem);
                         });
-                        showExcelUploadMessage('Current rankings loaded.', 'success');
+                        overallFDRSection.style.display = 'block';
                     } else {
-                        fdrDataGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No overall rankings data available. Please upload an Excel file.</div>';
-                        showExcelUploadMessage('No overall rankings data found in Firestore for 2025-2026 season.', 'info');
+                        overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
                     }
+
+                    // --- Render Home Rankings ---
+                    const homeRankings = data.home;
+                    if (homeRankings && homeRankings.length > 0) {
+                        homeRankings.sort((a, b) => {
+                            // Sort by FDR Away (since Home sheet has opponent's away FDR)
+                            if (b.fdrAway !== a.fdrAway) return b.fdrAway - a.fdrAway;
+                            return a.rank - b.rank;
+                        });
+
+                        homeRankings.forEach(item => {
+                            const teamName = item.team;
+                            const fdrAway = item.fdrAway; // This is the opponent's away FDR
+                            
+                            // Display the team and its corresponding FDR
+                            const awayItem = document.createElement('div');
+                            awayItem.className = `fdr-grid-item fdr-${fdrAway}`;
+                            awayItem.innerHTML = `${teamName} ✈️`; // Use airplane for opponent's away
+                            homeFDRGrid.appendChild(awayItem);
+
+                            // For the second column, we need a placeholder or a different interpretation
+                            // Since Home sheet only has one FDR, we can duplicate the value or use a placeholder
+                            // For now, let's just duplicate the value for visual consistency in the 2-column grid
+                            const homeItem = document.createElement('div');
+                            homeItem.className = `fdr-grid-item fdr-${fdrAway}`; // Using the same FDR for visual consistency
+                            homeItem.innerHTML = `${teamName} 🏠`; // Use house for home
+                            homeFDRGrid.appendChild(homeItem);
+                        });
+                        homeFDRSection.style.display = 'block';
+                    } else {
+                        homeFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
+                    }
+
+                    // --- Render Away Rankings ---
+                    const awayRankings = data.away;
+                    if (awayRankings && awayRankings.length > 0) {
+                        awayRankings.sort((a, b) => {
+                            // Sort by FDR Home (since Away sheet has opponent's home FDR)
+                            if (b.fdrHome !== a.fdrHome) return b.fdrHome - a.fdrHome;
+                            return a.rank - b.rank;
+                        });
+
+                        awayRankings.forEach(item => {
+                            const teamName = item.team;
+                            const fdrHome = item.fdrHome; // This is the opponent's home FDR
+
+                            const awayItem = document.createElement('div');
+                            awayItem.className = `fdr-grid-item fdr-${fdrHome}`; // Using this FDR for visual consistency
+                            awayItem.innerHTML = `${teamName} ✈️`; // Use airplane for away
+                            awayFDRGrid.appendChild(awayItem);
+
+                            const homeItem = document.createElement('div');
+                            homeItem.className = `fdr-grid-item fdr-${fdrHome}`;
+                            homeItem.innerHTML = `${teamName} 🏠`; // Use house for opponent's home
+                            awayFDRGrid.appendChild(homeItem);
+                        });
+                        awayFDRSection.style.display = 'block';
+                    } else {
+                        awayFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
+                    }
+                    
+                    showExcelUploadMessage('Current rankings loaded.', 'success');
                 } else {
-                    fdrDataGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
+                    overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
                     showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', 'info');
                 }
             } catch (error) {
                 console.error("Error fetching current rankings for display:", error);
                 showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, 'error');
-                fdrDataGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
+                overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
             }
         }
 
