@@ -2477,27 +2477,6 @@
                                 profitLossCell.setAttribute('data-label', 'Profit/Loss');
                             });
                         } else {
-                            const row = profitableTransfersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 4;
-                        }
-                        console.log('DEBUG: Populating lossMakingTransfersTable...');
-                        lossMakingTransfersTableBody.innerHTML = '';
-                        if (data.top5LossMakingTransfers && data.top5LossMakingTransfers.length > 0) {
-                            data.top5LossMakingTransfers.forEach(transfer => {
-                                const row = profitableTransfersTableBody.insertRow();
-                                row.insertCell().textContent = transfer.playerInName;
-                                row.cells[0].setAttribute('data-label', 'IN');
-                                row.insertCell().textContent = transfer.playerOutName;
-                                row.cells[1].setAttribute('data-label', 'OUT');
-                                row.insertCell().textContent = transfer.round;
-                                row.cells[2].setAttribute('data-label', 'Round');
-                                const profitLossCell = row.insertCell();
-                                profitLossCell.textContent = transfer.profitLoss;
-                                profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
-                                profitLossCell.setAttribute('data-label', 'Profit/Loss');
-                            });
-                        } else {
                             const row = lossMakingTransfersTableBody.insertRow();
                             row.insertCell().textContent = 'No data available.';
                             row.cells[0].colSpan = 4;
@@ -3619,7 +3598,7 @@
                             
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrAway}`;
-                            teamItem.innerHTML = `${teamName} 🏠`; // Display with house emoji for Home rankings
+                            teamItem.innerHTML = `${teamName} ✈️`; // Changed to airplane for Home rankings
                             homeFDRGrid.appendChild(teamItem);
                         });
                         homeFDRSection.style.display = 'block';
@@ -3642,7 +3621,7 @@
 
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrHome}`;
-                            teamItem.innerHTML = `${teamName} ✈️`; // Display with airplane emoji for Away rankings
+                            teamItem.innerHTML = `${teamName} 🏠`; // Changed to house for Away rankings
                             awayFDRGrid.appendChild(teamItem);
                         });
                         awayFDRSection.style.display = 'block';
