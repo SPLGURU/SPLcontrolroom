@@ -1077,6 +1077,101 @@
         body.dark-mode .instructions a {
             color: #FFD700; /* Bright gold for heading and links in dark mode */
         }
+
+        /* FDR Difficulty Scale Colors */
+        .fdr-scale {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners apply to children */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .fdr-level {
+            padding: 8px 12px;
+            text-align: center;
+            color: black; /* Default text color for light backgrounds */
+            flex-grow: 1;
+            min-width: 50px; /* Ensure minimum width for each block */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .fdr-level span {
+            display: block;
+            font-size: 0.8em;
+            margin-top: 2px;
+        }
+
+        /* Specific FDR Colors */
+        .fdr-1 { background-color: #00B050; color: white; } /* Very Easy - Green */
+        .fdr-2 { background-color: #92D050; color: black; } /* Easy - Light Green */
+        .fdr-3 { background-color: #FFFF00; color: black; } /* Medium - Yellow */
+        .fdr-4 { background-color: #FFC000; color: black; } /* Medium Hard - Orange */
+        .fdr-5 { background-color: #FF0000; color: white; } /* Hard - Red */
+        .fdr-6 { background-color: #C00000; color: white; } /* Very Hard - Dark Red */
+        .fdr-7 { background-color: #800000; color: white; } /* Extremely Hard - Deep Red */
+        
+        /* Dark Mode Adjustments for FDR Colors */
+        body.dark-mode .fdr-level {
+            color: white; /* Ensure text is white in dark mode */
+        }
+        body.dark-mode .fdr-2, body.dark-mode .fdr-3, body.dark-mode .fdr-4 {
+            color: black; /* Keep text black for these lighter dark mode colors */
+        }
+        body.dark-mode .fdr-1 { background-color: #008037; } /* Darker green */
+        body.dark-mode .fdr-2 { background-color: #6B9F3B; } /* Darker light green */
+        body.dark-mode .fdr-3 { background-color: #B3B300; } /* Darker yellow */
+        body.dark-mode .fdr-4 { background-color: #B38600; } /* Darker orange */
+        body.dark-mode .fdr-5 { background-color: #B30000; } /* Darker red */
+        body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
+        body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
+
+
+        /* Styles for the new list items in current rankings display */
+        .fdr-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--spl-border-light);
+        }
+        .fdr-list-item:last-child {
+            border-bottom: none;
+        }
+        .fdr-list-item:hover {
+            background-color: var(--spl-table-row-hover);
+        }
+        .fdr-list-item .rank-team {
+            font-weight: bold;
+            color: var(--spl-text-dark);
+            flex-grow: 1;
+        }
+        .fdr-list-item .fdr-badge-container {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        .fdr-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: black; /* Default text color for badges */
+        }
+        .fdr-badge.home-badge {
+            background-color: #f0f0f0; /* Placeholder, actual color from JS */
+        }
+        .fdr-badge.away-badge {
+            background-color: #f0f0f0; /* Placeholder, actual color from JS */
+        }
+        body.dark-mode .fdr-badge {
+            color: white; /* Default text color for badges in dark mode */
+        }
+
     </style>
 </head>
 <body>
@@ -1413,7 +1508,18 @@
 
                     <!-- Display Current Rankings -->
                     <div id="currentRankingsDisplay" class="mt-8">
-                        <h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
+                                            <!-- FDR Difficulty Scale Display -->
+                    <div class="fdr-scale">
+                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                        <div class="fdr-level fdr-2">2</div>
+                        <div class="fdr-level fdr-3">3</div>
+                        <div class="fdr-level fdr-4">4</div>
+                        <div class="fdr-level fdr-5">5</div>
+                        <div class="fdr-level fdr-6">6</div>
+                        <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                    </div>
+
+			<h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="bg-gray-100 p-3 rounded-md">
                                 <h5 class="font-medium text-gray-800 mb-2">Overall</h5>
@@ -3341,11 +3447,14 @@
                             rankings.forEach(item => {
                                 const listItem = document.createElement('li');
                                 listItem.className = 'flex justify-between items-center py-1 px-2 hover:bg-gray-200 rounded-md';
-                                listItem.innerHTML = `
-                                    <span class="font-medium text-gray-800">${item.rank}.</span>
-                                    <span class="flex-grow ml-2 text-gray-700">${item.team}</span>
-                                    <span class="ml-2 text-gray-600 text-xs">(H: ${item.fdrHome}, A: ${item.fdrAway})</span>
+                                                                listItem.innerHTML = `
+                                    <span class="rank-team">${item.rank}. ${item.team}</span>
+                                    <div class="fdr-badge-container">
+                                        <span class="fdr-badge home-badge fdr-${item.fdrHome}">🏠</span>
+                                        <span class="fdr-badge away-badge fdr-${item.fdrAway}">✈️</span>
+                                    </div>
                                 `;
+
                                 listElement.appendChild(listItem);
                             });
                         } else {
