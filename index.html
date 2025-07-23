@@ -173,7 +173,7 @@
             transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
         }
 
-        h1, h2, h3 {
+        h1, h2, h3, h4, h5 {
             font-family: 'Oswald', sans-serif;
             color: var(--spl-primary-accent);
             text-align: center;
@@ -1088,18 +1088,21 @@
             border-radius: 8px;
             overflow: hidden; /* Ensures rounded corners apply to children */
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px; /* Adjust max-width for the scale */
         }
         .fdr-level {
             padding: 8px 12px;
             text-align: center;
             color: black; /* Default text color for light backgrounds */
             flex-grow: 1;
-            min-width: 50px; /* Ensure minimum width for each block */
+            min-width: 30px;
             transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 0.85em;
         }
         .fdr-level span {
             display: block;
-            font-size: 0.8em;
+            font-size: 0.7em;
             margin-top: 2px;
         }
 
@@ -1127,7 +1130,7 @@
         body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
         body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
 
-        /* Styles for the two-column FDR display (Overall) */
+        /* FDR Grid Styles (reused from Admin Dashboard) */
         .fdr-data-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; /* Two equal columns */
@@ -1197,15 +1200,161 @@
             border-bottom: none;
         }
 
-        /* Responsive adjustments for the new grid */
-        @media (max-width: 480px) {
-            .fdr-grid-item {
-                font-size: 0.8em;
-                padding: 8px 10px;
-                min-height: 35px;
-            }
+        /* Customized FDR Input Section */
+        .custom-fdr-input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .custom-fdr-team-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--spl-table-bg);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease;
+        }
+        body.dark-mode .custom-fdr-team-row {
+            background-color: var(--spl-table-row-even);
+        }
+
+        .custom-fdr-team-name {
+            font-weight: bold;
+            color: var(--spl-text-dark);
+            flex-grow: 1;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+        .custom-fdr-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .custom-fdr-inputs label {
+            font-size: 0.9em;
+            color: var(--spl-text-medium);
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+        .custom-fdr-inputs select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--spl-border-light);
+            background-color: var(--spl-container-bg);
+            color: var(--spl-text-dark);
+            font-size: 0.9em;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        body.dark-mode .custom-fdr-inputs select {
+            background-color: var(--spl-table-bg);
+            border-color: var(--spl-border-light);
+        }
+        .custom-fdr-save-button {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        /* My Control Room FDR specific styles */
+        #myControlRoomContent .btn { /* General button style for My Control Room */
+            background-color: var(--spl-primary-accent);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #myControlRoomContent .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        body.dark-mode #myControlRoomContent .btn {
+            background-color: #007bff;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+        body.dark-mode #myControlRoomContent .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .fdr-options-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        .fdr-options-container .btn {
+            width: 100%;
+            max-width: 300px; /* Limit width for these buttons */
+        }
+
+        .message-text {
+            text-align: center;
+            font-size: 1.2em;
+            color: var(--spl-text-dark);
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
         }
         
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .fdr-scale {
+                flex-wrap: wrap;
+                max-width: 100%;
+            }
+            .fdr-level {
+                flex-basis: calc(100% / 7); /* For 1-7 scale */
+                min-width: unset;
+                font-size: 0.75em;
+                padding: 6px 4px;
+            }
+            .fdr-level span {
+                font-size: 0.6em;
+            }
+            .fdr-data-grid, .fdr-single-column-grid {
+                max-width: 100%;
+            }
+            .fdr-grid-item {
+                font-size: 0.85em;
+                padding: 8px 10px;
+                min-height: 40px;
+            }
+            .custom-fdr-team-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .custom-fdr-inputs {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .custom-fdr-inputs select {
+                flex-grow: 1;
+            }
+        }
+        @media (max-width: 480px) {
+            .fdr-level {
+                flex-basis: calc(100% / 6); /* For 1-6 scale */
+            }
+        }
+
+        /* Hide content sections by default */
+        #fdrOptionsContainer, #overallFDRDisplayArea, #homeAwayFDRDisplayArea, #customizedFDRInputArea {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -1484,126 +1633,94 @@
             <!-- My Control Room Content (initially hidden) -->
             <div id="myControlRoomContent" style="display: none;">
                 <p style="text-align: center; color: var(--spl-text-medium); margin-top: 50px;">
-                    More features coming soon to My Control Room!
+                    Welcome to your Control Room. More features coming soon!
                 </p>
-            </div>
 
-            <!-- Admin Dashboard Content (initially hidden) -->
-            <div id="adminDashboardContent" style="display: none;"> 
-                <h2>Admin Dashboard</h2>
-                <div class="admin-dashboard-nav-buttons"> <!-- New wrapper for Admin buttons -->
-                    <button id="adminUsersButton">Users</button>
-                    <button id="adminDataButton">Data</button>
-                </div>
-                <div class="admin-search-section" style="display: none;"> <!-- Initially hidden -->
-                    <input type="text" id="adminSearchInput" placeholder="Search by Email, SPL ID, or UID">
-                    <button id="adminSearchButton">Search User</button>
+                <!-- Main FDR Button (for My Control Room) -->
+                <button id="mainFDRButton" class="btn">FDR</button>
+
+                <!-- FDR Options Container (initially hidden, but will stay visible after first click) -->
+                <div id="fdrOptionsContainer" class="fdr-options-container">
+                    <p class="message-text">Please Choose FDR System</p>
+                    <button id="overallFDRButton" class="btn">Overall FDR</button>
+                    <button id="homeAwayFDRButton" class="btn">Home/Away FDR</button>
+                    <button id="customizedFDRButton" class="btn">Customized FDR</button>
                 </div>
 
-                <div id="adminSearchResults" class="admin-edit-section" style="display: none;"> <!-- Initially hidden -->
-                    <h3>User Found:</h3>
-                    <p>User ID: <strong id="adminUserUid">N/A</strong></p>
-                    <p>Current Email: <input type="email" id="adminEditEmail"></p>
-                    <p>Current SPL Manager ID: <input type="text" id="adminEditSplManagerId" oninput="this.value = convertArabicToWesternNumerals(this.value)"></p>
-                    <button id="adminUpdateUserButton">Update User</button>
-                </div>
-
-                <div id="adminMessage" class="message-box" style="display: none;"></div>
-
-                <!-- Data Upload Section (NEW) -->
-                <div id="dataUploadSection" style="display: none;" class="p-4 bg-white rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-3">Upload League Tables</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Upload Excel files for Overall, Home, or Away rankings.
-                        Overall FDR sheet: "Rank", "Team", "FDR Home", "FDR Away".
-                        Home FDR sheet: "Rank", "Team", "FDR Away".
-                        Away FDR sheet: "Rank", "Team", "FDR Home".
-                        FDRs should be numbers between 1-7 (Overall) or 1-6 (Home/Away).
-                    </p>
-                    <div class="mb-3 input-group">
-                        <label for="rankingTypeSelect" class="block text-gray-700 text-sm font-bold mb-2">
-                            Select Ranking Type for Upload:
-                        </label>
-                        <select
-                            id="rankingTypeSelect"
-                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline admin-input"
-                        >
-                            <option value="overall">Overall Ranking</option>
-                            <option value="home">Home Ranking</option>
-                            <option value="away">Away Ranking</option>
-                        </select>
+                <!-- Overall FDR Display Area (initially hidden) -->
+                <div id="overallFDRDisplayArea" style="margin-top: 30px;">
+                    <h4>Overall Rankings</h4>
+                    <!-- FDR Difficulty Scale for Overall (1-7) -->
+                    <div class="fdr-scale">
+                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                        <div class="fdr-level fdr-2">2</div>
+                        <div class="fdr-level fdr-3">3</div>
+                        <div class="fdr-level fdr-4">4</div>
+                        <div class="fdr-level fdr-5">5</div>
+                        <div class="fdr-level fdr-6">6</div>
+                        <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
                     </div>
-                    <label class="upload-button-label">
-                        Upload Excel File
-                        <input
-                            type="file"
-                            accept=".xlsx, .xls"
-                            id="excelFileUploadInput"
-                            class="hidden"
-                        />
-                    </label>
-                    <p id="excelUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
-
-                    <!-- Display Current Rankings -->
-                    <div id="currentRankingsDisplay" class="mt-8">
-                        <h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
-                        
-                        <!-- Overall FDR Display Section -->
-                        <div id="overallFDRSection" style="display: none;">
-                            <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Overall Rankings</h5>
-                            <!-- FDR Difficulty Scale for Overall (1-7) -->
-                            <div class="fdr-scale">
-                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                                <div class="fdr-level fdr-2">2</div>
-                                <div class="fdr-level fdr-3">3</div>
-                                <div class="fdr-level fdr-4">4</div>
-                                <div class="fdr-level fdr-5">5</div>
-                                <div class="fdr-level fdr-6">6</div>
-                                <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
-                            </div>
-                            <!-- Two-column FDR Display Container for Overall -->
-                            <div class="fdr-data-grid" id="overallFDRGrid">
-                                <!-- Team FDR items will be dynamically inserted here by JavaScript -->
-                            </div>
-                        </div>
-
-                        <!-- Home FDR Display Section -->
-                        <div id="homeFDRSection" style="display: none; margin-top: 30px;">
-                            <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Home Rankings</h5>
-                            <!-- FDR Difficulty Scale for Home/Away (1-6) -->
-                            <div class="fdr-scale">
-                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                                <div class="fdr-level fdr-2">2</div>
-                                <div class="fdr-level fdr-3">3</div>
-                                <div class="fdr-level fdr-4">4</div>
-                                <div class="fdr-level fdr-5">5</div>
-                                <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
-                            </div>
-                            <!-- Single-column FDR Display Container for Home -->
-                            <div class="fdr-single-column-grid" id="homeFDRGrid">
-                                <!-- Team FDR items will be dynamically inserted here by JavaScript -->
-                            </div>
-                        </div>
-
-                        <!-- Away FDR Display Section -->
-                        <div id="awayFDRSection" style="display: none; margin-top: 30px;">
-                            <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Away Rankings</h5>
-                            <!-- FDR Difficulty Scale for Home/Away (1-6) -->
-                            <div class="fdr-scale">
-                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                                <div class="fdr-level fdr-2">2</div>
-                                <div class="fdr-level fdr-3">3</div>
-                                <div class="fdr-level fdr-4">4</div>
-                                <div class="fdr-level fdr-5">5</div>
-                                <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
-                            </div>
-                            <!-- Single-column FDR Display Container for Away -->
-                            <div class="fdr-single-column-grid" id="awayFDRGrid">
-                                <!-- Team FDR items will be dynamically inserted here by JavaScript -->
-                            </div>
-                        </div>
-
+                    <!-- Two-column FDR Display Container for Overall -->
+                    <div class="fdr-data-grid" id="overallFDRGridMyControlRoom">
+                        <!-- Team FDR items will be dynamically inserted here by JavaScript -->
                     </div>
+                    <button id="saveOverallFDRButton" class="btn custom-fdr-save-button">Save as My FDR System</button>
+                    <div id="overallFDRMessage" class="message-box"></div>
+                </div>
+
+                <!-- Home/Away FDR Display Area (initially hidden) -->
+                <div id="homeAwayFDRDisplayArea" style="margin-top: 30px;">
+                    <h4>Home Rankings</h4>
+                    <!-- FDR Difficulty Scale for Home/Away (1-6) -->
+                    <div class="fdr-scale">
+                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                        <div class="fdr-level fdr-2">2</div>
+                        <div class="fdr-level fdr-3">3</div>
+                        <div class="fdr-level fdr-4">4</div>
+                        <div class="fdr-level fdr-5">5</div>
+                        <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                    </div>
+                    <div class="fdr-single-column-grid" id="homeFDRGridMyControlRoom">
+                        <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                    </div>
+
+                    <h4 style="margin-top: 30px;">Away Rankings</h4>
+                    <!-- FDR Difficulty Scale for Home/Away (1-6) -->
+                    <div class="fdr-scale">
+                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                        <div class="fdr-level fdr-2">2</div>
+                        <div class="fdr-level fdr-3">3</div>
+                        <div class="fdr-level fdr-4">4</div>
+                        <div class="fdr-level fdr-5">5</div>
+                        <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                    </div>
+                    <div class="fdr-single-column-grid" id="awayFDRGridMyControlRoom">
+                        <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                    </div>
+                    <button id="saveHomeAwayFDRButton" class="btn custom-fdr-save-button">Save as My FDR System</button>
+                    <div id="homeAwayFDRMessage" class="message-box"></div>
+                </div>
+
+                <!-- Customized FDR Input Area (initially hidden) -->
+                <div id="customizedFDRInputArea" style="margin-top: 30px;">
+                    <h4>Customized FDR Ratings</h4>
+                    <p class="message-text" style="font-size: 1em;">Rate each team's fixture difficulty (1-7).</p>
+                    <!-- FDR Difficulty Scale for Customized (1-7) -->
+                    <div class="fdr-scale">
+                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                        <div class="fdr-level fdr-2">2</div>
+                        <div class="fdr-level fdr-3">3</div>
+                        <div class="fdr-level fdr-4">4</div>
+                        <div class="fdr-level fdr-5">5</div>
+                        <div class="fdr-level fdr-6">6</div>
+                        <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                    </div>
+
+                    <div class="custom-fdr-input-section" id="customFDRInputsContainer">
+                        <!-- Team Rows for Custom Input will be dynamically generated here -->
+                    </div>
+                    <button id="saveCustomFDRButton" class="btn custom-fdr-save-button">Save Custom FDR</button>
+                    <div id="customFDRMessage" class="message-box"></div>
                 </div>
             </div>
         </div>
@@ -1673,6 +1790,13 @@
         let isAdminUser = false; 
         let foundUserForAdminEdit = null; 
 
+        // --- Hardcoded list of SPL teams for Customized FDR ---
+        const splTeams = [
+            "Ittihad", "Hilal", "Nassr", "Qadsiah", "Ahli", "Shabab", "Ittifaq", 
+            "Tawoun", "Kholood", "Fateh", "Riyadh", "Khaleej", "Fayha", "Damac", 
+            "Akhdoud", "Neom", "Najmah", "Hazm"
+        ];
+
 
         // --- DOM Element References ---
         const mainLogo = document.getElementById('mainLogo');
@@ -1713,7 +1837,7 @@
         
         // Content areas to toggle
         const analyzerReportContent = document.getElementById('analyzerReportContent');
-        const myControlRoomContent = document.getElementById('myControlRoomContent');
+        const myControlRoomContent = document.getElementById('myControlRoomContent'); // Renamed for clarity, was just myControlRoomContent
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
         const managerIdInput = document.getElementById('managerIdInput'); 
@@ -1755,7 +1879,7 @@
         const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
 
         // Admin Dashboard specific elements
-        const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons'); 
+        const adminDashboardNavButtons = document.getElementById('adminDashboardNavButtons'); 
         const adminUsersButton = document.getElementById('adminUsersButton'); 
         const adminDataButton = document.getElementById('adminDataButton'); 
         const adminSearchSection = document.querySelector('.admin-search-section'); 
@@ -1775,13 +1899,37 @@
         const excelUploadMessage = document.getElementById('excelUploadMessage');
         const currentRankingsDisplay = document.getElementById('currentRankingsDisplay');
         
-        // Specific FDR grid containers
-        const overallFDRSection = document.getElementById('overallFDRSection');
-        const overallFDRGrid = document.getElementById('overallFDRGrid');
-        const homeFDRSection = document.getElementById('homeFDRSection');
-        const homeFDRGrid = document.getElementById('homeFDRGrid');
-        const awayFDRSection = document.getElementById('awayFDRSection');
-        const awayFDRGrid = document.getElementById('awayFDRGrid');
+        // Specific FDR grid containers (Admin Dashboard)
+        const overallFDRSectionAdmin = document.getElementById('overallFDRSection');
+        const overallFDRGridAdmin = document.getElementById('overallFDRGrid');
+        const homeFDRSectionAdmin = document.getElementById('homeFDRSection');
+        const homeFDRGridAdmin = document.getElementById('homeFDRGrid');
+        const awayFDRSectionAdmin = document.getElementById('awayFDRSection');
+        const awayFDRGridAdmin = document.getElementById('awayFDRGrid');
+
+        // My Control Room FDR elements (NEW)
+        const mainFDRButton = document.getElementById('mainFDRButton');
+        const fdrOptionsContainer = document.getElementById('fdrOptionsContainer');
+        const overallFDRButton = document.getElementById('overallFDRButton');
+        const homeAwayFDRButton = document.getElementById('homeAwayFDRButton');
+        const customizedFDRButton = document.getElementById('customizedFDRButton');
+
+        const overallFDRDisplayArea = document.getElementById('overallFDRDisplayArea');
+        const homeAwayFDRDisplayArea = document.getElementById('homeAwayFDRDisplayArea');
+        const customizedFDRInputArea = document.getElementById('customizedFDRInputArea');
+        const customFDRInputsContainer = document.getElementById('customFDRInputsContainer');
+        const saveCustomFDRButton = document.getElementById('saveCustomFDRButton');
+
+        const overallFDRGridMyControlRoom = document.getElementById('overallFDRGridMyControlRoom');
+        const homeFDRGridMyControlRoom = document.getElementById('homeFDRGridMyControlRoom');
+        const awayFDRGridMyControlRoom = document.getElementById('awayFDRGridMyControlRoom');
+
+        const saveOverallFDRButton = document.getElementById('saveOverallFDRButton');
+        const saveHomeAwayFDRButton = document.getElementById('saveHomeAwayFDRButton');
+
+        const overallFDRMessage = document.getElementById('overallFDRMessage');
+        const homeAwayFDRMessage = document.getElementById('homeAwayFDRMessage');
+        const customFDRMessage = document.getElementById('customFDRMessage');
 
 
         // --- Helper Functions ---
@@ -1819,6 +1967,14 @@
             excelUploadMessage.style.display = 'block';
         }
 
+        // Function to display messages in My Control Room FDR sections
+        function showMyControlRoomFDRMessage(messageBoxElement, message, type = 'info') {
+            messageBoxElement.textContent = '';
+            messageBoxElement.className = `message-box ${type}`;
+            messageBoxElement.textContent = message;
+            messageBoxElement.style.display = 'block';
+        }
+
         function hideAllContentSections() {
             analyzerReportContent.style.display = 'none';
             myControlRoomContent.style.display = 'none';
@@ -1831,48 +1987,58 @@
             rankJourneyChartContainer.style.display = 'none';
 
             // Admin Dashboard specific elements to manage
-            adminDashboardNavButtons.style.display = 'none'; // Hide Admin buttons initially
-            adminSearchSection.style.display = 'none'; // Hide search input/button
-            adminSearchResults.style.display = 'none'; // Hide search results
-            adminMessage.style.display = 'none';      
+            if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'none'; // Hide Admin buttons initially
+            if (adminSearchSection) adminSearchSection.style.display = 'none'; // Hide search input/button
+            if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide search results
+            if (adminMessage) adminMessage.style.display = 'none';      
             
             // NEW: Hide data upload specific elements
-            dataUploadSection.style.display = 'none';
-            currentRankingsDisplay.style.display = 'none';
-            excelUploadMessage.style.display = 'none';
-            overallFDRSection.style.display = 'none'; // Hide all FDR sections
-            homeFDRSection.style.display = 'none';
-            awayFDRSection.style.display = 'none';
+            if (dataUploadSection) dataUploadSection.style.display = 'none';
+            if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none';
+            if (excelUploadMessage) excelUploadMessage.style.display = 'none';
+            if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; // Hide all Admin FDR sections
+            if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+            if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
+
+            // My Control Room FDR specific elements to manage
+            // Note: mainFDRButton and fdrOptionsContainer are intentionally NOT hidden here,
+            // as per the user's latest request for persistence.
+            if (overallFDRDisplayArea) overallFDRDisplayArea.style.display = 'none'; // Hide all My Control Room FDR sections
+            if (homeAwayFDRDisplayArea) homeAwayFDRDisplayArea.style.display = 'none';
+            if (customizedFDRInputArea) customizedFDRInputArea.style.display = 'none';
+            if (overallFDRMessage) overallFDRMessage.style.display = 'none'; // Hide messages
+            if (homeAwayFDRMessage) homeAwayFDRMessage.style.display = 'none';
+            if (customFDRMessage) customFDRMessage.style.display = 'none';
 
 
             // General messages/loading indicators
-            loadingMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            videoGeneratingMessage.style.display = 'none';
-            authMessageBox.style.display = 'none'; 
+            if (loadingMessage) loadingMessage.style.display = 'none';
+            if (errorMessage) errorMessage.style.display = 'none';
+            if (videoGeneratingMessage) videoGeneratingMessage.style.display = 'none';
+            if (authMessageBox) authMessageBox.style.display = 'none'; 
         }
 
         // Function to clear analyzer report data
         function clearAnalyzerReport() {
-            managerNameElem.textContent = '';
-            overallRankElem.textContent = 'N/A';
-            bestOverallRankElem.textContent = 'N/A';
-            worstOverallRankElem.textContent = 'N/A';
-            averagePointsElem.textContent = 'N/A';
-            averagePointsFor1stPlaceElem.textContent = 'N/A';
-            totalTransfersCountElem.textContent = 'N/A';
-            totalHitsPointsElem.textContent = 'N/A';
-            bestRoundDisplayElem.textContent = 'N/A';
-            worstRoundDisplayElem.textContent = 'N/A';
-            greenArrowsCountElem.textContent = 'N/A 🟢';
-            redArrowsCountElem.textContent = 'N/A 🔴';
+            if (managerNameElem) managerNameElem.textContent = '';
+            if (overallRankElem) overallRankElem.textContent = 'N/A';
+            if (bestOverallRankElem) bestOverallRankElem.textContent = 'N/A';
+            if (worstOverallRankElem) worstOverallRankElem.textContent = 'N/A';
+            if (averagePointsElem) averagePointsElem.textContent = 'N/A';
+            if (averagePointsFor1stPlaceElem) averagePointsFor1stPlaceElem.textContent = 'N/A';
+            if (totalTransfersCountElem) totalTransfersCountElem.textContent = 'N/A';
+            if (totalHitsPointsElem) totalHitsPointsElem.textContent = 'N/A';
+            if (bestRoundDisplayElem) bestRoundDisplayElem.textContent = 'N/A';
+            if (worstRoundDisplayElem) worstRoundDisplayElem.textContent = 'N/A';
+            if (greenArrowsCountElem) greenArrowsCountElem.textContent = 'N/A 🟢';
+            if (redArrowsCountElem) redArrowsCountElem.textContent = 'N/A 🔴';
 
-            topCaptainsTableBody.innerHTML = '<tr><td colspan="6">No data available.</td></tr>';
-            bestPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
-            worstPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
-            missedPointsTableBody.innerHTML = '<tr><td colspan="3">No data available.</td></tr>';
-            profitableTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
-            lossMakingTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
+            if (topCaptainsTableBody) topCaptainsTableBody.innerHTML = '<tr><td colspan="6">No data available.</td></tr>';
+            if (bestPlayersTableBody) bestPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
+            if (worstPlayersTableBody) worstPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
+            if (missedPointsTableBody) missedPointsTableBody.innerHTML = '<tr><td colspan="3">No data available.</td></tr>';
+            if (profitableTransfersTableBody) profitableTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
+            if (lossMakingTransfersTableBody) lossMakingTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
 
             managerOverallRankHistory = []; 
             if (rankJourneyChartInstance) {
@@ -1889,14 +2055,14 @@
 
         // Function to clear admin search results and input fields
         function clearAdminSearchAndResults() {
-            adminSearchInput.value = '';
-            adminUserUidElem.textContent = 'N/A';
-            adminEditEmailInput.value = '';
-            adminEditSplManagerIdInput.value = '';
+            if (adminSearchInput) adminSearchInput.value = '';
+            if (adminUserUidElem) adminUserUidElem.textContent = 'N/A';
+            if (adminEditEmailInput) adminEditEmailInput.value = '';
+            if (adminEditSplManagerIdInput) adminEditSplManagerIdInput.value = '';
             foundUserForAdminEdit = null;
-            adminSearchSection.style.display = 'none'; // Ensure search is hidden
-            adminSearchResults.style.display = 'none'; 
-            adminMessage.style.display = 'none';      
+            if (adminSearchSection) adminSearchSection.style.display = 'none'; // Ensure search is hidden
+            if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+            if (adminMessage) adminMessage.style.display = 'none';      
         }
 
         function convertArabicToWesternNumerals(input) {
@@ -1914,12 +2080,12 @@
             console.log("DEBUG: Setting theme to:", theme); 
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
-                mainLogo.src = darkModeLogoSrc;
-                darkModeToggle.checked = true;
+                if (mainLogo) mainLogo.src = darkModeLogoSrc;
+                if (darkModeToggle) darkModeToggle.checked = true;
             } else {
                 document.body.classList.remove('dark-mode');
-                mainLogo.src = lightModeLogoSrc;
-                darkModeToggle.checked = false;
+                if (mainLogo) mainLogo.src = lightModeLogoSrc;
+                if (darkModeToggle) darkModeToggle.checked = false;
             }
             localStorage.setItem('theme', theme);
         }
@@ -1927,228 +2093,238 @@
         // --- Authentication Logic ---
 
         // Handle Signup
-        signupButton.addEventListener('click', async () => {
-            showAuthMessage("Processing...", "info");
-            isProcessingAuth = true; 
+        if (signupButton) {
+            signupButton.addEventListener('click', async () => {
+                showAuthMessage("Processing...", "info");
+                isProcessingAuth = true; 
 
-            const email = signupEmailInput.value.trim();
-            const password = signupPasswordInput.value;
-            const confirmPassword = signupConfirmPasswordInput.value;
-            const managerId = convertArabicToWesternNumerals(signupManagerIdInput.value.trim());
+                const email = signupEmailInput.value.trim();
+                const password = signupPasswordInput.value;
+                const confirmPassword = signupConfirmPasswordInput.value;
+                const managerId = convertArabicToWesternNumerals(signupManagerIdInput.value.trim());
 
-            if (!email || !password || !confirmPassword || !managerId) {
-                showAuthMessage("All fields are required.", "error");
-                isProcessingAuth = false;
-                return;
-            }
-            if (password !== confirmPassword) {
-                showAuthMessage("Passwords do not match.", "error");
-                isProcessingAuth = false; 
-                return;
-            }
-            if (password.length < 6) {
-                showAuthMessage("Password must be at least 6 characters long.", "error");
-                isProcessingAuth = false; 
-                return;
-            }
-            if (!/^\d+$/.test(managerId)) {
-                showAuthMessage("SPL Manager ID is required and must be a valid number.", "error");
-                isProcessingAuth = false; 
-                return;
-            }
-
-            try {
-                console.log("DEBUG: Attempting to create user with email:", email);
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                console.log("DEBUG: User created successfully. UID:", user.uid, "Email:", user.email);
-
-                // Save user data to Firestore (teamName will be added on first analyzer report fetch)
-                console.log("DEBUG: Attempting to save user data to Firestore for UID:", user.uid);
-                await setDoc(doc(db, "users", user.uid), {
-                    email: user.email,
-                    splManagerId: managerId,
-                    createdAt: serverTimestamp(),
-                    emailVerified: false,
-                    teamName: 'Your Team' // Default team name on signup
-                });
-                console.log("DEBUG: User data saved to Firestore with default team name.");
-
-                // Send email verification
-                console.log("DEBUG: Attempting to send email verification for user:", user.email, "UID:", user.uid);
-                try {
-                    await sendEmailVerification(user); 
-                    console.log("DEBUG: Email verification sent successfully (Firebase API acknowledged request).");
-                } catch (emailError) {
-                    console.error("ERROR: Failed to send email verification during signup:", emailError);
-                    showAuthMessage(`Account created, but failed to send verification email: ${emailError.message}. Please check your email's spam folder or try logging in after a few minutes to trigger resend.`, "warning");
-                }
-                
-                // Log out the user immediately after signup to force email verification
-                console.log("DEBUG: Signing user out after signup to force verification flow.");
-                await signOut(auth); 
-                console.log("DEBUG: User signed out after signup.");
-
-                showAuthMessage("Account created! Please verify your email and then log in. If the confirmation e-mail is not in your inbox please check your spam folder", "success");
-                
-                // Clear form fields
-                signupEmailInput.value = '';
-                signupPasswordInput.value = '';
-                signupConfirmPasswordInput.value = '';
-                signupManagerIdInput.value = '';
-                // Switch to login form
-                loginForm.style.display = 'block'; 
-                signupForm.style.display = 'none';
-                instructionsBox.style.display = 'none'; // Hide instructions after successful signup
-
-            } catch (error) {
-                console.error("Signup failed (main try-catch):", error);
-                let friendlyMessage = "Failed to create account. Please try again.";
-                if (error.code === 'auth/email-already-in-use') {
-                    friendlyMessage = "That email address is already in use.";
-                } else if (error.code === 'auth/invalid-email') {
-                    friendlyMessage = "Please enter a valid email address.";
-                } else if (error.code === 'auth/weak-password') {
-                    friendlyMessage = "Password is too weak.";
-                } else if (error.code === 'auth/network-request-failed') {
-                    friendlyMessage = "Network error. Please check your internet connection.";
-                } else {
-                    friendlyMessage = `Failed to create account: ${error.message}`; 
-                }
-                showAuthMessage(friendlyMessage, "error");
-            } finally {
-                isProcessingAuth = false; 
-            }
-        });
-
-        // Handle Login
-        loginButton.addEventListener('click', async () => {
-            showAuthMessage("Logging in...", "info");
-            isProcessingAuth = true;
-
-            const email = loginEmailInput.value.trim();
-            const password = loginPasswordInput.value;
-
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                await reload(user); 
-
-                if (!user.emailVerified) {
-                    await signOut(auth); 
-                    showAuthMessage("Please verify your email address before logging in.", "info"); 
+                if (!email || !password || !confirmPassword || !managerId) {
+                    showAuthMessage("All fields are required.", "error");
+                    isProcessingAuth = false;
                     return;
                 }
-                
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
+                if (password !== confirmPassword) {
+                    showAuthMessage("Passwords do not match.", "error");
+                    isProcessingAuth = false; 
+                    return;
+                }
+                if (password.length < 6) {
+                    showAuthMessage("Password must be at least 6 characters long.", "error");
+                    isProcessingAuth = false; 
+                    return;
+                }
+                if (!/^\d+$/.test(managerId)) {
+                    showAuthMessage("SPL Manager ID is required and must be a valid number.", "error");
+                    isProcessingAuth = false; 
+                    return;
+                }
 
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    console.log("User data from Firestore on login:", userData);
+                try {
+                    console.log("DEBUG: Attempting to create user with email:", email);
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log("DEBUG: User created successfully. UID:", user.uid, "Email:", user.email);
 
-                    if (!userData.emailVerified && user.emailVerified) {
-                        await updateDoc(userDocRef, { emailVerified: true });
-                        userData.emailVerified = true; 
+                    // Save user data to Firestore (teamName will be added on first analyzer report fetch)
+                    console.log("DEBUG: Attempting to save user data to Firestore for UID:", user.uid);
+                    await setDoc(doc(db, "users", user.uid), {
+                        email: user.email,
+                        splManagerId: managerId,
+                        createdAt: serverTimestamp(),
+                        emailVerified: false,
+                        teamName: 'Your Team' // Default team name on signup
+                    });
+                    console.log("DEBUG: User data saved to Firestore with default team name.");
+
+                    // Send email verification
+                    console.log("DEBUG: Attempting to send email verification for user:", user.email, "UID:", user.uid);
+                    try {
+                        await sendEmailVerification(user); 
+                        console.log("DEBUG: Email verification sent successfully (Firebase API acknowledged request).");
+                    } catch (emailError) {
+                        console.error("ERROR: Failed to send email verification during signup:", emailError);
+                        showAuthMessage(`Account created, but failed to send verification email: ${emailError.message}. Please check your email's spam folder or try logging in after a few minutes to trigger resend.`, "warning");
                     }
+                    
+                    // Log out the user immediately after signup to force email verification
+                    console.log("DEBUG: Signing user out after signup to force verification flow.");
+                    await signOut(auth); 
+                    console.log("DEBUG: User signed out after signup.");
 
-                    const userManagerId = userData.splManagerId;
-                    const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
+                    showAuthMessage("Account created! Please verify your email and then log in. If the confirmation e-mail is not in your inbox please check your spam folder", "success");
+                    
+                    // Clear form fields
+                    if (signupEmailInput) signupEmailInput.value = '';
+                    if (signupPasswordInput) signupPasswordInput.value = '';
+                    if (signupConfirmPasswordInput) signupConfirmPasswordInput.value = '';
+                    if (signupManagerIdInput) signupManagerIdInput.value = '';
+                    // Switch to login form
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none';
+                    if (instructionsBox) instructionsBox.style.display = 'none'; // Hide instructions after successful signup
 
-                    if (userManagerId && /^\d+$/.test(userManagerId)) {
-                        displayLoggedInManagerId.textContent = userManagerId;
-                        sidebarTeamName.textContent = teamName; // Set team name in sidebar
-                        
-                        authSection.style.display = 'none'; // Hide auth section
-                        loggedInContent.style.display = 'block'; // Show the main logged-in container
-                        
-                        currentManagerId = userManagerId; 
-                        isAnalyzerReportDataFetched = false; // Reset this flag for new login
-
-                        // Check if current user is an admin to show Admin Dashboard menu item
-                        const adminDocRef = doc(db, "admins", user.uid);
-                        const adminDocSnap = await getDoc(adminDocRef);
-                        isAdminUser = adminDocSnap.exists();
-                        console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
-                        
-                        // Update visibility of the Admin Dashboard menu item
-                        menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
-                        console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
-
-                        // Show menu toggle icon
-                        menuToggle.style.display = 'block';
-
-                        // Default to Analyzer Report section
-                        showContentSection('analyzerReport');
-
+                } catch (error) {
+                    console.error("Signup failed (main try-catch):", error);
+                    let friendlyMessage = "Failed to create account. Please try again.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        friendlyMessage = "That email address is already in use.";
+                    } else if (error.code === 'auth/invalid-email') {
+                        friendlyMessage = "Please enter a valid email address.";
+                    } else if (error.code === 'auth/weak-password') {
+                        friendlyMessage = "Password is too weak.";
+                    } else if (error.code === 'auth/network-request-failed') {
+                        friendlyMessage = "Network error. Please check your internet connection.";
                     } else {
-                        showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
-                        await signOut(auth); 
+                        friendlyMessage = `Failed to create account: ${error.message}`; 
                     }
-                } else {
-                    showAuthMessage("User data not found. Please contact support.", "error"); 
-                    await signOut(auth);
+                    showAuthMessage(friendlyMessage, "error");
+                } finally {
+                    isProcessingAuth = false; 
                 }
-                loginPasswordInput.value = ''; 
+            });
+        }
 
-            } catch (error) {
-                console.error("Login failed:", error);
-                let friendlyMessage = "Login failed. Please check your email and password.";
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    friendlyMessage = "Invalid email or password.";
+        // Handle Login
+        if (loginButton) {
+            loginButton.addEventListener('click', async () => {
+                showAuthMessage("Logging in...", "info");
+                isProcessingAuth = true;
+
+                const email = loginEmailInput.value.trim();
+                const password = loginPasswordInput.value;
+
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    await reload(user); 
+
+                    if (!user.emailVerified) {
+                        await signOut(auth); 
+                        showAuthMessage("Please verify your email address before logging in.", "info"); 
+                        return;
+                    }
+                    
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        console.log("User data from Firestore on login:", userData);
+
+                        if (!userData.emailVerified && user.emailVerified) {
+                            await updateDoc(userDocRef, { emailVerified: true });
+                            userData.emailVerified = true; 
+                        }
+
+                        const userManagerId = userData.splManagerId;
+                        const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
+
+                        if (userManagerId && /^\d+$/.test(userManagerId)) {
+                            if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
+                            if (sidebarTeamName) sidebarTeamName.textContent = teamName; // Set team name in sidebar
+                            
+                            if (authSection) authSection.style.display = 'none'; // Hide auth section
+                            if (loggedInContent) loggedInContent.style.display = 'block'; // Show the main logged-in container
+                            
+                            currentManagerId = userManagerId; 
+                            isAnalyzerReportDataFetched = false; // Reset this flag for new login
+
+                            // Check if current user is an admin to show Admin Dashboard menu item
+                            const adminDocRef = doc(db, "admins", user.uid);
+                            const adminDocSnap = await getDoc(adminDocRef);
+                            isAdminUser = adminDocSnap.exists();
+                            console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
+                            
+                            // Update visibility of the Admin Dashboard menu item
+                            if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
+                            console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
+
+                            // Show menu toggle icon
+                            if (menuToggle) menuToggle.style.display = 'block';
+
+                            // Default to Analyzer Report section
+                            showContentSection('analyzerReport');
+
+                        } else {
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
+                            await signOut(auth); 
+                        }
+                    } else {
+                        showAuthMessage("User data not found. Please contact support.", "error"); 
+                        await signOut(auth);
+                    }
+                    if (loginPasswordInput) loginPasswordInput.value = ''; 
+
+                } catch (error) {
+                    console.error("Login failed:", error);
+                    let friendlyMessage = "Login failed. Please check your email and password.";
+                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        friendlyMessage = "Invalid email or password.";
+                    }
+                    showAuthMessage(friendlyMessage, "error"); 
+                } finally {
+                    isProcessingAuth = false; 
                 }
-                showAuthMessage(friendlyMessage, "error"); 
-            } finally {
-                isProcessingAuth = false; 
-            }
-        });
+            });
+        }
 
         // Handle Logout
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showAuthMessage("Logged out successfully.", "info"); 
-                isAdminUser = false; 
-                menuAdminDashboard.style.display = 'none'; // Hide admin menu item
-                menuToggle.style.display = 'none'; // Hide menu toggle
-                loggedInContent.style.display = 'none'; 
-                // Restore auth section and login form after logout
-                authSection.style.display = 'block'; 
-                loginForm.style.display = 'block'; 
-                signupForm.style.display = 'none';
-                instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
-                sidebarMenu.classList.remove('open'); // Close sidebar on logout
-                overlay.style.display = 'none'; // Hide overlay on logout
-                sidebarTeamName.textContent = 'Your Team'; // Reset team name
-                displayLoggedInManagerId.textContent = ''; // Clear manager ID
-            } catch (error) {
-                console.error("Logout error:", error);
-                showAuthMessage("Failed to logout. Please try again.", "error"); 
-            }
-        });
+        if (logoutButton) {
+            logoutButton.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    showAuthMessage("Logged out successfully.", "info"); 
+                    isAdminUser = false; 
+                    if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; // Hide admin menu item
+                    if (menuToggle) menuToggle.style.display = 'none'; // Hide menu toggle
+                    if (loggedInContent) loggedInContent.style.display = 'none'; 
+                    // Restore auth section and login form after logout
+                    if (authSection) authSection.style.display = 'block'; 
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none';
+                    if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close sidebar on logout
+                    if (overlay) overlay.style.display = 'none'; // Hide overlay on logout
+                    if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; // Reset team name
+                    if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; // Clear manager ID
+                } catch (error) {
+                    console.error("Logout error:", error);
+                    showAuthMessage("Failed to logout. Please try again.", "error"); 
+                }
+            });
+        }
 
         // Toggle between Login and Signup forms (showSignupLink is from login form to signup form)
-        showSignupLink.addEventListener('click', (e) => {
-            console.log("DEBUG: 'Sign Up' link clicked."); 
-            e.preventDefault();
-            loginForm.style.display = 'none';
-            signupForm.style.display = 'block'; 
-            authMessageBox.style.display = 'none'; 
-            authMessageBox.textContent = ''; 
-            instructionsBox.style.display = 'block'; // Show instructions when signup form is active
-        });
+        if (showSignupLink) {
+            showSignupLink.addEventListener('click', (e) => {
+                console.log("DEBUG: 'Sign Up' link clicked."); 
+                e.preventDefault();
+                if (loginForm) loginForm.style.display = 'none';
+                if (signupForm) signupForm.style.display = 'block'; 
+                if (authMessageBox) authMessageBox.style.display = 'none'; 
+                if (authMessageBox) authMessageBox.textContent = ''; 
+                if (instructionsBox) instructionsBox.style.display = 'block'; // Show instructions when signup form is active
+            });
+        }
 
         // Toggle between Login and Signup forms (showLoginLink is from signup form to login form)
-        showLoginLink.addEventListener('click', (e) => {
-            console.log("DEBUG: 'Login' link clicked."); 
-            e.preventDefault();
-            loginForm.style.display = 'block'; 
-            signupForm.style.display = 'none';
-            authMessageBox.style.display = 'none'; 
-            authMessageBox.textContent = ''; 
-            instructionsBox.style.display = 'none'; // Hide instructions when login form is active
-        });
+        if (showLoginLink) {
+            showLoginLink.addEventListener('click', (e) => {
+                console.log("DEBUG: 'Login' link clicked."); 
+                e.preventDefault();
+                if (loginForm) loginForm.style.display = 'block'; 
+                if (signupForm) signupForm.style.display = 'none';
+                if (authMessageBox) authMessageBox.style.display = 'none'; 
+                if (authMessageBox) authMessageBox.textContent = ''; 
+                if (instructionsBox) instructionsBox.style.display = 'none'; // Hide instructions when login form is active
+            });
+        }
 
 
         // --- Authentication State Listener (Core UI Logic) ---
@@ -2177,11 +2353,11 @@
                         const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
 
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
-                            displayLoggedInManagerId.textContent = userManagerId;
-                            sidebarTeamName.textContent = teamName; // Set team name in sidebar
+                            if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
+                            if (sidebarTeamName) sidebarTeamName.textContent = teamName; // Set team name in sidebar
                             
-                            authSection.style.display = 'none'; 
-                            loggedInContent.style.display = 'block'; 
+                            if (authSection) authSection.style.display = 'none'; 
+                            if (loggedInContent) loggedInContent.style.display = 'block'; 
                             
                             currentManagerId = userManagerId; 
                             isAnalyzerReportDataFetched = false; // Ensure flag is reset on fresh login
@@ -2193,11 +2369,11 @@
                             console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
                             // Update visibility of the Admin Dashboard menu item
-                            menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
+                            if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
                             console.log(`DEBUG ADMIN MENU ITEM RENDER (onAuthStateChanged Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
                             // Show menu toggle icon
-                            menuToggle.style.display = 'block';
+                            if (menuToggle) menuToggle.style.display = 'block';
 
                             // Default to Analyzer Report section
                             showContentSection('analyzerReport');
@@ -2205,45 +2381,45 @@
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
                             await signOut(auth); 
-                            authSection.style.display = 'block';
-                            loginForm.style.display = 'block'; 
-                            signupForm.style.display = 'none';
-                            loggedInContent.style.display = 'none'; 
-                            instructionsBox.style.display = 'none'; 
+                            if (authSection) authSection.style.display = 'block';
+                            if (loginForm) loginForm.style.display = 'block'; 
+                            if (signupForm) signupForm.style.display = 'none';
+                            if (loggedInContent) loggedInContent.style.display = 'none'; 
+                            if (instructionsBox) instructionsBox.style.display = 'none'; 
                         }
                     } else {
                         console.warn("Firestore document for user does not exist. Logging out.");
                         showAuthMessage("User data not found. Please contact support. Logging out.", "error");
                         await signOut(auth); 
-                        authSection.style.display = 'block';
-                        loginForm.style.display = 'block'; 
-                        signupForm.style.display = 'none';
-                        loggedInContent.style.display = 'none'; 
-                        instructionsBox.style.display = 'none'; 
+                        if (authSection) authSection.style.display = 'block';
+                        if (loginForm) loginForm.style.display = 'block'; 
+                        if (signupForm) signupForm.style.display = 'none';
+                        if (loggedInContent) loggedInContent.style.display = 'none'; 
+                        if (instructionsBox) instructionsBox.style.display = 'none'; 
                     }
                 } else {
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
-                    authSection.style.display = 'block';
-                    loginForm.style.display = 'block'; 
-                    signupForm.style.display = 'none';
-                    loggedInContent.style.display = 'none'; 
-                    instructionsBox.style.display = 'none'; 
+                    if (authSection) authSection.style.display = 'block';
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none';
+                    if (loggedInContent) loggedInContent.style.display = 'none'; 
+                    if (instructionsBox) instructionsBox.style.display = 'none'; 
                 }
             } else {
                 // User is not logged in
-                authSection.style.display = 'block'; 
-                loginForm.style.display = 'block'; 
-                signupForm.style.display = 'none';
-                loggedInContent.style.display = 'none'; 
+                if (authSection) authSection.style.display = 'block'; 
+                if (loginForm) loginForm.style.display = 'block'; 
+                if (signupForm) signupForm.style.display = 'none';
+                if (loggedInContent) loggedInContent.style.display = 'none'; 
                 clearAnalyzerReport(); // Clear any previous report data when logging out
                 isAdminUser = false; 
-                menuAdminDashboard.style.display = 'none'; // Hide admin menu item
-                menuToggle.style.display = 'none'; // Hide menu toggle
-                instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
-                sidebarMenu.classList.remove('open'); // Close sidebar on logout
-                overlay.style.display = 'none'; // Hide overlay on logout
-                sidebarTeamName.textContent = 'Your Team'; // Reset team name
-                displayLoggedInManagerId.textContent = ''; // Clear manager ID
+                if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; // Hide admin menu item
+                if (menuToggle) menuToggle.style.display = 'none'; // Hide menu toggle
+                if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
+                if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close sidebar on logout
+                if (overlay) overlay.style.display = 'none'; // Hide overlay on logout
+                if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; // Reset team name
+                if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; // Clear manager ID
             }
         });
 
@@ -2256,34 +2432,35 @@
             hideAllContentSections(); // Hide all content sub-sections first
             
             if (sectionId === 'analyzerReport') {
-                analyzerReportContent.style.display = 'block';
+                if (analyzerReportContent) analyzerReportContent.style.display = 'block';
                 
-                shareVideoButton.style.display = 'none'; 
-                managerStatsDiv.style.display = 'none'; 
-                rankJourneyBox.style.display = 'none';
+                if (shareVideoButton) shareVideoButton.style.display = 'none'; 
+                if (managerStatsDiv) managerStatsDiv.style.display = 'none'; 
+                if (rankJourneyBox) rankJourneyBox.style.display = 'none';
 
                 if (isAnalyzerReportDataFetched) {
-                    managerStatsDiv.style.display = 'block';
-                    rankJourneyBox.style.display = 'flex'; 
-                    shareVideoButton.style.display = 'block';
+                    if (managerStatsDiv) managerStatsDiv.style.display = 'block';
+                    if (rankJourneyBox) rankJourneyBox.style.display = 'flex'; 
+                    if (shareVideoButton) shareVideoButton.style.display = 'block';
                 } else {
                     console.log("DEBUG: Analyzer report data not fetched yet, waiting for 'Analyze My Team' menu click.");
                 }
 
             } else if (sectionId === 'controlRoom') {
-                myControlRoomContent.style.display = 'block';
+                if (myControlRoomContent) myControlRoomContent.style.display = 'block';
+                initializeFDRSection(); // Initialize FDR feature when My Control Room is shown
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
-                    adminDashboardContent.style.display = 'block'; 
-                    adminDashboardNavButtons.style.display = 'flex'; 
-                    adminSearchSection.style.display = 'flex'; 
-                    adminSearchResults.style.display = 'none'; 
-                    adminMessage.style.display = 'none'; 
-                    dataUploadSection.style.display = 'none'; // Hide data upload by default when entering admin
-                    currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
-                    overallFDRSection.style.display = 'none'; // Hide all FDR sections
-                    homeFDRSection.style.display = 'none';
-                    awayFDRSection.style.display = 'none';
+                    if (adminDashboardContent) adminDashboardContent.style.display = 'block'; 
+                    if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'flex'; 
+                    if (adminSearchSection) adminSearchSection.style.display = 'flex'; 
+                    if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                    if (adminMessage) adminMessage.style.display = 'none'; 
+                    if (dataUploadSection) dataUploadSection.style.display = 'none'; // Hide data upload by default when entering admin
+                    if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
+                    if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; // Hide all FDR sections
+                    if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+                    if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -2297,16 +2474,16 @@
         async function fetchAndDisplaySPLReport(managerId) {
             console.log("DEBUG: fetchAndDisplaySPLReport started with ID:", managerId);
             
-            loadingMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            managerStatsDiv.style.display = 'none'; 
-            rankJourneyChartContainer.style.display = 'none';
-            videoLoadingMessage.style.display = 'none';
-            rankJourneyBox.style.display = 'none';
-            createRankJourneyButton.textContent = 'Click Here';
-            shareVideoButton.disabled = false; 
-            createRankJourneyButton.disabled = false; 
-            darkModeToggle.disabled = false; 
+            if (loadingMessage) loadingMessage.style.display = 'block';
+            if (errorMessage) errorMessage.style.display = 'none';
+            if (managerStatsDiv) managerStatsDiv.style.display = 'none'; 
+            if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = 'none';
+            if (videoLoadingMessage) videoLoadingMessage.style.display = 'none';
+            if (rankJourneyBox) rankJourneyBox.style.display = 'none';
+            if (createRankJourneyButton) createRankJourneyButton.textContent = 'Click Here';
+            if (shareVideoButton) shareVideoButton.disabled = false; 
+            if (createRankJourneyButton) createRankJourneyButton.disabled = false; 
+            if (darkModeToggle) darkModeToggle.disabled = false; 
 
             clearAnalyzerReport(); 
 
@@ -2318,7 +2495,7 @@
                     const data = await response.json();
                     console.log('DEBUG: Fetch response received from Netlify Function.', { responseOk: response.ok, data: data });
 
-                    loadingMessage.style.display = 'none';
+                    if (loadingMessage) loadingMessage.style.display = 'none';
 
                     if (response.ok) {
                         console.log('DEBUG: Netlify Function Response OK. Populating manager data...');
@@ -2336,176 +2513,186 @@
                         if (user && data.managerName) {
                             const userDocRef = doc(db, "users", user.uid);
                             // Only update if the teamName is different or not set
-                            if (sidebarTeamName.textContent !== data.managerName) {
+                            if (sidebarTeamName && sidebarTeamName.textContent !== data.managerName) {
                                 await updateDoc(userDocRef, { teamName: data.managerName });
                                 console.log(`DEBUG: Updated user's teamName in Firestore to: ${data.managerName}`);
                             }
                         }
                         // --- END IMPORTANT ---
 
-                        sidebarTeamName.textContent = data.managerName || 'Your Team'; 
-                        managerNameElem.innerHTML = `Team Name: <span style="color: var(--spl-primary-accent);">${data.managerName || `Manager ID: ${managerId}`}</span><br>Rank & Points`;
+                        if (sidebarTeamName) sidebarTeamName.textContent = data.managerName || 'Your Team'; 
+                        if (managerNameElem) managerNameElem.innerHTML = `Team Name: <span style="color: var(--spl-primary-accent);">${data.managerName || `Manager ID: ${managerId}`}</span><br>Rank & Points`;
                         
-                        overallRankElem.textContent = `${data.overallRank} 🌏`;
+                        if (overallRankElem) overallRankElem.textContent = `${data.overallRank} 🌏`;
                         
                         let bestRankRaw = String(data.bestOverallRank);
                         let bestRankNumeric = bestRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
                         let bestRankRound = extractAndFormatRound(bestRankRaw);
-                        bestOverallRankElem.textContent = `${bestRankNumeric} 🌏 ${bestRankRound}`;
+                        if (bestOverallRankElem) bestOverallRankElem.textContent = `${bestRankNumeric} 🌏 ${bestRankRound}`;
 
                         let worstRankRaw = String(data.worstOverallRank);
                         let worstRankNumeric = worstRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
                         let worstRankRound = extractAndFormatRound(worstRankRaw);
-                        worstOverallRankElem.textContent = `${worstRankNumeric} 🌏 ${worstRankRound}`;
+                        if (worstOverallRankElem) worstOverallRankElem.textContent = `${worstRankNumeric} 🌏 ${worstRankRound}`;
 
-                        averagePointsElem.textContent = data.averagePoints;
-                        averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
+                        if (averagePointsElem) averagePointsElem.textContent = data.averagePoints;
+                        if (averagePointsFor1stPlaceElem) averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
                         
                         const bestRound = data.bestRound;
-                        bestRoundDisplayElem.textContent = bestRound.points !== 'N/A' 
+                        if (bestRoundDisplayElem) bestRoundDisplayElem.textContent = bestRound.points !== 'N/A' 
                             ? `${bestRound.points} ${bestRound.deductions !== 0 ? `(-${bestRound.deductions})` : ''} Points in Round ${bestRound.round}`
                             : 'N/A';
 
                         const worstRound = data.worstRound;
-                        worstRoundDisplayElem.textContent = worstRound.points !== 'N/A' 
+                        if (worstRoundDisplayElem) worstRoundDisplayElem.textContent = worstRound.points !== 'N/A' 
                             ? `${worstRound.points} ${worstRound.deductions !== 0 ? `(-${worstRound.deductions})` : ''} Points in Round ${worstRound.round}`
                             : 'N/A';
 
-                        totalTransfersCountElem.textContent = data.totalTransfersCount;
-                        totalHitsPointsElem.textContent = data.totalHitsPoints;
+                        if (totalTransfersCountElem) totalTransfersCountElem.textContent = data.totalTransfersCount;
+                        if (totalHitsPointsElem) totalHitsPointsElem.textContent = data.totalHitsPoints;
                         
-                        rankJourneyBox.style.display = 'flex'; 
+                        if (rankJourneyBox) rankJourneyBox.style.display = 'flex'; 
 
                         // Populate tables
                         console.log('DEBUG: Populating topCaptainsTable...');
-                        topCaptainsTableBody.innerHTML = '';
-                        if (data.top3Captains && data.top3Captains.length > 0) {
-                            data.top3Captains.forEach(captain => {
+                        if (topCaptainsTableBody) {
+                            topCaptainsTableBody.innerHTML = '';
+                            if (data.top3Captains && data.top3Captains.length > 0) {
+                                data.top3Captains.forEach(captain => {
+                                    const row = topCaptainsTableBody.insertRow();
+                                    row.insertCell().textContent = captain.name;
+                                    row.cells[0].setAttribute('data-label', 'Player');
+                                    row.insertCell().textContent = captain.times;
+                                    row.cells[1].setAttribute('data-label', 'Times Captained');
+                                    row.insertCell().textContent = captain.successful;
+                                    row.cells[2].setAttribute('data-label', 'Success');
+                                    row.insertCell().textContent = captain.failed;
+                                    row.cells[3].setAttribute('data-label', 'Failed');
+                                    row.insertCell().textContent = captain.totalCaptainedPoints;
+                                    row.cells[4].setAttribute('data-label', 'Captained Points');
+                                    row.insertCell().textContent = captain.captainedRounds ? captain.captainedRounds.join(', ') : 'N/A';
+                                    row.cells[5].setAttribute('data-label', 'Captained Rounds');
+                                });
+                            }
+                            else {
                                 const row = topCaptainsTableBody.insertRow();
-                                row.insertCell().textContent = captain.name;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = captain.times;
-                                row.cells[1].setAttribute('data-label', 'Times Captained');
-                                row.insertCell().textContent = captain.successful;
-                                row.cells[2].setAttribute('data-label', 'Success');
-                                row.insertCell().textContent = captain.failed;
-                                row.cells[3].setAttribute('data-label', 'Failed');
-                                row.insertCell().textContent = captain.totalCaptainedPoints;
-                                row.cells[4].setAttribute('data-label', 'Captained Points');
-                                row.insertCell().textContent = captain.captainedRounds ? captain.captainedRounds.join(', ') : 'N/A';
-                                row.cells[5].setAttribute('data-label', 'Captained Rounds');
-                            });
-                        }
-                        else {
-                            const row = topCaptainsTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 6;
+                                row.insertCell().textContent = 'No data available.';
+                                row.cells[0].colSpan = 6;
+                            }
                         }
                         console.log('DEBUG: Populating bestPlayersTable...');
-                        bestPlayersTableBody.innerHTML = '';
-                        if (data.bestPlayers && data.bestPlayers.length > 0) {
-                            data.bestPlayers.forEach(player => {
+                        if (bestPlayersTableBody) {
+                            bestPlayersTableBody.innerHTML = '';
+                            if (data.bestPlayers && data.bestPlayers.length > 0) {
+                                data.bestPlayers.forEach(player => {
+                                    const row = bestPlayersTableBody.insertRow();
+                                    row.insertCell().textContent = player.name;
+                                    row.cells[0].setAttribute('data-label', 'Player');
+                                    row.insertCell().textContent = player.started;
+                                    row.cells[1].setAttribute('data-label', 'Started');
+                                    row.insertCell().textContent = player.autoSubbed;
+                                    row.cells[2].setAttribute('data-label', 'Auto Subbed In');
+                                    row.insertCell().textContent = player.pointsGained;
+                                    row.cells[3].setAttribute('data-label', 'Points Gained');
+                                    row.insertCell().textContent = player.benchedPoints;
+                                    row.cells[4].setAttribute('data-label', 'Benched Points');
+                                });
+                            } else {
                                 const row = bestPlayersTableBody.insertRow();
-                                row.insertCell().textContent = player.name;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = player.started;
-                                row.cells[1].setAttribute('data-label', 'Started');
-                                row.insertCell().textContent = player.autoSubbed;
-                                row.cells[2].setAttribute('data-label', 'Auto Subbed In');
-                                row.insertCell().textContent = player.pointsGained;
-                                row.cells[3].setAttribute('data-label', 'Points Gained');
-                                row.insertCell().textContent = player.benchedPoints;
-                                row.cells[4].setAttribute('data-label', 'Benched Points');
-                            });
-                        } else {
-                            const row = bestPlayersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 5;
+                                row.insertCell().textContent = 'No data available.';
+                                row.cells[0].colSpan = 5;
+                            }
                         }
                         console.log('DEBUG: Populating worstPlayersTable...');
-                        worstPlayersTableBody.innerHTML = '';
-                        if (data.worstPlayers && data.worstPlayers.length > 0) {
-                            data.worstPlayers.forEach(player => {
+                        if (worstPlayersTableBody) {
+                            worstPlayersTableBody.innerHTML = '';
+                            if (data.worstPlayers && data.worstPlayers.length > 0) {
+                                data.worstPlayers.forEach(player => {
+                                    const row = worstPlayersTableBody.insertRow();
+                                    row.insertCell().textContent = player.name;
+                                    row.cells[0].setAttribute('data-label', 'Player');
+                                    row.insertCell().textContent = player.started;
+                                    row.cells[1].setAttribute('data-label', 'Started');
+                                    row.insertCell().textContent = player.autoSubbed;
+                                    row.cells[2].setAttribute('data-label', 'Auto Subbed In');
+                                    row.insertCell().textContent = player.pointsGained;
+                                    row.cells[3].setAttribute('data-label', 'Points Gained');
+                                    row.insertCell().textContent = player.benchedPoints;
+                                    row.cells[4].setAttribute('data-label', 'Benched Points');
+                                });
+                            } else {
                                 const row = worstPlayersTableBody.insertRow();
-                                row.insertCell().textContent = player.name;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = player.started;
-                                row.cells[1].setAttribute('data-label', 'Started');
-                                row.insertCell().textContent = player.autoSubbed;
-                                row.cells[2].setAttribute('data-label', 'Auto Subbed In');
-                                row.insertCell().textContent = player.pointsGained;
-                                row.cells[3].setAttribute('data-label', 'Points Gained');
-                                row.insertCell().textContent = player.benchedPoints;
-                                row.cells[4].setAttribute('data-label', 'Benched Points');
-                            });
-                        } else {
-                            const row = worstPlayersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 5;
+                                row.insertCell().textContent = 'No data available.';
+                                row.cells[0].colSpan = 5;
+                            }
                         }
                         console.log('DEBUG: Populating missedPointsTable...');
-                        missedPointsTableBody.innerHTML = '';
-                        if (data.top5MissedPoints && data.top5MissedPoints.length > 0) {
-                            data.top5MissedPoints.forEach(item => {
+                        if (missedPointsTableBody) {
+                            missedPointsTableBody.innerHTML = '';
+                            if (data.top5MissedPoints && data.top5MissedPoints.length > 0) {
+                                data.top5MissedPoints.forEach(item => {
+                                    const row = missedPointsTableBody.insertRow();
+                                    row.insertCell().textContent = item.playerName;
+                                    row.cells[0].setAttribute('data-label', 'Player');
+                                    row.insertCell().textContent = item.points;
+                                    row.cells[1].setAttribute('data-label', 'Points');
+                                    row.insertCell().textContent = item.round;
+                                    row.cells[2].setAttribute('data-label', 'Round');
+                                });
+                            } else {
                                 const row = missedPointsTableBody.insertRow();
-                                row.insertCell().textContent = item.playerName;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = item.points;
-                                row.cells[1].setAttribute('data-label', 'Points');
-                                row.insertCell().textContent = item.round;
-                                row.cells[2].setAttribute('data-label', 'Round');
-                            });
-                        } else {
-                            const row = missedPointsTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 3;
+                                row.insertCell().textContent = 'No data available.';
+                                row.cells[0].colSpan = 3;
+                            }
                         }
                         console.log('DEBUG: Populating profitableTransfersTable...');
-                        profitableTransfersTableBody.innerHTML = '';
-                        if (data.top5ProfitableTransfers && data.top5ProfitableTransfers.length > 0) {
-                            data.top5ProfitableTransfers.forEach(transfer => {
-                                const row = profitableTransfersTableBody.insertRow();
-                                row.insertCell().textContent = transfer.playerInName;
-                                row.cells[0].setAttribute('data-label', 'IN');
-                                row.insertCell().textContent = transfer.playerOutName;
-                                row.cells[1].setAttribute('data-label', 'OUT');
-                                row.insertCell().textContent = transfer.round;
-                                row.cells[2].setAttribute('data-label', 'Round');
-                                const profitLossCell = row.insertCell();
-                                profitLossCell.textContent = transfer.profitLoss;
-                                profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
-                                profitLossCell.setAttribute('data-label', 'Profit/Loss');
-                            });
-                        } else {
-                            const row = lossMakingTransfersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 4;
+                        if (profitableTransfersTableBody) {
+                            profitableTransfersTableBody.innerHTML = '';
+                            if (data.top5ProfitableTransfers && data.top5ProfitableTransfers.length > 0) {
+                                data.top5ProfitableTransfers.forEach(transfer => {
+                                    const row = profitableTransfersTableBody.insertRow();
+                                    row.insertCell().textContent = transfer.playerInName;
+                                    row.cells[0].setAttribute('data-label', 'IN');
+                                    row.insertCell().textContent = transfer.playerOutName;
+                                    row.cells[1].setAttribute('data-label', 'OUT');
+                                    row.insertCell().textContent = transfer.round;
+                                    row.cells[2].setAttribute('data-label', 'Round');
+                                    const profitLossCell = row.insertCell();
+                                    profitLossCell.textContent = transfer.profitLoss;
+                                    profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
+                                    profitLossCell.setAttribute('data-label', 'Profit/Loss');
+                                });
+                            } else {
+                                const row = lossMakingTransfersTableBody.insertRow();
+                                row.insertCell().textContent = 'No data available.';
+                                row.cells[0].colSpan = 4;
+                            }
                         }
 
-                        greenArrowsCountElem.textContent = `${data.greenArrowsCount || 0} 🟢`;
-                        redArrowsCountElem.textContent = `${data.redArrowsCount || 0} 🔴`;
+                        if (greenArrowsCountElem) greenArrowsCountElem.textContent = `${data.greenArrowsCount || 0} 🟢`;
+                        if (redArrowsCountElem) redArrowsCountElem.textContent = `${data.redArrowsCount || 0} 🔴`;
 
 
-                        managerStatsDiv.style.display = 'block'; 
-                        rankJourneyBox.style.display = 'flex'; 
-                        shareVideoButton.style.display = 'block';
+                        if (managerStatsDiv) managerStatsDiv.style.display = 'block'; 
+                        if (rankJourneyBox) rankJourneyBox.style.display = 'flex'; 
+                        if (shareVideoButton) shareVideoButton.style.display = 'block';
                         isAnalyzerReportDataFetched = true; 
 
                     } else {
                         console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
                         showAnalyzerMessage(data.error || 'An unknown error occurred.', 'error');
-                        managerStatsDiv.style.display = 'none';
-                        rankJourneyBox.style.display = 'none';
-                        shareVideoButton.style.display = 'none';
+                        if (managerStatsDiv) managerStatsDiv.style.display = 'none';
+                        if (rankJourneyBox) rankJourneyBox.style.display = 'none';
+                        if (shareVideoButton) shareVideoButton.style.display = 'none';
                     }
 
                 } catch (error) {
                     console.error("DEBUG: Critical fetchAndDisplaySPLReport error (outer catch):", error);
                     showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, 'error');
-                    loadingMessage.style.display = 'none';
-                    managerStatsDiv.style.display = 'none';
-                    rankJourneyBox.style.display = 'none';
-                    shareVideoButton.style.display = 'none';
+                    if (loadingMessage) loadingMessage.style.display = 'none';
+                    if (managerStatsDiv) managerStatsDiv.style.display = 'none';
+                    if (rankJourneyBox) rankJourneyBox.style.display = 'none';
+                    if (shareVideoButton) shareVideoButton.style.display = 'none';
                 }
             } else {
                 showAnalyzerMessage("No Manager ID found for report generation. Please ensure your account has a valid Manager ID.", "error");
@@ -2564,7 +2751,7 @@
 
             console.log(`DEBUG: Chart Y-axis Debug: Min Rank (History): ${minRankInHistory}, Max Rank (History): ${maxRankInHistory}, Current Overall Rank (for decision): ${decisionRank}, Calculated Y-axis Max: ${overallYAxisMax}`);
 
-            videoLoadingMessage.style.display = 'block';
+            if (videoLoadingMessage) videoLoadingMessage.style.display = 'block';
 
             const ctx = rankJourneyChartCanvas.getContext('2d');
             if (rankJourneyChartInstance) {
@@ -2757,7 +2944,7 @@
                 if (progress < 1) {
                     animationFrameId = requestAnimationFrame(animateChart);
                 } else {
-                    videoLoadingMessage.style.display = 'none';
+                    if (videoLoadingMessage) videoLoadingMessage.style.display = 'none';
                     // Ensure the full line is visible and all its points are shown at the end
                     rankJourneyChartInstance.data.datasets[0].data = fullRankHistoryData.map(d => ({ x: d.round, y: d.rank }));
                     rankJourneyChartInstance.data.datasets[0].pointRadius = 3; 
@@ -2787,11 +2974,11 @@
             }
             
             const originalChartContainerDisplay = rankJourneyChartContainer.style.display;
-            rankJourneyChartContainer.style.display = 'flex';
-            rankJourneyChartCanvas.style.display = 'block'; 
+            if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = 'flex';
+            if (rankJourneyChartCanvas) rankJourneyChartCanvas.style.display = 'block'; 
             
-            rankJourneyChartCanvas.width = 900; 
-            rankJourneyChartCanvas.height = rankJourneyChartCanvas.width / (window.innerWidth <= 950 ? 1.5 : 2); 
+            if (rankJourneyChartCanvas) rankJourneyChartCanvas.width = 900; 
+            if (rankJourneyChartCanvas) rankJourneyChartCanvas.height = rankJourneyChartCanvas.width / (window.innerWidth <= 950 ? 1.5 : 2); 
 
             if (rankJourneyChartInstance) {
                 rankJourneyChartInstance.destroy(); 
@@ -2933,26 +3120,28 @@
                     }
                 }
             });
-            rankJourneyChartInstance.update('resize'); 
+            if (rankJourneyChartInstance) rankJourneyChartInstance.update('resize'); 
 
             await new Promise(resolve => setTimeout(resolve, 500)); 
 
-            hiddenChartCaptureCanvas.width = gifWidth;
-            hiddenChartCaptureCanvas.height = gifHeight;
-            const hiddenCtx = hiddenChartCaptureCanvas.getContext('2d');
-            
-            hiddenCtx.fillStyle = getComputedStyle(document.body).backgroundColor;
-            hiddenCtx.fillRect(0, 0, hiddenChartCaptureCanvas.width, hiddenChartCaptureCanvas.height);
+            if (hiddenChartCaptureCanvas) {
+                hiddenChartCaptureCanvas.width = gifWidth;
+                hiddenChartCaptureCanvas.height = gifHeight;
+                const hiddenCtx = hiddenChartCaptureCanvas.getContext('2d');
+                
+                hiddenCtx.fillStyle = getComputedStyle(document.body).backgroundColor;
+                hiddenCtx.fillRect(0, 0, hiddenChartCaptureCanvas.width, hiddenChartCaptureCanvas.height);
 
-            const chartRatio = Math.min(hiddenChartCaptureCanvas.width / rankJourneyChartCanvas.width, hiddenChartCaptureCanvas.height / rankJourneyChartCanvas.height);
-            const chartWidth = rankJourneyChartCanvas.width * chartRatio;
-            const chartHeight = rankJourneyChartCanvas.height * chartRatio;
-            const chartX = (hiddenChartCaptureCanvas.width - chartWidth) / 2;
-            const chartY = (hiddenChartCaptureCanvas.height - chartHeight) / 2; // Corrected to use chartHeight
+                const chartRatio = Math.min(hiddenChartCaptureCanvas.width / rankJourneyChartCanvas.width, hiddenChartCaptureCanvas.height / rankJourneyChartCanvas.height);
+                const chartWidth = rankJourneyChartCanvas.width * chartRatio;
+                const chartHeight = rankJourneyChartCanvas.height * chartRatio;
+                const chartX = (hiddenChartCaptureCanvas.width - chartWidth) / 2;
+                const chartY = (hiddenChartCaptureCanvas.height - chartHeight) / 2; // Corrected to use chartHeight
 
-            hiddenCtx.drawImage(rankJourneyChartCanvas, chartX, chartY, chartWidth, chartHeight);
+                hiddenCtx.drawImage(rankJourneyChartCanvas, chartX, chartY, chartWidth, chartHeight);
+            }
 
-            rankJourneyChartContainer.style.display = originalChartContainerDisplay;
+            if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = originalChartContainerDisplay;
 
             console.log('DEBUG: Chart prepared and copied to hidden canvas for GIF.');
             return hiddenChartCaptureCanvas; 
@@ -2988,8 +3177,10 @@
                     element.style.display = 'block'; 
                 }
             });
-            originalDisplayStates['managerStats'] = managerStatsDiv.style.display;
-            managerStatsDiv.style.display = 'block'; 
+            if (managerStatsDiv) {
+                originalDisplayStates['managerStats'] = managerStatsDiv.style.display;
+                managerStatsDiv.style.display = 'block'; 
+            }
             await new Promise(resolve => setTimeout(resolve, 100)); 
 
             for (const sectionConfig of sectionsToCaptureConfig) {
@@ -3151,7 +3342,7 @@
 
             gif.on('progress', function(p) {
                 console.log('DEBUG: GIF generation progress: ' + Math.round(p * 100) + '%');
-                videoGeneratingMessage.textContent = `Generating GIF... ${Math.round(p * 100)}% complete.`;
+                if (videoGeneratingMessage) videoGeneratingMessage.textContent = `Generating GIF... ${Math.round(p * 100)}% complete.`;
             });
 
             gif.on('finished', function(blob) {
@@ -3165,17 +3356,17 @@
                 a.click();
                 window.URL.revokeObjectURL(url);
                 console.log("DEBUG: GIF download triggered.");
-                videoGeneratingMessage.textContent = 'GIF generated and download started!';
+                if (videoGeneratingMessage) videoGeneratingMessage.textContent = 'GIF generated and download started!';
                 // Re-enable buttons
-                shareVideoButton.disabled = false;
-                createRankJourneyButton.disabled = false;
-                darkModeToggle.disabled = false;
+                if (shareVideoButton) shareVideoButton.disabled = false;
+                if (createRankJourneyButton) createRankJourneyButton.disabled = false;
+                if (darkModeToggle) darkModeToggle.disabled = false;
             });
 
             gif.on('error', function(error) {
                 console.error("DEBUG: GIF generation error:", error);
                 showAnalyzerMessage(`GIF generation failed: ${error.message}. Please try again.`, 'error');
-                videoGeneratingMessage.style.display = 'none'; 
+                if (videoGeneratingMessage) videoGeneratingMessage.style.display = 'none'; 
             });
 
             gif.render(); 
@@ -3248,306 +3439,322 @@
             }
         }
 
-        adminSearchButton.addEventListener('click', async () => {
-            showAdminMessage("Searching...", "info");
-            adminSearchResults.style.display = 'none'; 
-            foundUserForAdminEdit = null; 
+        if (adminSearchButton) {
+            adminSearchButton.addEventListener('click', async () => {
+                showAdminMessage("Searching...", "info");
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                foundUserForAdminEdit = null; 
 
-            const searchTerm = adminSearchInput.value.trim();
-            if (!searchTerm) {
-                showAdminMessage("Please enter a search term (Email, SPL ID, or UID).", "error");
-                return;
-            }
-            
-            let userFoundData = null;
+                const searchTerm = adminSearchInput.value.trim();
+                if (!searchTerm) {
+                    showAdminMessage("Please enter a search term (Email, SPL ID, or UID).", "error");
+                    return;
+                }
+                
+                let userFoundData = null;
 
-            userFoundData = await searchUserByUid(searchTerm);
+                userFoundData = await searchUserByUid(searchTerm);
 
-            if (!userFoundData && searchTerm.includes('@')) { 
-                userFoundData = await searchUserByEmail(searchTerm);
-            }
+                if (!userFoundData && searchTerm.includes('@')) { 
+                    userFoundData = await searchUserByEmail(searchTerm);
+                }
 
-            if (!userFoundData && /^\d+$/.test(searchTerm)) {
-                userFoundData = await searchUserBySplManagerId(searchTerm);
-            }
-            
-            if (userFoundData) {
-                foundUserForAdminEdit = userFoundData; 
-                adminUserUidElem.textContent = userFoundData.id;
-                adminEditEmailInput.value = userFoundData.email || '';
-                adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
-                adminSearchResults.style.display = 'flex'; 
-                showAdminMessage("User found successfully.", "success");
-            } else {
-                showAdminMessage("User not found. Please check the search term or if the user exists.", "error");
-                adminSearchResults.style.display = 'none'; 
-            }
-        });
+                if (!userFoundData && /^\d+$/.test(searchTerm)) {
+                    userFoundData = await searchUserBySplManagerId(searchTerm);
+                }
+                
+                if (userFoundData) {
+                    foundUserForAdminEdit = userFoundData; 
+                    if (adminUserUidElem) adminUserUidElem.textContent = userFoundData.id;
+                    if (adminEditEmailInput) adminEditEmailInput.value = userFoundData.email || '';
+                    if (adminEditSplManagerIdInput) adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
+                    if (adminSearchResults) adminSearchResults.style.display = 'flex'; 
+                    showAdminMessage("User found successfully.", "success");
+                } else {
+                    showAdminMessage("User not found. Please check the search term or if the user exists.", "error");
+                    if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                }
+            });
+        }
 
-        adminSearchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault(); 
-                adminSearchButton.click(); 
-            }
-        });
+        if (adminSearchInput) {
+            adminSearchInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); 
+                    if (adminSearchButton) adminSearchButton.click(); 
+                }
+            });
+        }
 
         // Add Enter key listener for Login fields
-        loginEmailInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                loginButton.click();
-            }
-        });
-
-        loginPasswordInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                loginButton.click();
-            }
-        });
-
-
-        adminUpdateUserButton.addEventListener('click', async () => {
-            if (!foundUserForAdminEdit) {
-                showAdminMessage("No user selected for update. Please search for a user first.", "error");
-                return;
-            }
-
-            showAdminMessage("Updating user...", "info");
-
-            const newEmail = adminEditEmailInput.value.trim();
-            const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim());
-            const userToUpdateUid = foundUserForAdminEdit.id;
-
-            if (!newEmail || !newSplManagerId) {
-                showAdminMessage("Email and SPL Manager ID cannot be empty.", "error");
-                return;
-            }
-            if (!/^\d+$/.test(newSplManagerId)) {
-                showAdminMessage("SPL Manager ID must be a valid number.", "error");
-                return;
-            }
-
-            try {
-                const userDocRef = doc(db, "users", userToUpdateUid);
-                await updateDoc(userDocRef, {
-                    email: newEmail,
-                    splManagerId: newSplManagerId 
-                });
-                showAdminMessage("User updated successfully!", "success");
-                adminSearchInput.value = userToUpdateUid; 
-                await adminSearchButton.click(); 
-            } catch (error) {
-                console.error("Admin update failed:", error);
-                let friendlyMessage = "Failed to update user. Please try again.";
-                if (error.code === 'permission-denied') {
-                    friendlyMessage = "Permission denied. You might not have the necessary admin rights or the security rules prevented the update.";
-                } else if (error.code === 'invalid-argument') {
-                    friendlyMessage = "Invalid data provided. Please check the email format or SPL Manager ID.";
+        if (loginEmailInput) {
+            loginEmailInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (loginButton) loginButton.click();
                 }
-                showAdminMessage(`Update failed: ${friendlyMessage} Details: ${error.message}`, "error");
-            }
-        });
+            });
+        }
+
+        if (loginPasswordInput) {
+            loginPasswordInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (loginButton) loginButton.click();
+                }
+            });
+        }
+
+
+        if (adminUpdateUserButton) {
+            adminUpdateUserButton.addEventListener('click', async () => {
+                if (!foundUserForAdminEdit) {
+                    showAdminMessage("No user selected for update. Please search for a user first.", "error");
+                    return;
+                }
+
+                showAdminMessage("Updating user...", "info");
+
+                const newEmail = adminEditEmailInput.value.trim();
+                const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim());
+                const userToUpdateUid = foundUserForAdminEdit.id;
+
+                if (!newEmail || !newSplManagerId) {
+                    showAdminMessage("Email and SPL Manager ID cannot be empty.", "error");
+                    return;
+                }
+                if (!/^\d+$/.test(newSplManagerId)) {
+                    showAdminMessage("SPL Manager ID must be a valid number.", "error");
+                    return;
+                }
+
+                try {
+                    const userDocRef = doc(db, "users", userToUpdateUid);
+                    await updateDoc(userDocRef, {
+                        email: newEmail,
+                        splManagerId: newSplManagerId 
+                    });
+                    showAdminMessage("User updated successfully!", "success");
+                    if (adminSearchInput) adminSearchInput.value = userToUpdateUid; 
+                    if (adminSearchButton) await adminSearchButton.click(); 
+                } catch (error) {
+                    console.error("Admin update failed:", error);
+                    let friendlyMessage = "Failed to update user. Please try again.";
+                    if (error.code === 'permission-denied') {
+                        friendlyMessage = "Permission denied. You might not have the necessary admin rights or the security rules prevented the update.";
+                    } else if (error.code === 'invalid-argument') {
+                        friendlyMessage = "Invalid data provided. Please check the email format or SPL Manager ID.";
+                    }
+                    showAdminMessage(`Update failed: ${friendlyMessage} Details: ${error.message}`, "error");
+                }
+            });
+        }
 
         // Admin Dashboard Sub-Navigation Logic
-        adminUsersButton.addEventListener('click', () => {
-            adminSearchSection.style.display = 'flex'; // Show search input/button
-            adminSearchResults.style.display = 'none'; // Hide results until search is run
-            adminMessage.style.display = 'none'; // Clear previous messages
-            dataUploadSection.style.display = 'none'; // Hide data upload section
-            currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
-            overallFDRSection.style.display = 'none'; // Hide all FDR sections
-            homeFDRSection.style.display = 'none';
-            awayFDRSection.style.display = 'none';
-            showAdminMessage("Enter user details to search.", "info");
-        });
+        if (adminUsersButton) {
+            adminUsersButton.addEventListener('click', () => {
+                if (adminSearchSection) adminSearchSection.style.display = 'flex'; // Show search input/button
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results until search is run
+                if (adminMessage) adminMessage.style.display = 'none'; // Clear previous messages
+                if (dataUploadSection) dataUploadSection.style.display = 'none'; // Hide data upload section
+                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
+                if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; // Hide all FDR sections
+                if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+                if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
+                showAdminMessage("Enter user details to search.", "info");
+            });
+        }
 
-        adminDataButton.addEventListener('click', () => {
-            adminSearchSection.style.display = 'none'; // Hide search input/button
-            adminSearchResults.style.display = 'none'; // Hide results
-            adminMessage.style.display = 'none'; // Clear previous messages
-            dataUploadSection.style.display = 'block'; // Show the data upload section
-            currentRankingsDisplay.style.display = 'block'; // Show current rankings display
-            showExcelUploadMessage("Upload your league table Excel file here.", "info");
-            fetchAndDisplayCurrentRankings(); // Fetch and display existing rankings
-        });
+        if (adminDataButton) {
+            adminDataButton.addEventListener('click', () => {
+                if (adminSearchSection) adminSearchSection.style.display = 'none'; // Hide search input/button
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results
+                if (adminMessage) adminMessage.style.display = 'none'; // Clear previous messages
+                if (dataUploadSection) dataUploadSection.style.display = 'block'; // Show the data upload section
+                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'block'; // Show current rankings display
+                showExcelUploadMessage("Upload your league table Excel file here.", "info");
+                fetchAndDisplayCurrentRankingsAdmin(); // Fetch and display existing rankings for Admin
+            });
+        }
 
 
         // --- Excel File Upload Logic (NEW) ---
-        excelFileUploadInput.addEventListener('change', async (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                showExcelUploadMessage('No file selected.', 'error');
-                return;
-            }
+        if (excelFileUploadInput) {
+            excelFileUploadInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    showExcelUploadMessage('No file selected.', 'error');
+                    return;
+                }
 
-            // Check window.XLSX directly here (it's loaded from CDN in HTML)
-            if (typeof window.XLSX === 'undefined') {
-                showExcelUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', 'error');
-                console.error("window.XLSX is not defined. Excel library not loaded.");
-                return;
-            }
+                // Check window.XLSX directly here (it's loaded from CDN in HTML)
+                if (typeof window.XLSX === 'undefined') {
+                    showExcelUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', 'error');
+                    console.error("window.XLSX is not defined. Excel library not loaded.");
+                    return;
+                }
 
-            showExcelUploadMessage('Uploading and processing Excel file...', 'info');
+                showExcelUploadMessage('Uploading and processing Excel file...', 'info');
 
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' }); // Use XLSX directly
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' }); // Use XLSX directly
 
-                    const sheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[sheetName];
-                    const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Use XLSX directly
+                        const sheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[sheetName];
+                        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Use XLSX directly
 
-                    if (jsonRows.length < 2) {
-                        showExcelUploadMessage('Excel file is empty or missing data rows.', 'error');
-                        return;
-                    }
-
-                    const headerRow = jsonRows[0].map(h => String(h).trim().toLowerCase());
-                    
-                    const selectedRankingType = rankingTypeSelect.value; 
-                    let expectedHeaders;
-                    let fdrColumnName1, fdrColumnName2; // For overall
-                    let fdrColumnNameSingle; // For home/away
-
-                    if (selectedRankingType === 'overall') {
-                        expectedHeaders = {
-                            rank: ['rank', 'ranking number'],
-                            team: ['team', 'team name'],
-                            fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
-                            fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
-                        };
-                        fdrColumnName1 = 'fdrHome';
-                        fdrColumnName2 = 'fdrAway';
-                    } else if (selectedRankingType === 'home') {
-                        expectedHeaders = {
-                            rank: ['rank', 'ranking number'],
-                            team: ['team', 'team name'],
-                            fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] // Home sheet has FDR Away
-                        };
-                        fdrColumnNameSingle = 'fdrAway';
-                    } else if (selectedRankingType === 'away') {
-                        expectedHeaders = {
-                            rank: ['rank', 'ranking number'],
-                            team: ['team', 'team name'],
-                            fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] // Away sheet has FDR Home
-                        };
-                        fdrColumnNameSingle = 'fdrHome';
-                    } else {
-                        showExcelUploadMessage('Invalid ranking type selected.', 'error');
-                        return;
-                    }
-
-                    const getColumnIndex = (headers, aliases) => {
-                        for (const alias of aliases) {
-                            const index = headers.indexOf(alias);
-                            if (index !== -1) return index;
-                        }
-                        return -1;
-                    };
-
-                    const rankIndex = getColumnIndex(headerRow, expectedHeaders.rank);
-                    const teamIndex = getColumnIndex(headerRow, expectedHeaders.team);
-
-                    let fdrCol1Index = -1;
-                    let fdrCol2Index = -1;
-                    let fdrColSingleIndex = -1;
-
-                    if (selectedRankingType === 'overall') {
-                        fdrCol1Index = getColumnIndex(headerRow, expectedHeaders.fdrHome);
-                        fdrCol2Index = getColumnIndex(headerRow, expectedHeaders.fdrAway);
-                        if (rankIndex === -1 || teamIndex === -1 || fdrCol1Index === -1 || fdrCol2Index === -1) {
-                            showExcelUploadMessage('Invalid Excel headers for Overall Ranking. Expected "Rank", "Team", "FDR Home", and "FDR Away".', 'error');
+                        if (jsonRows.length < 2) {
+                            showExcelUploadMessage('Excel file is empty or missing data rows.', 'error');
                             return;
                         }
-                    } else {
-                        fdrColSingleIndex = getColumnIndex(headerRow, expectedHeaders[fdrColumnNameSingle]);
-                        if (rankIndex === -1 || teamIndex === -1 || fdrColSingleIndex === -1) {
-                            showExcelUploadMessage(`Invalid Excel headers for ${selectedRankingType.charAt(0).toUpperCase() + selectedRankingType.slice(1)} Ranking. Expected "Rank", "Team", and "FDR ${fdrColumnNameSingle === 'fdrHome' ? 'Home' : 'Away'}".`, 'error');
-                            return;
-                        }
-                    }
 
-                    const parsedRankings = [];
-                    for (let i = 1; i < jsonRows.length; i++) {
-                        const row = jsonRows[i];
-                        const rank = parseInt(row[rankIndex], 10);
-                        const team = String(row[teamIndex]).trim();
-                        let fdrValue1, fdrValue2;
-
-                        let isValid = false;
+                        const headerRow = jsonRows[0].map(h => String(h).trim().toLowerCase());
+                        
+                        const selectedRankingType = rankingTypeSelect.value; 
+                        let expectedHeaders;
+                        let fdrColumnName1, fdrColumnName2; // For overall
+                        let fdrColumnNameSingle; // For home/away
 
                         if (selectedRankingType === 'overall') {
-                            fdrValue1 = parseInt(row[fdrCol1Index], 10);
-                            fdrValue2 = parseInt(row[fdrCol2Index], 10);
-                            if (!isNaN(rank) && team && !isNaN(fdrValue1) && !isNaN(fdrValue2) &&
-                                fdrValue1 >=1 && fdrValue1 <= 7 && fdrValue2 >= 1 && fdrValue2 <= 7) {
-                                parsedRankings.push({ rank, team, fdrHome: fdrValue1, fdrAway: fdrValue2 });
-                                isValid = true;
+                            expectedHeaders = {
+                                rank: ['rank', 'ranking number'],
+                                team: ['team', 'team name'],
+                                fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
+                                fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
+                            };
+                            fdrColumnName1 = 'fdrHome';
+                            fdrColumnName2 = 'fdrAway';
+                        } else if (selectedRankingType === 'home') {
+                            expectedHeaders = {
+                                rank: ['rank', 'ranking number'],
+                                team: ['team', 'team name'],
+                                fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] // Home sheet has FDR Away
+                            };
+                            fdrColumnNameSingle = 'fdrAway';
+                        } else if (selectedRankingType === 'away') {
+                            expectedHeaders = {
+                                rank: ['rank', 'ranking number'],
+                                team: ['team', 'team name'],
+                                fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] // Away sheet has FDR Home
+                            };
+                            fdrColumnNameSingle = 'fdrHome';
+                        } else {
+                            showExcelUploadMessage('Invalid ranking type selected.', "error");
+                            return;
+                        }
+
+                        const getColumnIndex = (headers, aliases) => {
+                            for (const alias of aliases) {
+                                const index = headers.indexOf(alias);
+                                if (index !== -1) return index;
+                            }
+                            return -1;
+                        };
+
+                        const rankIndex = getColumnIndex(headerRow, expectedHeaders.rank);
+                        const teamIndex = getColumnIndex(headerRow, expectedHeaders.team);
+
+                        let fdrCol1Index = -1;
+                        let fdrCol2Index = -1;
+                        let fdrColSingleIndex = -1;
+
+                        if (selectedRankingType === 'overall') {
+                            fdrCol1Index = getColumnIndex(headerRow, expectedHeaders.fdrHome);
+                            fdrCol2Index = getColumnIndex(headerRow, expectedHeaders.fdrAway);
+                            if (rankIndex === -1 || teamIndex === -1 || fdrCol1Index === -1 || fdrCol2Index === -1) {
+                                showExcelUploadMessage('Invalid Excel headers for Overall Ranking. Expected "Rank", "Team", "FDR Home", and "FDR Away".', "error");
+                                return;
                             }
                         } else {
-                            fdrValue1 = parseInt(row[fdrColSingleIndex], 10);
-                            if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
-                                fdrValue1 >=1 && fdrValue1 <= 6) { // FDR 1-6 for Home/Away
-                                if (selectedRankingType === 'home') {
-                                    parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); // Store as fdrAway for Home rankings
-                                } else if (selectedRankingType === 'away') {
-                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); // Store as fdrHome for Away rankings
-                                }
-                                isValid = true;
+                            fdrColSingleIndex = getColumnIndex(headerRow, expectedHeaders[fdrColumnNameSingle]);
+                            if (rankIndex === -1 || teamIndex === -1 || fdrColSingleIndex === -1) {
+                                showExcelUploadMessage(`Invalid Excel headers for ${selectedRankingType.charAt(0).toUpperCase() + selectedRankingType.slice(1)} Ranking. Expected "Rank", "Team", and "FDR ${fdrColumnNameSingle === 'fdrHome' ? 'Home' : 'Away'}".`, "error");
+                                return;
                             }
                         }
 
-                        if (!isValid) {
-                            console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7 for Overall, 1-6 for Home/Away): Row Data:`, row);
+                        const parsedRankings = [];
+                        for (let i = 1; i < jsonRows.length; i++) {
+                            const row = jsonRows[i];
+                            const rank = parseInt(row[rankIndex], 10);
+                            const team = String(row[teamIndex]).trim();
+                            let fdrValue1, fdrValue2;
+
+                            let isValid = false;
+
+                            if (selectedRankingType === 'overall') {
+                                fdrValue1 = parseInt(row[fdrCol1Index], 10);
+                                fdrValue2 = parseInt(row[fdrCol2Index], 10);
+                                if (!isNaN(rank) && team && !isNaN(fdrValue1) && !isNaN(fdrValue2) &&
+                                    fdrValue1 >=1 && fdrValue1 <= 7 && fdrValue2 >= 1 && fdrValue2 <= 7) {
+                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1, fdrAway: fdrValue2 });
+                                    isValid = true;
+                                }
+                            } else {
+                                fdrValue1 = parseInt(row[fdrColSingleIndex], 10);
+                                if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
+                                    fdrValue1 >=1 && fdrValue1 <= 6) { // FDR 1-6 for Home/Away
+                                    if (selectedRankingType === 'home') {
+                                        parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); // Store as fdrAway for Home rankings
+                                    } else if (selectedRankingType === 'away') {
+                                        parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); // Store as fdrHome for Away rankings
+                                    }
+                                    isValid = true;
+                                }
+                            }
+
+                            if (!isValid) {
+                                console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7 for Overall, 1-6 for Home/Away): Row Data:`, row);
+                            }
                         }
+
+                        if (parsedRankings.length === 0) {
+                            showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are in the correct range (1-7 for Overall, 1-6 for Home/Away).', "error");
+                            return;
+                        }
+
+                        const seasonId = "2025-2026"; 
+                        const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
+
+                        let existingData = {};
+                        const docSnap = await getDoc(splRankingsDocRef);
+                        if (docSnap.exists()) {
+                            existingData = docSnap.data();
+                        }
+
+                        const newData = {
+                            ...existingData,
+                            season: seasonId,
+                            lastUpdated: serverTimestamp(),
+                            [selectedRankingType]: parsedRankings 
+                        };
+
+                        await setDoc(splRankingsDocRef, newData, { merge: true });
+                        showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, "success");
+                        event.target.value = null; // Clear file input
+                        fetchAndDisplayCurrentRankingsAdmin(); // Refresh display after upload
+                    } catch (error) {
+                        console.error('Error processing Excel file or uploading to Firestore:', error);
+                        showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, "error");
                     }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
 
-                    if (parsedRankings.length === 0) {
-                        showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are in the correct range (1-7 for Overall, 1-6 for Home/Away).', 'error');
-                        return;
-                    }
-
-                    const seasonId = "2025-2026"; 
-                    const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
-
-                    let existingData = {};
-                    const docSnap = await getDoc(splRankingsDocRef);
-                    if (docSnap.exists()) {
-                        existingData = docSnap.data();
-                    }
-
-                    const newData = {
-                        ...existingData,
-                        season: seasonId,
-                        lastUpdated: serverTimestamp(),
-                        [selectedRankingType]: parsedRankings 
-                    };
-
-                    await setDoc(splRankingsDocRef, newData, { merge: true });
-                    showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, 'success');
-                    event.target.value = null; // Clear file input
-                    fetchAndDisplayCurrentRankings(); // Refresh display after upload
-                } catch (error) {
-                    console.error('Error processing Excel file or uploading to Firestore:', error);
-                    showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, 'error');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        });
-
-        // --- Fetch and Display Current Rankings from Firestore (NEW) ---
-        async function fetchAndDisplayCurrentRankings() {
-            showExcelUploadMessage('Fetching current rankings...', 'info');
+        // --- Fetch and Display Current Rankings from Firestore (Admin Dashboard) ---
+        async function fetchAndDisplayCurrentRankingsAdmin() {
+            showExcelUploadMessage('Fetching current rankings...', "info");
             // Clear all grids and hide sections initially
-            overallFDRGrid.innerHTML = '';
-            homeFDRGrid.innerHTML = '';
-            awayFDRGrid.innerHTML = '';
-            overallFDRSection.style.display = 'none';
-            homeFDRSection.style.display = 'none';
-            awayFDRSection.style.display = 'none';
+            if (overallFDRGridAdmin) overallFDRGridAdmin.innerHTML = '';
+            if (homeFDRGridAdmin) homeFDRGridAdmin.innerHTML = '';
+            if (awayFDRGridAdmin) awayFDRGridAdmin.innerHTML = '';
+            if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none';
+            if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+            if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -3556,7 +3763,7 @@
                 const docSnap = await getDoc(splRankingsDocRef); 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Current Rankings from Firestore:", data);
+                    console.log("Current Rankings from Firestore (Admin):", data);
 
                     // --- Render Overall Rankings ---
                     const overallRankings = data.overall;
@@ -3571,16 +3778,16 @@
                             const awayItem = document.createElement('div');
                             awayItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
                             awayItem.innerHTML = `${item.team} ✈️`;
-                            overallFDRGrid.appendChild(awayItem);
+                            if (overallFDRGridAdmin) overallFDRGridAdmin.appendChild(awayItem);
 
                             const homeItem = document.createElement('div');
                             homeItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
                             homeItem.innerHTML = `${item.team} 🏠`;
-                            overallFDRGrid.appendChild(homeItem);
+                            if (overallFDRGridAdmin) overallFDRGridAdmin.appendChild(homeItem);
                         });
-                        overallFDRSection.style.display = 'block';
+                        if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'block';
                     } else {
-                        overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
+                        if (overallFDRGridAdmin) overallFDRGridAdmin.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
                     }
 
                     // --- Render Home Rankings (Single Column) ---
@@ -3599,11 +3806,11 @@
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrAway}`;
                             teamItem.innerHTML = `${teamName} ✈️`; // Changed to airplane for Home rankings
-                            homeFDRGrid.appendChild(teamItem);
+                            if (homeFDRGridAdmin) homeFDRGridAdmin.appendChild(teamItem);
                         });
-                        homeFDRSection.style.display = 'block';
+                        if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'block';
                     } else {
-                        homeFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
+                        if (homeFDRGridAdmin) homeFDRGridAdmin.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
                     }
 
                     // --- Render Away Rankings (Single Column) ---
@@ -3622,23 +3829,279 @@
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrHome}`;
                             teamItem.innerHTML = `${teamName} 🏠`; // Changed to house for Away rankings
-                            awayFDRGrid.appendChild(teamItem);
+                            if (awayFDRGridAdmin) awayFDRGridAdmin.appendChild(teamItem);
                         });
-                        awayFDRSection.style.display = 'block';
+                        if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'block';
                     } else {
-                        awayFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
+                        if (awayFDRGridAdmin) awayFDRGridAdmin.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
                     }
                     
-                    showExcelUploadMessage('Current rankings loaded.', 'success');
+                    showExcelUploadMessage('Current rankings loaded.', "success");
                 } else {
-                    overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
-                    showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', 'info');
+                    if (overallFDRGridAdmin) overallFDRGridAdmin.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
+                    showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', "info");
                 }
             } catch (error) {
-                console.error("Error fetching current rankings for display:", error);
-                showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, 'error');
-                overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
+                console.error("Error fetching current rankings for display (Admin):", error);
+                showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, "error");
+                if (overallFDRGridAdmin) overallFDRGridAdmin.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
             }
+        }
+
+        // --- My Control Room FDR Feature Logic (NEW) ---
+        const currentSeasonId = "2025-2026"; // Define current season ID
+
+        async function initializeFDRSection() {
+            if (mainFDRButton) mainFDRButton.style.display = 'block'; // Ensure main FDR button is visible
+            if (fdrOptionsContainer) fdrOptionsContainer.style.display = 'flex'; // Ensure options are visible
+            hideFDRDisplayAreas(); // Hide all specific FDR content areas
+
+            const user = auth.currentUser;
+            if (!user) {
+                showMyControlRoomFDRMessage(overallFDRMessage, "Please log in to manage your FDR preferences.", "info");
+                return;
+            }
+
+            const fdrPreferenceDocRef = doc(db, `users/${user.uid}/preferences`, `fdrPreference`);
+            try {
+                const docSnap = await getDoc(fdrPreferenceDocRef);
+                if (docSnap.exists()) {
+                    const preferredFDR = docSnap.data();
+                    console.log("DEBUG: Loaded preferred FDR:", preferredFDR);
+                    if (preferredFDR.system === 'overall') {
+                        displayOverallFDR();
+                        showMyControlRoomFDRMessage(overallFDRMessage, "Displaying your saved Overall FDR system.", "info");
+                    } else if (preferredFDR.system === 'homeAway') {
+                        displayHomeAwayFDR();
+                        showMyControlRoomFDRMessage(homeAwayFDRMessage, "Displaying your saved Home/Away FDR system.", "info");
+                    } else if (preferredFDR.system === 'customized') {
+                        displayCustomFDR(preferredFDR.custom);
+                        showMyControlRoomFDRMessage(customFDRMessage, "Displaying your saved Customized FDR system.", "info");
+                    } else {
+                        showMyControlRoomFDRMessage(overallFDRMessage, "Please choose your preferred FDR system.", "info");
+                    }
+                } else {
+                    showMyControlRoomFDRMessage(overallFDRMessage, "Please choose your preferred FDR system.", "info");
+                }
+            } catch (error) {
+                console.error("Error loading preferred FDR system:", error);
+                showMyControlRoomFDRMessage(overallFDRMessage, `Error loading your FDR preferences: ${error.message}`, "error");
+            }
+        }
+
+        async function fetchPublicFDRData() {
+            const splRankingsDocRef = doc(db, 'splRankings', currentSeasonId);
+            try {
+                const docSnap = await getDoc(splRankingsDocRef);
+                if (docSnap.exists()) {
+                    return docSnap.data();
+                } else {
+                    console.warn("No public SPL rankings data found for current season.");
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error fetching public FDR data:", error);
+                return null;
+            }
+        }
+
+        async function displayOverallFDR() {
+            hideFDRDisplayAreas();
+            if (overallFDRDisplayArea) overallFDRDisplayArea.style.display = 'block';
+            showMyControlRoomFDRMessage(overallFDRMessage, "Loading Overall FDR...", "info");
+            if (overallFDRGridMyControlRoom) overallFDRGridMyControlRoom.innerHTML = ''; // Clear previous content
+
+            const data = await fetchPublicFDRData();
+            if (data && data.overall && data.overall.length > 0) {
+                const overallRankings = data.overall;
+                overallRankings.sort((a, b) => {
+                    if (b.fdrAway !== a.fdrAway) return b.fdrAway - a.fdrAway;
+                    if (b.fdrHome !== a.fdrHome) return b.fdrHome - a.fdrHome;
+                    return a.rank - b.rank;
+                });
+
+                overallRankings.forEach(item => {
+                    const awayItem = document.createElement('div');
+                    awayItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
+                    awayItem.innerHTML = `${item.team} ✈️`;
+                    if (overallFDRGridMyControlRoom) overallFDRGridMyControlRoom.appendChild(awayItem);
+
+                    const homeItem = document.createElement('div');
+                    homeItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
+                    homeItem.innerHTML = `${item.team} 🏠`;
+                    if (overallFDRGridMyControlRoom) overallFDRGridMyControlRoom.appendChild(homeItem);
+                });
+                showMyControlRoomFDRMessage(overallFDRMessage, "Overall FDR loaded. Click 'Save' to set as your default.", "success");
+            } else {
+                if (overallFDRGridMyControlRoom) overallFDRGridMyControlRoom.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available. Please ask an Admin to upload.</div>';
+                showMyControlRoomFDRMessage(overallFDRMessage, "No Overall FDR data found.", "warning");
+            }
+        }
+
+        async function displayHomeAwayFDR() {
+            hideFDRDisplayAreas();
+            if (homeAwayFDRDisplayArea) homeAwayFDRDisplayArea.style.display = 'block';
+            showMyControlRoomFDRMessage(homeAwayFDRMessage, "Loading Home/Away FDR...", "info");
+            if (homeFDRGridMyControlRoom) homeFDRGridMyControlRoom.innerHTML = ''; // Clear previous content
+            if (awayFDRGridMyControlRoom) awayFDRGridMyControlRoom.innerHTML = ''; // Clear previous content
+
+            const data = await fetchPublicFDRData();
+            if (data) {
+                // Home Rankings (single column, airplane emoji)
+                if (data.home && data.home.length > 0) {
+                    data.home.sort((a, b) => {
+                        if (b.fdrAway !== a.fdrAway) return b.fdrAway - a.fdrAway;
+                        return a.rank - b.rank;
+                    });
+                    data.home.forEach(item => {
+                        const teamItem = document.createElement('div');
+                        teamItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
+                        teamItem.innerHTML = `${item.team} ✈️`; // Airplane for Home
+                        if (homeFDRGridMyControlRoom) homeFDRGridMyControlRoom.appendChild(teamItem);
+                    });
+                } else {
+                    if (homeFDRGridMyControlRoom) homeFDRGridMyControlRoom.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
+                }
+
+                // Away Rankings (single column, house emoji)
+                if (data.away && data.away.length > 0) {
+                    data.away.sort((a, b) => {
+                        if (b.fdrHome !== a.fdrHome) return b.fdrHome - a.fdrHome;
+                        return a.rank - b.rank;
+                    });
+                    data.away.forEach(item => {
+                        const teamItem = document.createElement('div');
+                        teamItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
+                        teamItem.innerHTML = `${item.team} 🏠`; // House for Away
+                        if (awayFDRGridMyControlRoom) awayFDRGridMyControlRoom.appendChild(teamItem);
+                    });
+                } else {
+                    if (awayFDRGridMyControlRoom) awayFDRGridMyControlRoom.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
+                }
+                showMyControlRoomFDRMessage(homeAwayFDRMessage, "Home/Away FDR loaded. Click 'Save' to set as your default.", "success");
+            } else {
+                showMyControlRoomFDRMessage(homeAwayFDRMessage, "No Home/Away FDR data found. Please ask an Admin to upload.", "warning");
+            }
+        }
+
+        async function displayCustomFDR(customRatings = null) {
+            hideFDRDisplayAreas();
+            if (customizedFDRInputArea) customizedFDRInputArea.style.display = 'block';
+            showMyControlRoomFDRMessage(customFDRMessage, "Loading Customized FDR...", "info");
+            
+            const user = auth.currentUser;
+            if (!user) {
+                showMyControlRoomFDRMessage(customFDRMessage, "Please log in to customize your FDR.", "error");
+                return;
+            }
+
+            let loadedCustomRatings = customRatings;
+            if (!loadedCustomRatings) {
+                const fdrPreferenceDocRef = doc(db, `users/${user.uid}/preferences`, `fdrPreference`);
+                try {
+                    const docSnap = await getDoc(fdrPreferenceDocRef);
+                    if (docSnap.exists() && docSnap.data().system === 'customized') {
+                        loadedCustomRatings = docSnap.data().custom;
+                        console.log("DEBUG: Loaded existing custom ratings:", loadedCustomRatings);
+                    }
+                } catch (error) {
+                    console.error("Error fetching existing custom FDR for display:", error);
+                    showMyControlRoomFDRMessage(customFDRMessage, `Error loading your custom ratings: ${error.message}`, "error");
+                }
+            }
+            
+            if (customFDRInputsContainer) customFDRInputsContainer.innerHTML = ''; // Clear previous inputs
+            splTeams.forEach(team => {
+                const teamId = team.replace(/\s/g, ''); // Remove spaces for ID
+                const homeRating = loadedCustomRatings && loadedCustomRatings[teamId] ? loadedCustomRatings[teamId].home : 4; // Default to 4
+                const awayRating = loadedCustomRatings && loadedCustomRatings[teamId] ? loadedCustomRatings[teamId].away : 4; // Default to 4
+
+                const teamRow = document.createElement('div');
+                teamRow.className = 'custom-fdr-team-row';
+                teamRow.innerHTML = `
+                    <span class="custom-fdr-team-name">${team}</span>
+                    <div class="custom-fdr-inputs">
+                        <label for="${teamId}Home">Home:</label>
+                        <select id="${teamId}Home">
+                            ${Array.from({length: 7}, (_, i) => `<option value="${i+1}" ${homeRating === i+1 ? 'selected' : ''}>${i+1}</option>`).join('')}
+                        </select>
+                        <label for="${teamId}Away">Away:</label>
+                        <select id="${teamId}Away">
+                            ${Array.from({length: 7}, (_, i) => `<option value="${i+1}" ${awayRating === i+1 ? 'selected' : ''}>${i+1}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+                if (customFDRInputsContainer) customFDRInputsContainer.appendChild(teamRow);
+            });
+            showMyControlRoomFDRMessage(customFDRMessage, "Customize your FDR ratings. Click 'Save' to set as your default.", "info");
+        }
+
+        async function savePreferredFDRSystem(systemType, customRatings = null) {
+            const user = auth.currentUser;
+            if (!user) {
+                showMyControlRoomFDRMessage(overallFDRMessage, "You must be logged in to save preferences.", "error");
+                return;
+            }
+
+            const fdrPreferenceDocRef = doc(db, `users/${user.uid}/preferences`, `fdrPreference`);
+            try {
+                const dataToSave = {
+                    system: systemType,
+                    lastSaved: serverTimestamp()
+                };
+                if (systemType === 'customized' && customRatings) {
+                    dataToSave.custom = customRatings;
+                }
+
+                await setDoc(fdrPreferenceDocRef, dataToSave, { merge: true });
+                if (systemType === 'overall') {
+                    showMyControlRoomFDRMessage(overallFDRMessage, "Overall FDR saved as your preferred system!", "success");
+                } else if (systemType === 'homeAway') {
+                    showMyControlRoomFDRMessage(homeAwayFDRMessage, "Home/Away FDR saved as your preferred system!", "success");
+                } else if (systemType === 'customized') {
+                    showMyControlRoomFDRMessage(customFDRMessage, "Customized FDR saved as your preferred system!", "success");
+                }
+                console.log(`DEBUG: Preferred FDR system '${systemType}' saved for user ${user.uid}.`);
+            } catch (error) {
+                console.error("Error saving preferred FDR system:", error);
+                showMyControlRoomFDRMessage(overallFDRMessage, `Failed to save preference: ${error.message}`, "error");
+            }
+        }
+
+
+        // --- Event Listeners for My Control Room FDR ---
+
+        if (mainFDRButton) {
+            mainFDRButton.addEventListener('click', () => {
+                if (fdrOptionsContainer) fdrOptionsContainer.style.display = 'flex'; // Ensure options are visible
+                hideFDRDisplayAreas(); // Hide any previously shown content areas
+                // No message needed here, as "Please Choose FDR System" is already there.
+            });
+        }
+
+        if (overallFDRButton) overallFDRButton.addEventListener('click', displayOverallFDR);
+        if (homeAwayFDRButton) homeAwayFDRButton.addEventListener('click', displayHomeAwayFDR);
+        if (customizedFDRButton) customizedFDRButton.addEventListener('click', () => displayCustomFDR()); // Call without args to load from Firestore
+
+        if (saveOverallFDRButton) saveOverallFDRButton.addEventListener('click', () => savePreferredFDRSystem('overall'));
+        if (saveHomeAwayFDRButton) saveHomeAwayFDRButton.addEventListener('click', () => savePreferredFDRSystem('homeAway'));
+        
+        if (saveCustomFDRButton) {
+            saveCustomFDRButton.addEventListener('click', () => {
+                const customRatings = {};
+                splTeams.forEach(team => {
+                    const teamId = team.replace(/\s/g, '');
+                    const homeSelect = document.getElementById(`${teamId}Home`);
+                    const awaySelect = document.getElementById(`${teamId}Away`);
+                    if (homeSelect && awaySelect) {
+                        customRatings[teamId] = {
+                            home: parseInt(homeSelect.value, 10),
+                            away: parseInt(awaySelect.value, 10)
+                        };
+                    }
+                });
+                savePreferredFDRSystem('customized', customRatings);
+            });
         }
 
 
@@ -3682,8 +4145,8 @@
                 menuAnalyzeMyTeam.addEventListener('click', (e) => {
                     e.preventDefault();
                     showContentSection('analyzerReport');
-                    sidebarMenu.classList.remove('open'); // Close menu after click
-                    overlay.style.display = 'none';
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close menu after click
+                    if (overlay) overlay.style.display = 'none';
                     if (currentManagerId && !isAnalyzerReportDataFetched) {
                         fetchAndDisplaySPLReport(currentManagerId);
                     }
@@ -3692,9 +4155,9 @@
             if (menuMyControlRoom) {
                 menuMyControlRoom.addEventListener('click', (e) => {
                     e.preventDefault();
-                    showContentSection('controlRoom');
-                    sidebarMenu.classList.remove('open'); // Close menu after click
-                    overlay.style.display = 'none';
+                    showContentSection('controlRoom'); // This now calls initializeFDRSection
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close menu after click
+                    if (overlay) overlay.style.display = 'none';
                 });
             }
             if (menuAdminDashboard) {
@@ -3702,8 +4165,8 @@
                     e.preventDefault();
                     console.trace("DEBUG: Admin Dashboard menu item clicked!"); 
                     showContentSection('adminDashboard');
-                    sidebarMenu.classList.remove('open'); // Close menu after click
-                    overlay.style.display = 'none';
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close menu after click
+                    if (overlay) overlay.style.display = 'none';
                 });
             }
         });
