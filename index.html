@@ -1018,7 +1018,103 @@
         body.dark-mode .fdr-section-title {
             color: #FFD700;
         }
-        
+
+        /* Styles for Customized FDR inputs */
+        .custom-fdr-input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--spl-border-light);
+            background-color: var(--spl-container-bg);
+            transition: background-color 0.3s ease;
+        }
+        .custom-fdr-input-group:last-child {
+            border-bottom: none;
+        }
+        .custom-fdr-input-group span {
+            font-weight: bold;
+            color: var(--spl-text-dark);
+            flex-grow: 1;
+        }
+        .custom-fdr-input-group input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid var(--spl-border-light);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9em;
+            background-color: var(--spl-table-bg);
+            color: var(--spl-text-dark);
+        }
+        .custom-fdr-input-group input[type="number"]:focus {
+            outline: none;
+            border-color: var(--spl-primary-accent);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+        body.dark-mode .custom-fdr-input-group {
+            background-color: var(--spl-container-bg);
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+        body.dark-mode .custom-fdr-input-group span {
+            color: var(--spl-text-dark);
+        }
+        body.dark-mode .custom-fdr-input-group input[type="number"] {
+            background-color: var(--spl-table-bg);
+            color: var(--spl-text-dark);
+            border-color: var(--spl-border-light);
+        }
+
+        /* Styling for the main FDR button in My Control Room */
+        #showFDRButton {
+            display: block;
+            margin: 20px auto; /* Center the button */
+            background-color: var(--spl-primary-accent);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+            max-width: fit-content; /* Adjust width to content */
+        }
+        #showFDRButton:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+        }
+        body.dark-mode #showFDRButton {
+            background-color: #007bff;
+        }
+        body.dark-mode #showFDRButton:hover {
+            background-color: #0056b3;
+        }
+
+        #fdrSystemsContainer {
+            display: none; /* Hidden by default, shown when #showFDRButton is clicked */
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: var(--spl-container-bg);
+            box-shadow: 0 4px 8px var(--spl-shadow);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #fdrSystemsContainer p {
+            text-align: center;
+            font-size: 1.1em;
+            color: var(--spl-text-dark);
+            margin-bottom: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -1110,72 +1206,80 @@
             <!-- My Control Room Content (initially hidden) -->
             <div id="myControlRoomContent" style="display: none;">
                 <h2>My Control Room</h2>
-                <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
+                
+                <!-- Main FDR Button for My Control Room -->
+                <button id="showFDRButton">FDR</button>
 
-                <!-- FDR System Selection -->
-                <div class="fdr-system-selection">
-                    <label>
-                        <input type="radio" name="fdrSystem" value="overall" id="radioOverallFDR"> Overall
-                    </label>
-                    <label>
-                        <input type="radio" name="fdrSystem" value="home" id="radioHomeFDR"> Home
-                    </label>
-                    <label>
-                        <input type="radio" name="fdrSystem" value="away" id="radioAwayFDR"> Away
-                    </label>
-                    <button id="saveFDRSystemButton">Save Preferred System</button>
-                </div>
+                <!-- FDR Systems Container (hidden until FDR button is clicked) -->
+                <div id="fdrSystemsContainer">
+                    <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
+                    <p>Please Choose FDR System</p>
 
-                <!-- FDR Display for My Control Room -->
-                <div id="myControlRoomFDRDisplay" class="mt-8">
-                    <h4 class="fdr-section-title">Upcoming Fixture Difficulty</h4>
-                    
-                    <!-- Overall FDR Display Section for Control Room -->
-                    <div id="overallFDRSectionControlRoom" style="display: none;">
-                        <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Overall Difficulty Scale</h5>
-                        <div class="fdr-scale">
-                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                            <div class="fdr-level fdr-2">2</div>
-                            <div class="fdr-level fdr-3">3</div>
-                            <div class="fdr-level fdr-4">4</div>
-                            <div class="fdr-level fdr-5">5</div>
-                            <div class="fdr-level fdr-6">6</div>
-                            <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
-                        </div>
-                        <div class="fixtures-list-container" id="overallFixturesList">
-                            <!-- Fixture items will be dynamically inserted here -->
-                        </div>
+                    <!-- FDR System Selection Radio Buttons -->
+                    <div class="fdr-system-selection">
+                        <label>
+                            <input type="radio" name="fdrSystem" value="overall" id="radioOverallFDR"> Overall FDR
+                        </label>
+                        <label>
+                            <input type="radio" name="fdrSystem" value="homeAway" id="radioHomeAwayFDR"> Home/Away FDR
+                        </label>
+                        <label>
+                            <input type="radio" name="fdrSystem" value="customized" id="radioCustomizedFDR"> Customized FDR
+                        </label>
+                        <button id="saveFDRSystemButton">Save as My FDR System</button>
                     </div>
 
-                    <!-- Home FDR Display Section for Control Room -->
-                    <div id="homeFDRSectionControlRoom" style="display: none; margin-top: 30px;">
-                        <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Home Difficulty Scale</h5>
-                        <div class="fdr-scale">
-                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                            <div class="fdr-level fdr-2">2</div>
-                            <div class="fdr-level fdr-3">3</div>
-                            <div class="fdr-level fdr-4">4</div>
-                            <div class="fdr-level fdr-5">5</div>
-                            <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                    <!-- FDR Display for My Control Room (dynamically shown based on selection) -->
+                    <div id="myControlRoomFDRDisplay">
+                        <!-- Overall FDR Display Section for Control Room -->
+                        <div id="overallFDRSectionControlRoom" style="display: none;">
+                            <h5 class="fdr-section-title">Overall Fixture Difficulty</h5>
+                            <div class="fdr-scale">
+                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                                <div class="fdr-level fdr-2">2</div>
+                                <div class="fdr-level fdr-3">3</div>
+                                <div class="fdr-level fdr-4">4</div>
+                                <div class="fdr-level fdr-5">5</div>
+                                <div class="fdr-level fdr-6">6</div>
+                                <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                            </div>
+                            <div class="fixtures-list-container" id="overallFixturesList">
+                                <!-- Fixture items will be dynamically inserted here -->
+                            </div>
                         </div>
-                        <div class="fixtures-list-container" id="homeFixturesList">
-                            <!-- Fixture items will be dynamically inserted here -->
-                        </div>
-                    </div>
 
-                    <!-- Away FDR Display Section for Control Room -->
-                    <div id="awayFDRSectionControlRoom" style="display: none; margin-top: 30px;">
-                        <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Away Difficulty Scale</h5>
-                        <div class="fdr-scale">
-                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                            <div class="fdr-level fdr-2">2</div>
-                            <div class="fdr-level fdr-3">3</div>
-                            <div class="fdr-level fdr-4">4</div>
-                            <div class="fdr-level fdr-5">5</div>
-                            <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                        <!-- Home/Away FDR Display Section for Control Room -->
+                        <div id="homeAwayFDRSectionControlRoom" style="display: none;">
+                            <h5 class="fdr-section-title">Home/Away Fixture Difficulty</h5>
+                            <div class="fdr-scale">
+                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                                <div class="fdr-level fdr-2">2</div>
+                                <div class="fdr-level fdr-3">3</div>
+                                <div class="fdr-level fdr-4">4</div>
+                                <div class="fdr-level fdr-5">5</div>
+                                <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                            </div>
+                            <div class="fixtures-list-container" id="homeAwayFixturesList">
+                                <!-- Fixture items will be dynamically inserted here -->
+                            </div>
                         </div>
-                        <div class="fixtures-list-container" id="awayFixturesList">
-                            <!-- Fixture items will be dynamically inserted here -->
+
+                        <!-- Customized FDR Display Section for Control Room -->
+                        <div id="customizedFDRSectionControlRoom" style="display: none;">
+                            <h5 class="fdr-section-title">Customized Fixture Difficulty</h5>
+                            <div class="fdr-scale">
+                                <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                                <div class="fdr-level fdr-2">2</div>
+                                <div class="fdr-level fdr-3">3</div>
+                                <div class="fdr-level fdr-4">4</div>
+                                <div class="fdr-level fdr-5">5</div>
+                                <div class="fdr-level fdr-6">6</div>
+                                <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                            </div>
+                            <div class="fixtures-list-container" id="customizedFixturesList">
+                                <!-- Customized fixture inputs will be dynamically inserted here -->
+                            </div>
+                            <button id="saveCustomFDRButton" class="mt-4">Save Custom Ratings</button>
                         </div>
                     </div>
                 </div>
@@ -1345,7 +1449,7 @@
         let currentManagerId = null; 
         let isAdminUser = false; 
         let foundUserForAdminEdit = null; 
-        let userTeamName = 'Your Team'; // Store user's team name
+        let userTeamName = 'Your Team'; // Store user's team name (placeholder for now)
 
 
         // --- DOM Element References ---
@@ -1426,18 +1530,21 @@
         const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
 
         // Data Display Elements (My Control Room) - NEW
+        const showFDRButton = document.getElementById('showFDRButton'); // New main FDR button
+        const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); // Container for FDR systems
         const controlRoomMessageBox = document.getElementById('controlRoomMessageBox');
-        const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay');
+        const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); // Main container for FDR display
         const radioOverallFDR = document.getElementById('radioOverallFDR');
-        const radioHomeFDR = document.getElementById('radioHomeFDR');
-        const radioAwayFDR = document.getElementById('radioAwayFDR');
+        const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); // Renamed
+        const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); // New
         const saveFDRSystemButton = document.getElementById('saveFDRSystemButton');
         const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom');
         const overallFixturesList = document.getElementById('overallFixturesList');
-        const homeFDRSectionControlRoom = document.getElementById('homeFDRSectionControlRoom');
-        const homeFixturesList = document.getElementById('homeFixturesList');
-        const awayFDRSectionControlRoom = document.getElementById('awayFDRSectionControlRoom');
-        const awayFixturesList = document.getElementById('awayFixturesList');
+        const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); // Renamed
+        const homeAwayFixturesList = document.getElementById('homeAwayFixturesList'); // Renamed
+        const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom'); // New
+        const customizedFixturesList = document.getElementById('customizedFixturesList'); // New
+        const saveCustomFDRButton = document.getElementById('saveCustomFDRButton'); // New button for saving custom ratings
 
 
         // --- Helper Functions ---
@@ -1521,11 +1628,13 @@
             if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
             if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
 
-            // Hide data display specific elements (Control Room) - NEW
-            if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Hide main FDR container
+            // Hide Control Room specific elements
+            if (showFDRButton) showFDRButton.style.display = 'none'; // Hide the main FDR button
+            if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Hide the systems container
+            if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Hide main FDR display
             if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none'; 
-            if (homeFDRSectionControlRoom) homeFDRSectionControlRoom.style.display = 'none';
-            if (awayFDRSectionControlRoom) awayFDRSectionControlRoom.style.display = 'none';
+            if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none'; 
+            if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none'; 
             if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none';
 
 
@@ -1730,7 +1839,7 @@
                             // Show menu toggle icon
                             if (menuToggle) menuToggle.style.display = 'block';
 
-                            // Default to My Control Room section since Analyzer is removed
+                            // Default to My Control Room section
                             showContentSection('controlRoom');
 
                         } else {
@@ -1857,9 +1966,9 @@
                             console.log(`DEBUG: User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
                             
                             if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
-                            if (menuToggle) menuToggle.style.display = 'block';
+                            console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
-                            // Default to My Control Room section since Analyzer is removed
+                            // Default to My Control Room section
                             showContentSection('controlRoom');
 
                         } else {
@@ -1928,8 +2037,11 @@
                 console.log("DEBUG: Analyzer Report section is now empty.");
             } else if (sectionId === 'controlRoom') {
                 if (myControlRoomContent) myControlRoomContent.style.display = 'block';
-                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block'; // Ensure FDR display is visible
-                displayUserTeamFDR(); // NEW: Call the function to display user-specific FDR
+                // Initially, only show the main FDR button in My Control Room
+                if (showFDRButton) showFDRButton.style.display = 'block';
+                if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Ensure systems container is hidden
+                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Ensure FDR display is hidden
+                if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; // Ensure message box is hidden
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
                     if (adminDashboardContent) adminDashboardContent.style.display = 'block'; 
@@ -2132,8 +2244,8 @@
                 if (dataUploadSection) dataUploadSection.style.display = 'block'; 
                 if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'block'; 
                 showExcelUploadMessage("Upload your league table Excel file here.", "info");
-                // Call fetchAndDisplayRankings for Admin Dashboard
-                fetchAndDisplayRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null); // Pass null for userTeamName
+                // Call fetchAndRenderRankings for Admin Dashboard
+                fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null); // Pass null for userTeamName, as Admin shows all
             });
         }
 
@@ -2295,7 +2407,7 @@
                         showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, "success");
                         event.target.value = null; 
                         // Re-fetch and display rankings for Admin Dashboard
-                        fetchAndDisplayRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null);
+                        fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null);
                     } catch (error) {
                         console.error('Error processing Excel file or uploading to Firestore:', error);
                         showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, "error");
@@ -2306,7 +2418,7 @@
         }
 
         /**
-         * Fetches and displays current rankings from Firestore into specified grid/list elements.
+         * Fetches and renders current rankings from Firestore into specified grid/list elements.
          * This function is now generalized to serve both Admin Dashboard and My Control Room.
          * @param {HTMLElement} messageBox - The message box element to display status messages.
          * @param {HTMLElement} overallGridOrList - The grid/list element for overall FDR.
@@ -2317,9 +2429,9 @@
          * @param {HTMLElement} awaySection - The section container for away FDR.
          * @param {HTMLElement} displayContainer - The main display container for rankings (e.g., currentRankingsDisplayAdmin or myControlRoomFDRDisplay).
          * @param {string | null} teamNameForFilter - The user's team name to filter fixtures, or null for Admin (show all).
-         * @param {string | null} selectedFDRSystem - The currently selected FDR system ('overall', 'home', 'away') for Control Room, or null for Admin.
+         * @param {string | null} selectedFDRSystem - The currently selected FDR system ('overall', 'homeAway', 'customized') for Control Room, or null for Admin.
          */
-        async function fetchAndDisplayRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, teamNameForFilter = null, selectedFDRSystem = null) {
+        async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, teamNameForFilter = null, selectedFDRSystem = null) {
             messageBox.textContent = '';
             messageBox.style.display = 'block';
             messageBox.className = 'message-box info';
@@ -2343,40 +2455,22 @@
                     const data = docSnap.data();
                     let hasDataToDisplay = false;
 
-                    // Determine which data to use based on teamNameForFilter
-                    let overallRankings = data.overall || [];
-                    let homeRankings = data.home || [];
-                    let awayRankings = data.away || [];
-
-                    // If teamNameForFilter is provided, filter the rankings to find the user's team's data
-                    let teamOverallFDR = null;
-                    let teamHomeFDR = null;
-                    let teamAwayFDR = null;
-
-                    if (teamNameForFilter) {
-                        const teamDataOverall = overallRankings.find(item => item.team === teamNameForFilter);
-                        const teamDataHome = homeRankings.find(item => item.team === teamNameForFilter);
-                        const teamDataAway = awayRankings.find(item => item.team === teamNameForFilter);
-
-                        if (teamDataOverall) {
-                            teamOverallFDR = { home: teamDataOverall.fdrHome, away: teamDataOverall.fdrAway };
-                        }
-                        if (teamDataHome) {
-                            teamHomeFDR = { away: teamDataHome.fdrAway }; // Home sheet provides opponent's away FDR
-                        }
-                        if (teamDataAway) {
-                            teamAwayFDR = { home: teamDataAway.fdrHome }; // Away sheet provides opponent's home FDR
-                        }
-                    }
+                    // Fetch league-wide rankings
+                    const overallRankings = data.overall || [];
+                    const homeRankings = data.home || [];
+                    const awayRankings = data.away || [];
 
                     // Mock upcoming fixtures for the user's team (for My Control Room)
                     // In a real app, this would come from a fixture API or Firestore collection
+                    // For demonstration, these are fixed.
                     const mockUpcomingFixtures = [
-                        { opponent: 'Al-Hilal', isHome: true, date: '2025-08-10' },
-                        { opponent: 'Al-Nassr', isHome: false, date: '2025-08-17' },
-                        { opponent: 'Al-Ahli', isHome: true, date: '2025-08-24' },
-                        { opponent: 'Al-Shabab', isHome: false, date: '2025-08-31' },
-                        { opponent: 'Al-Ettifaq', isHome: true, date: '2025-09-07' },
+                        { id: 'fix1', opponent: 'Al-Hilal', isHome: true, date: '2025-08-10' },
+                        { id: 'fix2', opponent: 'Al-Nassr', isHome: false, date: '2025-08-17' },
+                        { id: 'fix3', opponent: 'Al-Ahli', isHome: true, date: '2025-08-24' },
+                        { id: 'fix4', opponent: 'Al-Shabab', isHome: false, date: '2025-08-31' },
+                        { id: 'fix5', opponent: 'Al-Ettifaq', isHome: true, date: '2025-09-07' },
+                        { id: 'fix6', opponent: 'Al-Taawoun', isHome: false, date: '2025-09-14' },
+                        { id: 'fix7', opponent: 'Al-Fateh', isHome: true, date: '2025-09-21' },
                     ];
 
                     // --- Render for Admin Dashboard (show all data) ---
@@ -2452,14 +2546,13 @@
                     } 
                     // --- Render for My Control Room (user's team fixtures) ---
                     else {
-                        if (!teamOverallFDR && !teamHomeFDR && !teamAwayFDR) {
-                            messageBox.className = 'message-box warning';
-                            messageBox.textContent = `No FDR data found for your team (${teamNameForFilter}). Please ensure your team name is correct and data is uploaded via Admin Dashboard.`;
-                            return;
-                        }
+                        // Ensure overall, homeAway, and customized sections are hidden initially for Control Room
+                        if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
+                        if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
+                        if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
                         // Function to render fixtures for a given system
-                        const renderFixtures = (fixtureListElement, fdrType) => {
+                        const renderFixturesForUserTeam = (fixtureListElement, fdrType, customRatings = {}) => {
                             fixtureListElement.innerHTML = ''; // Clear previous fixtures
                             if (mockUpcomingFixtures.length === 0) {
                                 fixtureListElement.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No upcoming fixtures found.</div>';
@@ -2469,40 +2562,48 @@
                             mockUpcomingFixtures.forEach(fixture => {
                                 const opponentTeam = fixture.opponent;
                                 const isHomeGame = fixture.isHome;
+                                const fixtureId = fixture.id; // Unique ID for saving custom ratings
+
                                 let fdrValue = 'N/A';
                                 let fdrClass = '';
-                                let displayLabel = '';
+                                let displayLabel = `${fixture.date} vs ${opponentTeam} (${isHomeGame ? 'Home' : 'Away'})`;
 
-                                const opponentOverallData = overallRankings.find(item => item.team === opponentTeam);
-                                const opponentHomeData = homeRankings.find(item => item.team === opponentTeam);
-                                const opponentAwayData = awayRankings.find(item => item.team === opponentTeam);
-
-                                if (fdrType === 'overall' && opponentOverallData) {
-                                    // For overall, we need to decide which FDR to show based on home/away
-                                    fdrValue = isHomeGame ? opponentOverallData.fdrHome : opponentOverallData.fdrAway;
+                                if (fdrType === 'customized') {
+                                    // For customized, use saved custom rating or default to N/A
+                                    fdrValue = customRatings[fixtureId] || 'N/A';
                                     fdrClass = `fdr-${fdrValue}`;
-                                    displayLabel = `${fixture.date} vs ${opponentTeam} (${isHomeGame ? 'Home' : 'Away'})`;
-                                } else if (fdrType === 'home' && isHomeGame && opponentAwayData) {
-                                    // For home, show opponent's away FDR
-                                    fdrValue = opponentAwayData.fdrAway;
-                                    fdrClass = `fdr-${fdrValue}`;
-                                    displayLabel = `${fixture.date} vs ${opponentTeam} (Home)`;
-                                } else if (fdrType === 'away' && !isHomeGame && opponentHomeData) {
-                                    // For away, show opponent's home FDR
-                                    fdrValue = opponentHomeData.fdrHome;
-                                    fdrClass = `fdr-${fdrValue}`;
-                                    displayLabel = `${fixture.date} vs ${opponentTeam} (Away)`;
+                                    const inputElement = `
+                                        <input type="number" min="1" max="7" value="${fdrValue !== 'N/A' ? fdrValue : ''}" 
+                                               data-fixture-id="${fixtureId}" 
+                                               oninput="this.value=Math.max(1, Math.min(7, parseInt(this.value)||''))"
+                                        />
+                                    `;
+                                    const fixtureItem = document.createElement('div');
+                                    fixtureItem.className = 'custom-fdr-input-group';
+                                    fixtureItem.innerHTML = `
+                                        <span>${displayLabel}</span>
+                                        ${inputElement}
+                                    `;
+                                    fixtureListElement.appendChild(fixtureItem);
+                                    hasDataToDisplay = true;
                                 } else {
-                                    fdrClass = 'fdr-na'; // A class for N/A or missing data
-                                    displayLabel = `${fixture.date} vs ${opponentTeam} (${isHomeGame ? 'Home' : 'Away'})`;
-                                }
-                                
-                                // Only add fixture if it's relevant to the selected system (e.g., home games for 'home' system)
-                                if (
-                                    (fdrType === 'overall') ||
-                                    (fdrType === 'home' && isHomeGame) ||
-                                    (fdrType === 'away' && !isHomeGame)
-                                ) {
+                                    // For Overall and Home/Away systems, calculate FDR based on league data
+                                    const opponentOverallData = overallRankings.find(item => item.team === opponentTeam);
+                                    const opponentHomeData = homeRankings.find(item => item.team === opponentTeam);
+                                    const opponentAwayData = awayRankings.find(item => item.team === opponentTeam);
+
+                                    if (fdrType === 'overall' && opponentOverallData) {
+                                        fdrValue = isHomeGame ? opponentOverallData.fdrHome : opponentOverallData.fdrAway;
+                                        fdrClass = `fdr-${fdrValue}`;
+                                    } else if (fdrType === 'homeAway') {
+                                        if (isHomeGame && opponentAwayData) {
+                                            fdrValue = opponentAwayData.fdrAway; // Home game vs. opponent's away FDR
+                                        } else if (!isHomeGame && opponentHomeData) {
+                                            fdrValue = opponentHomeData.fdrHome; // Away game vs. opponent's home FDR
+                                        }
+                                        fdrClass = `fdr-${fdrValue}`;
+                                    }
+
                                     const fixtureItem = document.createElement('div');
                                     fixtureItem.className = 'fixture-item';
                                     fixtureItem.innerHTML = `
@@ -2515,41 +2616,46 @@
                             });
                         };
 
-                        // Hide all FDR sections initially for Control Room
-                        overallFDRSectionControlRoom.style.display = 'none';
-                        homeFDRSectionControlRoom.style.display = 'none';
-                        awayFDRSectionControlRoom.style.display = 'none';
-
-                        // Display the selected FDR system
+                        // Display the selected FDR system for the user
                         if (selectedFDRSystem === 'overall') {
-                            overallFDRSectionControlRoom.style.display = 'block';
-                            renderFixtures(overallFixturesList, 'overall');
-                        } else if (selectedFDRSystem === 'home') {
-                            homeFDRSectionControlRoom.style.display = 'block';
-                            renderFixtures(homeFixturesList, 'home');
-                        } else if (selectedFDRSystem === 'away') {
-                            awayFDRSectionControlRoom.style.display = 'block';
-                            renderFixtures(awayFixturesList, 'away');
+                            if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
+                            renderFixturesForUserTeam(overallFixturesList, 'overall');
+                        } else if (selectedFDRSystem === 'homeAway') {
+                            if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
+                            renderFixturesForUserTeam(homeAwayFixturesList, 'homeAway');
+                        } else if (selectedFDRSystem === 'customized') {
+                            if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
+                            // Fetch custom ratings for the current user
+                            const user = auth.currentUser;
+                            let customRatings = {};
+                            if (user) {
+                                const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
+                                const customFDRDocSnap = await getDoc(customFDRDocRef);
+                                if (customFDRDocSnap.exists()) {
+                                    customRatings = customFDRDocSnap.data();
+                                }
+                            }
+                            renderFixturesForUserTeam(customizedFixturesList, 'customized', customRatings);
                         }
                     }
 
                     if (hasDataToDisplay) {
                         messageBox.className = 'message-box success';
-                        messageBox.textContent = 'Current rankings loaded.';
+                        messageBox.textContent = 'FDR data loaded.';
                     } else {
                         messageBox.className = 'message-box info';
-                        messageBox.textContent = 'No relevant rankings data found for display.';
+                        messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard and your team name is correct.';
                     }
                 } else {
                     messageBox.className = 'message-box info';
-                    messageBox.textContent = 'No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file via the Admin Dashboard.';
+                    messageBox.textContent = 'No league rankings data found in Firestore for 2025-2026 season. Please upload an Excel file via the Admin Dashboard.';
                 }
             } catch (error) {
-                console.error("Error fetching current rankings for display:", error);
+                console.error("Error fetching or rendering rankings:", error);
                 messageBox.className = 'message-box error';
-                messageBox.textContent = `Failed to load current rankings: ${error.message}`;
+                messageBox.textContent = `Failed to load FDR data: ${error.message}`;
                 // Ensure grids are cleared on error
-                if (overallGridOrList) overallGridOrList.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
+                if (overallGridOrList) overallGridOrList.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading data.</div>';
                 if (homeGridOrList) homeGridOrList.innerHTML = '';
                 if (awayGridOrList) awayGridOrList.innerHTML = '';
             }
@@ -2558,7 +2664,7 @@
         /**
          * Fetches the user's preferred FDR system from Firestore and sets the radio button.
          */
-        async function loadPreferredFDRSystem() {
+        async function loadAndSetPreferredFDRSystem() {
             const user = auth.currentUser;
             if (!user) return;
 
@@ -2572,25 +2678,28 @@
                         const radio = document.querySelector(`input[name="fdrSystem"][value="${preferredSystem}"]`);
                         if (radio) {
                             radio.checked = true;
-                            // Trigger display based on loaded preference
-                            displayUserTeamFDR(preferredSystem);
+                            displaySelectedFDRSystem(preferredSystem); // Display based on loaded preference
+                        } else {
+                            // If saved preference is invalid, default to 'overall'
+                            if (radioOverallFDR) radioOverallFDR.checked = true;
+                            displaySelectedFDRSystem('overall');
                         }
                     } else {
                         // Default to 'overall' if no preference saved
                         if (radioOverallFDR) radioOverallFDR.checked = true;
-                        displayUserTeamFDR('overall');
+                        displaySelectedFDRSystem('overall');
                     }
                 } else {
                     // Default to 'overall' if user doc doesn't exist or no preferred system
                     if (radioOverallFDR) radioOverallFDR.checked = true;
-                    displayUserTeamFDR('overall');
+                    displaySelectedFDRSystem('overall');
                 }
             } catch (error) {
                 console.error("Error loading preferred FDR system:", error);
                 showControlRoomMessage("Failed to load your preferred FDR system.", "error");
                 // Fallback to overall if loading fails
                 if (radioOverallFDR) radioOverallFDR.checked = true;
-                displayUserTeamFDR('overall');
+                displaySelectedFDRSystem('overall');
             }
         }
 
@@ -2625,12 +2734,51 @@
         }
 
         /**
+         * Saves the customized FDR ratings to the user's Firestore document.
+         */
+        if (saveCustomFDRButton) {
+            saveCustomFDRButton.addEventListener('click', async () => {
+                const user = auth.currentUser;
+                if (!user) {
+                    showControlRoomMessage("You must be logged in to save custom ratings.", "error");
+                    return;
+                }
+
+                const customRatings = {};
+                const customInputs = customizedFixturesList.querySelectorAll('input[type="number"]');
+                let isValid = true;
+
+                customInputs.forEach(input => {
+                    const fixtureId = input.dataset.fixtureId;
+                    const value = parseInt(input.value, 10);
+                    if (isNaN(value) || value < 1 || value > 7) {
+                        isValid = false;
+                        showControlRoomMessage(`Invalid rating for fixture ${fixtureId}. Ratings must be between 1 and 7.`, "error");
+                        return;
+                    }
+                    customRatings[fixtureId] = value;
+                });
+
+                if (!isValid) return;
+
+                try {
+                    const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
+                    await setDoc(customFDRDocRef, customRatings, { merge: true });
+                    showControlRoomMessage("Custom FDR ratings saved successfully!", "success");
+                } catch (error) {
+                    console.error("Error saving custom FDR ratings:", error);
+                    showControlRoomMessage(`Failed to save custom ratings: ${error.message}`, "error");
+                }
+            });
+        }
+
+        /**
          * Central function to display the user's team FDR based on selected system.
          * This will be called on Control Room load and radio button changes.
-         * @param {string | null} initialSystem - The system to display initially (e.g., from saved preference).
+         * @param {string | null} systemType - The system to display ('overall', 'homeAway', 'customized').
          */
-        async function displayUserTeamFDR(initialSystem = null) {
-            let selectedSystem = initialSystem;
+        async function displaySelectedFDRSystem(systemType = null) {
+            let selectedSystem = systemType;
             if (!selectedSystem) {
                 selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value || 'overall';
             }
@@ -2642,19 +2790,23 @@
             }
 
             // Hide all FDR sections for Control Room before rendering the selected one
-            overallFDRSectionControlRoom.style.display = 'none';
-            homeFDRSectionControlRoom.style.display = 'none';
-            awayFDRSectionControlRoom.style.display = 'none';
+            if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
+            if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
+            if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
-            // Now call the generalized fetchAndDisplayRankings with Control Room specific elements and userTeamName
-            fetchAndDisplayRankings(
+            // Show the main FDR display container
+            if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
+
+            // Now call the generalized fetchAndRenderRankings with Control Room specific elements and userTeamName
+            // The last argument (selectedFDRSystem) is used by the function to determine how to render for the user.
+            fetchAndRenderRankings(
                 controlRoomMessageBox,
                 overallFixturesList, // This is the list container for overall
-                homeFixturesList,    // This is the list container for home
-                awayFixturesList,    // This is the list container for away
+                homeAwayFixturesList,    // This is the list container for home/away
+                customizedFixturesList,    // This is the list container for customized
                 overallFDRSectionControlRoom,
-                homeFDRSectionControlRoom,
-                awayFDRSectionControlRoom,
+                homeAwayFDRSectionControlRoom,
+                customizedFDRSectionControlRoom,
                 myControlRoomFDRDisplay, // Main container for Control Room FDR
                 userTeamName, // Pass the user's team name for filtering
                 selectedSystem // Pass the currently selected system
@@ -2664,9 +2816,18 @@
         // Add event listeners for FDR system radio buttons in Control Room
         document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => {
             radio.addEventListener('change', () => {
-                displayUserTeamFDR(radio.value);
+                displaySelectedFDRSystem(radio.value);
             });
         });
+
+        // Event listener for the main "FDR" button in My Control Room
+        if (showFDRButton) {
+            showFDRButton.addEventListener('click', () => {
+                if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; // Show the systems container
+                // showFDRButton.style.display = 'block'; // Keep the main FDR button visible as requested
+                loadAndSetPreferredFDRSystem(); // Load and display the preferred system
+            });
+        }
 
 
         // --- Initial Load & Theme & Event Listeners ---
@@ -2682,7 +2843,7 @@
             } else { 
                 console.log("DEBUG: DOMContentLoaded: No user logged in, showing authSection.");
                 if (authSection) authSection.style.display = 'block';
-                if (loginForm) loginForm.style.display = 'block';
+                if (loginForm) loginForm.style.display = 'block'; 
                 if (signupForm) signupForm.style.display = 'none';
                 if (loggedInContent) loggedInContent.style.display = 'none';
             }
@@ -2727,7 +2888,7 @@
                     showContentSection('controlRoom');
                     sidebarMenu.classList.remove('open');
                     overlay.style.display = 'none';
-                    loadPreferredFDRSystem(); // Load and display preferred FDR system when entering Control Room
+                    // The FDR button will be shown, and its click handler will load the preferred system.
                 });
             }
             if (menuAdminDashboard) {
