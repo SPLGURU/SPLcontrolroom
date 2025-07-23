@@ -182,19 +182,19 @@
             transition: color 0.3s ease; /* Smooth transition */
         }
         
-        /* Specific style for the main manager name/rank header */
-        #managerName {
-            font-size: 2em; /* Adjust as needed */
+        /* Specific style for the main manager name/rank header (will be removed with analyzer) */
+        /* #managerName {
+            font-size: 2em;
             line-height: 1.3;
             margin-bottom: 30px;
-            color: var(--spl-text-dark); /* Darker text for main header */
+            color: var(--spl-text-dark);
             text-align: center;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
         #managerName span {
-            color: var(--spl-primary-accent); /* Accent color for the actual name */
-            transition: color 0.3s ease; /* Smooth transition */
-        }
+            color: var(--spl-primary-accent);
+            transition: color 0.3s ease;
+        } */
 
 
         /* The main input-section class now primarily styles the wrapper around the forms */
@@ -426,7 +426,7 @@
         .red-button:hover {
             background-color: #c82333 !important; /* Darker red on hover */
             transform: translateY(-1px) !important;
-            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+            box-shadow: 0 44px 8px rgba(220, 53, 69, 0.25);
         }
         body.dark-mode .red-button {
             background-color: #f44336 !important; /* Brighter red in dark mode */
@@ -637,7 +637,7 @@
 
 
         /* Share Video Button Specific Styles (unrelated to auth forms, left as is) */
-        #shareVideoButton {
+        /* #shareVideoButton {
             background-color: #17A2B8; 
             color: white;
             padding: 12px 25px;
@@ -664,10 +664,10 @@
         }
         body.dark-mode #shareVideoButton:hover {
             background-color: #1aae88;
-        }
+        } */
 
-        /* Styles for the Rank Journey button container (unrelated to auth forms, left as is) */
-        .rank-journey-box {
+        /* Styles for the Rank Journey button container (will be removed with analyzer) */
+        /* .rank-journey-box {
             background-color: var(--spl-primary-accent); 
             border-radius: 12px;
             box-shadow: 0 8px 16px var(--spl-shadow); 
@@ -692,10 +692,10 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: color 0.3s ease; 
-        }
+        } */
 
-        /* Styles for the button inside the Rank Journey box (unrelated to auth forms, left as is) */
-        #createRankJourneyButton { 
+        /* Styles for the button inside the Rank Journey box (will be removed with analyzer) */
+        /* #createRankJourneyButton { 
             background-color: white; 
             color: var(--spl-primary-accent); 
             padding: 15px 35px; 
@@ -717,7 +717,7 @@
             color: #0056b3; 
             transform: translateY(-2px); 
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); 
-        }
+        } */
 
 
         .message-box { 
@@ -754,12 +754,12 @@
             border: 1px solid #DC3545;
         }
 
-        .video-loading-message {
+        .video-loading-message { /* Will be removed with analyzer */
             background-color: #fff3cd;
             color: #856404;
             display: none; 
         }
-        #videoGeneratingMessage {
+        #videoGeneratingMessage { /* Will be removed with analyzer */
             background-color: #cfe2ff; 
             color: #0056b3; 
             display: none; 
@@ -770,14 +770,14 @@
         }
 
 
-        .stats-grid {
+        .stats-grid { /* Will be removed with analyzer */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
 
-        .stat-card {
+        .stat-card { /* Will be removed with analyzer */
             background-color: var(--spl-table-bg); 
             border-radius: 10px;
             padding: 20px;
@@ -786,11 +786,11 @@
             transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
-        .stat-card:hover {
+        .stat-card:hover { /* Will be removed with analyzer */
             transform: translateY(-3px);
         }
 
-        .stat-card h3 {
+        .stat-card h3 { /* Will be removed with analyzer */
             color: var(--spl-primary-accent);
             margin-top: 0;
             font-size: 1.3em;
@@ -798,7 +798,7 @@
             transition: color 0.3s ease; 
         }
 
-        .stat-card p {
+        .stat-card p { /* Will be removed with analyzer */
             font-size: 1.8em;
             font-weight: bold;
             color: var(--spl-text-dark);
@@ -806,14 +806,14 @@
             transition: color 0.3s ease; 
         }
 
-        .stat-card .small-text {
+        .stat-card .small-text { /* Will be removed with analyzer */
             font-size: 0.9em;
             color: var(--spl-text-medium);
             margin-top: 5px;
             transition: color 0.3s ease; 
         }
 
-        .chart-section {
+        .chart-section { /* Will be removed with analyzer */
             margin-top: 30px;
             padding: 20px;
             background-color: var(--spl-container-bg);
@@ -825,18 +825,18 @@
             transition: background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
-        .chart-section h2 {
+        .chart-section h2 { /* Will be removed with analyzer */
             margin-bottom: 20px;
         }
 
-        #rankJourneyChart {
+        #rankJourneyChart { /* Will be removed with analyzer */
             width: 100%; 
             max-width: 900px; 
             height: auto; 
             box-sizing: border-box;
         }
 
-        .table-section {
+        .table-section { /* Will be removed with analyzer */
             margin-top: 30px;
             padding: 20px;
             background-color: var(--spl-container-bg);
@@ -845,18 +845,18 @@
             transition: background-color 0.3s ease, box-shadow 0.3s ease; 
         }
 
-        .table-section h2 {
+        .table-section h2 { /* Will be removed with analyzer */
             margin-bottom: 20px;
         }
 
-        table {
+        table { /* Will be removed with analyzer */
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
             table-layout: fixed; 
         }
 
-        th, td {
+        th, td { /* Will be removed with analyzer */
             padding: 12px 15px;
             border: 1px solid var(--spl-border-light);
             text-align: left;
@@ -865,7 +865,7 @@
             transition: border-color 0.3s ease, color 0.3s ease; 
         }
 
-        th {
+        th { /* Will be removed with analyzer */
             background-color: var(--spl-table-header-bg);
             color: var(--spl-text-dark);
             font-weight: bold;
@@ -874,27 +874,27 @@
             transition: background-color 0.3s ease, color 0.3s ease; 
         }
 
-        tr:nth-child(even) {
+        tr:nth-child(even) { /* Will be removed with analyzer */
             background-color: var(--spl-table-row-even);
         }
 
-        tr:hover {
+        tr:hover { /* Will be removed with analyzer */
             background-color: var(--spl-table-row-hover);
         }
 
-        .positive {
+        .positive { /* Will be removed with analyzer */
             color: var(--spl-accent-green);
             font-weight: bold;
         }
 
-        .negative {
+        .negative { /* Will be removed with analyzer */
             color: var(--spl-accent-red);
             font-weight: bold;
         }
 
-        /* Responsive Adjustments */
+        /* Responsive Adjustments (partially removed with analyzer) */
         @media (min-width: 951px) {
-            #topCaptainsTable th:nth-child(1), #topCaptainsTable td:nth-child(1) { width: auto; }
+            /* #topCaptainsTable th:nth-child(1), #topCaptainsTable td:nth-child(1) { width: auto; }
             #topCaptainsTable th:nth-child(2), #topCaptainsTable td:nth-child(2) { width: auto; }
             #topCaptainsTable th:nth-child(3), #topCaptainsTable td:nth-child(3) { width: auto; }
             #topCaptainsTable th:nth-child(4), #topCaptainsTable td:nth-child(4) { width: auto; }
@@ -925,11 +925,11 @@
             #lossMakingTransfersTable th:nth-child(1), #lossMakingTransfersTable td:nth-child(1) { width: auto; }
             #lossMakingTransfersTable th:nth-child(2), #lossMakingTransfersTable td:nth-child(2) { width: auto; }
             #lossMakingTransfersTable th:nth-child(3), #lossMakingTransfersTable td:nth-child(3) { width: auto; }
-            #lossMakingTransfersTable th:nth-child(4), #lossMakingTransfersTable td:nth-child(4) { width: auto; }
+            #lossMakingTransfersTable th:nth-child(4), #lossMakingTransfersTable td:nth-child(4) { width: auto; } */
         }
 
 
-        /* Mobile Version (apply when viewport is 950px or narrower) */
+        /* Mobile Version (apply when viewport is 950px or narrower) (partially removed with analyzer) */
         @media (max-width: 950px) {
             body {
                 padding: 15px;
@@ -952,21 +952,21 @@
                 padding: 10px 20px;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr; /* Stack cards on small screens */
+            /* .stats-grid {
+                grid-template-columns: 1fr;
             }
 
             .stat-card p {
                 font-size: 1.5em;
-            }
+            } */
 
-            /* Apply card-like display to ALL tables */
-            table {
+            /* Apply card-like display to ALL tables (will be removed with analyzer) */
+            /* table {
                 border: 0;
             }
 
             table thead {
-                display: none; /* Hide table headers */
+                display: none;
             }
 
             table tr {
@@ -974,8 +974,8 @@
                 margin-bottom: 10px;
                 border: 1px solid var(--spl-border-light);
                 border-radius: 8px;
-                background-color: var(--spl-container-bg); /* Card background */
-                box-shadow: 0 2px 4px var(--spl-shadow); /* Use shadow variable */
+                background-color: var(--spl-container-bg);
+                box-shadow: 0 2px 4px var(--spl-shadow);
                 padding: 10px;
             }
 
@@ -983,30 +983,30 @@
                 display: block;
                 text-align: right;
                 padding: 8px 10px;
-                border: none; /* Remove cell borders */
-                border-bottom: 1px solid var(--spl-table-row-even); /* Separator for cells */
-                position: relative; /* For pseudo-element positioning */
-                font-size: 0.9em; /* Adjust font size for mobile cells */
-                padding-left: 50%; /* Make space for the label */
+                border: none;
+                border-bottom: 1px solid var(--spl-table-row-even);
+                position: relative;
+                font-size: 0.9em;
+                padding-left: 50%;
             }
 
             table td:last-child {
-                border-bottom: 0; /* No border on the last cell */
+                border-bottom: 0;
             }
 
             table td::before {
-                content: attr(data-label); /* Use data-label for content */
+                content: attr(data-label);
                 position: absolute;
                 left: 10px;
-                width: calc(50% - 20px); /* Adjust width to fit */
+                width: calc(50% - 20px);
                 text-align: left;
                 font-weight: bold;
                 color: var(--spl-text-medium);
-                font-size: 0.85em; /* Smaller font for labels */
-                white-space: nowrap; /* Prevent label wrapping */
+                font-size: 0.85em;
+                white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-            }
+            } */
         }
 
         @media (max-width: 480px) {
@@ -1019,13 +1019,13 @@
             .input-section {
                 gap: 10px;
             }
-            /* Further reduce font size for very small screens if necessary */
-            table td {
+            /* Further reduce font size for very small screens if necessary (will be removed with analyzer) */
+            /* table td {
                 font-size: 0.85em;
             }
             table td::before {
                 font-size: 0.8em;
-            }
+            } */
         }
 
         .instructions {
@@ -1078,7 +1078,7 @@
             color: #FFD700; /* Bright gold for heading and links in dark mode */
         }
 
-        /* FDR Difficulty Scale Colors */
+        /* FDR Difficulty Scale Colors (will be kept for Admin Dashboard) */
         .fdr-scale {
             display: flex;
             justify-content: center;
@@ -1103,7 +1103,7 @@
             margin-top: 2px;
         }
 
-        /* Specific FDR Colors */
+        /* Specific FDR Colors (will be kept for Admin Dashboard) */
         .fdr-1 { background-color: #00B050; color: white; } /* Very Easy - Green */
         .fdr-2 { background-color: #92D050; color: black; } /* Easy - Light Green */
         .fdr-3 { background-color: #FFFF00; color: black; } /* Medium - Yellow */
@@ -1112,7 +1112,7 @@
         .fdr-6 { background-color: #C00000; color: white; } /* Very Hard - Dark Red */
         .fdr-7 { background-color: #800000; color: white; } /* Extremely Hard - Deep Red */
         
-        /* Dark Mode Adjustments for FDR Colors */
+        /* Dark Mode Adjustments for FDR Colors (will be kept for Admin Dashboard) */
         body.dark-mode .fdr-level {
             color: white; /* Ensure text is white in dark mode */
         }
@@ -1127,7 +1127,7 @@
         body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
         body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
 
-        /* Styles for the two-column FDR display (Overall) */
+        /* Styles for the two-column FDR display (Overall) (will be kept for Admin Dashboard) */
         .fdr-data-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; /* Two equal columns */
@@ -1142,7 +1142,7 @@
             box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
         }
 
-        /* Styles for single-column FDR display (Home/Away) */
+        /* Styles for single-column FDR display (Home/Away) (will be kept for Admin Dashboard) */
         .fdr-single-column-grid {
             display: grid;
             grid-template-columns: 1fr; /* Single column */
@@ -1180,7 +1180,7 @@
             border-bottom-color: rgba(255,255,255,0.1);
         }
 
-        /* Vertical separator for the left column items (only applies to two-column grids) */
+        /* Vertical separator for the left column items (only applies to two-column grids) (will be kept for Admin Dashboard) */
         .fdr-data-grid .fdr-grid-item:nth-child(2n-1) { /* Applies to 1st, 3rd, 5th... items (left column) */
             border-right: 1px solid var(--spl-border-light);
             transition: border-color 0.3s ease;
@@ -1189,7 +1189,7 @@
             border-right-color: rgba(255,255,255,0.1);
         }
 
-        /* Remove bottom border for items in the last "row" (last two items for 2-col, last item for 1-col) */
+        /* Remove bottom border for items in the last "row" (last two items for 2-col, last item for 1-col) (will be kept for Admin Dashboard) */
         .fdr-data-grid > :nth-last-child(-n + 2) { 
             border-bottom: none;
         }
@@ -1197,7 +1197,7 @@
             border-bottom: none;
         }
 
-        /* Responsive adjustments for the new grid */
+        /* Responsive adjustments for the new grid (will be kept for Admin Dashboard) */
         @media (max-width: 480px) {
             .fdr-grid-item {
                 font-size: 0.8em;
@@ -1275,7 +1275,8 @@
                 <div id="sidebarHeader">
                     <span id="sidebarTeamName">Your Team</span>
                 </div>
-                <a href="#" id="menuAnalyzeMyTeam">Analyze My Team</a>
+                <!-- Analyze My Team menu item removed -->
+                <!-- <a href="#" id="menuAnalyzeMyTeam">Analyze My Team</a> -->
                 <a href="#" id="menuMyControlRoom">My Control Room</a>
                 <a href="#" id="menuAdminDashboard" style="display: none;">Admin Dashboard</a> <!-- Hidden by default, shown to admins -->
                 <p id="sidebarManagerIdText">Manager ID: <span id="displayLoggedInManagerId"></span></p>
@@ -1286,9 +1287,8 @@
 
             <!-- Content areas remain the same -->
 
-            <!-- Analyzer Report Content (initially hidden) -->
-            <div id="analyzerReportContent" style="display: none;">
-                <!-- Original Analyzer Content Starts Here -->
+            <!-- Analyzer Report Content (REMOVED) -->
+            <!-- <div id="analyzerReportContent" style="display: none;">
                 <div class="input-section" style="display: none;"> 
                     <label for="managerIdInput">Enter Manager ID:</label>
                     <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
@@ -1373,7 +1373,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
                             </tbody>
                         </table>
                     </div>
@@ -1391,7 +1390,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
                             </tbody>
                         </table>
                     </div>
@@ -1409,7 +1407,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
                             </tbody>
                             </table>
                     </div>
@@ -1425,7 +1422,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
                             </tbody>
                         </table>
                     </div>
@@ -1456,7 +1452,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
                             </tbody>
                         </table>
                     </div>
@@ -1473,13 +1468,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data will be inserted here -->
                             </tbody>
                         </table>
                     </div>
 
                 </div>
-            </div>
+            </div> -->
 
             <!-- My Control Room Content (initially hidden) -->
             <div id="myControlRoomContent" style="display: none;">
@@ -1640,7 +1634,7 @@
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "AIzaSyABljnM2tU8eANL6Eblx_howQDPjB3X7VQ", // IMPORTANT: This is a placeholder. Netlify will inject the actual key.
+            apiKey: "", // This should be an empty string for Netlify to inject the FIREBASE_API_KEY environment variable.
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
@@ -1657,19 +1651,21 @@
 
         // --- GLOBAL FLAGS / VARIABLES ---
         let isProcessingAuth = false; 
-        let rankJourneyChartInstance = null;
-        let managerOverallRankHistory = [];
-        let managerCurrentOverallRank = null;
-        const totalAnimationDurationMs = 10000;
-        let animationStartTime = null;
-        let animationFrameId = null;
-        const gifWidth = 1280;
-        const gifHeight = 720;
-        const sectionFrameDelay = 3000;
-        const chartFrameDelay = 3000;
+        // Analyzer-specific variables removed:
+        // let rankJourneyChartInstance = null;
+        // let managerOverallRankHistory = [];
+        // let managerCurrentOverallRank = null;
+        // const totalAnimationDurationMs = 10000;
+        // let animationStartTime = null;
+        // let animationFrameId = null;
+        // const gifWidth = 1280;
+        // const gifHeight = 720;
+        // const sectionFrameDelay = 3000;
+        // const chartFrameDelay = 3000;
         
         let currentManagerId = null; 
-        let isAnalyzerReportDataFetched = false; 
+        // Analyzer-specific flag removed:
+        // let isAnalyzerReportDataFetched = false; 
         let isAdminUser = false; 
         let foundUserForAdminEdit = null; 
 
@@ -1695,6 +1691,8 @@
         const signupManagerIdInput = document.getElementById('signupManagerId'); 
         const signupButton = document.getElementById('signupButton');
         const showLoginLink = document.getElementById('showLoginLink'); 
+        const instructionsBox = document.getElementById('instructionsBox'); 
+
 
         // Logged-in / Analyzer UI elements
         const loggedInContent = document.getElementById('loggedInContent');
@@ -1703,56 +1701,57 @@
         const menuToggle = document.getElementById('menuToggle');
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
-        const sidebarTeamName = document.getElementById('sidebarTeamName'); // New element
-        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam');
+        const sidebarTeamName = document.getElementById('sidebarTeamName'); 
+        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); // Kept for event listener removal
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
-        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); // New element
-        const displayLoggedInManagerId = sidebarManagerIdText.querySelector('span'); // Span inside the new P tag
-        const logoutButton = document.getElementById('logoutButton'); // Moved to sidebar
+        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); 
+        const displayLoggedInManagerId = sidebarManagerIdText.querySelector('span'); 
+        const logoutButton = document.getElementById('logoutButton'); 
         
         // Content areas to toggle
-        const analyzerReportContent = document.getElementById('analyzerReportContent');
-        const myControlRoomContent = document.getElementById('myControlRoomContent');
+        const analyzerReportContent = document.getElementById('analyzerReportContent'); // Kept for display none
+        const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
-        const managerIdInput = document.getElementById('managerIdInput'); 
-        const analyzeButton = document.getElementById('analyzeButton'); 
-        const instructionsBox = document.getElementById('instructionsBox'); 
+        // Analyzer-specific elements removed:
+        // const managerIdInput = document.getElementById('managerIdInput'); 
+        // const analyzeButton = document.getElementById('analyzeButton'); 
 
-        const loadingMessage = document.getElementById('loadingMessage');
-        const errorMessage = document.getElementById('errorMessage');
-        const managerStatsDiv = document.getElementById('managerStats');
-        const managerSummarySection = document.getElementById('managerSummarySection'); 
-        const managerNameElem = document.getElementById('managerName');
-        const overallRankElem = document.getElementById('overallRank');
-        const bestOverallRankElem = document.getElementById('bestOverallRank');
-        const worstOverallRankElem = document.getElementById('worstOverallRank');
-        const averagePointsElem = document.getElementById('averagePoints');
-        const averagePointsFor1stPlaceElem = document.getElementById('averagePointsFor1stPlace');
-        const totalTransfersCountElem = document.getElementById('totalTransfersCount');
-        const totalHitsPointsElem = document.getElementById('totalHitsPoints'); 
-        const bestRoundDisplayElem = document.getElementById('bestRoundDisplay');
-        const worstRoundDisplayElem = document.getElementById('worstRoundDisplay');
-        const greenArrowsCountElem = document.getElementById('greenArrowsCount');
-        const redArrowsCountElem = document.getElementById('redArrowsCount');
+        const loadingMessage = document.getElementById('loadingMessage'); // Kept for general use
+        const errorMessage = document.getElementById('errorMessage'); // Kept for general use
+        // Analyzer-specific elements removed:
+        // const managerStatsDiv = document.getElementById('managerStats');
+        // const managerSummarySection = document.getElementById('managerSummarySection'); 
+        // const managerNameElem = document.getElementById('managerName');
+        // const overallRankElem = document.getElementById('overallRank');
+        // const bestOverallRankElem = document.getElementById('bestOverallRank');
+        // const worstOverallRankElem = document.getElementById('worstOverallRank');
+        // const averagePointsElem = document.getElementById('averagePoints');
+        // const averagePointsFor1stPlaceElem = document.getElementById('averagePointsFor1stPlace');
+        // const totalTransfersCountElem = document.getElementById('totalTransfersCount');
+        // const totalHitsPointsElem = document.getElementById('totalHitsPoints'); 
+        // const bestRoundDisplayElem = document.getElementById('bestRoundDisplay');
+        // const worstRoundDisplayElem = document.getElementById('worstRoundDisplay');
+        // const greenArrowsCountElem = document.getElementById('greenArrowsCount');
+        // const redArrowsCountElem = document.getElementById('redArrowsCount');
         
-        const topCaptainsTableBody = document.querySelector('#topCaptainsTable tbody');
-        const bestPlayersTableBody = document.querySelector('#bestPlayersTable tbody');
-        const worstPlayersTableBody = document.querySelector('#worstPlayersTable tbody');
-        const missedPointsTableBody = document.querySelector('#missedPointsTable tbody');
-        const profitableTransfersTableBody = document.querySelector('#profitableTransfersTable tbody');
-        const lossMakingTransfersTableBody = document.querySelector('#lossMakingTransfersTable tbody');
+        // const topCaptainsTableBody = document.querySelector('#topCaptainsTable tbody');
+        // const bestPlayersTableBody = document.querySelector('#bestPlayersTable tbody');
+        // const worstPlayersTableBody = document.querySelector('#worstPlayersTable tbody');
+        // const missedPointsTableBody = document.querySelector('#missedPointsTable tbody');
+        // const profitableTransfersTableBody = document.querySelector('#profitableTransfersTable tbody');
+        // const lossMakingTransfersTableBody = document.querySelector('#lossMakingTransfersTable tbody');
 
-        const rankJourneyChartCanvas = document.getElementById('rankJourneyChart');
-        const rankJourneyChartContainer = document.getElementById('rankJourneyChartContainer');
-        const videoLoadingMessage = document.getElementById('videoLoadingMessage');
-        const createRankJourneyButton = document.getElementById('createRankJourneyButton');
-        const rankJourneyBox = document.getElementById('rankJourneyBox');
-        const shareVideoButton = document.getElementById('shareVideoButton');
-        const videoGeneratingMessage = document.getElementById('videoGeneratingMessage'); 
-        const gifCaptureCanvas = document.getElementById('gifCaptureCanvas'); 
-        const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
+        // const rankJourneyChartCanvas = document.getElementById('rankJourneyChart');
+        // const rankJourneyChartContainer = document.getElementById('rankJourneyChartContainer');
+        // const videoLoadingMessage = document.getElementById('videoLoadingMessage');
+        // const createRankJourneyButton = document.getElementById('createRankJourneyButton');
+        // const rankJourneyBox = document.getElementById('rankJourneyBox');
+        // const shareVideoButton = document.getElementById('shareVideoButton');
+        // const videoGeneratingMessage = document.getElementById('videoGeneratingMessage'); 
+        // const gifCaptureCanvas = document.getElementById('gifCaptureCanvas'); 
+        // const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
 
         // Admin Dashboard specific elements
         const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons'); 
@@ -1775,7 +1774,7 @@
         const excelUploadMessage = document.getElementById('excelUploadMessage');
         const currentRankingsDisplay = document.getElementById('currentRankingsDisplay');
         
-        // Specific FDR grid containers
+        // Specific FDR grid containers (Admin Dashboard)
         const overallFDRSection = document.getElementById('overallFDRSection');
         const overallFDRGrid = document.getElementById('overallFDRGrid');
         const homeFDRSection = document.getElementById('homeFDRSection');
@@ -1788,115 +1787,111 @@
 
         // Function to display messages in the authMessageBox
         function showAuthMessage(message, type = 'info') {
-            authMessageBox.textContent = ''; 
-            authMessageBox.className = `message-box ${type}`; 
-            authMessageBox.textContent = message; 
-            authMessageBox.style.display = 'block'; 
+            if (authMessageBox) {
+                authMessageBox.textContent = ''; 
+                authMessageBox.className = `message-box ${type}`; 
+                authMessageBox.textContent = message; 
+                authMessageBox.style.display = 'block'; 
+            } else {
+                console.warn("Auth message box element not found.");
+            }
         }
 
         // Function to display messages in the general errorMessage (for analyzer part)
+        // Kept for general error messages, but not specifically for analyzer data fetch
         function showAnalyzerMessage(message, type = 'info') {
-            errorMessage.textContent = ''; 
-            errorMessage.className = `error-message ${type}`; 
-            errorMessage.textContent = message; 
-            errorMessage.style.display = 'block'; 
+            if (errorMessage) {
+                errorMessage.textContent = ''; 
+                errorMessage.className = `error-message ${type}`; 
+                errorMessage.textContent = message; 
+                errorMessage.style.display = 'block'; 
+            } else {
+                console.warn("Analyzer error message element not found.");
+            }
         }
 
         // Function to display messages specific to Admin Dashboard
         function showAdminMessage(message, type = 'info') {
-            adminMessage.textContent = '';
-            adminMessage.className = `message-box ${type}`;
-            adminMessage.textContent = message;
-            adminMessage.style.display = 'block';
-            adminSearchResults.style.display = 'none'; // Hide results when a new admin message is shown
+            if (adminMessage) {
+                adminMessage.textContent = '';
+                adminMessage.className = `message-box ${type}`;
+                adminMessage.textContent = message;
+                adminMessage.style.display = 'block';
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results when a new admin message is shown
+            } else {
+                console.warn("Admin message element not found.");
+            }
         }
 
         // Function to display messages specific to Excel Upload (NEW)
         function showExcelUploadMessage(message, type = 'info') {
-            excelUploadMessage.textContent = '';
-            excelUploadMessage.className = `message-box ${type}`;
-            excelUploadMessage.textContent = message;
-            excelUploadMessage.style.display = 'block';
+            if (excelUploadMessage) {
+                excelUploadMessage.textContent = '';
+                excelUploadMessage.className = `message-box ${type}`;
+                excelUploadMessage.textContent = message;
+                excelUploadMessage.style.display = 'block';
+            } else {
+                console.warn("Excel upload message element not found.");
+            }
         }
 
         function hideAllContentSections() {
-            analyzerReportContent.style.display = 'none';
-            myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; 
+            if (analyzerReportContent) analyzerReportContent.style.display = 'none';
+            if (myControlRoomContent) myControlRoomContent.style.display = 'none';
+            if (adminDashboardContent) adminDashboardContent.style.display = 'none'; 
             
-            // Also hide specific elements that show up in sub-sections
-            shareVideoButton.style.display = 'none'; 
-            managerStatsDiv.style.display = 'none'; 
-            rankJourneyBox.style.display = 'none';
-            rankJourneyChartContainer.style.display = 'none';
+            // Analyzer-specific elements hidden/removed:
+            // if (shareVideoButton) shareVideoButton.style.display = 'none'; 
+            // if (managerStatsDiv) managerStatsDiv.style.display = 'none'; 
+            // if (rankJourneyBox) rankJourneyBox.style.display = 'none';
+            // if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = 'none';
 
             // Admin Dashboard specific elements to manage
-            adminDashboardNavButtons.style.display = 'none'; // Hide Admin buttons initially
-            adminSearchSection.style.display = 'none'; // Hide search input/button
-            adminSearchResults.style.display = 'none'; // Hide search results
-            adminMessage.style.display = 'none';      
+            if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'none'; 
+            if (adminSearchSection) adminSearchSection.style.display = 'none'; 
+            if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+            if (adminMessage) adminMessage.style.display = 'none';      
             
             // NEW: Hide data upload specific elements
-            dataUploadSection.style.display = 'none';
-            currentRankingsDisplay.style.display = 'none';
-            excelUploadMessage.style.display = 'none';
-            overallFDRSection.style.display = 'none'; // Hide all FDR sections
-            homeFDRSection.style.display = 'none';
-            awayFDRSection.style.display = 'none';
+            if (dataUploadSection) dataUploadSection.style.display = 'none';
+            if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none';
+            if (excelUploadMessage) excelUploadMessage.style.display = 'none';
+            if (overallFDRSection) overallFDRSection.style.display = 'none'; 
+            if (homeFDRSection) homeFDRSection.style.display = 'none';
+            if (awayFDRSection) awayFDRSection.style.display = 'none';
 
 
             // General messages/loading indicators
-            loadingMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            videoGeneratingMessage.style.display = 'none';
-            authMessageBox.style.display = 'none'; 
+            if (loadingMessage) loadingMessage.style.display = 'none';
+            if (errorMessage) errorMessage.style.display = 'none';
+            // Analyzer-specific messages removed:
+            // if (videoGeneratingMessage) videoGeneratingMessage.style.display = 'none';
+            if (authMessageBox) authMessageBox.style.display = 'none'; 
         }
 
-        // Function to clear analyzer report data
+        // Function to clear analyzer report data (REMOVED)
         function clearAnalyzerReport() {
-            managerNameElem.textContent = '';
-            overallRankElem.textContent = 'N/A';
-            bestOverallRankElem.textContent = 'N/A';
-            worstOverallRankElem.textContent = 'N/A';
-            averagePointsElem.textContent = 'N/A';
-            averagePointsFor1stPlaceElem.textContent = 'N/A';
-            totalTransfersCountElem.textContent = 'N/A';
-            totalHitsPointsElem.textContent = 'N/A';
-            bestRoundDisplayElem.textContent = 'N/A';
-            worstRoundDisplayElem.textContent = 'N/A';
-            greenArrowsCountElem.textContent = 'N/A 🟢';
-            redArrowsCountElem.textContent = 'N/A 🔴';
-
-            topCaptainsTableBody.innerHTML = '<tr><td colspan="6">No data available.</td></tr>';
-            bestPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
-            worstPlayersTableBody.innerHTML = '<tr><td colspan="5">No data available.</td></tr>';
-            missedPointsTableBody.innerHTML = '<tr><td colspan="3">No data available.</td></tr>';
-            profitableTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
-            lossMakingTransfersTableBody.innerHTML = '<tr><td colspan="4">No data available.</td></tr>';
-
-            managerOverallRankHistory = []; 
-            if (rankJourneyChartInstance) {
-                rankJourneyChartInstance.destroy();
-                rankJourneyChartInstance = null;
-            }
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-            animationStartTime = null;
-            isAnalyzerReportDataFetched = false; 
+            // All analyzer-specific DOM manipulation removed from here
+            // managerNameElem.textContent = '';
+            // overallRankElem.textContent = 'N/A';
+            // ... (rest of analyzer clearing)
+            // managerOverallRankHistory = []; 
+            // if (rankJourneyChartInstance) { rankJourneyChartInstance.destroy(); rankJourneyChartInstance = null; }
+            // if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+            // animationStartTime = null;
+            // isAnalyzerReportDataFetched = false; 
         }
 
         // Function to clear admin search results and input fields
         function clearAdminSearchAndResults() {
-            adminSearchInput.value = '';
-            adminUserUidElem.textContent = 'N/A';
-            adminEditEmailInput.value = '';
-            adminEditSplManagerIdInput.value = '';
+            if (adminSearchInput) adminSearchInput.value = '';
+            if (adminUserUidElem) adminUserUidElem.textContent = 'N/A';
+            if (adminEditEmailInput) adminEditEmailInput.value = '';
+            if (adminEditSplManagerIdInput) adminEditSplManagerIdInput.value = '';
             foundUserForAdminEdit = null;
-            adminSearchSection.style.display = 'none'; // Ensure search is hidden
-            adminSearchResults.style.display = 'none'; 
-            adminMessage.style.display = 'none';      
+            if (adminSearchSection) adminSearchSection.style.display = 'none'; 
+            if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+            if (adminMessage) adminMessage.style.display = 'none';      
         }
 
         function convertArabicToWesternNumerals(input) {
@@ -1914,12 +1909,12 @@
             console.log("DEBUG: Setting theme to:", theme); 
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
-                mainLogo.src = darkModeLogoSrc;
-                darkModeToggle.checked = true;
+                if (mainLogo) mainLogo.src = darkModeLogoSrc;
+                if (darkModeToggle) darkModeToggle.checked = true;
             } else {
                 document.body.classList.remove('dark-mode');
-                mainLogo.src = lightModeLogoSrc;
-                darkModeToggle.checked = false;
+                if (mainLogo) mainLogo.src = lightModeLogoSrc;
+                if (darkModeToggle) darkModeToggle.checked = false;
             }
             localStorage.setItem('theme', theme);
         }
@@ -1927,247 +1922,130 @@
         // --- Authentication Logic ---
 
         // Handle Signup
-        signupButton.addEventListener('click', async () => {
-            showAuthMessage("Processing...", "info");
-            isProcessingAuth = true; 
+        if (signupButton) {
+            signupButton.addEventListener('click', async () => {
+                showAuthMessage("Processing...", "info");
+                isProcessingAuth = true; 
 
-            const email = signupEmailInput.value.trim();
-            const password = signupPasswordInput.value;
-            const confirmPassword = signupConfirmPasswordInput.value;
-            const managerId = convertArabicToWesternNumerals(signupManagerIdInput.value.trim());
+                const email = signupEmailInput.value.trim();
+                const password = signupPasswordInput.value;
+                const confirmPassword = signupConfirmPasswordInput.value;
+                const managerId = convertArabicToWesternNumerals(signupManagerIdInput.value.trim());
 
-            if (!email || !password || !confirmPassword || !managerId) {
-                showAuthMessage("All fields are required.", "error");
-                isProcessingAuth = false;
-                return;
-            }
-            if (password !== confirmPassword) {
-                showAuthMessage("Passwords do not match.", "error");
-                isProcessingAuth = false; 
-                return;
-            }
-            if (password.length < 6) {
-                showAuthMessage("Password must be at least 6 characters long.", "error");
-                isProcessingAuth = false; 
-                return;
-            }
-            if (!/^\d+$/.test(managerId)) {
-                showAuthMessage("SPL Manager ID is required and must be a valid number.", "error");
-                isProcessingAuth = false; 
-                return;
-            }
-
-            try {
-                console.log("DEBUG: Attempting to create user with email:", email);
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                console.log("DEBUG: User created successfully. UID:", user.uid, "Email:", user.email);
-
-                // Save user data to Firestore (teamName will be added on first analyzer report fetch)
-                console.log("DEBUG: Attempting to save user data to Firestore for UID:", user.uid);
-                await setDoc(doc(db, "users", user.uid), {
-                    email: user.email,
-                    splManagerId: managerId,
-                    createdAt: serverTimestamp(),
-                    emailVerified: false,
-                    teamName: 'Your Team' // Default team name on signup
-                });
-                console.log("DEBUG: User data saved to Firestore with default team name.");
-
-                // Send email verification
-                console.log("DEBUG: Attempting to send email verification for user:", user.email, "UID:", user.uid);
-                try {
-                    await sendEmailVerification(user); 
-                    console.log("DEBUG: Email verification sent successfully (Firebase API acknowledged request).");
-                } catch (emailError) {
-                    console.error("ERROR: Failed to send email verification during signup:", emailError);
-                    showAuthMessage(`Account created, but failed to send verification email: ${emailError.message}. Please check your email's spam folder or try logging in after a few minutes to trigger resend.`, "warning");
-                }
-                
-                // Log out the user immediately after signup to force email verification
-                console.log("DEBUG: Signing user out after signup to force verification flow.");
-                await signOut(auth); 
-                console.log("DEBUG: User signed out after signup.");
-
-                showAuthMessage("Account created! Please verify your email and then log in. If the confirmation e-mail is not in your inbox please check your spam folder", "success");
-                
-                // Clear form fields
-                signupEmailInput.value = '';
-                signupPasswordInput.value = '';
-                signupConfirmPasswordInput.value = '';
-                signupManagerIdInput.value = '';
-                // Switch to login form
-                loginForm.style.display = 'block'; 
-                signupForm.style.display = 'none';
-                instructionsBox.style.display = 'none'; // Hide instructions after successful signup
-
-            } catch (error) {
-                console.error("Signup failed (main try-catch):", error);
-                let friendlyMessage = "Failed to create account. Please try again.";
-                if (error.code === 'auth/email-already-in-use') {
-                    friendlyMessage = "That email address is already in use.";
-                } else if (error.code === 'auth/invalid-email') {
-                    friendlyMessage = "Please enter a valid email address.";
-                } else if (error.code === 'auth/weak-password') {
-                    friendlyMessage = "Password is too weak.";
-                } else if (error.code === 'auth/network-request-failed') {
-                    friendlyMessage = "Network error. Please check your internet connection.";
-                } else {
-                    friendlyMessage = `Failed to create account: ${error.message}`; 
-                }
-                showAuthMessage(friendlyMessage, "error");
-            } finally {
-                isProcessingAuth = false; 
-            }
-        });
-
-        // Handle Login
-        loginButton.addEventListener('click', async () => {
-            showAuthMessage("Logging in...", "info");
-            isProcessingAuth = true;
-
-            const email = loginEmailInput.value.trim();
-            const password = loginPasswordInput.value;
-
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                await reload(user); 
-
-                if (!user.emailVerified) {
-                    await signOut(auth); 
-                    showAuthMessage("Please verify your email address before logging in.", "info"); 
+                if (!email || !password || !confirmPassword || !managerId) {
+                    showAuthMessage("All fields are required.", "error");
+                    isProcessingAuth = false;
                     return;
                 }
-                
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
+                if (password !== confirmPassword) {
+                    showAuthMessage("Passwords do not match.", "error");
+                    isProcessingAuth = false; 
+                    return;
+                }
+                if (password.length < 6) {
+                    showAuthMessage("Password must be at least 6 characters long.", "error");
+                    isProcessingAuth = false; 
+                    return;
+                }
+                if (!/^\d+$/.test(managerId)) {
+                    showAuthMessage("SPL Manager ID is required and must be a valid number.", "error");
+                    isProcessingAuth = false; 
+                    return;
+                }
 
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    console.log("User data from Firestore on login:", userData);
+                try {
+                    console.log("DEBUG: Attempting to create user with email:", email);
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log("DEBUG: User created successfully. UID:", user.uid, "Email:", user.email);
 
-                    if (!userData.emailVerified && user.emailVerified) {
-                        await updateDoc(userDocRef, { emailVerified: true });
-                        userData.emailVerified = true; 
+                    // Save user data to Firestore (teamName will be added on first analyzer report fetch)
+                    console.log("DEBUG: Attempting to save user data to Firestore for UID:", user.uid);
+                    await setDoc(doc(db, "users", user.uid), {
+                        email: user.email,
+                        splManagerId: managerId,
+                        createdAt: serverTimestamp(),
+                        emailVerified: false,
+                        teamName: 'Your Team' // Default team name on signup
+                    });
+                    console.log("DEBUG: User data saved to Firestore with default team name.");
+
+                    // Send email verification
+                    console.log("DEBUG: Attempting to send email verification for user:", user.email, "UID:", user.uid);
+                    try {
+                        await sendEmailVerification(user); 
+                        console.log("DEBUG: Email verification sent successfully (Firebase API acknowledged request).");
+                    } catch (emailError) {
+                        console.error("ERROR: Failed to send email verification during signup:", emailError);
+                        showAuthMessage(`Account created, but failed to send verification email: ${emailError.message}. Please check your email's spam folder or try logging in after a few minutes to trigger resend.`, "warning");
                     }
+                    
+                    // Log out the user immediately after signup to force email verification
+                    console.log("DEBUG: Signing user out after signup to force verification flow.");
+                    await signOut(auth); 
+                    console.log("DEBUG: User signed out after signup.");
 
-                    const userManagerId = userData.splManagerId;
-                    const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
+                    showAuthMessage("Account created! Please verify your email and then log in. If the confirmation e-mail is not in your inbox please check your spam folder", "success");
+                    
+                    // Clear form fields
+                    if (signupEmailInput) signupEmailInput.value = '';
+                    if (signupPasswordInput) signupPasswordInput.value = '';
+                    if (signupConfirmPasswordInput) signupConfirmPasswordInput.value = '';
+                    if (signupManagerIdInput) signupManagerIdInput.value = '';
+                    // Switch to login form
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none';
+                    if (instructionsBox) instructionsBox.style.display = 'none'; // Hide instructions after successful signup
 
-                    if (userManagerId && /^\d+$/.test(userManagerId)) {
-                        displayLoggedInManagerId.textContent = userManagerId;
-                        sidebarTeamName.textContent = teamName; // Set team name in sidebar
-                        
-                        authSection.style.display = 'none'; // Hide auth section
-                        loggedInContent.style.display = 'block'; // Show the main logged-in container
-                        
-                        currentManagerId = userManagerId; 
-                        isAnalyzerReportDataFetched = false; // Reset this flag for new login
-
-                        // Check if current user is an admin to show Admin Dashboard menu item
-                        const adminDocRef = doc(db, "admins", user.uid);
-                        const adminDocSnap = await getDoc(adminDocRef);
-                        isAdminUser = adminDocSnap.exists();
-                        console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
-                        
-                        // Update visibility of the Admin Dashboard menu item
-                        menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
-                        console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
-
-                        // Show menu toggle icon
-                        menuToggle.style.display = 'block';
-
-                        // Default to Analyzer Report section
-                        showContentSection('analyzerReport');
-
+                } catch (error) {
+                    console.error("Signup failed (main try-catch):", error);
+                    let friendlyMessage = "Failed to create account. Please try again.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        friendlyMessage = "That email address is already in use.";
+                    } else if (error.code === 'auth/invalid-email') {
+                        friendlyMessage = "Please enter a valid email address.";
+                    } else if (error.code === 'auth/weak-password') {
+                        friendlyMessage = "Password is too weak.";
+                    } else if (error.code === 'auth/network-request-failed') {
+                        friendlyMessage = "Network error. Please check your internet connection.";
                     } else {
-                        showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
-                        await signOut(auth); 
+                        friendlyMessage = `Failed to create account: ${error.message}`; 
                     }
-                } else {
-                    showAuthMessage("User data not found. Please contact support.", "error"); 
-                    await signOut(auth);
+                    showAuthMessage(friendlyMessage, "error");
+                } finally {
+                    isProcessingAuth = false; 
                 }
-                loginPasswordInput.value = ''; 
+            });
+        }
 
-            } catch (error) {
-                console.error("Login failed:", error);
-                let friendlyMessage = "Login failed. Please check your email and password.";
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    friendlyMessage = "Invalid email or password.";
-                }
-                showAuthMessage(friendlyMessage, "error"); 
-            } finally {
-                isProcessingAuth = false; 
-            }
-        });
+        // Handle Login
+        if (loginButton) {
+            loginButton.addEventListener('click', async () => {
+                showAuthMessage("Logging in...", "info");
+                isProcessingAuth = true;
 
-        // Handle Logout
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showAuthMessage("Logged out successfully.", "info"); 
-                isAdminUser = false; 
-                menuAdminDashboard.style.display = 'none'; // Hide admin menu item
-                menuToggle.style.display = 'none'; // Hide menu toggle
-                loggedInContent.style.display = 'none'; 
-                // Restore auth section and login form after logout
-                authSection.style.display = 'block'; 
-                loginForm.style.display = 'block'; 
-                signupForm.style.display = 'none';
-                instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
-                sidebarMenu.classList.remove('open'); // Close sidebar on logout
-                overlay.style.display = 'none'; // Hide overlay on logout
-                sidebarTeamName.textContent = 'Your Team'; // Reset team name
-                displayLoggedInManagerId.textContent = ''; // Clear manager ID
-            } catch (error) {
-                console.error("Logout error:", error);
-                showAuthMessage("Failed to logout. Please try again.", "error"); 
-            }
-        });
+                const email = loginEmailInput.value.trim();
+                const password = loginPasswordInput.value;
 
-        // Toggle between Login and Signup forms (showSignupLink is from login form to signup form)
-        showSignupLink.addEventListener('click', (e) => {
-            console.log("DEBUG: 'Sign Up' link clicked."); 
-            e.preventDefault();
-            loginForm.style.display = 'none';
-            signupForm.style.display = 'block'; 
-            authMessageBox.style.display = 'none'; 
-            authMessageBox.textContent = ''; 
-            instructionsBox.style.display = 'block'; // Show instructions when signup form is active
-        });
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
 
-        // Toggle between Login and Signup forms (showLoginLink is from signup form to login form)
-        showLoginLink.addEventListener('click', (e) => {
-            console.log("DEBUG: 'Login' link clicked."); 
-            e.preventDefault();
-            loginForm.style.display = 'block'; 
-            signupForm.style.display = 'none';
-            authMessageBox.style.display = 'none'; 
-            authMessageBox.textContent = ''; 
-            instructionsBox.style.display = 'none'; // Hide instructions when login form is active
-        });
+                    await reload(user); 
 
-
-        // --- Authentication State Listener (Core UI Logic) ---
-        onAuthStateChanged(auth, async (user) => {
-            if (isProcessingAuth) { 
-                console.log("DEBUG: onAuthStateChanged deferred due to active auth process.");
-                return; 
-            }
-
-            if (user) {
-                await reload(user); 
-
-                if (user.emailVerified) {
+                    if (!user.emailVerified) {
+                        await signOut(auth); 
+                        showAuthMessage("Please verify your email address before logging in.", "info"); 
+                        return;
+                    }
+                    
                     const userDocRef = doc(db, "users", user.uid);
                     const userDocSnap = await getDoc(userDocRef);
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
-                        
+                        console.log("User data from Firestore on login:", userData);
+
                         if (!userData.emailVerified && user.emailVerified) {
                             await updateDoc(userDocRef, { emailVerified: true });
                             userData.emailVerified = true; 
@@ -2177,73 +2055,210 @@
                         const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
 
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
-                            displayLoggedInManagerId.textContent = userManagerId;
-                            sidebarTeamName.textContent = teamName; // Set team name in sidebar
+                            if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
+                            if (sidebarTeamName) sidebarTeamName.textContent = teamName; // Set team name in sidebar
                             
-                            authSection.style.display = 'none'; 
-                            loggedInContent.style.display = 'block'; 
+                            if (authSection) authSection.style.display = 'none'; // Hide auth section
+                            if (loggedInContent) loggedInContent.style.display = 'block'; // Show the main logged-in container
                             
                             currentManagerId = userManagerId; 
-                            isAnalyzerReportDataFetched = false; // Ensure flag is reset on fresh login
+                            // isAnalyzerReportDataFetched = false; // Analyzer-specific flag removed
 
                             // Check if current user is an admin to show Admin Dashboard menu item
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
-                            console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
+                            console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
                             // Update visibility of the Admin Dashboard menu item
-                            menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
-                            console.log(`DEBUG ADMIN MENU ITEM RENDER (onAuthStateChanged Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
+                            if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
+                            console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
                             // Show menu toggle icon
-                            menuToggle.style.display = 'block';
+                            if (menuToggle) menuToggle.style.display = 'block';
 
-                            // Default to Analyzer Report section
-                            showContentSection('analyzerReport');
+                            // Default to My Control Room section since Analyzer is removed
+                            showContentSection('controlRoom');
 
                         } else {
-                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
                             await signOut(auth); 
-                            authSection.style.display = 'block';
-                            loginForm.style.display = 'block'; 
-                            signupForm.style.display = 'none';
-                            loggedInContent.style.display = 'none'; 
-                            instructionsBox.style.display = 'none'; 
                         }
                     } else {
-                        console.warn("Firestore document for user does not exist. Logging out.");
+                        showAuthMessage("User data not found. Please contact support.", "error"); 
+                        await signOut(auth);
+                    }
+                    if (loginPasswordInput) loginPasswordInput.value = ''; 
+
+                } catch (error) {
+                    console.error("Login failed:", error);
+                    let friendlyMessage = "Login failed. Please check your email and password.";
+                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        friendlyMessage = "Invalid email or password.";
+                    }
+                    showAuthMessage(friendlyMessage, "error"); 
+                } finally {
+                    isProcessingAuth = false; 
+                }
+            });
+        }
+
+        // Handle Logout
+        if (logoutButton) {
+            logoutButton.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    showAuthMessage("Logged out successfully.", "info"); 
+                    isAdminUser = false; 
+                    if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; // Hide admin menu item
+                    if (menuToggle) menuToggle.style.display = 'none'; // Hide menu toggle
+                    if (loggedInContent) loggedInContent.style.display = 'none'; 
+                    // Restore auth section and login form after logout
+                    if (authSection) authSection.style.display = 'block'; 
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none';
+                    if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close sidebar on logout
+                    if (overlay) overlay.style.display = 'none'; // Hide overlay on logout
+                    if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; // Reset team name
+                    if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; // Clear manager ID
+                } catch (error) {
+                    console.error("Logout error:", error);
+                    showAuthMessage("Failed to logout. Please try again.", "error"); 
+                }
+            });
+        }
+
+        // Toggle between Login and Signup forms (showSignupLink is from login form to signup form)
+        if (showSignupLink) {
+            showSignupLink.addEventListener('click', (e) => {
+                console.log("DEBUG: 'Sign Up' link clicked."); 
+                e.preventDefault();
+                if (loginForm) loginForm.style.display = 'none';
+                if (signupForm) signupForm.style.display = 'block'; 
+                if (authMessageBox) authMessageBox.style.display = 'none'; 
+                if (authMessageBox) authMessageBox.textContent = ''; 
+                if (instructionsBox) instructionsBox.style.display = 'block'; // Show instructions when signup form is active
+            });
+        }
+
+        // Toggle between Login and Signup forms (showLoginLink is from signup form to login form)
+        if (showLoginLink) {
+            showLoginLink.addEventListener('click', (e) => {
+                console.log("DEBUG: 'Login' link clicked."); 
+                e.preventDefault();
+                if (loginForm) loginForm.style.display = 'block'; 
+                if (signupForm) signupForm.style.display = 'none';
+                if (authMessageBox) authMessageBox.style.display = 'none'; 
+                if (authMessageBox) authMessageBox.textContent = ''; 
+                if (instructionsBox) instructionsBox.style.display = 'none'; // Hide instructions when login form is active
+            });
+        }
+
+
+        // --- Authentication State Listener (Core UI Logic) ---
+        onAuthStateChanged(auth, async (user) => {
+            console.log("DEBUG: onAuthStateChanged fired. User:", user ? user.uid : "null");
+
+            if (isProcessingAuth) { 
+                console.log("DEBUG: onAuthStateChanged deferred due to active auth process.");
+                return; 
+            }
+
+            if (user) {
+                console.log("DEBUG: User detected, checking email verification and data...");
+                await reload(user); 
+
+                if (user.emailVerified) {
+                    console.log("DEBUG: Email verified. Fetching user document...");
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        console.log("DEBUG: User data from Firestore:", userData);
+                        
+                        // Update emailVerified status in Firestore if it's false but Firebase auth says true
+                        if (!userData.emailVerified && user.emailVerified) {
+                            await updateDoc(userDocRef, { emailVerified: true });
+                            userData.emailVerified = true; 
+                            console.log("DEBUG: Updated emailVerified status in Firestore.");
+                        }
+
+                        const userManagerId = userData.splManagerId;
+                        const teamName = userData.teamName || 'Your Team'; 
+
+                        if (userManagerId && /^\d+$/.test(userManagerId)) {
+                            console.log("DEBUG: Valid Manager ID found. Displaying logged-in content.");
+                            if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
+                            if (sidebarTeamName) sidebarTeamName.textContent = teamName; 
+                            
+                            if (authSection) authSection.style.display = 'none'; 
+                            if (loggedInContent) loggedInContent.style.display = 'block'; 
+                            
+                            currentManagerId = userManagerId; 
+                            // isAnalyzerReportDataFetched = false; // Analyzer-specific flag removed
+
+                            const adminDocRef = doc(db, "admins", user.uid);
+                            const adminDocSnap = await getDoc(adminDocRef);
+                            isAdminUser = adminDocSnap.exists();
+                            console.log(`DEBUG: User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
+                            
+                            if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
+                            if (menuToggle) menuToggle.style.display = 'block';
+
+                            // Default to My Control Room section since Analyzer is removed
+                            showContentSection('controlRoom');
+                            console.log("DEBUG: showContentSection('controlRoom') called.");
+
+                        } else {
+                            console.warn("DEBUG: No valid SPL Manager ID found for user. Logging out.");
+                            showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
+                            await signOut(auth); 
+                            // Ensure auth section is visible after logout
+                            if (authSection) authSection.style.display = 'block';
+                            if (loginForm) loginForm.style.display = 'block'; 
+                            if (signupForm) signupForm.style.display = 'none';
+                            if (loggedInContent) loggedInContent.style.display = 'none'; 
+                            if (instructionsBox) instructionsBox.style.display = 'none'; 
+                        }
+                    } else {
+                        console.warn("DEBUG: Firestore document for user does not exist. Logging out.");
                         showAuthMessage("User data not found. Please contact support. Logging out.", "error");
                         await signOut(auth); 
-                        authSection.style.display = 'block';
-                        loginForm.style.display = 'block'; 
-                        signupForm.style.display = 'none';
-                        loggedInContent.style.display = 'none'; 
-                        instructionsBox.style.display = 'none'; 
+                        // Ensure auth section is visible after logout
+                        if (authSection) authSection.style.display = 'block';
+                        if (loginForm) loginForm.style.display = 'block'; 
+                        if (signupForm) signupForm.style.display = 'none';
+                        if (loggedInContent) loggedInContent.style.display = 'none'; 
+                        if (instructionsBox) instructionsBox.style.display = 'none'; 
                     }
                 } else {
+                    console.log("DEBUG: Email not verified. Logging out.");
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
-                    authSection.style.display = 'block';
-                    loginForm.style.display = 'block'; 
-                    signupForm.style.display = 'none';
-                    loggedInContent.style.display = 'none'; 
-                    instructionsBox.style.display = 'none'; 
+                    // Ensure auth section is visible
+                    if (authSection) authSection.style.display = 'block';
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none';
+                    if (loggedInContent) loggedInContent.style.display = 'none'; 
+                    if (instructionsBox) instructionsBox.style.display = 'none'; 
                 }
             } else {
+                console.log("DEBUG: No user detected. Displaying authentication section.");
                 // User is not logged in
-                authSection.style.display = 'block'; 
-                loginForm.style.display = 'block'; 
-                signupForm.style.display = 'none';
-                loggedInContent.style.display = 'none'; 
-                clearAnalyzerReport(); // Clear any previous report data when logging out
+                if (authSection) authSection.style.display = 'block'; 
+                if (loginForm) loginForm.style.display = 'block'; 
+                if (signupForm) signupForm.style.display = 'none';
+                if (loggedInContent) loggedInContent.style.display = 'none'; 
+                // clearAnalyzerReport(); // Analyzer-specific function removed
                 isAdminUser = false; 
-                menuAdminDashboard.style.display = 'none'; // Hide admin menu item
-                menuToggle.style.display = 'none'; // Hide menu toggle
-                instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
-                sidebarMenu.classList.remove('open'); // Close sidebar on logout
-                overlay.style.display = 'none'; // Hide overlay on logout
-                sidebarTeamName.textContent = 'Your Team'; // Reset team name
-                displayLoggedInManagerId.textContent = ''; // Clear manager ID
+                if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; 
+                if (menuToggle) menuToggle.style.display = 'none'; 
+                if (instructionsBox) instructionsBox.style.display = 'none'; 
+                if (sidebarMenu) sidebarMenu.classList.remove('open'); 
+                if (overlay) overlay.style.display = 'none'; 
+                if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; 
+                if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; 
             }
         });
 
@@ -2256,34 +2271,24 @@
             hideAllContentSections(); // Hide all content sub-sections first
             
             if (sectionId === 'analyzerReport') {
-                analyzerReportContent.style.display = 'block';
-                
-                shareVideoButton.style.display = 'none'; 
-                managerStatsDiv.style.display = 'none'; 
-                rankJourneyBox.style.display = 'none';
-
-                if (isAnalyzerReportDataFetched) {
-                    managerStatsDiv.style.display = 'block';
-                    rankJourneyBox.style.display = 'flex'; 
-                    shareVideoButton.style.display = 'block';
-                } else {
-                    console.log("DEBUG: Analyzer report data not fetched yet, waiting for 'Analyze My Team' menu click.");
-                }
-
+                // This section is now empty as Analyzer is removed.
+                // It will simply hide everything else.
+                if (analyzerReportContent) analyzerReportContent.style.display = 'block';
+                console.log("DEBUG: Analyzer Report section is now empty.");
             } else if (sectionId === 'controlRoom') {
-                myControlRoomContent.style.display = 'block';
+                if (myControlRoomContent) myControlRoomContent.style.display = 'block';
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
-                    adminDashboardContent.style.display = 'block'; 
-                    adminDashboardNavButtons.style.display = 'flex'; 
-                    adminSearchSection.style.display = 'flex'; 
-                    adminSearchResults.style.display = 'none'; 
-                    adminMessage.style.display = 'none'; 
-                    dataUploadSection.style.display = 'none'; // Hide data upload by default when entering admin
-                    currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
-                    overallFDRSection.style.display = 'none'; // Hide all FDR sections
-                    homeFDRSection.style.display = 'none';
-                    awayFDRSection.style.display = 'none';
+                    if (adminDashboardContent) adminDashboardContent.style.display = 'block'; 
+                    if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'flex'; 
+                    if (adminSearchSection) adminSearchSection.style.display = 'flex'; 
+                    if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                    if (adminMessage) adminMessage.style.display = 'none'; 
+                    if (dataUploadSection) dataUploadSection.style.display = 'none'; 
+                    if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
+                    if (overallFDRSection) overallFDRSection.style.display = 'none'; 
+                    if (homeFDRSection) homeFDRSection.style.display = 'none';
+                    if (awayFDRSection) awayFDRSection.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -2293,893 +2298,14 @@
         }
 
 
-        // --- Original Analyzer Data Fetching Logic ---
-        async function fetchAndDisplaySPLReport(managerId) {
-            console.log("DEBUG: fetchAndDisplaySPLReport started with ID:", managerId);
-            
-            loadingMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            managerStatsDiv.style.display = 'none'; 
-            rankJourneyChartContainer.style.display = 'none';
-            videoLoadingMessage.style.display = 'none';
-            rankJourneyBox.style.display = 'none';
-            createRankJourneyButton.textContent = 'Click Here';
-            shareVideoButton.disabled = false; 
-            createRankJourneyButton.disabled = false; 
-            darkModeToggle.disabled = false; 
+        // --- Original Analyzer Data Fetching Logic (REMOVED) ---
+        // async function fetchAndDisplaySPLReport(managerId) { ... }
+        // function extractAndFormatRound(rankValueString) { ... }
+        // function renderRankJourneyChart(fullRankHistoryData) { ... }
+        // async function prepareChartForCapture() { ... }
+        // async function captureAndPrepareSectionsForGIF() { ... }
+        // async function generateGIF() { ... }
 
-            clearAnalyzerReport(); 
-
-            isAnalyzerReportDataFetched = false; 
-            if (managerId) { 
-                try {
-                    console.log(`DEBUG: Attempting to fetch data for manager ID: ${managerId} from Netlify Function.`);
-                    const response = await fetch(`/.netlify/functions/fetch-spl-data?id=${managerId}`);
-                    const data = await response.json();
-                    console.log('DEBUG: Fetch response received from Netlify Function.', { responseOk: response.ok, data: data });
-
-                    loadingMessage.style.display = 'none';
-
-                    if (response.ok) {
-                        console.log('DEBUG: Netlify Function Response OK. Populating manager data...');
-                        managerOverallRankHistory = data.overallRankHistory || [];
-                        
-                        if (data.overallRank && data.overallRank !== 'N/A') {
-                            const rankString = String(data.overallRank);
-                            managerCurrentOverallRank = Math.round(parseFloat(rankString.replace(/,/g, '')));
-                        } else {
-                            managerCurrentOverallRank = null; 
-                        }
-
-                        // --- IMPORTANT: Save teamName to Firestore after fetching ---
-                        const user = auth.currentUser;
-                        if (user && data.managerName) {
-                            const userDocRef = doc(db, "users", user.uid);
-                            // Only update if the teamName is different or not set
-                            if (sidebarTeamName.textContent !== data.managerName) {
-                                await updateDoc(userDocRef, { teamName: data.managerName });
-                                console.log(`DEBUG: Updated user's teamName in Firestore to: ${data.managerName}`);
-                            }
-                        }
-                        // --- END IMPORTANT ---
-
-                        sidebarTeamName.textContent = data.managerName || 'Your Team'; 
-                        managerNameElem.innerHTML = `Team Name: <span style="color: var(--spl-primary-accent);">${data.managerName || `Manager ID: ${managerId}`}</span><br>Rank & Points`;
-                        
-                        overallRankElem.textContent = `${data.overallRank} 🌏`;
-                        
-                        let bestRankRaw = String(data.bestOverallRank);
-                        let bestRankNumeric = bestRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
-                        let bestRankRound = extractAndFormatRound(bestRankRaw);
-                        bestOverallRankElem.textContent = `${bestRankNumeric} 🌏 ${bestRankRound}`;
-
-                        let worstRankRaw = String(data.worstOverallRank);
-                        let worstRankNumeric = worstRankRaw.split(/\s*\(R|RD\s*\d+\)/i)[0].trim();
-                        let worstRankRound = extractAndFormatRound(worstRankRaw);
-                        worstOverallRankElem.textContent = `${worstRankNumeric} 🌏 ${worstRankRound}`;
-
-                        averagePointsElem.textContent = data.averagePoints;
-                        averagePointsFor1stPlaceElem.textContent = data.averagePointsFor1stPlace;
-                        
-                        const bestRound = data.bestRound;
-                        bestRoundDisplayElem.textContent = bestRound.points !== 'N/A' 
-                            ? `${bestRound.points} ${bestRound.deductions !== 0 ? `(-${bestRound.deductions})` : ''} Points in Round ${bestRound.round}`
-                            : 'N/A';
-
-                        const worstRound = data.worstRound;
-                        worstRoundDisplayElem.textContent = worstRound.points !== 'N/A' 
-                            ? `${worstRound.points} ${worstRound.deductions !== 0 ? `(-${worstRound.deductions})` : ''} Points in Round ${worstRound.round}`
-                            : 'N/A';
-
-                        totalTransfersCountElem.textContent = data.totalTransfersCount;
-                        totalHitsPointsElem.textContent = data.totalHitsPoints;
-                        
-                        rankJourneyBox.style.display = 'flex'; 
-
-                        // Populate tables
-                        console.log('DEBUG: Populating topCaptainsTable...');
-                        topCaptainsTableBody.innerHTML = '';
-                        if (data.top3Captains && data.top3Captains.length > 0) {
-                            data.top3Captains.forEach(captain => {
-                                const row = topCaptainsTableBody.insertRow();
-                                row.insertCell().textContent = captain.name;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = captain.times;
-                                row.cells[1].setAttribute('data-label', 'Times Captained');
-                                row.insertCell().textContent = captain.successful;
-                                row.cells[2].setAttribute('data-label', 'Success');
-                                row.insertCell().textContent = captain.failed;
-                                row.cells[3].setAttribute('data-label', 'Failed');
-                                row.insertCell().textContent = captain.totalCaptainedPoints;
-                                row.cells[4].setAttribute('data-label', 'Captained Points');
-                                row.insertCell().textContent = captain.captainedRounds ? captain.captainedRounds.join(', ') : 'N/A';
-                                row.cells[5].setAttribute('data-label', 'Captained Rounds');
-                            });
-                        }
-                        else {
-                            const row = topCaptainsTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 6;
-                        }
-                        console.log('DEBUG: Populating bestPlayersTable...');
-                        bestPlayersTableBody.innerHTML = '';
-                        if (data.bestPlayers && data.bestPlayers.length > 0) {
-                            data.bestPlayers.forEach(player => {
-                                const row = bestPlayersTableBody.insertRow();
-                                row.insertCell().textContent = player.name;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = player.started;
-                                row.cells[1].setAttribute('data-label', 'Started');
-                                row.insertCell().textContent = player.autoSubbed;
-                                row.cells[2].setAttribute('data-label', 'Auto Subbed In');
-                                row.insertCell().textContent = player.pointsGained;
-                                row.cells[3].setAttribute('data-label', 'Points Gained');
-                                row.insertCell().textContent = player.benchedPoints;
-                                row.cells[4].setAttribute('data-label', 'Benched Points');
-                            });
-                        } else {
-                            const row = bestPlayersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 5;
-                        }
-                        console.log('DEBUG: Populating worstPlayersTable...');
-                        worstPlayersTableBody.innerHTML = '';
-                        if (data.worstPlayers && data.worstPlayers.length > 0) {
-                            data.worstPlayers.forEach(player => {
-                                const row = worstPlayersTableBody.insertRow();
-                                row.insertCell().textContent = player.name;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = player.started;
-                                row.cells[1].setAttribute('data-label', 'Started');
-                                row.insertCell().textContent = player.autoSubbed;
-                                row.cells[2].setAttribute('data-label', 'Auto Subbed In');
-                                row.insertCell().textContent = player.pointsGained;
-                                row.cells[3].setAttribute('data-label', 'Points Gained');
-                                row.insertCell().textContent = player.benchedPoints;
-                                row.cells[4].setAttribute('data-label', 'Benched Points');
-                            });
-                        } else {
-                            const row = worstPlayersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 5;
-                        }
-                        console.log('DEBUG: Populating missedPointsTable...');
-                        missedPointsTableBody.innerHTML = '';
-                        if (data.top5MissedPoints && data.top5MissedPoints.length > 0) {
-                            data.top5MissedPoints.forEach(item => {
-                                const row = missedPointsTableBody.insertRow();
-                                row.insertCell().textContent = item.playerName;
-                                row.cells[0].setAttribute('data-label', 'Player');
-                                row.insertCell().textContent = item.points;
-                                row.cells[1].setAttribute('data-label', 'Points');
-                                row.insertCell().textContent = item.round;
-                                row.cells[2].setAttribute('data-label', 'Round');
-                            });
-                        } else {
-                            const row = missedPointsTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 3;
-                        }
-                        console.log('DEBUG: Populating profitableTransfersTable...');
-                        profitableTransfersTableBody.innerHTML = '';
-                        if (data.top5ProfitableTransfers && data.top5ProfitableTransfers.length > 0) {
-                            data.top5ProfitableTransfers.forEach(transfer => {
-                                const row = profitableTransfersTableBody.insertRow();
-                                row.insertCell().textContent = transfer.playerInName;
-                                row.cells[0].setAttribute('data-label', 'IN');
-                                row.insertCell().textContent = transfer.playerOutName;
-                                row.cells[1].setAttribute('data-label', 'OUT');
-                                row.insertCell().textContent = transfer.round;
-                                row.cells[2].setAttribute('data-label', 'Round');
-                                const profitLossCell = row.insertCell();
-                                profitLossCell.textContent = transfer.profitLoss;
-                                profitLossCell.classList.add(transfer.profitLoss >= 0 ? 'positive' : 'negative');
-                                profitLossCell.setAttribute('data-label', 'Profit/Loss');
-                            });
-                        } else {
-                            const row = lossMakingTransfersTableBody.insertRow();
-                            row.insertCell().textContent = 'No data available.';
-                            row.cells[0].colSpan = 4;
-                        }
-
-                        greenArrowsCountElem.textContent = `${data.greenArrowsCount || 0} 🟢`;
-                        redArrowsCountElem.textContent = `${data.redArrowsCount || 0} 🔴`;
-
-
-                        managerStatsDiv.style.display = 'block'; 
-                        rankJourneyBox.style.display = 'flex'; 
-                        shareVideoButton.style.display = 'block';
-                        isAnalyzerReportDataFetched = true; 
-
-                    } else {
-                        console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
-                        showAnalyzerMessage(data.error || 'An unknown error occurred.', 'error');
-                        managerStatsDiv.style.display = 'none';
-                        rankJourneyBox.style.display = 'none';
-                        shareVideoButton.style.display = 'none';
-                    }
-
-                } catch (error) {
-                    console.error("DEBUG: Critical fetchAndDisplaySPLReport error (outer catch):", error);
-                    showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, 'error');
-                    loadingMessage.style.display = 'none';
-                    managerStatsDiv.style.display = 'none';
-                    rankJourneyBox.style.display = 'none';
-                    shareVideoButton.style.display = 'none';
-                }
-            } else {
-                showAnalyzerMessage("No Manager ID found for report generation. Please ensure your account has a valid Manager ID.", "error");
-            }
-            console.log("DEBUG: fetchAndDisplaySPLReport finished.");
-        }
-
-        // --- Chart Rendering Logic (Existing - Unchanged) ---
-        function extractAndFormatRound(rankValueString) {
-            if (typeof rankValueString !== 'string' || rankValueString === 'N/A') {
-                return '';
-            }
-            const match = rankValueString.match(/\((R|RD)\s*(\d+)\)/i);
-            if (match && match[2]) {
-                return `(Round ${match[2]})`;
-            }
-            return '';
-        }
-
-        function renderRankJourneyChart(fullRankHistoryData) {
-            if (!fullRankHistoryData || fullRankHistoryData.length === 0) {
-                console.warn("DEBUG: No rank data to render chart.");
-                return;
-            }
-
-            fullRankHistoryData.sort((a, b) => a.round - b.round);
-
-            const fixedMaxRound = 34; 
-            const labels = Array.from({ length: fixedMaxRound + 1 }, (_, i) => `Round ${i}`);
-            
-            const ranks = Array(fixedMaxRound + 1).fill(null);
-            fullRankHistoryData.forEach(d => {
-                if (d.round >= 1 && d.round <= fixedMaxRound) {
-                    ranks[d.round] = d.rank;
-                }
-            });
-
-            const validRanksForScaling = ranks.filter(rank => typeof rank === 'number' && !isNaN(rank));
-            const minRankInHistory = validRanksForScaling.length > 0 ? Math.min(...validRanksForScaling) : 1;
-            const maxRankInHistory = validRanksForScaling.length > 0 ? Math.max(...validRanksForScaling) : 114154;
-
-            let overallYAxisMax;
-            const decisionRank = managerCurrentOverallRank !== null ? managerCurrentOverallRank : maxRankInHistory;
-
-            if (decisionRank >= 1 && decisionRank <= 100) {
-                overallYAxisMax = maxRankInHistory + 10;
-            } else if (decisionRank > 100 && decisionRank <= 3000) {
-                overallYAxisMax = maxRankInHistory + 50;
-            } else if (decisionRank > 3000) {
-                overallYAxisMax = maxRankInHistory + 200;
-            } else {
-                overallYAxisMax = maxRankInHistory + 100;
-            }
-
-            overallYAxisMax = Math.min(Math.max(overallYAxisMax, minRankInHistory + 10, 200), 114154); 
-
-            console.log(`DEBUG: Chart Y-axis Debug: Min Rank (History): ${minRankInHistory}, Max Rank (History): ${maxRankInHistory}, Current Overall Rank (for decision): ${decisionRank}, Calculated Y-axis Max: ${overallYAxisMax}`);
-
-            videoLoadingMessage.style.display = 'block';
-
-            const ctx = rankJourneyChartCanvas.getContext('2d');
-            if (rankJourneyChartInstance) {
-                rankJourneyChartInstance.destroy();
-            }
-
-            const isMobile = window.innerWidth <= 950;
-
-            rankJourneyChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Overall Rank',
-                            data: [],
-                            tension: 0.1,
-                            spanGaps: true,
-                            pointRadius: 0,
-                            borderColor: (context) => {
-                                const currentPoint = context.dataset.data[context.dataIndex];
-                                const previousPoint = context.dataset.data[context.dataIndex - 1];
-                                
-                                if (!currentPoint || !previousPoint || typeof currentPoint.y !== 'number' || typeof previousPoint.y !== 'number') {
-                                    return '#007BFF';
-                                }
-                                if (currentPoint.y < previousPoint.y) {
-                                    return '#28A745';
-                                } else if (currentPoint.y > previousPoint.y) {
-                                    return '#DC3545';
-                                } else {
-                                    return '#495057';
-                                }
-                            },
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
-                            fill: false,
-                            xAxisID: 'x-linear',
-                            yAxisID: 'y-rank'
-                        },
-                        {
-                            label: 'Current Rank',
-                            data: [],
-                            pointRadius: 8,
-                            pointBackgroundColor: 'red',
-                            pointBorderColor: 'white',
-                            pointBorderWidth: 2,
-                            showLine: false,
-                            type: 'scatter',
-                            xAxisID: 'x-linear',
-                            yAxisID: 'y-rank',
-                            hidden: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: isMobile ? 1.5 : 2,
-                    animation: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: 'var(--spl-text-dark)', 
-                                filter: function(legendItem, chartData) {
-                                    return legendItem.text === 'Overall Rank';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        'x-linear': {
-                            type: 'linear',
-                            title: {
-                                display: true,
-                                text: 'Round',
-                                color: 'var(--spl-text-dark)'
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            min: 0,
-                            max: fixedMaxRound,
-                            ticks: {
-                                color: 'var(--spl-text-dark)',
-                                autoSkip: false,
-                                maxRotation: 0,
-                                minRotation: 0,
-                                values: [0, 4, 8, 12, 16, 20, 24, 28, 32, 34],
-                                callback: function(value, index) {
-                                    return labels[value].replace('Round ', '');
-                                },
-                                font: {
-                                    size: isMobile ? 9 : 12
-                                }
-                            }
-                        },
-                        'y-rank': {
-                            type: 'linear',
-                            display: true,
-                            title: {
-                                display: !isMobile,
-                                text: 'Overall Rank (Lower is Better)',
-                                color: 'var(--spl-text-dark)'
-                            },
-                            reverse: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            min: 1,
-                            max: overallYAxisMax,
-                            ticks: {
-                                color: 'var(--spl-text-dark)',
-                                callback: function(value, index, values) {
-                                    return new Intl.NumberFormat().format(value);
-                                },
-                                maxTicksLimit: isMobile ? 20 : 10,
-                                font: {
-                                    size: isMobile ? 9 : 12
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            function animateChart(timestamp) {
-                if (!animationStartTime) {
-                    animationStartTime = timestamp;
-                }
-
-                const elapsedTime = timestamp - animationStartTime;
-                const progress = Math.min(elapsedTime / totalAnimationDurationMs, 1);
-
-                const firstDataRound = fullRankHistoryData.length > 0 ? fullRankHistoryData[0].round : 0;
-                const lastDataRound = fullRankHistoryData.length > 0 ? fullRankHistoryData[fullRankHistoryData.length - 1].round : fixedMaxRound;
-                const dataRoundRange = lastDataRound - firstDataRound;
-
-                let currentRoundForDot = firstDataRound + (progress * dataRoundRange);
-                currentRoundForDot = Math.min(currentRoundForDot, lastDataRound);
-
-                let prevDataPoint = null;
-                let nextDataPoint = null;
-
-                for (let i = 0; i < fullRankHistoryData.length; i++) {
-                    if (fullRankHistoryData[i].round <= currentRoundForDot) {
-                        prevDataPoint = fullRankHistoryData[i];
-                    } else {
-                        nextDataPoint = fullRankHistoryData[i];
-                        break;
-                    }
-                }
-
-                if (prevDataPoint && nextDataPoint) {
-                    const roundRange = nextDataPoint.round - prevDataPoint.round;
-                    const rankRange = nextDataPoint.rank - prevDataPoint.rank;
-                    const factor = (currentRoundForDot - prevDataPoint.round) / roundRange;
-                    interpolatedRank = prevDataPoint.rank + (rankRange * factor);
-                } else if (prevDataPoint) {
-                    interpolatedRank = prevDataPoint.rank;
-                } else {
-                    interpolatedRank = null; 
-                }
-                
-                if (interpolatedRank !== null) {
-                    rankJourneyChartInstance.data.datasets[1].data = [{ x: dotXPosition, y: interpolatedRank }];
-                } else {
-                    rankJourneyChartInstance.data.datasets[1].data = [];
-                }
-
-                const traceData = [];
-                for (let i = 0; i < fullRankHistoryData.length; i++) {
-                    if (fullRankHistoryData[i].round <= currentRoundForDot) {
-                        traceData.push({ x: fullRankHistoryData[i].round, y: fullRankHistoryData[i].rank });
-                    } else {
-                        break;
-                    }
-                }
-                if (interpolatedRank !== null && traceData.length > 0 && dotXPosition > traceData[traceData.length - 1].x) {
-                    traceData.push({ x: dotXPosition, y: interpolatedRank });
-                } else if (interpolatedRank !== null && traceData.length === 0 && fullRankHistoryData.length > 0 && dotXPosition >= fullRankHistoryData[0].round) {
-                    traceData.push({ x: dotXPosition, y: interpolatedRank });
-                }
-                
-                rankJourneyChartInstance.data.datasets[0].data = traceData;
-
-                rankJourneyChartInstance.update();
-
-                if (progress < 1) {
-                    animationFrameId = requestAnimationFrame(animateChart);
-                } else {
-                    videoLoadingMessage.style.display = 'none';
-                    // Ensure the full line is visible and all its points are shown at the end
-                    rankJourneyChartInstance.data.datasets[0].data = fullRankHistoryData.map(d => ({ x: d.round, y: d.rank }));
-                    rankJourneyChartInstance.data.datasets[0].pointRadius = 3; 
-                    
-                    const lastDataPoint = fullRankHistoryData[fullRankHistoryData.length - 1];
-                    if (lastDataPoint) {
-                        rankJourneyChartInstance.data.datasets[1].data = [{ x: lastDataPoint.round, y: lastDataPoint.rank }];
-                    } else {
-                        rankJourneyChartInstance.data.datasets[1].data = []; 
-                    }
-                    rankJourneyChartInstance.update();
-                    animationStartTime = null;
-                    animationFrameId = null;
-                }
-            }
-
-            animationFrameId = requestAnimationFrame(animateChart); 
-        }
-
-        /**
-         * Renders the chart to its final state onto a hidden canvas for GIF capture.
-         */
-        async function prepareChartForCapture() {
-            if (!managerOverallRankHistory || managerOverallRankHistory.length === 0) {
-                console.warn("DEBUG: No rank data to prepare chart for capture.");
-                return null;
-            }
-            
-            const originalChartContainerDisplay = rankJourneyChartContainer.style.display;
-            rankJourneyChartContainer.style.display = 'flex';
-            rankJourneyChartCanvas.style.display = 'block'; 
-            
-            rankJourneyChartCanvas.width = 900; 
-            rankJourneyChartCanvas.height = rankJourneyChartCanvas.width / (window.innerWidth <= 950 ? 1.5 : 2); 
-
-            if (rankJourneyChartInstance) {
-                rankJourneyChartInstance.destroy(); 
-            }
-
-            const isMobile = window.innerWidth <= 950;
-            const ctx = rankJourneyChartCanvas.getContext('2d');
-            
-            const labels = Array.from({ length: 34 + 1 }, (_, i) => `Round ${i}`);
-            const fullRankHistoryData = managerOverallRankHistory.map(d => ({ x: d.round, y: d.rank }));
-
-            const validRanksForScaling = fullRankHistoryData.filter(d => typeof d.y === 'number' && !isNaN(d.y));
-            const minRankInHistory = validRanksForScaling.length > 0 ? Math.min(...validRanksForScaling.map(d => d.y)) : 1;
-            const maxRankInHistory = validRanksForScaling.length > 0 ? Math.max(...validRanksForScaling.map(d => d.y)) : 114154;
-
-            let overallYAxisMax;
-            const decisionRank = managerCurrentOverallRank !== null ? managerCurrentOverallRank : maxRankInHistory;
-
-            if (decisionRank >= 1 && decisionRank <= 100) {
-                overallYAxisMax = maxRankInHistory + 10;
-            } else if (decisionRank > 100 && decisionRank <= 3000) {
-                overallYAxisMax = maxRankInHistory + 50;
-            } else if (decisionRank > 3000) {
-                overallYAxisMax = maxRankInHistory + 200;
-            } else {
-                overallYAxisMax = maxRankInHistory + 100;
-            }
-            overallYAxisMax = Math.min(Math.max(overallYAxisMax, minRankInHistory + 10, 200), 114154); 
-
-            rankJourneyChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Overall Rank',
-                            data: fullRankHistoryData, 
-                            tension: 0.1,
-                            spanGaps: true,
-                            pointRadius: 3, 
-                            borderColor: (context) => {
-                                const currentPoint = context.dataset.data[context.dataIndex];
-                                const previousPoint = context.dataset.data[context.dataIndex - 1];
-                                if (!currentPoint || !previousPoint || typeof currentPoint.y !== 'number' || typeof previousPoint.y !== 'number') {
-                                    return '#007BFF';
-                                }
-                                if (currentPoint.y < previousPoint.y) { return '#28A745'; } 
-                                else if (currentPoint.y > previousPoint.y) { return '#DC3545'; } 
-                                else { return '#495057'; }
-                            },
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
-                            fill: false,
-                            xAxisID: 'x-linear',
-                            yAxisID: 'y-rank'
-                        },
-                        {
-                            label: 'Current Rank',
-                            data: [fullRankHistoryData[fullRankHistoryData.length - 1]], 
-                            pointRadius: 8,
-                            pointBackgroundColor: 'red',
-                            pointBorderColor: 'white',
-                            pointBorderWidth: 2,
-                            showLine: false,
-                            type: 'scatter',
-                            xAxisID: 'x-linear',
-                            yAxisID: 'y-rank'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: isMobile ? 1.5 : 2,
-                    animation: false, 
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: 'var(--spl-text-dark)', 
-                                filter: function(legendItem, chartData) {
-                                    return legendItem.text === 'Overall Rank';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        'x-linear': {
-                            type: 'linear',
-                            title: {
-                                display: true,
-                                text: 'Round',
-                                color: 'var(--spl-text-dark)'
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            min: 0,
-                            max: 34,
-                            ticks: {
-                                color: 'var(--spl-text-dark)',
-                                autoSkip: false,
-                                maxRotation: 0,
-                                minRotation: 0,
-                                values: [0, 4, 8, 12, 16, 20, 24, 28, 32, 34],
-                                callback: function(value, index) {
-                                    return labels[value].replace('Round ', '');
-                                },
-                                font: {
-                                    size: isMobile ? 9 : 12
-                                }
-                            }
-                        },
-                        'y-rank': {
-                            type: 'linear',
-                            display: true,
-                            title: {
-                                display: !isMobile,
-                                text: 'Overall Rank (Lower is Better)',
-                                color: 'var(--spl-text-dark)'
-                            },
-                            reverse: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            min: 1,
-                            max: overallYAxisMax,
-                            ticks: {
-                                color: 'var(--spl-text-dark)',
-                                callback: function(value, index, values) {
-                                    return new Intl.NumberFormat().format(value);
-                                },
-                                maxTicksLimit: isMobile ? 20 : 10,
-                                font: {
-                                    size: isMobile ? 9 : 12
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            rankJourneyChartInstance.update('resize'); 
-
-            await new Promise(resolve => setTimeout(resolve, 500)); 
-
-            hiddenChartCaptureCanvas.width = gifWidth;
-            hiddenChartCaptureCanvas.height = gifHeight;
-            const hiddenCtx = hiddenChartCaptureCanvas.getContext('2d');
-            
-            hiddenCtx.fillStyle = getComputedStyle(document.body).backgroundColor;
-            hiddenCtx.fillRect(0, 0, hiddenChartCaptureCanvas.width, hiddenChartCaptureCanvas.height);
-
-            const chartRatio = Math.min(hiddenChartCaptureCanvas.width / rankJourneyChartCanvas.width, hiddenChartCaptureCanvas.height / rankJourneyChartCanvas.height);
-            const chartWidth = rankJourneyChartCanvas.width * chartRatio;
-            const chartHeight = rankJourneyChartCanvas.height * chartRatio;
-            const chartX = (hiddenChartCaptureCanvas.width - chartWidth) / 2;
-            const chartY = (hiddenChartCaptureCanvas.height - chartHeight) / 2; // Corrected to use chartHeight
-
-            hiddenCtx.drawImage(rankJourneyChartCanvas, chartX, chartY, chartWidth, chartHeight);
-
-            rankJourneyChartContainer.style.display = originalChartContainerDisplay;
-
-            console.log('DEBUG: Chart prepared and copied to hidden canvas for GIF.');
-            return hiddenChartCaptureCanvas; 
-        }
-
-
-        /**
-         * Captures specified sections as high-resolution canvases using html2canvas.
-         */
-        async function captureAndPrepareSectionsForGIF() {
-            console.log("DEBUG: Starting captureAndPrepareSectionsForGIF...");
-            const sectionsToCaptureConfig = [
-                { id: 'managerSummarySection', duration: sectionFrameDelay },
-                { id: 'rankJourneyChartContainer', duration: chartFrameDelay, specialHandling: true }, 
-                { id: 'topCaptainsTableContainer', duration: sectionFrameDelay },
-                { id: 'bestPlayersTableContainer', duration: sectionFrameDelay },
-                { id: 'worstPlayersTableContainer', duration: sectionFrameDelay },
-                { id: 'missedPointsTableContainer', duration: sectionFrameDelay },
-                { id: 'transfersSummaryContainer', duration: sectionFrameDelay },
-                { id: 'profitableTransfersTableContainer', duration: sectionFrameDelay },
-                { id: 'lossMakingTransfersTableContainer', duration: sectionFrameDelay },
-            ];
-
-            const capturedCanvases = [];
-
-            const preparedChartCanvas = await prepareChartForCapture();
-
-            const originalDisplayStates = {};
-            sectionsToCaptureConfig.forEach(config => {
-                const element = document.getElementById(config.id);
-                if (element && !config.specialHandling) { 
-                    originalDisplayStates[config.id] = element.style.display;
-                    element.style.display = 'block'; 
-                }
-            });
-            originalDisplayStates['managerStats'] = managerStatsDiv.style.display;
-            managerStatsDiv.style.display = 'block'; 
-            await new Promise(resolve => setTimeout(resolve, 100)); 
-
-            for (const sectionConfig of sectionsToCaptureConfig) {
-                let sourceCanvas = null;
-                let element = document.getElementById(sectionConfig.id);
-
-                if (!element) {
-                    console.warn(`DEBUG: Element with ID ${sectionConfig.id} not found, skipping capture for GIF.`);
-                    continue; 
-                }
-
-                if (sectionConfig.specialHandling && sectionConfig.id === 'rankJourneyChartContainer') {
-                    if (preparedChartCanvas) {
-                        sourceCanvas = preparedChartCanvas;
-                        console.log(`DEBUG: Using pre-rendered hidden canvas for ${sectionConfig.id}.`);
-                    } else {
-                        console.error(`ERROR: Pre-rendered chart canvas for ${sectionConfig.id} not available!`);
-                        sourceCanvas = document.createElement('canvas'); 
-                        sourceCanvas.width = gifWidth; sourceCanvas.height = gifHeight;
-                        const errorCtx = sourceCanvas.getContext('2d');
-                        errorCtx.fillStyle = '#333';
-                        errorCtx.fillRect(0, 0, gifWidth, gifHeight);
-                        errorCtx.fillStyle = 'white';
-                        errorCtx.font = '24px Arial';
-                        errorCtx.textAlign = 'center';
-                        errorCtx.textBaseline = 'middle';
-                        errorCtx.fillText(`Chart not found: ${sectionConfig.id}`, gifWidth / 2, gifHeight / 2);
-                    }
-                } else {
-                    console.log(`DEBUG: Capturing section with html2canvas: ${sectionConfig.id}`);
-                    try {
-                        sourceCanvas = await html2canvas(element, {
-                            useCORS: true, 
-                            scale: 2, 
-                            backgroundColor: null, 
-                            allowTaint: true, 
-                            windowWidth: gifWidth, 
-                            windowHeight: gifHeight * 2, 
-                            onclone: (clonedDoc) => {
-                                if (document.body.classList.contains('dark-mode')) {
-                                    clonedDoc.body.classList.add('dark-mode');
-                                }
-                                const clonedMainLogo = clonedDoc.getElementById('mainLogo');
-                                if (clonedMainLogo) {
-                                    clonedMainLogo.src = mainLogo.src; 
-                                }
-                                
-                                const elementsToDisplayInClone = [
-                                    'managerStats', 
-                                    'managerSummarySection', 
-                                    'rankJourneyChartContainer',
-                                    'topCaptainsTableContainer',
-                                    'bestPlayersTableContainer',
-                                    'worstPlayersTableContainer',
-                                    'missedPointsTableContainer',
-                                    'transfersSummaryContainer',
-                                    'profitableTransfersTableContainer',
-                                    'lossMakingTransfersTableContainer'
-                                ];
-                                elementsToDisplayInClone.forEach(id => {
-                                    const el = clonedDoc.getElementById(id);
-                                    if (el) {
-                                        el.style.display = el.id === 'rankJourneyChartContainer' ? 'flex' : 'block';
-                                        el.style.overflow = 'visible';
-                                        el.style.height = 'auto';
-                                    }
-                                });
-
-                                clonedDoc.body.style.overflow = 'visible';
-                                clonedDoc.body.style.height = 'auto';
-
-                                const clonedVideoLoadingMessage = clonedDoc.getElementById('videoLoadingMessage');
-                                if (clonedVideoLoadingMessage) {
-                                    clonedVideoLoadingMessage.style.display = 'none';
-                                }
-                            }
-                        });
-                    } catch (e) {
-                        console.error(`ERROR: Failed to capture section ${sectionConfig.id} for GIF:`, e);
-                        sourceCanvas = document.createElement('canvas'); 
-                        sourceCanvas.width = gifWidth; sourceCanvas.height = gifHeight;
-                        const errorCtx = sourceCanvas.getContext('2d');
-                        errorCtx.fillStyle = '#333';
-                        errorCtx.fillRect(0, 0, gifWidth, gifHeight);
-                        errorCtx.fillStyle = 'white';
-                        errorCtx.font = '24px Arial';
-                        errorCtx.textAlign = 'center';
-                        errorCtx.textBaseline = 'middle';
-                        errorCtx.fillText(`Capture failed: ${sectionConfig.id}`, gifWidth / 2, gifHeight / 2);
-                    }
-                }
-
-                if (sourceCanvas) {
-                    const finalFrameCanvas = document.createElement('canvas');
-                    finalFrameCanvas.width = gifWidth;
-                    finalFrameCanvas.height = gifHeight;
-                    const finalFrameCtx = finalFrameCanvas.getContext('2d');
-
-                    const hRatio = finalFrameCanvas.width / sourceCanvas.width;
-                    const vRatio = finalFrameCanvas.height / sourceCanvas.height;
-                    const ratio = Math.min(hRatio, vRatio); 
-
-                    const sx = 0;
-                    const sy = 0;
-                    const sWidth = sourceCanvas.width;
-                    const sHeight = sourceCanvas.height;
-
-                    const dWidth = sWidth * ratio;
-                    const dHeight = sHeight * ratio;
-                    const dx = (finalFrameCanvas.width - dWidth) / 2; 
-                    const dy = (finalFrameCanvas.height - dHeight) / 2; 
-
-                    finalFrameCtx.fillStyle = getComputedStyle(document.body).backgroundColor;
-                    finalFrameCtx.fillRect(0, 0, finalFrameCanvas.width, finalFrameCanvas.height);
-                    
-                    finalFrameCtx.drawImage(sourceCanvas, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-
-                    capturedCanvases.push({
-                        canvas: finalFrameCanvas, 
-                        delay: sectionConfig.duration 
-                    });
-                }
-            }
-            
-            for (const id in originalDisplayStates) {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.style.display = originalDisplayStates[id];
-                }
-            }
-            console.log("DEBUG: Finished captureAndPrepareSectionsForGIF.");
-            return capturedCanvases;
-        }
-
-        /**
-         * Generates an animated GIF from captured section canvases.
-         */
-        async function generateGIF() {
-            console.log("DEBUG: Starting GIF generation process...");
-            const sections = await captureAndPrepareSectionsForGIF();
-
-            if (sections.length === 0) {
-                throw new Error("No sections captured for GIF generation.");
-            }
-
-            const gif = new GIF({
-                workers: 2, 
-                quality: 10, 
-                width: gifWidth,
-                height: gifHeight,
-                transparent: 'rgba(0,0,0,0)', 
-                background: getComputedStyle(document.body).backgroundColor, 
-                workerScript: './gif.worker.js' 
-            });
-
-            gif.on('start', function() {
-                console.log("DEBUG: GIF generation started...");
-            });
-
-            gif.on('progress', function(p) {
-                console.log('DEBUG: GIF generation progress: ' + Math.round(p * 100) + '%');
-                videoGeneratingMessage.textContent = `Generating GIF... ${Math.round(p * 100)}% complete.`;
-            });
-
-            gif.on('finished', function(blob) {
-                console.log('DEBUG: GIF generation finished! Size:', blob.size, 'bytes');
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = `spl_report_${Date.now()}.gif`; 
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                console.log("DEBUG: GIF download triggered.");
-                videoGeneratingMessage.textContent = 'GIF generated and download started!';
-                // Re-enable buttons
-                shareVideoButton.disabled = false;
-                createRankJourneyButton.disabled = false;
-                darkModeToggle.disabled = false;
-            });
-
-            gif.on('error', function(error) {
-                console.error("DEBUG: GIF generation error:", error);
-                showAnalyzerMessage(`GIF generation failed: ${error.message}. Please try again.`, 'error');
-                videoGeneratingMessage.style.display = 'none'; 
-            });
-
-            gif.render(); 
-        }
 
         // --- Admin Dashboard Logic ---
 
@@ -3248,306 +2374,321 @@
             }
         }
 
-        adminSearchButton.addEventListener('click', async () => {
-            showAdminMessage("Searching...", "info");
-            adminSearchResults.style.display = 'none'; 
-            foundUserForAdminEdit = null; 
+        if (adminSearchButton) {
+            adminSearchButton.addEventListener('click', async () => {
+                showAdminMessage("Searching...", "info");
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                foundUserForAdminEdit = null; 
 
-            const searchTerm = adminSearchInput.value.trim();
-            if (!searchTerm) {
-                showAdminMessage("Please enter a search term (Email, SPL ID, or UID).", "error");
-                return;
-            }
-            
-            let userFoundData = null;
+                const searchTerm = adminSearchInput.value.trim();
+                if (!searchTerm) {
+                    showAdminMessage("Please enter a search term (Email, SPL ID, or UID).", "error");
+                    return;
+                }
+                
+                let userFoundData = null;
 
-            userFoundData = await searchUserByUid(searchTerm);
+                userFoundData = await searchUserByUid(searchTerm);
 
-            if (!userFoundData && searchTerm.includes('@')) { 
-                userFoundData = await searchUserByEmail(searchTerm);
-            }
+                if (!userFoundData && searchTerm.includes('@')) { 
+                    userFoundData = await searchUserByEmail(searchTerm);
+                }
 
-            if (!userFoundData && /^\d+$/.test(searchTerm)) {
-                userFoundData = await searchUserBySplManagerId(searchTerm);
-            }
-            
-            if (userFoundData) {
-                foundUserForAdminEdit = userFoundData; 
-                adminUserUidElem.textContent = userFoundData.id;
-                adminEditEmailInput.value = userFoundData.email || '';
-                adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
-                adminSearchResults.style.display = 'flex'; 
-                showAdminMessage("User found successfully.", "success");
-            } else {
-                showAdminMessage("User not found. Please check the search term or if the user exists.", "error");
-                adminSearchResults.style.display = 'none'; 
-            }
-        });
+                if (!userFoundData && /^\d+$/.test(searchTerm)) {
+                    userFoundData = await searchUserBySplManagerId(searchTerm);
+                }
+                
+                if (userFoundData) {
+                    foundUserForAdminEdit = userFoundData; 
+                    if (adminUserUidElem) adminUserUidElem.textContent = userFoundData.id;
+                    if (adminEditEmailInput) adminEditEmailInput.value = userFoundData.email || '';
+                    if (adminEditSplManagerIdInput) adminEditSplManagerIdInput.value = userFoundData.splManagerId || '';
+                    if (adminSearchResults) adminSearchResults.style.display = 'flex'; 
+                    showAdminMessage("User found successfully.", "success");
+                } else {
+                    showAdminMessage("User not found. Please check the search term or if the user exists.", "error");
+                    if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                }
+            });
+        }
 
-        adminSearchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault(); 
-                adminSearchButton.click(); 
-            }
-        });
+        if (adminSearchInput) {
+            adminSearchInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); 
+                    if (adminSearchButton) adminSearchButton.click(); 
+                }
+            });
+        }
 
         // Add Enter key listener for Login fields
-        loginEmailInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                loginButton.click();
-            }
-        });
-
-        loginPasswordInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                loginButton.click();
-            }
-        });
-
-
-        adminUpdateUserButton.addEventListener('click', async () => {
-            if (!foundUserForAdminEdit) {
-                showAdminMessage("No user selected for update. Please search for a user first.", "error");
-                return;
-            }
-
-            showAdminMessage("Updating user...", "info");
-
-            const newEmail = adminEditEmailInput.value.trim();
-            const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim());
-            const userToUpdateUid = foundUserForAdminEdit.id;
-
-            if (!newEmail || !newSplManagerId) {
-                showAdminMessage("Email and SPL Manager ID cannot be empty.", "error");
-                return;
-            }
-            if (!/^\d+$/.test(newSplManagerId)) {
-                showAdminMessage("SPL Manager ID must be a valid number.", "error");
-                return;
-            }
-
-            try {
-                const userDocRef = doc(db, "users", userToUpdateUid);
-                await updateDoc(userDocRef, {
-                    email: newEmail,
-                    splManagerId: newSplManagerId 
-                });
-                showAdminMessage("User updated successfully!", "success");
-                adminSearchInput.value = userToUpdateUid; 
-                await adminSearchButton.click(); 
-            } catch (error) {
-                console.error("Admin update failed:", error);
-                let friendlyMessage = "Failed to update user. Please try again.";
-                if (error.code === 'permission-denied') {
-                    friendlyMessage = "Permission denied. You might not have the necessary admin rights or the security rules prevented the update.";
-                } else if (error.code === 'invalid-argument') {
-                    friendlyMessage = "Invalid data provided. Please check the email format or SPL Manager ID.";
+        if (loginEmailInput) {
+            loginEmailInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (loginButton) loginButton.click();
                 }
-                showAdminMessage(`Update failed: ${friendlyMessage} Details: ${error.message}`, "error");
-            }
-        });
+            });
+        }
+
+        if (loginPasswordInput) {
+            loginPasswordInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    if (loginButton) loginButton.click();
+                }
+            });
+        }
+
+
+        if (adminUpdateUserButton) {
+            adminUpdateUserButton.addEventListener('click', async () => {
+                if (!foundUserForAdminEdit) {
+                    showAdminMessage("No user selected for update. Please search for a user first.", "error");
+                    return;
+                }
+
+                showAdminMessage("Updating user...", "info");
+
+                const newEmail = adminEditEmailInput.value.trim();
+                const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim());
+                const userToUpdateUid = foundUserForAdminEdit.id;
+
+                if (!newEmail || !newSplManagerId) {
+                    showAdminMessage("Email and SPL Manager ID cannot be empty.", "error");
+                    return;
+                }
+                if (!/^\d+$/.test(newSplManagerId)) {
+                    showAdminMessage("SPL Manager ID must be a valid number.", "error");
+                    return;
+                }
+
+                try {
+                    const userDocRef = doc(db, "users", userToUpdateUid);
+                    await updateDoc(userDocRef, {
+                        email: newEmail,
+                        splManagerId: newSplManagerId 
+                    });
+                    showAdminMessage("User updated successfully!", "success");
+                    if (adminSearchInput) adminSearchInput.value = userToUpdateUid; 
+                    if (adminSearchButton) await adminSearchButton.click(); 
+                } catch (error) {
+                    console.error("Admin update failed:", error);
+                    let friendlyMessage = "Failed to update user. Please try again.";
+                    if (error.code === 'permission-denied') {
+                        friendlyMessage = "Permission denied. You might not have the necessary admin rights or the security rules prevented the update.";
+                    } else if (error.code === 'invalid-argument') {
+                        friendlyMessage = "Invalid data provided. Please check the email format or SPL Manager ID.";
+                    }
+                    showAdminMessage(`Update failed: ${friendlyMessage} Details: ${error.message}`, "error");
+                }
+            });
+        }
 
         // Admin Dashboard Sub-Navigation Logic
-        adminUsersButton.addEventListener('click', () => {
-            adminSearchSection.style.display = 'flex'; // Show search input/button
-            adminSearchResults.style.display = 'none'; // Hide results until search is run
-            adminMessage.style.display = 'none'; // Clear previous messages
-            dataUploadSection.style.display = 'none'; // Hide data upload section
-            currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
-            overallFDRSection.style.display = 'none'; // Hide all FDR sections
-            homeFDRSection.style.display = 'none';
-            awayFDRSection.style.display = 'none';
-            showAdminMessage("Enter user details to search.", "info");
-        });
+        if (adminUsersButton) {
+            adminUsersButton.addEventListener('click', () => {
+                if (adminSearchSection) adminSearchSection.style.display = 'flex'; 
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                if (adminMessage) adminMessage.style.display = 'none'; 
+                if (dataUploadSection) dataUploadSection.style.display = 'none'; 
+                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
+                if (overallFDRSection) overallFDRSection.style.display = 'none'; 
+                if (homeFDRSection) homeFDRSection.style.display = 'none';
+                if (awayFDRSection) awayFDRSection.style.display = 'none';
+                showAdminMessage("Enter user details to search.", "info");
+            });
+        }
 
-        adminDataButton.addEventListener('click', () => {
-            adminSearchSection.style.display = 'none'; // Hide search input/button
-            adminSearchResults.style.display = 'none'; // Hide results
-            adminMessage.style.display = 'none'; // Clear previous messages
-            dataUploadSection.style.display = 'block'; // Show the data upload section
-            currentRankingsDisplay.style.display = 'block'; // Show current rankings display
-            showExcelUploadMessage("Upload your league table Excel file here.", "info");
-            fetchAndDisplayCurrentRankings(); // Fetch and display existing rankings
-        });
+        if (adminDataButton) {
+            adminDataButton.addEventListener('click', () => {
+                if (adminSearchSection) adminSearchSection.style.display = 'none'; 
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                if (adminMessage) adminMessage.style.display = 'none'; 
+                if (dataUploadSection) dataUploadSection.style.display = 'block'; 
+                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'block'; 
+                showExcelUploadMessage("Upload your league table Excel file here.", "info");
+                fetchAndDisplayCurrentRankings(); 
+            });
+        }
 
 
         // --- Excel File Upload Logic (NEW) ---
-        excelFileUploadInput.addEventListener('change', async (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                showExcelUploadMessage('No file selected.', 'error');
-                return;
-            }
+        if (excelFileUploadInput) {
+            excelFileUploadInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    showExcelUploadMessage('No file selected.', "error");
+                    return;
+                }
 
-            // Check window.XLSX directly here (it's loaded from CDN in HTML)
-            if (typeof window.XLSX === 'undefined') {
-                showExcelUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', 'error');
-                console.error("window.XLSX is not defined. Excel library not loaded.");
-                return;
-            }
+                if (typeof window.XLSX === 'undefined') {
+                    showExcelUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', "error");
+                    console.error("window.XLSX is not defined. Excel library not loaded.");
+                    return;
+                }
 
-            showExcelUploadMessage('Uploading and processing Excel file...', 'info');
+                showExcelUploadMessage('Uploading and processing Excel file...', "info");
 
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' }); // Use XLSX directly
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' }); 
 
-                    const sheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[sheetName];
-                    const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Use XLSX directly
+                        const sheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[sheetName];
+                        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); 
 
-                    if (jsonRows.length < 2) {
-                        showExcelUploadMessage('Excel file is empty or missing data rows.', 'error');
-                        return;
-                    }
-
-                    const headerRow = jsonRows[0].map(h => String(h).trim().toLowerCase());
-                    
-                    const selectedRankingType = rankingTypeSelect.value; 
-                    let expectedHeaders;
-                    let fdrColumnName1, fdrColumnName2; // For overall
-                    let fdrColumnNameSingle; // For home/away
-
-                    if (selectedRankingType === 'overall') {
-                        expectedHeaders = {
-                            rank: ['rank', 'ranking number'],
-                            team: ['team', 'team name'],
-                            fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
-                            fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
-                        };
-                        fdrColumnName1 = 'fdrHome';
-                        fdrColumnName2 = 'fdrAway';
-                    } else if (selectedRankingType === 'home') {
-                        expectedHeaders = {
-                            rank: ['rank', 'ranking number'],
-                            team: ['team', 'team name'],
-                            fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] // Home sheet has FDR Away
-                        };
-                        fdrColumnNameSingle = 'fdrAway';
-                    } else if (selectedRankingType === 'away') {
-                        expectedHeaders = {
-                            rank: ['rank', 'ranking number'],
-                            team: ['team', 'team name'],
-                            fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] // Away sheet has FDR Home
-                        };
-                        fdrColumnNameSingle = 'fdrHome';
-                    } else {
-                        showExcelUploadMessage('Invalid ranking type selected.', 'error');
-                        return;
-                    }
-
-                    const getColumnIndex = (headers, aliases) => {
-                        for (const alias of aliases) {
-                            const index = headers.indexOf(alias);
-                            if (index !== -1) return index;
-                        }
-                        return -1;
-                    };
-
-                    const rankIndex = getColumnIndex(headerRow, expectedHeaders.rank);
-                    const teamIndex = getColumnIndex(headerRow, expectedHeaders.team);
-
-                    let fdrCol1Index = -1;
-                    let fdrCol2Index = -1;
-                    let fdrColSingleIndex = -1;
-
-                    if (selectedRankingType === 'overall') {
-                        fdrCol1Index = getColumnIndex(headerRow, expectedHeaders.fdrHome);
-                        fdrCol2Index = getColumnIndex(headerRow, expectedHeaders.fdrAway);
-                        if (rankIndex === -1 || teamIndex === -1 || fdrCol1Index === -1 || fdrCol2Index === -1) {
-                            showExcelUploadMessage('Invalid Excel headers for Overall Ranking. Expected "Rank", "Team", "FDR Home", and "FDR Away".', 'error');
+                        if (jsonRows.length < 2) {
+                            showExcelUploadMessage('Excel file is empty or missing data rows.', "error");
                             return;
                         }
-                    } else {
-                        fdrColSingleIndex = getColumnIndex(headerRow, expectedHeaders[fdrColumnNameSingle]);
-                        if (rankIndex === -1 || teamIndex === -1 || fdrColSingleIndex === -1) {
-                            showExcelUploadMessage(`Invalid Excel headers for ${selectedRankingType.charAt(0).toUpperCase() + selectedRankingType.slice(1)} Ranking. Expected "Rank", "Team", and "FDR ${fdrColumnNameSingle === 'fdrHome' ? 'Home' : 'Away'}".`, 'error');
-                            return;
-                        }
-                    }
 
-                    const parsedRankings = [];
-                    for (let i = 1; i < jsonRows.length; i++) {
-                        const row = jsonRows[i];
-                        const rank = parseInt(row[rankIndex], 10);
-                        const team = String(row[teamIndex]).trim();
-                        let fdrValue1, fdrValue2;
-
-                        let isValid = false;
+                        const headerRow = jsonRows[0].map(h => String(h).trim().toLowerCase());
+                        
+                        const selectedRankingType = rankingTypeSelect.value; 
+                        let expectedHeaders;
+                        let fdrColumnName1, fdrColumnName2; 
+                        let fdrColumnNameSingle; 
 
                         if (selectedRankingType === 'overall') {
-                            fdrValue1 = parseInt(row[fdrCol1Index], 10);
-                            fdrValue2 = parseInt(row[fdrCol2Index], 10);
-                            if (!isNaN(rank) && team && !isNaN(fdrValue1) && !isNaN(fdrValue2) &&
-                                fdrValue1 >=1 && fdrValue1 <= 7 && fdrValue2 >= 1 && fdrValue2 <= 7) {
-                                parsedRankings.push({ rank, team, fdrHome: fdrValue1, fdrAway: fdrValue2 });
-                                isValid = true;
+                            expectedHeaders = {
+                                rank: ['rank', 'ranking number'],
+                                team: ['team', 'team name'],
+                                fdrHome: ['fdr home', 'home fdr', 'fdr rating home'], 
+                                fdrAway: ['fdr away', 'away fdr', 'fdr rating away']  
+                            };
+                            fdrColumnName1 = 'fdrHome';
+                            fdrColumnName2 = 'fdrAway';
+                        } else if (selectedRankingType === 'home') {
+                            expectedHeaders = {
+                                rank: ['rank', 'ranking number'],
+                                team: ['team', 'team name'],
+                                fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] 
+                            };
+                            fdrColumnNameSingle = 'fdrAway';
+                        } else if (selectedRankingType === 'away') {
+                            expectedHeaders = {
+                                rank: ['rank', 'ranking number'],
+                                team: ['team', 'team name'],
+                                fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] 
+                            };
+                            fdrColumnNameSingle = 'fdrHome';
+                        } else {
+                            showExcelUploadMessage('Invalid ranking type selected.', "error");
+                            return;
+                        }
+
+                        const getColumnIndex = (headers, aliases) => {
+                            for (const alias of aliases) {
+                                const index = headers.indexOf(alias);
+                                if (index !== -1) return index;
+                            }
+                            return -1;
+                        };
+
+                        const rankIndex = getColumnIndex(headerRow, expectedHeaders.rank);
+                        const teamIndex = getColumnIndex(headerRow, expectedHeaders.team);
+
+                        let fdrCol1Index = -1;
+                        let fdrCol2Index = -1;
+                        let fdrColSingleIndex = -1;
+
+                        if (selectedRankingType === 'overall') {
+                            fdrCol1Index = getColumnIndex(headerRow, expectedHeaders.fdrHome);
+                            fdrCol2Index = getColumnIndex(headerRow, expectedHeaders.fdrAway);
+                            if (rankIndex === -1 || teamIndex === -1 || fdrCol1Index === -1 || fdrCol2Index === -1) {
+                                showExcelUploadMessage('Invalid Excel headers for Overall Ranking. Expected "Rank", "Team", "FDR Home", and "FDR Away".', "error");
+                                return;
                             }
                         } else {
-                            fdrValue1 = parseInt(row[fdrColSingleIndex], 10);
-                            if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
-                                fdrValue1 >=1 && fdrValue1 <= 6) { // FDR 1-6 for Home/Away
-                                if (selectedRankingType === 'home') {
-                                    parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); // Store as fdrAway for Home rankings
-                                } else if (selectedRankingType === 'away') {
-                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); // Store as fdrHome for Away rankings
-                                }
-                                isValid = true;
+                            fdrColSingleIndex = getColumnIndex(headerRow, expectedHeaders[fdrColumnNameSingle]);
+                            if (rankIndex === -1 || teamIndex === -1 || fdrColSingleIndex === -1) {
+                                showExcelUploadMessage(`Invalid Excel headers for ${selectedRankingType.charAt(0).toUpperCase() + selectedRankingType.slice(1)} Ranking. Expected "Rank", "Team", and "FDR ${fdrColumnNameSingle === 'fdrHome' ? 'Home' : 'Away'}".`, "error");
+                                return;
                             }
                         }
 
-                        if (!isValid) {
-                            console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7 for Overall, 1-6 for Home/Away): Row Data:`, row);
+                        const parsedRankings = [];
+                        for (let i = 1; i < jsonRows.length; i++) {
+                            const row = jsonRows[i];
+                            const rank = parseInt(row[rankIndex], 10);
+                            const team = String(row[teamIndex]).trim();
+                            let fdrValue1, fdrValue2;
+
+                            let isValid = false;
+
+                            if (selectedRankingType === 'overall') {
+                                fdrValue1 = parseInt(row[fdrCol1Index], 10);
+                                fdrValue2 = parseInt(row[fdrCol2Index], 10);
+                                if (!isNaN(rank) && team && !isNaN(fdrValue1) && !isNaN(fdrValue2) &&
+                                    fdrValue1 >=1 && fdrValue1 <= 7 && fdrValue2 >= 1 && fdrValue2 <= 7) {
+                                    parsedRankings.push({ rank, team, fdrHome: fdrValue1, fdrAway: fdrValue2 });
+                                    isValid = true;
+                                }
+                            } else {
+                                fdrValue1 = parseInt(row[fdrColSingleIndex], 10);
+                                if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
+                                    fdrValue1 >=1 && fdrValue1 <= 6) { 
+                                    if (selectedRankingType === 'home') {
+                                        parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); 
+                                    } else if (selectedRankingType === 'away') {
+                                        parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); 
+                                    }
+                                    isValid = true;
+                                }
+                            }
+
+                            if (!isValid) {
+                                console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-7 for Overall, 1-6 for Home/Away): Row Data:`, row);
+                            }
                         }
+
+                        if (parsedRankings.length === 0) {
+                            showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are in the correct range (1-7 for Overall, 1-6 for Home/Away).', "error");
+                            return;
+                        }
+
+                        const seasonId = "2025-2026"; 
+                        const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
+
+                        let existingData = {};
+                        const docSnap = await getDoc(splRankingsDocRef);
+                        if (docSnap.exists()) {
+                            existingData = docSnap.data();
+                        }
+
+                        const newData = {
+                            ...existingData,
+                            season: seasonId,
+                            lastUpdated: serverTimestamp(),
+                            [selectedRankingType]: parsedRankings 
+                        };
+
+                        await setDoc(splRankingsDocRef, newData, { merge: true });
+                        showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, "success");
+                        event.target.value = null; 
+                        fetchAndDisplayCurrentRankings(); 
+                    } catch (error) {
+                        console.error('Error processing Excel file or uploading to Firestore:', error);
+                        showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, "error");
                     }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
 
-                    if (parsedRankings.length === 0) {
-                        showExcelUploadMessage('No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are in the correct range (1-7 for Overall, 1-6 for Home/Away).', 'error');
-                        return;
-                    }
-
-                    const seasonId = "2025-2026"; 
-                    const splRankingsDocRef = doc(db, 'splRankings', seasonId); 
-
-                    let existingData = {};
-                    const docSnap = await getDoc(splRankingsDocRef);
-                    if (docSnap.exists()) {
-                        existingData = docSnap.data();
-                    }
-
-                    const newData = {
-                        ...existingData,
-                        season: seasonId,
-                        lastUpdated: serverTimestamp(),
-                        [selectedRankingType]: parsedRankings 
-                    };
-
-                    await setDoc(splRankingsDocRef, newData, { merge: true });
-                    showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, 'success');
-                    event.target.value = null; // Clear file input
-                    fetchAndDisplayCurrentRankings(); // Refresh display after upload
-                } catch (error) {
-                    console.error('Error processing Excel file or uploading to Firestore:', error);
-                    showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, 'error');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        });
-
-        // --- Fetch and Display Current Rankings from Firestore (NEW) ---
+        // --- Fetch and Display Current Rankings from Firestore (Admin Dashboard) ---
         async function fetchAndDisplayCurrentRankings() {
-            showExcelUploadMessage('Fetching current rankings...', 'info');
+            showExcelUploadMessage('Fetching current rankings...', "info");
             // Clear all grids and hide sections initially
-            overallFDRGrid.innerHTML = '';
-            homeFDRGrid.innerHTML = '';
-            awayFDRGrid.innerHTML = '';
-            overallFDRSection.style.display = 'none';
-            homeFDRSection.style.display = 'none';
-            awayFDRSection.style.display = 'none';
+            if (overallFDRGrid) overallFDRGrid.innerHTML = '';
+            if (homeFDRGrid) homeFDRGrid.innerHTML = '';
+            if (awayFDRGrid) awayFDRGrid.innerHTML = '';
+            if (overallFDRSection) overallFDRSection.style.display = 'none';
+            if (homeFDRSection) homeFDRSection.style.display = 'none';
+            if (awayFDRSection) awayFDRSection.style.display = 'none';
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -3556,7 +2697,7 @@
                 const docSnap = await getDoc(splRankingsDocRef); 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Current Rankings from Firestore:", data);
+                    console.log("Current Rankings from Firestore (Admin):", data);
 
                     // --- Render Overall Rankings ---
                     const overallRankings = data.overall;
@@ -3571,16 +2712,16 @@
                             const awayItem = document.createElement('div');
                             awayItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
                             awayItem.innerHTML = `${item.team} ✈️`;
-                            overallFDRGrid.appendChild(awayItem);
+                            if (overallFDRGrid) overallFDRGrid.appendChild(awayItem);
 
                             const homeItem = document.createElement('div');
                             homeItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
                             homeItem.innerHTML = `${item.team} 🏠`;
-                            overallFDRGrid.appendChild(homeItem);
+                            if (overallFDRGrid) overallFDRGrid.appendChild(homeItem);
                         });
-                        overallFDRSection.style.display = 'block';
+                        if (overallFDRSection) overallFDRSection.style.display = 'block';
                     } else {
-                        overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
+                        if (overallFDRGrid) overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
                     }
 
                     // --- Render Home Rankings (Single Column) ---
@@ -3598,12 +2739,12 @@
                             
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrAway}`;
-                            teamItem.innerHTML = `${teamName} ✈️`; // Changed to airplane for Home rankings
-                            homeFDRGrid.appendChild(teamItem);
+                            teamItem.innerHTML = `${teamName} ✈️`; 
+                            if (homeFDRGrid) homeFDRGrid.appendChild(teamItem);
                         });
-                        homeFDRSection.style.display = 'block';
+                        if (homeFDRSection) homeFDRSection.style.display = 'block';
                     } else {
-                        homeFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
+                        if (homeFDRGrid) homeFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
                     }
 
                     // --- Render Away Rankings (Single Column) ---
@@ -3621,30 +2762,46 @@
 
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrHome}`;
-                            teamItem.innerHTML = `${teamName} 🏠`; // Changed to house for Away rankings
-                            awayFDRGrid.appendChild(teamItem);
+                            teamItem.innerHTML = `${teamName} 🏠`; 
+                            if (awayFDRGrid) awayFDRGrid.appendChild(teamItem);
                         });
-                        awayFDRSection.style.display = 'block';
+                        if (awayFDRSection) awayFDRSection.style.display = 'block';
                     } else {
-                        awayFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
+                        if (awayFDRGrid) awayFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
                     }
                     
-                    showExcelUploadMessage('Current rankings loaded.', 'success');
+                    showExcelUploadMessage('Current rankings loaded.', "success");
                 } else {
-                    overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
-                    showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', 'info');
+                    if (overallFDRGrid) overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
+                    showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', "info");
                 }
             } catch (error) {
-                console.error("Error fetching current rankings for display:", error);
-                showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, 'error');
-                overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
+                console.error("Error fetching current rankings for display (Admin):", error);
+                showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, "error");
+                if (overallFDRGrid) overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
             }
         }
 
 
-        // --- Initial Load & Theme ---
+        // --- Initial Load & Theme & Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DEBUG: DOMContentLoaded fired.");
+
+            // Explicitly set initial display state for main sections based on current auth state
+            // This is crucial to prevent a blank page before onAuthStateChanged fully resolves
+            if (auth.currentUser) { 
+                console.log("DEBUG: DOMContentLoaded: User already logged in, showing loggedInContent.");
+                if (loggedInContent) loggedInContent.style.display = 'block';
+                if (authSection) authSection.style.display = 'none';
+            } else { 
+                console.log("DEBUG: DOMContentLoaded: No user logged in, showing authSection.");
+                if (authSection) authSection.style.display = 'block';
+                if (loginForm) loginForm.style.display = 'block';
+                if (signupForm) signupForm.style.display = 'none';
+                if (loggedInContent) loggedInContent.style.display = 'none';
+            }
+            if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure hidden initially
+
             if (darkModeToggle) {
                 console.log("DEBUG: darkModeToggle element found.");
                 const savedTheme = localStorage.getItem('theme');
@@ -3678,17 +2835,18 @@
             }
 
             // --- Menu Item Click Listeners ---
-            if (menuAnalyzeMyTeam) {
-                menuAnalyzeMyTeam.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showContentSection('analyzerReport');
-                    sidebarMenu.classList.remove('open'); // Close menu after click
-                    overlay.style.display = 'none';
-                    if (currentManagerId && !isAnalyzerReportDataFetched) {
-                        fetchAndDisplaySPLReport(currentManagerId);
-                    }
-                });
-            }
+            // Removed event listener for menuAnalyzeMyTeam
+            // if (menuAnalyzeMyTeam) {
+            //     menuAnalyzeMyTeam.addEventListener('click', (e) => {
+            //         e.preventDefault();
+            //         showContentSection('analyzerReport');
+            //         sidebarMenu.classList.remove('open'); // Close menu after click
+            //         overlay.style.display = 'none';
+            //         if (currentManagerId && !isAnalyzerReportDataFetched) {
+            //             fetchAndDisplaySPLReport(currentManagerId);
+            //         }
+            //     });
+            // }
             if (menuMyControlRoom) {
                 menuMyControlRoom.addEventListener('click', (e) => {
                     e.preventDefault();
