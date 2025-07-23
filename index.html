@@ -262,7 +262,7 @@
         #signupForm button:hover {
             background-color: #0056b3; 
             transform: translateY(-1px); 
-            box-shadow: 0 44px 8px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
         }
         
         /* Centering the "Don't have an account?" and "Already have an account?" texts */
@@ -411,7 +411,7 @@
         .red-button:hover {
             background-color: #c82333 !important; /* Darker red on hover */
             transform: translateY(-1px) !important;
-            box-shadow: 0 44px 8px rgba(220, 53, 69, 0.25);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.25);
         }
         body.dark-mode .red-button {
             background-color: #f44336 !important; /* Brighter red in dark mode */
@@ -859,7 +859,29 @@
         .fdr-single-column-grid > :last-child {
             border-bottom: none;
         }
+        /* Style for the upload button label to make it look like a button */
+        .upload-button-label {
+            display: inline-block;
+            background-color: var(--spl-primary-accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
 
+        .upload-button-label:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .upload-button-label input[type="file"] {
+            display: none; /* Hide the actual file input */
+        }
         /* Responsive adjustments for the new grid */
         @media (max-width: 480px) {
             .fdr-grid-item {
@@ -1130,7 +1152,6 @@
 
         // --- GLOBAL FLAGS / VARIABLES ---
         let isProcessingAuth = false; 
-        // Analyzer-specific variables are correctly removed.
         
         let currentManagerId = null; 
         let isAdminUser = false; 
@@ -1169,7 +1190,6 @@
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
         const sidebarTeamName = document.getElementById('sidebarTeamName'); 
-        // The menuAnalyzeMyTeam element is still referenced but its click listener will be removed.
         const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); 
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
@@ -1178,7 +1198,7 @@
         const logoutButton = document.getElementById('logoutButton'); 
         
         // Content areas to toggle
-        const analyzerReportContent = document.getElementById('analyzerReportContent'); // Kept for display none
+        const analyzerReportContent = document.getElementById('analyzerReportContent'); 
         const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
@@ -1696,7 +1716,7 @@
                     if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
                     if (overallFDRSection) overallFDRSection.style.display = 'none'; 
                     if (homeFDRSection) homeFDRSection.style.display = 'none';
-                    if (awayFDRSection) awayFdrSection.style.display = 'none';
+                    if (awayFDRSection) awayFDRSection.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -1893,7 +1913,7 @@
                 if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
                 if (overallFDRSection) overallFDRSection.style.display = 'none'; 
                 if (homeFDRSection) homeFDRSection.style.display = 'none';
-                if (awayFDRSection) awayFdrSection.style.display = 'none';
+                if (awayFDRSection) awayFDRSection.style.display = 'none';
                 showAdminMessage("Enter user details to search.", "info");
             });
         }
@@ -2086,7 +2106,7 @@
             if (awayFDRGrid) awayFDRGrid.innerHTML = '';
             if (overallFDRSection) overallFDRSection.style.display = 'none';
             if (homeFDRSection) homeFDRSection.style.display = 'none';
-            if (awayFDRSection) awayFdrSection.style.display = 'none';
+            if (awayFDRSection) awayFDRSection.style.display = 'none';
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -2095,7 +2115,6 @@
                 const docSnap = await getDoc(splRankingsDocRef); 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Current Rankings from Firestore (Admin):", data);
 
                     // --- Render Overall Rankings ---
                     const overallRankings = data.overall;
