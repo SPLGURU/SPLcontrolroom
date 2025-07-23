@@ -95,8 +95,8 @@
             gap: 10px;
             color: var(--spl-text-dark); /* Ensure label text changes with theme */
             font-size: 0.95em;
-            width: 100%; /* Take full width to help centering */
-            max-width: 1200px; /* Align with container max width */
+            width: 100%;
+            max-width: 1200px;
         }
         .theme-switch {
             position: relative;
@@ -151,13 +151,13 @@
         }
         /* Adjust switch background color for dark mode */
         body.dark-mode .theme-switch .slider {
-            background-color: #555; /* Darker grey when off in dark mode */
+            background-color: #555;
         }
         body.dark-mode input:checked + .slider {
-            background-color: var(--spl-primary-accent); /* Brighter blue when on in dark mode */
+            background-color: var(--spl-primary-accent);
         }
         body.dark-mode .theme-label {
-            color: var(--spl-text-dark); /* Ensure label color changes correctly in dark mode */
+            color: var(--spl-text-dark);
         }
 
 
@@ -170,7 +170,7 @@
             width: 100%;
             max-width: 1200px;
             box-sizing: border-box;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         h1, h2, h3 {
@@ -179,10 +179,9 @@
             text-align: center;
             margin-top: 0;
             margin-bottom: 20px;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
         
-        /* The main input-section class now primarily styles the wrapper around the forms */
         .input-section {
             display: flex;
             flex-direction: column;
@@ -201,7 +200,7 @@
 
         #loginForm, #signupForm {
             display: flex;
-            flex-direction: column; /* Stack children vertically */
+            flex-direction: column;
             align-items: center; 
             gap: 15px; 
             width: 100%; 
@@ -211,12 +210,12 @@
             box-sizing: border-box; 
         }
 
-        /* Input fields within login/signup forms - Design and explicit centering */
+        /* Input fields within login/signup forms */
         #loginForm input[type="email"],
         #loginForm input[type="password"],
         #signupForm input[type="email"],
         #signupForm input[type="password"],
-        #signupForm input[type="text"] { /* For Manager ID */
+        #signupForm input[type="text"] {
             display: block; 
             width: 100%; 
             max-width: 300px; 
@@ -240,7 +239,7 @@
             margin: 0;
         }
 
-        /* Buttons within login/signup forms - Design and explicit centering */
+        /* Buttons within login/signup forms */
         #loginForm button,
         #signupForm button {
             display: block; 
@@ -295,7 +294,7 @@
             font-weight: bold;
             color: var(--spl-text-medium);
             font-size: 1.1em;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
         
         /* General input and button styles (for non-auth forms, if any) */
@@ -304,7 +303,7 @@
         .input-section input[type="password"] {
             padding: 12px 15px;
             border: 1px solid var(--spl-border-light);
-            border-radius: 8px; /* Default for other inputs */
+            border-radius: 8px;
             font-size: 1em;
             box-sizing: border-box;
             text-align: center;
@@ -313,18 +312,18 @@
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
-        .input-section button { /* Base style for all buttons in input section (for non-auth forms) */
+        .input-section button {
             background-color: var(--spl-primary-accent);
             color: white;
             padding: 12px 25px;
             border: none;
-            border-radius: 8px; /* Default for other buttons */
+            border-radius: 8px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
             display: block;
-            margin: 0 auto; /* Center the button */
+            margin: 0 auto;
         }
         .input-section button:hover {
             background-color: #0056b3;
@@ -337,84 +336,84 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 1001; /* Above other content */
+            z-index: 1001;
             cursor: pointer;
-            font-size: 2em; /* Size of the hamburger icon */
-            color: var(--spl-primary-accent); /* Icon color */
+            font-size: 2em;
+            color: var(--spl-primary-accent);
             transition: color 0.3s ease;
-            display: none; /* Hidden by default, shown when logged in */
+            display: none;
         }
         body.dark-mode #menuToggle {
-            color: #fff; /* White icon in dark mode */
+            color: #fff;
         }
 
         #sidebarMenu {
             position: fixed;
             top: 0;
-            left: -300px; /* Hidden off-screen */
-            width: 280px; /* Width of the sidebar */
+            left: -300px;
+            width: 280px;
             height: 100%;
-            background-color: var(--spl-container-bg); /* Match container background */
+            background-color: var(--spl-container-bg);
             box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             transition: left 0.3s ease-in-out;
-            padding-top: 20px; /* Initial padding at the top */
+            padding-top: 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Space between menu items */
-            box-sizing: border-box; /* Include padding in width */
+            gap: 10px;
+            box-sizing: border-box;
         }
         body.dark-mode #sidebarMenu {
-            background-color: var(--spl-container-bg); /* Match dark container background */
+            background-color: var(--spl-container-bg);
         }
 
         #sidebarMenu.open {
-            left: 0; /* Slide in */
+            left: 0;
         }
 
         #sidebarMenu a {
             padding: 15px 25px;
             text-decoration: none;
-            color: var(--spl-text-dark); /* Text color for menu items */
+            color: var(--spl-text-dark);
             font-size: 1.1em;
             display: block;
             transition: background-color 0.2s ease, color 0.2s ease;
-            border-left: 5px solid transparent; /* For active indicator */
+            border-left: 5px solid transparent;
         }
         #sidebarMenu a:hover {
-            background-color: var(--spl-table-row-hover); /* Hover state */
+            background-color: var(--spl-table-row-hover);
             color: var(--spl-primary-accent);
         }
         body.dark-mode #sidebarMenu a {
-            color: var(--spl-text-dark); /* Light text for dark mode menu */
+            color: var(--spl-text-dark);
         }
         body.dark-mode #sidebarMenu a:hover {
-            background-color: var(--spl-table-row-hover); /* Dark hover */
-            color: var(--spl-primary-accent); /* Light accent hover */
+            background-color: var(--spl-table-row-hover);
+            color: var(--spl-primary-accent);
         }
 
         /* Red button style for Logout */
         .red-button {
-            background-color: #DC3545 !important; /* Red */
+            background-color: #DC3545 !important;
             color: white !important;
-            padding: 10px 20px !important; /* Match other buttons */
+            padding: 10px 20px !important;
             border: none !important;
             border-radius: 4px !important;
             font-size: 1.1em !important;
             cursor: pointer !important;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease !important;
             box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
-            display: block; /* Make it a block element to take full width of container */
-            width: calc(100% - 50px); /* Adjusted width to account for sidebar padding (25px left + 25px right) */
-            margin: 10px auto; /* Center within sidebar */
+            display: block;
+            width: calc(100% - 50px);
+            margin: 10px auto;
         }
         .red-button:hover {
-            background-color: #c82333 !important; /* Darker red on hover */
+            background-color: #c82333 !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 4px 8px rgba(220, 53, 69, 0.25);
         }
         body.dark-mode .red-button {
-            background-color: #f44336 !important; /* Brighter red in dark mode */
+            background-color: #f44336 !important;
             box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2) !important;
         }
         body.dark-mode .red-button:hover {
@@ -423,41 +422,41 @@
 
         /* Sidebar Header for Team Name */
         #sidebarHeader {
-            padding: 15px 25px 10px; /* Top padding, matches menu item horizontal padding */
+            padding: 15px 25px 10px;
             font-family: 'Oswald', sans-serif;
-            color: var(--spl-primary-accent); /* Color for the header */
+            color: var(--spl-primary-accent);
             font-size: 1.2em;
             font-weight: bold;
-            border-bottom: 1px solid var(--spl-border-light); /* Separator */
+            border-bottom: 1px solid var(--spl-border-light);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            justify-content: center; /* Center content within header */
+            justify-content: center;
             text-align: center;
         }
         body.dark-mode #sidebarHeader {
-            color: var(--spl-text-dark); /* Light text for dark mode */
+            color: var(--spl-text-dark);
             border-bottom-color: var(--spl-border-light);
         }
 
         #sidebarTeamName {
-            color: var(--spl-primary-accent); /* Accent color for the actual team name */
+            color: var(--spl-primary-accent);
             display: block; 
             margin-top: 5px; 
         }
         body.dark-mode #sidebarTeamName {
-            color: #FFD700; /* Gold for team name in dark mode */
+            color: #FFD700;
         }
 
         /* Manager ID Text in Sidebar */
         #sidebarManagerIdText {
-            padding: 10px 25px; /* Match menu item padding */
+            padding: 10px 25px;
             font-size: 0.95em;
             color: var(--spl-text-medium);
-            margin-top: 10px; /* Space from menu items above */
+            margin-top: 10px;
             margin-bottom: 10px;
-            text-align: center; /* Center the ID text */
-            border-top: 1px solid var(--spl-border-light); /* Separator */
+            text-align: center;
+            border-top: 1px solid var(--spl-border-light);
             padding-top: 15px;
         }
         body.dark-mode #sidebarManagerIdText {
@@ -482,9 +481,9 @@
 
         /* --- Admin Dashboard Specific Styles --- */
         #adminDashboardContent {
-            display: flex; /* Default display for JS to toggle */
+            display: flex;
             flex-direction: column;
-            align-items: center; /* Center horizontally */
+            align-items: center;
             gap: 20px;
             padding: 20px;
             margin-top: 20px;
@@ -492,11 +491,11 @@
             background-color: var(--spl-container-bg); 
             box-shadow: 0 4px 8px var(--spl-shadow);
             width: 100%;
-            max-width: 600px; /* Limits width and centers with margin: auto */
+            max-width: 600px;
             box-sizing: border-box;
-            min-height: 200px; /* Ensure it has some height even if content is tiny */
-            margin-left: auto; /* Center the content */
-            margin-right: auto; /* Center the content */
+            min-height: 200px;
+            margin-left: auto;
+            margin-right: auto;
         }
         body.dark-mode #adminDashboardContent {
             background-color: var(--spl-container-bg);
@@ -577,12 +576,12 @@
             border-radius: 6px;
             margin-top: 10px;
             font-weight: bold;
-            background-color: #d1ecf1; /* Light info background */
-            color: #0c5460; /* Darker info text */
+            background-color: #d1ecf1;
+            color: #0c5460;
             width: 100%;
             max-width: 350px;
             box-sizing: border-box;
-            display: none; /* Controlled by JS */
+            display: none;
         }
         body.dark-mode #adminMessage {
             background-color: #1f3d54;
@@ -591,7 +590,7 @@
         /* New Admin Dashboard internal navigation buttons */
         .admin-dashboard-nav-buttons {
             display: flex;
-            justify-content: center; /* Center the buttons */
+            justify-content: center;
             gap: 15px;
             width: 100%;
             margin-bottom: 20px;
@@ -701,17 +700,17 @@
             color: var(--spl-text-dark);
             line-height: 1.5;
             width: 100%;
-            max-width: 600px; /* Limit width for readability */
+            max-width: 600px;
             box-sizing: border-box;
-            text-align: left; /* Align text left within the instruction box */
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            text-align: left;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
         .instructions h3 {
             color: var(--spl-primary-accent);
             margin-top: 0;
             margin-bottom: 10px;
             text-align: left;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
         .instructions ol {
             margin-left: 20px;
@@ -724,7 +723,7 @@
             color: var(--spl-primary-accent);
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
         .instructions a:hover {
             text-decoration: underline;
@@ -732,13 +731,13 @@
 
         /* Dark mode specific styles for the instructions box text */
         body.dark-mode .instructions {
-            background-color: var(--spl-light-bg); /* Match body background for a unified look */
-            border-left-color: var(--spl-primary-accent); /* Keep accent border */
-            color: var(--spl-text-dark); /* Ensure main text is light */
+            background-color: var(--spl-light-bg);
+            border-left-color: var(--spl-primary-accent);
+            color: var(--spl-text-dark);
         }
         body.dark-mode .instructions h3,
         body.dark-mode .instructions a {
-            color: #FFD700; /* Bright gold for heading and links in dark mode */
+            color: #FFD700;
         }
 
         /* FDR Difficulty Scale Colors */
@@ -749,15 +748,15 @@
             margin-bottom: 20px;
             font-weight: bold;
             border-radius: 8px;
-            overflow: hidden; /* Ensures rounded corners apply to children */
+            overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .fdr-level {
             padding: 8px 12px;
             text-align: center;
-            color: black; /* Default text color for light backgrounds */
+            color: black;
             flex-grow: 1;
-            min-width: 50px; /* Ensure minimum width for each block */
+            min-width: 50px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .fdr-level span {
@@ -767,38 +766,38 @@
         }
 
         /* Specific FDR Colors */
-        .fdr-1 { background-color: #00B050; color: white; } /* Very Easy - Green */
-        .fdr-2 { background-color: #92D050; color: black; } /* Easy - Light Green */
-        .fdr-3 { background-color: #FFFF00; color: black; } /* Medium - Yellow */
-        .fdr-4 { background-color: #FFC000; color: black; } /* Medium Hard - Orange */
-        .fdr-5 { background-color: #FF0000; color: white; } /* Hard - Red */
-        .fdr-6 { background-color: #C00000; color: white; } /* Very Hard - Dark Red */
-        .fdr-7 { background-color: #800000; color: white; } /* Extremely Hard - Deep Red */
+        .fdr-1 { background-color: #00B050; color: white; }
+        .fdr-2 { background-color: #92D050; color: black; }
+        .fdr-3 { background-color: #FFFF00; color: black; }
+        .fdr-4 { background-color: #FFC000; color: black; }
+        .fdr-5 { background-color: #FF0000; color: white; }
+        .fdr-6 { background-color: #C00000; color: white; }
+        .fdr-7 { background-color: #800000; color: white; }
         
         /* Dark Mode Adjustments for FDR Colors */
         body.dark-mode .fdr-level {
-            color: white; /* Ensure text is white in dark mode */
+            color: white;
         }
         body.dark-mode .fdr-2, body.dark-mode .fdr-3, body.dark-mode .fdr-4 {
-            color: black; /* Keep text black for these lighter dark mode colors */
+            color: black;
         }
-        body.dark-mode .fdr-1 { background-color: #008037; } /* Darker green */
-        body.dark-mode .fdr-2 { background-color: #6B9F3B; } /* Darker light green */
-        body.dark-mode .fdr-3 { background-color: #B3B300; } /* Darker yellow */
-        body.dark-mode .fdr-4 { background-color: #B38600; } /* Darker orange */
-        body.dark-mode .fdr-5 { background-color: #B30000; } /* Darker red */
-        body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
-        body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
+        body.dark-mode .fdr-1 { background-color: #008037; }
+        body.dark-mode .fdr-2 { background-color: #6B9F3B; }
+        body.dark-mode .fdr-3 { background-color: #B3B300; }
+        body.dark-mode .fdr-4 { background-color: #B38600; }
+        body.dark-mode .fdr-5 { background-color: #B30000; }
+        body.dark-mode .fdr-6 { background-color: #800000; }
+        body.dark-mode .fdr-7 { background-color: #530000; }
 
         /* Styles for the two-column FDR display (Overall) */
         .fdr-data-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            gap: 0; /* No gaps between grid items */
-            border: 1px solid var(--spl-border-light); /* Outer border for the whole grid */
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            border: 1px solid var(--spl-border-light);
             border-radius: 8px;
-            overflow: hidden; /* Ensures rounded corners apply to content */
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* Inner shadow for depth */
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
         }
         body.dark-mode .fdr-data-grid {
             border-color: rgba(255,255,255,0.1);
@@ -808,7 +807,7 @@
         /* Styles for single-column FDR display (Home/Away) */
         .fdr-single-column-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Single column */
+            grid-template-columns: 1fr;
             gap: 0;
             border: 1px solid var(--spl-border-light);
             border-radius: 8px;
@@ -832,19 +831,19 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: black; /* Default text color for light backgrounds */
-            min-height: 45px; /* Consistent height for each item */
+            color: black;
+            min-height: 45px;
             box-sizing: border-box;
-            border-bottom: 1px solid var(--spl-border-light); /* Horizontal separator */
+            border-bottom: 1px solid var(--spl-border-light);
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         body.dark-mode .fdr-grid-item {
-            color: white; /* Ensure text is white in dark mode */
+            color: white;
             border-bottom-color: rgba(255,255,255,0.1);
         }
 
         /* Vertical separator for the left column items (only applies to two-column grids) */
-        .fdr-data-grid .fdr-grid-item:nth-child(2n-1) { /* Applies to 1st, 3rd, 5th... items (left column) */
+        .fdr-data-grid .fdr-grid-item:nth-child(2n-1) {
             border-right: 1px solid var(--spl-border-light);
             transition: border-color 0.3s ease;
         }
@@ -880,7 +879,7 @@
         }
 
         .upload-button-label input[type="file"] {
-            display: none; /* Hide the actual file input */
+            display: none;
         }
         /* Responsive adjustments for the new grid */
         @media (max-width: 480px) {
@@ -1135,7 +1134,7 @@
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", // Corrected placeholder
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___",
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
@@ -1269,7 +1268,7 @@
                 adminMessage.className = `message-box ${type}`;
                 adminMessage.textContent = message;
                 adminMessage.style.display = 'block';
-                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results when a new admin message is shown
+                // Removed: if (adminSearchResults) adminSearchResults.style.display = 'none'; // This line was causing the issue
             } else {
                 console.warn("Admin message element not found.");
             }
@@ -1540,18 +1539,18 @@
                     await signOut(auth);
                     showAuthMessage("Logged out successfully.", "info"); 
                     isAdminUser = false; 
-                    if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; // Hide admin menu item
-                    if (menuToggle) menuToggle.style.display = 'none'; // Hide menu toggle
+                    if (menuAdminDashboard) menuAdminDashboard.style.display = 'none';
+                    if (menuToggle) menuToggle.style.display = 'none';
                     if (loggedInContent) loggedInContent.style.display = 'none'; 
                     // Restore auth section and login form after logout
                     if (authSection) authSection.style.display = 'block'; 
                     if (loginForm) loginForm.style.display = 'block'; 
                     if (signupForm) signupForm.style.display = 'none';
-                    if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
-                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close sidebar on logout
-                    if (overlay) overlay.style.display = 'none'; // Hide overlay on logout
-                    if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; // Reset team name
-                    if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; // Clear manager ID
+                    if (instructionsBox) instructionsBox.style.display = 'none';
+                    if (sidebarMenu) sidebarMenu.classList.remove('open');
+                    if (overlay) overlay.style.display = 'none';
+                    if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team';
+                    if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = '';
                 } catch (error) {
                     console.error("Logout error:", error);
                     showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -1568,7 +1567,7 @@
                 if (signupForm) signupForm.style.display = 'block'; 
                 if (authMessageBox) authMessageBox.style.display = 'none'; 
                 if (authMessageBox) authMessageBox.textContent = ''; 
-                if (instructionsBox) instructionsBox.style.display = 'block'; // Show instructions when signup form is active
+                if (instructionsBox) instructionsBox.style.display = 'block';
             });
         }
 
@@ -1581,7 +1580,7 @@
                 if (signupForm) signupForm.style.display = 'none';
                 if (authMessageBox) authMessageBox.style.display = 'none'; 
                 if (authMessageBox) authMessageBox.textContent = ''; 
-                if (instructionsBox) instructionsBox.style.display = 'none'; // Hide instructions when login form is active
+                if (instructionsBox) instructionsBox.style.display = 'none';
             });
         }
 
@@ -1835,25 +1834,6 @@
                 if (event.key === 'Enter') {
                     event.preventDefault(); 
                     if (adminSearchButton) adminSearchButton.click(); 
-                }
-            });
-        }
-
-        // Add Enter key listener for Login fields
-        if (loginEmailInput) {
-            loginEmailInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    if (loginButton) loginButton.click();
-                }
-            });
-        }
-
-        if (loginPasswordInput) {
-            loginPasswordInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    if (loginButton) loginButton.click();
                 }
             });
         }
@@ -2217,7 +2197,7 @@
                 if (signupForm) signupForm.style.display = 'none';
                 if (loggedInContent) loggedInContent.style.display = 'none';
             }
-            if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure hidden initially
+            if (instructionsBox) instructionsBox.style.display = 'none';
 
             if (darkModeToggle) {
                 console.log("DEBUG: darkModeToggle element found.");
@@ -2266,7 +2246,7 @@
                 menuMyControlRoom.addEventListener('click', (e) => {
                     e.preventDefault();
                     showContentSection('controlRoom');
-                    sidebarMenu.classList.remove('open'); // Close menu after click
+                    sidebarMenu.classList.remove('open');
                     overlay.style.display = 'none';
                 });
             }
@@ -2275,7 +2255,7 @@
                     e.preventDefault();
                     console.trace("DEBUG: Admin Dashboard menu item clicked!"); 
                     showContentSection('adminDashboard');
-                    sidebarMenu.classList.remove('open'); // Close menu after click
+                    sidebarMenu.classList.remove('open');
                     overlay.style.display = 'none';
                 });
             }
