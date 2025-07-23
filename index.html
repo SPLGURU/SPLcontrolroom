@@ -1085,10 +1085,6 @@
         </div>
     </div>
 
-    <!-- Hidden canvas for GIF generation - positioned off-screen -->
-    <!-- Removed as part of Analyzer feature removal -->
-    <!-- <canvas id="gifCaptureCanvas" style="position: absolute; left: -9999px; top: -9999px;"></canvas> -->
-
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1117,7 +1113,7 @@
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "", // This should be an empty string for Netlify to inject the FIREBASE_API_KEY environment variable.
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", // Corrected placeholder
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
@@ -1134,7 +1130,7 @@
 
         // --- GLOBAL FLAGS / VARIABLES ---
         let isProcessingAuth = false; 
-        // Analyzer-specific variables removed.
+        // Analyzer-specific variables are correctly removed.
         
         let currentManagerId = null; 
         let isAdminUser = false; 
@@ -1173,7 +1169,7 @@
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
         const sidebarTeamName = document.getElementById('sidebarTeamName'); 
-        // menuAnalyzeMyTeam is now effectively a placeholder for the removed item, its event listener will be removed.
+        // The menuAnalyzeMyTeam element is still referenced but its click listener will be removed.
         const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); 
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
@@ -1700,7 +1696,7 @@
                     if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
                     if (overallFDRSection) overallFDRSection.style.display = 'none'; 
                     if (homeFDRSection) homeFDRSection.style.display = 'none';
-                    if (awayFDRSection) awayFDRSection.style.display = 'none';
+                    if (awayFDRSection) awayFdrSection.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -1897,7 +1893,7 @@
                 if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
                 if (overallFDRSection) overallFDRSection.style.display = 'none'; 
                 if (homeFDRSection) homeFDRSection.style.display = 'none';
-                if (awayFDRSection) awayFDRSection.style.display = 'none';
+                if (awayFDRSection) awayFdrSection.style.display = 'none';
                 showAdminMessage("Enter user details to search.", "info");
             });
         }
@@ -2090,7 +2086,7 @@
             if (awayFDRGrid) awayFDRGrid.innerHTML = '';
             if (overallFDRSection) overallFDRSection.style.display = 'none';
             if (homeFDRSection) homeFDRSection.style.display = 'none';
-            if (awayFDRSection) awayFDRSection.style.display = 'none';
+            if (awayFDRSection) awayFdrSection.style.display = 'none';
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -2237,9 +2233,16 @@
             }
 
             // --- Menu Item Click Listeners ---
-            // The 'Analyze My Team' menu item and its event listener are removed.
-            // The menu item itself is commented out in HTML.
-            // The JS variable `menuAnalyzeMyTeam` is still declared but its listener is removed.
+            // The 'Analyze My Team' menu item is commented out in HTML and its event listener is removed here.
+            // This ensures no attempts to call analyzer-related functions.
+            // if (menuAnalyzeMyTeam) {
+            //     menuAnalyzeMyTeam.addEventListener('click', (e) => {
+            //         e.preventDefault();
+            //         showContentSection('analyzerReport');
+            //         sidebarMenu.classList.remove('open'); // Close menu after click
+            //         overlay.style.display = 'none';
+            //     });
+            // }
             if (menuMyControlRoom) {
                 menuMyControlRoom.addEventListener('click', (e) => {
                     e.preventDefault();
