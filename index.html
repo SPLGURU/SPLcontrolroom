@@ -1115,6 +1115,20 @@
             margin-bottom: 10px;
         }
 
+        /* New: Welcome Dashboard content */
+        #initialLoggedInDashboardContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            text-align: center;
+            padding: 20px;
+            color: var(--spl-text-dark);
+        }
+        #initialLoggedInDashboardContent h2 {
+            color: var(--spl-primary-accent);
+        }
     </style>
 </head>
 <body>
@@ -1195,6 +1209,12 @@
             <div id="overlay"></div>
 
             <!-- Content areas remain the same -->
+
+            <!-- Initial Logged-in Dashboard Content (EMPTY HOME PAGE) -->
+            <div id="initialLoggedInDashboardContent" style="display: none;">
+                <h2>Welcome to Your Control Room!</h2>
+                <p>Select an option from the menu to get started.</p>
+            </div>
 
             <!-- Analyzer Report Content (REMOVED) -->
             <div id="analyzerReportContent" style="display: none;">
@@ -1492,6 +1512,7 @@
         const logoutButton = document.getElementById('logoutButton'); 
         
         // Content areas to toggle
+        const initialLoggedInDashboardContent = document.getElementById('initialLoggedInDashboardContent'); // NEW
         const analyzerReportContent = document.getElementById('analyzerReportContent'); 
         const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
@@ -1529,22 +1550,22 @@
         const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin');
         const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
 
-        // Data Display Elements (My Control Room) - NEW
-        const showFDRButton = document.getElementById('showFDRButton'); // New main FDR button
-        const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); // Container for FDR systems
+        // Data Display Elements (My Control Room)
+        const showFDRButton = document.getElementById('showFDRButton'); 
+        const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
         const controlRoomMessageBox = document.getElementById('controlRoomMessageBox');
-        const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); // Main container for FDR display
+        const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); 
         const radioOverallFDR = document.getElementById('radioOverallFDR');
-        const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); // Renamed
-        const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); // New
+        const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
+        const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); 
         const saveFDRSystemButton = document.getElementById('saveFDRSystemButton');
         const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom');
         const overallFixturesList = document.getElementById('overallFixturesList');
-        const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); // Renamed
-        const homeAwayFixturesList = document.getElementById('homeAwayFixturesList'); // Renamed
-        const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom'); // New
-        const customizedFixturesList = document.getElementById('customizedFixturesList'); // New
-        const saveCustomFDRButton = document.getElementById('saveCustomFDRButton'); // New button for saving custom ratings
+        const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); 
+        const homeAwayFixturesList = document.getElementById('homeAwayFixturesList'); 
+        const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom'); 
+        const customizedFixturesList = document.getElementById('customizedFixturesList'); 
+        const saveCustomFDRButton = document.getElementById('saveCustomFDRButton'); 
 
 
         // --- Helper Functions ---
@@ -1597,7 +1618,7 @@
             }
         }
 
-        // NEW: Function to display messages specific to Control Room
+        // Function to display messages specific to Control Room
         function showControlRoomMessage(message, type = 'info') {
             if (controlRoomMessageBox) {
                 controlRoomMessageBox.textContent = '';
@@ -1610,6 +1631,7 @@
         }
 
         function hideAllContentSections() {
+            if (initialLoggedInDashboardContent) initialLoggedInDashboardContent.style.display = 'none'; // NEW
             if (analyzerReportContent) analyzerReportContent.style.display = 'none';
             if (myControlRoomContent) myControlRoomContent.style.display = 'none';
             if (adminDashboardContent) adminDashboardContent.style.display = 'none'; 
@@ -1629,9 +1651,9 @@
             if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
 
             // Hide Control Room specific elements
-            if (showFDRButton) showFDRButton.style.display = 'none'; // Hide the main FDR button
-            if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Hide the systems container
-            if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Hide main FDR display
+            if (showFDRButton) showFDRButton.style.display = 'none'; 
+            if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
+            if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; 
             if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none'; 
             if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none'; 
             if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none'; 
@@ -1839,8 +1861,8 @@
                             // Show menu toggle icon
                             if (menuToggle) menuToggle.style.display = 'block';
 
-                            // Default to My Control Room section
-                            showContentSection('controlRoom');
+                            // Show initial logged-in dashboard (empty home page)
+                            showContentSection('initialLoggedInDashboard');
 
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
@@ -1966,10 +1988,13 @@
                             console.log(`DEBUG: User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
                             
                             if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
-                            console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
+                            console.log(`DEBUG ADMIN MENU ITEM RENDER (onAuthStateChanged): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
-                            // Default to My Control Room section
-                            showContentSection('controlRoom');
+                            // Show menu toggle icon
+                            if (menuToggle) menuToggle.style.display = 'block';
+
+                            // Default to the initial logged-in dashboard (empty home page)
+                            showContentSection('initialLoggedInDashboard');
 
                         } else {
                             console.warn("DEBUG: No valid SPL Manager ID found for user. Logging out.");
@@ -2024,36 +2049,29 @@
 
         /**
          * Manages the display of main content sections based on navigation button clicks.
-         * @param {string} sectionId - 'analyzerReport', 'controlRoom', or 'adminDashboard'.
+         * @param {string} sectionId - 'initialLoggedInDashboard', 'analyzerReport', 'controlRoom', or 'adminDashboard'.
          */
         async function showContentSection(sectionId) {
             console.log(`DEBUG: showContentSection called for section: ${sectionId}`);
             hideAllContentSections(); // Hide all content sub-sections first
             
-            if (sectionId === 'analyzerReport') {
-                // This section is now empty as Analyzer is removed.
-                // It will simply display a message.
+            if (sectionId === 'initialLoggedInDashboard') { // NEW
+                if (initialLoggedInDashboardContent) initialLoggedInDashboardContent.style.display = 'flex';
+            } else if (sectionId === 'analyzerReport') {
                 if (analyzerReportContent) analyzerReportContent.style.display = 'block';
                 console.log("DEBUG: Analyzer Report section is now empty.");
             } else if (sectionId === 'controlRoom') {
                 if (myControlRoomContent) myControlRoomContent.style.display = 'block';
-                // Initially, only show the main FDR button in My Control Room
-                if (showFDRButton) showFDRButton.style.display = 'block';
-                if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Ensure systems container is hidden
-                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Ensure FDR display is hidden
-                if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; // Ensure message box is hidden
+                if (showFDRButton) showFDRButton.style.display = 'block'; // Show the main FDR button
+                if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Ensure systems container is hidden initially
+                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Ensure FDR display is hidden initially
+                if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; // Ensure message box is hidden initially
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
-                    if (adminDashboardContent) adminDashboardContent.style.display = 'block'; 
+                    if (adminDashboardContent) adminDashboardContent.style.display = 'flex'; // Use flex for admin dashboard
                     if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'flex'; 
-                    if (adminSearchSection) adminSearchSection.style.display = 'flex'; 
-                    if (adminSearchResults) adminSearchResults.style.display = 'none'; 
-                    if (adminMessage) adminMessage.style.display = 'none'; 
-                    if (dataUploadSection) dataUploadSection.style.display = 'none'; 
-                    if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none'; 
-                    if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
-                    if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
-                    if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
+                    // Default to showing the Users section when Admin Dashboard is first opened
+                    if (adminUsersButton) adminUsersButton.click(); // Simulate click to show users section
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -2231,7 +2249,7 @@
                 if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none'; 
                 if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
                 if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
-                if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
+                if (awayFDRSectionAdmin) awayFdrSectionAdmin.style.display = 'none';
                 showAdminMessage("Enter user details to search.", "info");
             });
         }
@@ -2663,40 +2681,39 @@
 
         /**
          * Fetches the user's preferred FDR system from Firestore and sets the radio button.
+         * Then, displays the corresponding FDR system.
          */
         async function loadAndSetPreferredFDRSystem() {
             const user = auth.currentUser;
-            if (!user) return;
+            if (!user) {
+                showControlRoomMessage("You must be logged in to view FDR systems.", "error");
+                return;
+            }
 
             try {
                 const userDocRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(userDocRef);
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    const preferredSystem = userData.preferredFDRSystem;
-                    if (preferredSystem) {
-                        const radio = document.querySelector(`input[name="fdrSystem"][value="${preferredSystem}"]`);
-                        if (radio) {
-                            radio.checked = true;
-                            displaySelectedFDRSystem(preferredSystem); // Display based on loaded preference
-                        } else {
-                            // If saved preference is invalid, default to 'overall'
-                            if (radioOverallFDR) radioOverallFDR.checked = true;
-                            displaySelectedFDRSystem('overall');
-                        }
-                    } else {
-                        // Default to 'overall' if no preference saved
-                        if (radioOverallFDR) radioOverallFDR.checked = true;
-                        displaySelectedFDRSystem('overall');
-                    }
-                } else {
-                    // Default to 'overall' if user doc doesn't exist or no preferred system
-                    if (radioOverallFDR) radioOverallFDR.checked = true;
-                    displaySelectedFDRSystem('overall');
+                let preferredSystem = 'overall'; // Default if not found
+
+                if (docSnap.exists() && docSnap.data().preferredFDRSystem) {
+                    preferredSystem = docSnap.data().preferredFDRSystem;
                 }
+                
+                // Set the radio button based on preferredSystem
+                const radioToSelect = document.querySelector(`input[name="fdrSystem"][value="${preferredSystem}"]`);
+                if (radioToSelect) {
+                    radioToSelect.checked = true;
+                } else {
+                    // Fallback to overall if saved preference is invalid or missing
+                    if (radioOverallFDR) radioOverallFDR.checked = true;
+                    preferredSystem = 'overall';
+                }
+                
+                displaySelectedFDRSystem(preferredSystem); // Display the loaded/default system
+
             } catch (error) {
                 console.error("Error loading preferred FDR system:", error);
-                showControlRoomMessage("Failed to load your preferred FDR system.", "error");
+                showControlRoomMessage("Failed to load your preferred FDR system. Defaulting to Overall.", "error");
                 // Fallback to overall if loading fails
                 if (radioOverallFDR) radioOverallFDR.checked = true;
                 displaySelectedFDRSystem('overall');
@@ -2725,7 +2742,7 @@
                     await updateDoc(userDocRef, {
                         preferredFDRSystem: selectedSystem
                     });
-                    showControlRoomMessage(`Preferred FDR system (${selectedSystem.toUpperCase()}) saved successfully!`, "success");
+                    showControlRoomMessage(`Preferred FDR system (${selectedSystem.toUpperCase().replace('AWAY', '/AWAY')}) saved successfully!`, "success");
                 } catch (error) {
                     console.error("Error saving preferred FDR system:", error);
                     showControlRoomMessage(`Failed to save preferred system: ${error.message}`, "error");
@@ -2754,12 +2771,13 @@
                     if (isNaN(value) || value < 1 || value > 7) {
                         isValid = false;
                         showControlRoomMessage(`Invalid rating for fixture ${fixtureId}. Ratings must be between 1 and 7.`, "error");
-                        return;
+                        // Stop processing further inputs if one is invalid
+                        return; 
                     }
                     customRatings[fixtureId] = value;
                 });
 
-                if (!isValid) return;
+                if (!isValid) return; // Exit if any input was invalid
 
                 try {
                     const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
@@ -2794,22 +2812,21 @@
             if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
             if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
-            // Show the main FDR display container
+            // Show the main FDR display container (which contains the scales and fixture lists)
             if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
             // Now call the generalized fetchAndRenderRankings with Control Room specific elements and userTeamName
-            // The last argument (selectedFDRSystem) is used by the function to determine how to render for the user.
             fetchAndRenderRankings(
                 controlRoomMessageBox,
-                overallFixturesList, // This is the list container for overall
-                homeAwayFixturesList,    // This is the list container for home/away
-                customizedFixturesList,    // This is the list container for customized
+                overallFixturesList, 
+                homeAwayFixturesList,    
+                customizedFixturesList,    
                 overallFDRSectionControlRoom,
                 homeAwayFDRSectionControlRoom,
                 customizedFDRSectionControlRoom,
-                myControlRoomFDRDisplay, // Main container for Control Room FDR
-                userTeamName, // Pass the user's team name for filtering
-                selectedSystem // Pass the currently selected system
+                myControlRoomFDRDisplay, 
+                userTeamName, 
+                selectedSystem 
             );
         }
 
@@ -2824,7 +2841,7 @@
         if (showFDRButton) {
             showFDRButton.addEventListener('click', () => {
                 if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; // Show the systems container
-                // showFDRButton.style.display = 'block'; // Keep the main FDR button visible as requested
+                // The main FDR button should NOT disappear as requested.
                 loadAndSetPreferredFDRSystem(); // Load and display the preferred system
             });
         }
@@ -2888,7 +2905,7 @@
                     showContentSection('controlRoom');
                     sidebarMenu.classList.remove('open');
                     overlay.style.display = 'none';
-                    // The FDR button will be shown, and its click handler will load the preferred system.
+                    // No need to call loadAndSetPreferredFDRSystem here, it will be called by showFDRButton click
                 });
             }
             if (menuAdminDashboard) {
