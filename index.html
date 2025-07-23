@@ -980,24 +980,80 @@
 
             <!-- My Control Room Content (initially hidden) -->
             <div id="myControlRoomContent" style="display: none;">
-                <p style="text-align: center; color: var(--spl-text-medium); margin-top: 50px;">
-                    More features coming soon to My Control Room!
-                </p>
+                <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
+                <div id="currentRankingsDisplayControlRoom" class="mt-8">
+                    <h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
+                    
+                    <!-- Overall FDR Display Section -->
+                    <div id="overallFDRSectionControlRoom" style="display: none;">
+                        <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Overall Rankings</h5>
+                        <!-- FDR Difficulty Scale for Overall (1-7) -->
+                        <div class="fdr-scale">
+                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                            <div class="fdr-level fdr-2">2</div>
+                            <div class="fdr-level fdr-3">3</div>
+                            <div class="fdr-level fdr-4">4</div>
+                            <div class="fdr-level fdr-5">5</div>
+                            <div class="fdr-level fdr-6">6</div>
+                            <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                        </div>
+                        <!-- Two-column FDR Display Container for Overall -->
+                        <div class="fdr-data-grid" id="overallFDRGridControlRoom">
+                            <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Home FDR Display Section -->
+                    <div id="homeFDRSectionControlRoom" style="display: none; margin-top: 30px;">
+                        <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Home Rankings</h5>
+                        <!-- FDR Difficulty Scale for Home/Away (1-6) -->
+                        <div class="fdr-scale">
+                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                            <div class="fdr-level fdr-2">2</div>
+                            <div class="fdr-level fdr-3">3</div>
+                            <div class="fdr-level fdr-4">4</div>
+                            <div class="fdr-level fdr-5">5</div>
+                            <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                        </div>
+                        <!-- Single-column FDR Display Container for Home -->
+                        <div class="fdr-single-column-grid" id="homeFDRGridControlRoom">
+                            <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Away FDR Display Section -->
+                    <div id="awayFDRSectionControlRoom" style="display: none; margin-top: 30px;">
+                        <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Away Rankings</h5>
+                        <!-- FDR Difficulty Scale for Home/Away (1-6) -->
+                        <div class="fdr-scale">
+                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                            <div class="fdr-level fdr-2">2</div>
+                            <div class="fdr-level fdr-3">3</div>
+                            <div class="fdr-level fdr-4">4</div>
+                            <div class="fdr-level fdr-5">5</div>
+                            <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
+                        </div>
+                        <!-- Single-column FDR Display Container for Away -->
+                        <div class="fdr-single-column-grid" id="awayFDRGridControlRoom">
+                            <!-- Team FDR items will be dynamically inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Admin Dashboard Content (initially hidden) -->
             <div id="adminDashboardContent" style="display: none;"> 
                 <h2>Admin Dashboard</h2>
-                <div class="admin-dashboard-nav-buttons"> <!-- New wrapper for Admin buttons -->
+                <div class="admin-dashboard-nav-buttons">
                     <button id="adminUsersButton">Users</button>
                     <button id="adminDataButton">Data</button>
                 </div>
-                <div class="admin-search-section" style="display: none;"> <!-- Initially hidden -->
+                <div class="admin-search-section" style="display: none;">
                     <input type="text" id="adminSearchInput" placeholder="Search by Email, SPL ID, or UID">
                     <button id="adminSearchButton">Search User</button>
                 </div>
 
-                <div id="adminSearchResults" class="admin-edit-section" style="display: none;"> <!-- Initially hidden -->
+                <div id="adminSearchResults" class="admin-edit-section" style="display: none;">
                     <h3>User Found:</h3>
                     <p>User ID: <strong id="adminUserUid">N/A</strong></p>
                     <p>Current Email: <input type="email" id="adminEditEmail"></p>
@@ -1008,7 +1064,7 @@
                 <div id="adminMessage" class="message-box" style="display: none;"></div>
 
                 <!-- Data Upload Section (NEW) -->
-                <div id="dataUploadSection" style="display: none;" class="p-4 bg-white rounded-lg shadow-md">
+                <div id="dataUploadSection" style="display: none;">
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Upload League Tables</h3>
                     <p class="text-sm text-gray-600 mb-4">
                         Upload Excel files for Overall, Home, or Away rankings.
@@ -1042,11 +1098,11 @@
                     <p id="excelUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
 
                     <!-- Display Current Rankings -->
-                    <div id="currentRankingsDisplay" class="mt-8">
+                    <div id="currentRankingsDisplayAdmin" class="mt-8">
                         <h4 class="text-lg font-semibold text-gray-700 mb-3 text-center">Current Rankings Data</h4>
                         
                         <!-- Overall FDR Display Section -->
-                        <div id="overallFDRSection" style="display: none;">
+                        <div id="overallFDRSectionAdmin" style="display: none;">
                             <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Overall Rankings</h5>
                             <!-- FDR Difficulty Scale for Overall (1-7) -->
                             <div class="fdr-scale">
@@ -1059,13 +1115,13 @@
                                 <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
                             </div>
                             <!-- Two-column FDR Display Container for Overall -->
-                            <div class="fdr-data-grid" id="overallFDRGrid">
+                            <div class="fdr-data-grid" id="overallFDRGridAdmin">
                                 <!-- Team FDR items will be dynamically inserted here by JavaScript -->
                             </div>
                         </div>
 
                         <!-- Home FDR Display Section -->
-                        <div id="homeFDRSection" style="display: none; margin-top: 30px;">
+                        <div id="homeFDRSectionAdmin" style="display: none; margin-top: 30px;">
                             <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Home Rankings</h5>
                             <!-- FDR Difficulty Scale for Home/Away (1-6) -->
                             <div class="fdr-scale">
@@ -1077,13 +1133,13 @@
                                 <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
                             </div>
                             <!-- Single-column FDR Display Container for Home -->
-                            <div class="fdr-single-column-grid" id="homeFDRGrid">
+                            <div class="fdr-single-column-grid" id="homeFDRGridAdmin">
                                 <!-- Team FDR items will be dynamically inserted here by JavaScript -->
                             </div>
                         </div>
 
                         <!-- Away FDR Display Section -->
-                        <div id="awayFDRSection" style="display: none; margin-top: 30px;">
+                        <div id="awayFDRSectionAdmin" style="display: none; margin-top: 30px;">
                             <h5 class="text-md font-semibold text-gray-600 mb-2 text-center">Away Rankings</h5>
                             <!-- FDR Difficulty Scale for Home/Away (1-6) -->
                             <div class="fdr-scale">
@@ -1095,7 +1151,7 @@
                                 <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
                             </div>
                             <!-- Single-column FDR Display Container for Away -->
-                            <div class="fdr-single-column-grid" id="awayFDRGrid">
+                            <div class="fdr-single-column-grid" id="awayFDRGridAdmin">
                                 <!-- Team FDR items will be dynamically inserted here by JavaScript -->
                             </div>
                         </div>
@@ -1219,20 +1275,30 @@
         const adminUpdateUserButton = document.getElementById('adminUpdateUserButton');
         const adminMessage = document.getElementById('adminMessage');
 
-        // Data Upload Elements (NEW)
+        // Data Upload Elements (Admin Dashboard)
         const dataUploadSection = document.getElementById('dataUploadSection');
         const rankingTypeSelect = document.getElementById('rankingTypeSelect');
         const excelFileUploadInput = document.getElementById('excelFileUploadInput');
         const excelUploadMessage = document.getElementById('excelUploadMessage');
-        const currentRankingsDisplay = document.getElementById('currentRankingsDisplay');
+        const currentRankingsDisplayAdmin = document.getElementById('currentRankingsDisplayAdmin'); // Renamed for clarity
         
         // Specific FDR grid containers (Admin Dashboard)
-        const overallFDRSection = document.getElementById('overallFDRSection');
-        const overallFDRGrid = document.getElementById('overallFDRGrid');
-        const homeFDRSection = document.getElementById('homeFDRSection');
-        const homeFDRGrid = document.getElementById('homeFDRGrid');
-        const awayFDRSection = document.getElementById('awayFDRSection');
-        const awayFDRGrid = document.getElementById('awayFDRGrid');
+        const overallFDRSectionAdmin = document.getElementById('overallFDRSectionAdmin'); // Renamed
+        const overallFDRGridAdmin = document.getElementById('overallFDRGridAdmin'); // Renamed
+        const homeFDRSectionAdmin = document.getElementById('homeFDRSectionAdmin'); // Renamed
+        const homeFDRGridAdmin = document.getElementById('homeFDRGridAdmin'); // Renamed
+        const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin'); // Renamed
+        const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin'); // Renamed
+
+        // Data Display Elements (My Control Room) - NEW
+        const controlRoomMessageBox = document.getElementById('controlRoomMessageBox'); // NEW message box
+        const currentRankingsDisplayControlRoom = document.getElementById('currentRankingsDisplayControlRoom'); // NEW
+        const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom'); // NEW
+        const overallFDRGridControlRoom = document.getElementById('overallFDRGridControlRoom'); // NEW
+        const homeFDRSectionControlRoom = document.getElementById('homeFDRSectionControlRoom'); // NEW
+        const homeFDRGridControlRoom = document.getElementById('homeFDRGridControlRoom'); // NEW
+        const awayFDRSectionControlRoom = document.getElementById('awayFDRSectionControlRoom'); // NEW
+        const awayFDRGridControlRoom = document.getElementById('awayFDRGridControlRoom'); // NEW
 
 
         // --- Helper Functions ---
@@ -1268,13 +1334,12 @@
                 adminMessage.className = `message-box ${type}`;
                 adminMessage.textContent = message;
                 adminMessage.style.display = 'block';
-                // Removed: if (adminSearchResults) adminSearchResults.style.display = 'none'; // This line was causing the issue
             } else {
                 console.warn("Admin message element not found.");
             }
         }
 
-        // Function to display messages specific to Excel Upload (NEW)
+        // Function to display messages specific to Excel Upload (Admin Dashboard)
         function showExcelUploadMessage(message, type = 'info') {
             if (excelUploadMessage) {
                 excelUploadMessage.textContent = '';
@@ -1283,6 +1348,18 @@
                 excelUploadMessage.style.display = 'block';
             } else {
                 console.warn("Excel upload message element not found.");
+            }
+        }
+
+        // NEW: Function to display messages specific to Control Room
+        function showControlRoomMessage(message, type = 'info') {
+            if (controlRoomMessageBox) {
+                controlRoomMessageBox.textContent = '';
+                controlRoomMessageBox.className = `message-box ${type}`;
+                controlRoomMessageBox.textContent = message;
+                controlRoomMessageBox.style.display = 'block';
+            } else {
+                console.warn("Control Room message box element not found.");
             }
         }
 
@@ -1297,13 +1374,20 @@
             if (adminSearchResults) adminSearchResults.style.display = 'none'; 
             if (adminMessage) adminMessage.style.display = 'none';      
             
-            // NEW: Hide data upload specific elements
+            // Hide data upload specific elements (Admin)
             if (dataUploadSection) dataUploadSection.style.display = 'none';
-            if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none';
+            if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none';
             if (excelUploadMessage) excelUploadMessage.style.display = 'none';
-            if (overallFDRSection) overallFDRSection.style.display = 'none'; 
-            if (homeFDRSection) homeFDRSection.style.display = 'none';
-            if (awayFDRSection) awayFDRSection.style.display = 'none';
+            if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
+            if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+            if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
+
+            // Hide data display specific elements (Control Room) - NEW
+            if (currentRankingsDisplayControlRoom) currentRankingsDisplayControlRoom.style.display = 'none';
+            if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none'; 
+            if (homeFDRSectionControlRoom) homeFDRSectionControlRoom.style.display = 'none';
+            if (awayFDRSectionControlRoom) awayFDRSectionControlRoom.style.display = 'none';
+            if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none';
 
 
             // General messages/loading indicators
@@ -1637,7 +1721,6 @@
 
                             // Default to My Control Room section since Analyzer is removed
                             showContentSection('controlRoom');
-                            console.log("DEBUG: showContentSection('controlRoom') called.");
 
                         } else {
                             console.warn("DEBUG: No valid SPL Manager ID found for user. Logging out.");
@@ -1704,6 +1787,8 @@
                 console.log("DEBUG: Analyzer Report section is now empty.");
             } else if (sectionId === 'controlRoom') {
                 if (myControlRoomContent) myControlRoomContent.style.display = 'block';
+                // NEW: Load FDR data for Control Room
+                fetchAndDisplayRankings(controlRoomMessageBox, overallFDRGridControlRoom, homeFDRGridControlRoom, awayFDRGridControlRoom, overallFDRSectionControlRoom, homeFDRSectionControlRoom, awayFDRSectionControlRoom, currentRankingsDisplayControlRoom);
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
                     if (adminDashboardContent) adminDashboardContent.style.display = 'block'; 
@@ -1712,10 +1797,10 @@
                     if (adminSearchResults) adminSearchResults.style.display = 'none'; 
                     if (adminMessage) adminMessage.style.display = 'none'; 
                     if (dataUploadSection) dataUploadSection.style.display = 'none'; 
-                    if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
-                    if (overallFDRSection) overallFDRSection.style.display = 'none'; 
-                    if (homeFDRSection) homeFDRSection.style.display = 'none';
-                    if (awayFDRSection) awayFDRSection.style.display = 'none';
+                    if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none'; 
+                    if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
+                    if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+                    if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
@@ -1890,10 +1975,10 @@
                 if (adminSearchResults) adminSearchResults.style.display = 'none'; 
                 if (adminMessage) adminMessage.style.display = 'none'; 
                 if (dataUploadSection) dataUploadSection.style.display = 'none'; 
-                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
-                if (overallFDRSection) overallFDRSection.style.display = 'none'; 
-                if (homeFDRSection) homeFDRSection.style.display = 'none';
-                if (awayFDRSection) awayFDRSection.style.display = 'none';
+                if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none'; 
+                if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
+                if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
+                if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
                 showAdminMessage("Enter user details to search.", "info");
             });
         }
@@ -1904,14 +1989,14 @@
                 if (adminSearchResults) adminSearchResults.style.display = 'none'; 
                 if (adminMessage) adminMessage.style.display = 'none'; 
                 if (dataUploadSection) dataUploadSection.style.display = 'block'; 
-                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'block'; 
+                if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'block'; 
                 showExcelUploadMessage("Upload your league table Excel file here.", "info");
-                fetchAndDisplayCurrentRankings(); 
+                fetchAndDisplayRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
             });
         }
 
 
-        // --- Excel File Upload Logic (NEW) ---
+        // --- Excel File Upload Logic (Admin Dashboard) ---
         if (excelFileUploadInput) {
             excelFileUploadInput.addEventListener('change', async (event) => {
                 const file = event.target.files[0];
@@ -2067,7 +2152,7 @@
                         await setDoc(splRankingsDocRef, newData, { merge: true });
                         showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, "success");
                         event.target.value = null; 
-                        fetchAndDisplayCurrentRankings(); 
+                        fetchAndDisplayRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
                     } catch (error) {
                         console.error('Error processing Excel file or uploading to Firestore:', error);
                         showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, "error");
@@ -2077,16 +2162,31 @@
             });
         }
 
-        // --- Fetch and Display Current Rankings from Firestore (Admin Dashboard) ---
-        async function fetchAndDisplayCurrentRankings() {
-            showExcelUploadMessage('Fetching current rankings...', "info");
+        /**
+         * Fetches and displays current rankings from Firestore into specified grid elements.
+         * @param {HTMLElement} messageBox - The message box element to display status messages.
+         * @param {HTMLElement} overallGrid - The grid element for overall FDR.
+         * @param {HTMLElement} homeGrid - The grid element for home FDR.
+         * @param {HTMLElement} awayGrid - The grid element for away FDR.
+         * @param {HTMLElement} overallSection - The section container for overall FDR.
+         * @param {HTMLElement} homeSection - The section container for home FDR.
+         * @param {HTMLElement} awaySection - The section container for away FDR.
+         * @param {HTMLElement} displayContainer - The main display container for rankings (e.g., currentRankingsDisplayAdmin or currentRankingsDisplayControlRoom).
+         */
+        async function fetchAndDisplayRankings(messageBox, overallGrid, homeGrid, awayGrid, overallSection, homeSection, awaySection, displayContainer) {
+            messageBox.textContent = ''; // Clear previous message
+            messageBox.style.display = 'block'; // Ensure message box is visible
+            messageBox.className = 'message-box info';
+            messageBox.textContent = 'Fetching current rankings...';
+
             // Clear all grids and hide sections initially
-            if (overallFDRGrid) overallFDRGrid.innerHTML = '';
-            if (homeFDRGrid) homeFDRGrid.innerHTML = '';
-            if (awayFDRGrid) awayFDRGrid.innerHTML = '';
-            if (overallFDRSection) overallFDRSection.style.display = 'none';
-            if (homeFDRSection) homeFDRSection.style.display = 'none';
-            if (awayFDRSection) awayFDRSection.style.display = 'none';
+            if (overallGrid) overallGrid.innerHTML = '';
+            if (homeGrid) homeGrid.innerHTML = '';
+            if (awayGrid) awayGrid.innerHTML = '';
+            if (overallSection) overallSection.style.display = 'none';
+            if (homeSection) homeSection.style.display = 'none';
+            if (awaySection) awaySection.style.display = 'none';
+            if (displayContainer) displayContainer.style.display = 'block'; // Ensure the main container is visible
 
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -2095,6 +2195,8 @@
                 const docSnap = await getDoc(splRankingsDocRef); 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+
+                    let hasDataToDisplay = false;
 
                     // --- Render Overall Rankings ---
                     const overallRankings = data.overall;
@@ -2109,16 +2211,17 @@
                             const awayItem = document.createElement('div');
                             awayItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
                             awayItem.innerHTML = `${item.team} ✈️`;
-                            if (overallFDRGrid) overallFDRGrid.appendChild(awayItem);
+                            if (overallGrid) overallGrid.appendChild(awayItem);
 
                             const homeItem = document.createElement('div');
                             homeItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
                             homeItem.innerHTML = `${item.team} 🏠`;
-                            if (overallFDRGrid) overallFDRGrid.appendChild(homeItem);
+                            if (overallGrid) overallGrid.appendChild(homeItem);
                         });
-                        if (overallFDRSection) overallFDRSection.style.display = 'block';
+                        if (overallSection) overallSection.style.display = 'block';
+                        hasDataToDisplay = true;
                     } else {
-                        if (overallFDRGrid) overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
+                        if (overallGrid) overallGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Overall rankings data available.</div>';
                     }
 
                     // --- Render Home Rankings (Single Column) ---
@@ -2137,11 +2240,12 @@
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrAway}`;
                             teamItem.innerHTML = `${teamName} ✈️`; 
-                            if (homeFDRGrid) homeFDRGrid.appendChild(teamItem);
+                            if (homeGrid) homeGrid.appendChild(teamItem);
                         });
-                        if (homeFDRSection) homeFDRSection.style.display = 'block';
+                        if (homeSection) homeSection.style.display = 'block';
+                        hasDataToDisplay = true;
                     } else {
-                        if (homeFDRGrid) homeFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
+                        if (homeGrid) homeGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Home rankings data available.</div>';
                     }
 
                     // --- Render Away Rankings (Single Column) ---
@@ -2160,22 +2264,30 @@
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrHome}`;
                             teamItem.innerHTML = `${teamName} 🏠`; 
-                            if (awayFDRGrid) awayFDRGrid.appendChild(teamItem);
+                            if (awayGrid) awayGrid.appendChild(teamItem);
                         });
-                        if (awayFDRSection) awayFDRSection.style.display = 'block';
+                        if (awaySection) awaySection.style.display = 'block';
+                        hasDataToDisplay = true;
                     } else {
-                        if (awayFDRGrid) awayFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
+                        if (awayGrid) awayGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
                     }
                     
-                    showExcelUploadMessage('Current rankings loaded.', "success");
+                    if (hasDataToDisplay) {
+                        messageBox.className = 'message-box success';
+                        messageBox.textContent = 'Current rankings loaded.';
+                    } else {
+                        messageBox.className = 'message-box info';
+                        messageBox.textContent = 'No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file via the Admin Dashboard.';
+                    }
                 } else {
-                    if (overallFDRGrid) overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file.</div>';
-                    showExcelUploadMessage('No rankings data found in Firestore for 2025-2026 season.', "info");
+                    messageBox.className = 'message-box info';
+                    messageBox.textContent = 'No rankings data found in Firestore for 2025-2026 season. Please upload an Excel file via the Admin Dashboard.';
                 }
             } catch (error) {
-                console.error("Error fetching current rankings for display (Admin):", error);
-                showExcelUploadMessage(`Failed to load current rankings: ${error.message}`, "error");
-                if (overallFDRGrid) overallFDRGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
+                console.error("Error fetching current rankings for display:", error);
+                messageBox.className = 'message-box error';
+                messageBox.textContent = `Failed to load current rankings: ${error.message}`;
+                if (overallGrid) overallGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">Error loading rankings. Please check console for details.</div>';
             }
         }
 
