@@ -182,21 +182,6 @@
             transition: color 0.3s ease; /* Smooth transition */
         }
         
-        /* Specific style for the main manager name/rank header (will be removed with analyzer) */
-        /* #managerName {
-            font-size: 2em;
-            line-height: 1.3;
-            margin-bottom: 30px;
-            color: var(--spl-text-dark);
-            text-align: center;
-            transition: color 0.3s ease;
-        }
-        #managerName span {
-            color: var(--spl-primary-accent);
-            transition: color 0.3s ease;
-        } */
-
-
         /* The main input-section class now primarily styles the wrapper around the forms */
         .input-section {
             display: flex;
@@ -636,90 +621,6 @@
         /* --- End Admin Dashboard Specific Styles --- */
 
 
-        /* Share Video Button Specific Styles (unrelated to auth forms, left as is) */
-        /* #shareVideoButton {
-            background-color: #17A2B8; 
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 8px rgba(23, 162, 184, 0.2);
-            width: 100%;
-            max-width: 300px;
-            display: block;
-            margin: 15px auto 0 auto; 
-            text-align: center;
-        }
-
-        #shareVideoButton:hover {
-            background-color: #138496;
-            transform: translateY(-2px);
-        }
-        body.dark-mode #shareVideoButton {
-            background-color: #20c997; 
-            box-shadow: 0 4px 8px rgba(32, 201, 151, 0.2);
-        }
-        body.dark-mode #shareVideoButton:hover {
-            background-color: #1aae88;
-        } */
-
-        /* Styles for the Rank Journey button container (will be removed with analyzer) */
-        /* .rank-journey-box {
-            background-color: var(--spl-primary-accent); 
-            border-radius: 12px;
-            box-shadow: 0 8px 16px var(--spl-shadow); 
-            padding: 25px;
-            margin: 30px auto; 
-            text-align: center;
-            width: 100%;
-            max-width: 400px; 
-            box-sizing: border-box;
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
-        }
-
-        .rank-journey-box h3 {
-            color: white; 
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.8em; 
-            margin-top: 0;
-            margin-bottom: 20px; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s ease; 
-        } */
-
-        /* Styles for the button inside the Rank Journey box (will be removed with analyzer) */
-        /* #createRankJourneyButton { 
-            background-color: white; 
-            color: var(--spl-primary-accent); 
-            padding: 15px 35px; 
-            border: none; 
-            border-radius: 10px; 
-            font-size: 1.2em; 
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: auto; 
-            display: inline-block; 
-        }
-
-        #createRankJourneyButton:hover {
-            background-color: #f0f0f0; 
-            color: #0056b3; 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); 
-        } */
-
-
         .message-box { 
             text-align: center;
             padding: 15px;
@@ -734,7 +635,7 @@
         .message-box.warning { background-color: #fff3cd; color: #856404; } 
 
 
-        .loading-message, .error-message, .video-loading-message, #videoGeneratingMessage { 
+        .loading-message, .error-message { 
             text-align: center;
             padding: 20px;
             border-radius: 8px;
@@ -754,182 +655,7 @@
             border: 1px solid #DC3545;
         }
 
-        .video-loading-message { /* Will be removed with analyzer */
-            background-color: #fff3cd;
-            color: #856404;
-            display: none; 
-        }
-        #videoGeneratingMessage { /* Will be removed with analyzer */
-            background-color: #cfe2ff; 
-            color: #0056b3; 
-            display: none; 
-        }
-        body.dark-mode #videoGeneratingMessage {
-            background-color: #0a1c2a; 
-            color: #ffffff; 
-        }
-
-
-        .stats-grid { /* Will be removed with analyzer */
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card { /* Will be removed with analyzer */
-            background-color: var(--spl-table-bg); 
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px var(--spl-shadow); 
-            text-align: center;
-            transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
-        }
-
-        .stat-card:hover { /* Will be removed with analyzer */
-            transform: translateY(-3px);
-        }
-
-        .stat-card h3 { /* Will be removed with analyzer */
-            color: var(--spl-primary-accent);
-            margin-top: 0;
-            font-size: 1.3em;
-            margin-bottom: 10px;
-            transition: color 0.3s ease; 
-        }
-
-        .stat-card p { /* Will be removed with analyzer */
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--spl-text-dark);
-            margin: 0;
-            transition: color 0.3s ease; 
-        }
-
-        .stat-card .small-text { /* Will be removed with analyzer */
-            font-size: 0.9em;
-            color: var(--spl-text-medium);
-            margin-top: 5px;
-            transition: color 0.3s ease; 
-        }
-
-        .chart-section { /* Will be removed with analyzer */
-            margin-top: 30px;
-            padding: 20px;
-            background-color: var(--spl-container-bg);
-            border-radius: 12px;
-            box-shadow: 0 6px 12px var(--spl-shadow);
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
-        }
-
-        .chart-section h2 { /* Will be removed with analyzer */
-            margin-bottom: 20px;
-        }
-
-        #rankJourneyChart { /* Will be removed with analyzer */
-            width: 100%; 
-            max-width: 900px; 
-            height: auto; 
-            box-sizing: border-box;
-        }
-
-        .table-section { /* Will be removed with analyzer */
-            margin-top: 30px;
-            padding: 20px;
-            background-color: var(--spl-container-bg);
-            border-radius: 12px;
-            box-shadow: 0 6px 12px var(--spl-shadow);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
-        }
-
-        .table-section h2 { /* Will be removed with analyzer */
-            margin-bottom: 20px;
-        }
-
-        table { /* Will be removed with analyzer */
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            table-layout: fixed; 
-        }
-
-        th, td { /* Will be removed with analyzer */
-            padding: 12px 15px;
-            border: 1px solid var(--spl-border-light);
-            text-align: left;
-            word-break: break-word; 
-            white-space: normal; 
-            transition: border-color 0.3s ease, color 0.3s ease; 
-        }
-
-        th { /* Will be removed with analyzer */
-            background-color: var(--spl-table-header-bg);
-            color: var(--spl-text-dark);
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.9em;
-            transition: background-color 0.3s ease, color 0.3s ease; 
-        }
-
-        tr:nth-child(even) { /* Will be removed with analyzer */
-            background-color: var(--spl-table-row-even);
-        }
-
-        tr:hover { /* Will be removed with analyzer */
-            background-color: var(--spl-table-row-hover);
-        }
-
-        .positive { /* Will be removed with analyzer */
-            color: var(--spl-accent-green);
-            font-weight: bold;
-        }
-
-        .negative { /* Will be removed with analyzer */
-            color: var(--spl-accent-red);
-            font-weight: bold;
-        }
-
-        /* Responsive Adjustments (partially removed with analyzer) */
-        @media (min-width: 951px) {
-            /* #topCaptainsTable th:nth-child(1), #topCaptainsTable td:nth-child(1) { width: auto; }
-            #topCaptainsTable th:nth-child(2), #topCaptainsTable td:nth-child(2) { width: auto; }
-            #topCaptainsTable th:nth-child(3), #topCaptainsTable td:nth-child(3) { width: auto; }
-            #topCaptainsTable th:nth-child(4), #topCaptainsTable td:nth-child(4) { width: auto; }
-            #topCaptainsTable th:nth-child(5), #topCaptainsTable td:nth-child(5) { width: auto; }
-            #topCaptainsTable th:nth-child(6), #topCaptainsTable td:nth-child(6) { width: auto; }
-
-            #bestPlayersTable th:nth-child(1), #bestPlayersTable td:nth-child(1) { width: auto; }
-            #bestPlayersTable th:nth-child(2), #bestPlayersTable td:nth-child(2) { width: auto; }
-            #bestPlayersTable th:nth-child(3), #bestPlayersTable td:nth-child(3) { width: auto; }
-            #bestPlayersTable th:nth-child(4), #bestPlayersTable td:nth-child(4) { width: auto; }
-            #bestPlayersTable th:nth-child(5), #bestPlayersTable td:nth-child(5) { width: auto; }
-
-            #worstPlayersTable th:nth-child(1), #worstPlayersTable td:nth-child(1) { width: auto; }
-            #worstPlayersTable th:nth-child(2), #worstPlayersTable td:nth-child(2) { width: auto; }
-            #worstPlayersTable th:nth-child(3), #worstPlayersTable td:nth-child(3) { width: auto; }
-            #worstPlayersTable th:nth-child(4), #worstPlayersTable td:nth-child(4) { width: auto; }
-            #worstPlayersTable th:nth-child(5), #worstPlayersTable td:nth-child(5) { width: auto; }
-
-            #missedPointsTable th:nth-child(1), #missedPointsTable td:nth-child(1) { width: auto; }
-            #missedPointsTable th:nth-child(2), #missedPointsTable td:nth-child(2) { width: auto; }
-            #missedPointsTable th:nth-child(3), #missedPointsTable td:nth-child(3) { width: auto; }
-
-            #profitableTransfersTable th:nth-child(1), #profitableTransfersTable td:nth-child(1) { width: auto; }
-            #profitableTransfersTable th:nth-child(2), #profitableTransfersTable td:nth-child(2) { width: auto; }
-            #profitableTransfersTable th:nth-child(3), #profitableTransfersTable td:nth-child(3) { width: auto; }
-            #profitableTransfersTable th:nth-child(4), #profitableTransfersTable td:nth-child(4) { width: auto; }
-
-            #lossMakingTransfersTable th:nth-child(1), #lossMakingTransfersTable td:nth-child(1) { width: auto; }
-            #lossMakingTransfersTable th:nth-child(2), #lossMakingTransfersTable td:nth-child(2) { width: auto; }
-            #lossMakingTransfersTable th:nth-child(3), #lossMakingTransfersTable td:nth-child(3) { width: auto; }
-            #lossMakingTransfersTable th:nth-child(4), #lossMakingTransfersTable td:nth-child(4) { width: auto; } */
-        }
-
-
-        /* Mobile Version (apply when viewport is 950px or narrower) (partially removed with analyzer) */
+        /* Responsive Adjustments */
         @media (max-width: 950px) {
             body {
                 padding: 15px;
@@ -951,62 +677,6 @@
                 font-size: 0.95em;
                 padding: 10px 20px;
             }
-
-            /* .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stat-card p {
-                font-size: 1.5em;
-            } */
-
-            /* Apply card-like display to ALL tables (will be removed with analyzer) */
-            /* table {
-                border: 0;
-            }
-
-            table thead {
-                display: none;
-            }
-
-            table tr {
-                display: block;
-                margin-bottom: 10px;
-                border: 1px solid var(--spl-border-light);
-                border-radius: 8px;
-                background-color: var(--spl-container-bg);
-                box-shadow: 0 2px 4px var(--spl-shadow);
-                padding: 10px;
-            }
-
-            table td {
-                display: block;
-                text-align: right;
-                padding: 8px 10px;
-                border: none;
-                border-bottom: 1px solid var(--spl-table-row-even);
-                position: relative;
-                font-size: 0.9em;
-                padding-left: 50%;
-            }
-
-            table td:last-child {
-                border-bottom: 0;
-            }
-
-            table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 10px;
-                width: calc(50% - 20px);
-                text-align: left;
-                font-weight: bold;
-                color: var(--spl-text-medium);
-                font-size: 0.85em;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            } */
         }
 
         @media (max-width: 480px) {
@@ -1019,13 +689,6 @@
             .input-section {
                 gap: 10px;
             }
-            /* Further reduce font size for very small screens if necessary (will be removed with analyzer) */
-            /* table td {
-                font-size: 0.85em;
-            }
-            table td::before {
-                font-size: 0.8em;
-            } */
         }
 
         .instructions {
@@ -1078,7 +741,7 @@
             color: #FFD700; /* Bright gold for heading and links in dark mode */
         }
 
-        /* FDR Difficulty Scale Colors (will be kept for Admin Dashboard) */
+        /* FDR Difficulty Scale Colors */
         .fdr-scale {
             display: flex;
             justify-content: center;
@@ -1103,7 +766,7 @@
             margin-top: 2px;
         }
 
-        /* Specific FDR Colors (will be kept for Admin Dashboard) */
+        /* Specific FDR Colors */
         .fdr-1 { background-color: #00B050; color: white; } /* Very Easy - Green */
         .fdr-2 { background-color: #92D050; color: black; } /* Easy - Light Green */
         .fdr-3 { background-color: #FFFF00; color: black; } /* Medium - Yellow */
@@ -1112,7 +775,7 @@
         .fdr-6 { background-color: #C00000; color: white; } /* Very Hard - Dark Red */
         .fdr-7 { background-color: #800000; color: white; } /* Extremely Hard - Deep Red */
         
-        /* Dark Mode Adjustments for FDR Colors (will be kept for Admin Dashboard) */
+        /* Dark Mode Adjustments for FDR Colors */
         body.dark-mode .fdr-level {
             color: white; /* Ensure text is white in dark mode */
         }
@@ -1127,7 +790,7 @@
         body.dark-mode .fdr-6 { background-color: #800000; } /* Darker dark red */
         body.dark-mode .fdr-7 { background-color: #530000; } /* Darker deep red */
 
-        /* Styles for the two-column FDR display (Overall) (will be kept for Admin Dashboard) */
+        /* Styles for the two-column FDR display (Overall) */
         .fdr-data-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; /* Two equal columns */
@@ -1142,7 +805,7 @@
             box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
         }
 
-        /* Styles for single-column FDR display (Home/Away) (will be kept for Admin Dashboard) */
+        /* Styles for single-column FDR display (Home/Away) */
         .fdr-single-column-grid {
             display: grid;
             grid-template-columns: 1fr; /* Single column */
@@ -1180,7 +843,7 @@
             border-bottom-color: rgba(255,255,255,0.1);
         }
 
-        /* Vertical separator for the left column items (only applies to two-column grids) (will be kept for Admin Dashboard) */
+        /* Vertical separator for the left column items (only applies to two-column grids) */
         .fdr-data-grid .fdr-grid-item:nth-child(2n-1) { /* Applies to 1st, 3rd, 5th... items (left column) */
             border-right: 1px solid var(--spl-border-light);
             transition: border-color 0.3s ease;
@@ -1189,7 +852,7 @@
             border-right-color: rgba(255,255,255,0.1);
         }
 
-        /* Remove bottom border for items in the last "row" (last two items for 2-col, last item for 1-col) (will be kept for Admin Dashboard) */
+        /* Remove bottom border for items in the last "row" (last two items for 2-col, last item for 1-col) */
         .fdr-data-grid > :nth-last-child(-n + 2) { 
             border-bottom: none;
         }
@@ -1197,7 +860,7 @@
             border-bottom: none;
         }
 
-        /* Responsive adjustments for the new grid (will be kept for Admin Dashboard) */
+        /* Responsive adjustments for the new grid */
         @media (max-width: 480px) {
             .fdr-grid-item {
                 font-size: 0.8em;
@@ -1288,192 +951,11 @@
             <!-- Content areas remain the same -->
 
             <!-- Analyzer Report Content (REMOVED) -->
-            <!-- <div id="analyzerReportContent" style="display: none;">
-                <div class="input-section" style="display: none;"> 
-                    <label for="managerIdInput">Enter Manager ID:</label>
-                    <input type="text" id="managerIdInput" placeholder="e.g., 1234" oninput="this.value = convertArabicToWesternNumerals(this.value)">
-                    <button id="analyzeButton">Full Season Report</button>
-                </div>
-                
-                <button id="shareVideoButton" style="display: none;">Download/Share Report as GIF</button>
-            
-                <div id="loadingMessage" class="loading-message" style="display: none;">
-                    Loading
-                </div>
-                <div id="errorMessage" class="error-message" style="display: none;"></div>
-                <div id="videoGeneratingMessage" class="loading-message" style="display: none;">
-                    Generating GIF... This might take a moment. Please keep this tab open.
-                </div>
-
-                <div id="managerStats" style="display: none;">
-                    <div id="managerSummarySection">
-                        <h2 id="managerName"></h2>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <h3>Overall Rank</h3>
-                                <p id="overallRank">N/A</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Best Overall Rank</h3>
-                                <p id="bestOverallRank">N/A</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Worst Overall Rank</h3>
-                                <p id="worstOverallRank">N/A</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Average Points Per Round</h3>
-                                <p id="averagePoints">N/A</p>
-                            <p class="small-text">vs. 1st Place Average: <span id="averagePointsFor1stPlace">N/A</span></p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Best Round</h3>
-                                <p id="bestRoundDisplay">N/A</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Worst Round</h3>
-                                <p id="worstRoundDisplay">N/A</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Total Green Arrows</h3>
-                                <p id="greenArrowsCount">N/A 🟢</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Total Red Arrows</h3>
-                                <p id="redArrowsCount">N/A 🔴</p>
-                            </div>
-                        </div>
-                    </div> 
-
-                    <div id="rankJourneyBox" class="rank-journey-box">
-                        <h3>My Rank Journey</h3>
-                        <button id="createRankJourneyButton">Click Here</button>
-                    </div>
-
-                    <div class="chart-section" id="rankJourneyChartContainer" style="display: none;">
-                        <h2>Overall Rank Journey</h2>
-                        <div id="videoLoadingMessage" class="video-loading-message">
-                            Animating rank journey...
-                        </div>
-                        <canvas id="rankJourneyChart"></canvas>
-                        <canvas id="hiddenChartCaptureCanvas" style="display: none;"></canvas>
-                    </div>
-                    
-                    <div class="table-section" id="topCaptainsTableContainer">
-                        <h2>Top 3 Captains</h2>
-                        <table id="topCaptainsTable">
-                            <thead>
-                                <tr>
-                                    <th>Player</th>
-                                    <th>Times Captained</th>
-                                    <th>Success</th>
-                                    <th>Failed</th>
-                                    <th>Captained Points</th>
-                                    <th>Captained Rounds</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-section" id="bestPlayersTableContainer">
-                        <h2>Top 5 Best Players</h2>
-                        <table id="bestPlayersTable">
-                            <thead>
-                                <tr>
-                                    <th>Player</th>
-                                    <th>Started</th>
-                                    <th>Auto Subbed In</th>
-                                    <th>Points Gained</th>
-                                    <th>Benched Points</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-section" id="worstPlayersTableContainer">
-                        <h2>Top 5 Worst Players</h2>
-                        <table id="worstPlayersTable">
-                            <thead>
-                                <tr>
-                                    <th>Player</th>
-                                    <th>Started</th>
-                                    <th>Auto Subbed In</th>
-                                    <th>Points Gained</th>
-                                    <th>Benched Points</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                            </table>
-                    </div>
-
-                    <div class="table-section" id="missedPointsTableContainer">
-                        <h2>Top 5 Missed Points (Benched Players)</h2>
-                        <table id="missedPointsTable">
-                            <thead>
-                                <tr>
-                                    <th>Player</th>
-                                    <th>Points</th>
-                                    <th>Round</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-section" id="transfersSummaryContainer">
-                        <h2>Transfers Summary</h2>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <h3>Total Transfers</h3>
-                                <p id="totalTransfersCount">N/A</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Total Hits (Points Deducted)</h3>
-                                <p id="totalHitsPoints">N/A</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="table-section" id="profitableTransfersTableContainer">
-                        <h2>Most Profitable Transfers</h2>
-                        <table id="profitableTransfersTable">
-                            <thead>
-                                <tr>
-                                    <th>IN</th>
-                                    <th>OUT</th>
-                                    <th>Round</th>
-                                    <th>Profit/Loss</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-section" id="lossMakingTransfersTableContainer">
-                        <h2>Most Loss-making Transfers</h2>
-                        <table id="lossMakingTransfersTable">
-                            <thead>
-                                <tr>
-                                    <th>IN</th>
-                                    <th>OUT</th>
-                                    <th>Round</th>
-                                    <th>Profit/Loss</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div> -->
+            <div id="analyzerReportContent" style="display: none;">
+                <p style="text-align: center; color: var(--spl-text-medium); margin-top: 50px;">
+                    The "Analyze My Team" feature has been removed.
+                </p>
+            </div>
 
             <!-- My Control Room Content (initially hidden) -->
             <div id="myControlRoomContent" style="display: none;">
@@ -1604,7 +1086,8 @@
     </div>
 
     <!-- Hidden canvas for GIF generation - positioned off-screen -->
-    <canvas id="gifCaptureCanvas" style="position: absolute; left: -9999px; top: -9999px;"></canvas>
+    <!-- Removed as part of Analyzer feature removal -->
+    <!-- <canvas id="gifCaptureCanvas" style="position: absolute; left: -9999px; top: -9999px;"></canvas> -->
 
     <script type="module">
         // Import Firebase modules
@@ -1651,21 +1134,9 @@
 
         // --- GLOBAL FLAGS / VARIABLES ---
         let isProcessingAuth = false; 
-        // Analyzer-specific variables removed:
-        // let rankJourneyChartInstance = null;
-        // let managerOverallRankHistory = [];
-        // let managerCurrentOverallRank = null;
-        // const totalAnimationDurationMs = 10000;
-        // let animationStartTime = null;
-        // let animationFrameId = null;
-        // const gifWidth = 1280;
-        // const gifHeight = 720;
-        // const sectionFrameDelay = 3000;
-        // const chartFrameDelay = 3000;
+        // Analyzer-specific variables removed.
         
         let currentManagerId = null; 
-        // Analyzer-specific flag removed:
-        // let isAnalyzerReportDataFetched = false; 
         let isAdminUser = false; 
         let foundUserForAdminEdit = null; 
 
@@ -1702,7 +1173,8 @@
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
         const sidebarTeamName = document.getElementById('sidebarTeamName'); 
-        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); // Kept for event listener removal
+        // menuAnalyzeMyTeam is now effectively a placeholder for the removed item, its event listener will be removed.
+        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); 
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
         const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); 
@@ -1714,44 +1186,9 @@
         const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
-        // Analyzer-specific elements removed:
-        // const managerIdInput = document.getElementById('managerIdInput'); 
-        // const analyzeButton = document.getElementById('analyzeButton'); 
-
-        const loadingMessage = document.getElementById('loadingMessage'); // Kept for general use
-        const errorMessage = document.getElementById('errorMessage'); // Kept for general use
-        // Analyzer-specific elements removed:
-        // const managerStatsDiv = document.getElementById('managerStats');
-        // const managerSummarySection = document.getElementById('managerSummarySection'); 
-        // const managerNameElem = document.getElementById('managerName');
-        // const overallRankElem = document.getElementById('overallRank');
-        // const bestOverallRankElem = document.getElementById('bestOverallRank');
-        // const worstOverallRankElem = document.getElementById('worstOverallRank');
-        // const averagePointsElem = document.getElementById('averagePoints');
-        // const averagePointsFor1stPlaceElem = document.getElementById('averagePointsFor1stPlace');
-        // const totalTransfersCountElem = document.getElementById('totalTransfersCount');
-        // const totalHitsPointsElem = document.getElementById('totalHitsPoints'); 
-        // const bestRoundDisplayElem = document.getElementById('bestRoundDisplay');
-        // const worstRoundDisplayElem = document.getElementById('worstRoundDisplay');
-        // const greenArrowsCountElem = document.getElementById('greenArrowsCount');
-        // const redArrowsCountElem = document.getElementById('redArrowsCount');
-        
-        // const topCaptainsTableBody = document.querySelector('#topCaptainsTable tbody');
-        // const bestPlayersTableBody = document.querySelector('#bestPlayersTable tbody');
-        // const worstPlayersTableBody = document.querySelector('#worstPlayersTable tbody');
-        // const missedPointsTableBody = document.querySelector('#missedPointsTable tbody');
-        // const profitableTransfersTableBody = document.querySelector('#profitableTransfersTable tbody');
-        // const lossMakingTransfersTableBody = document.querySelector('#lossMakingTransfersTable tbody');
-
-        // const rankJourneyChartCanvas = document.getElementById('rankJourneyChart');
-        // const rankJourneyChartContainer = document.getElementById('rankJourneyChartContainer');
-        // const videoLoadingMessage = document.getElementById('videoLoadingMessage');
-        // const createRankJourneyButton = document.getElementById('createRankJourneyButton');
-        // const rankJourneyBox = document.getElementById('rankJourneyBox');
-        // const shareVideoButton = document.getElementById('shareVideoButton');
-        // const videoGeneratingMessage = document.getElementById('videoGeneratingMessage'); 
-        // const gifCaptureCanvas = document.getElementById('gifCaptureCanvas'); 
-        // const hiddenChartCaptureCanvas = document.getElementById('hiddenChartCaptureCanvas');
+        // General messages/loading indicators
+        const loadingMessage = document.getElementById('loadingMessage'); 
+        const errorMessage = document.getElementById('errorMessage'); 
 
         // Admin Dashboard specific elements
         const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons'); 
@@ -1797,16 +1234,15 @@
             }
         }
 
-        // Function to display messages in the general errorMessage (for analyzer part)
-        // Kept for general error messages, but not specifically for analyzer data fetch
-        function showAnalyzerMessage(message, type = 'info') {
+        // Function to display messages in the general errorMessage 
+        function showGeneralErrorMessage(message, type = 'info') {
             if (errorMessage) {
                 errorMessage.textContent = ''; 
                 errorMessage.className = `error-message ${type}`; 
                 errorMessage.textContent = message; 
                 errorMessage.style.display = 'block'; 
             } else {
-                console.warn("Analyzer error message element not found.");
+                console.warn("General error message element not found.");
             }
         }
 
@@ -1840,12 +1276,6 @@
             if (myControlRoomContent) myControlRoomContent.style.display = 'none';
             if (adminDashboardContent) adminDashboardContent.style.display = 'none'; 
             
-            // Analyzer-specific elements hidden/removed:
-            // if (shareVideoButton) shareVideoButton.style.display = 'none'; 
-            // if (managerStatsDiv) managerStatsDiv.style.display = 'none'; 
-            // if (rankJourneyBox) rankJourneyBox.style.display = 'none';
-            // if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = 'none';
-
             // Admin Dashboard specific elements to manage
             if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'none'; 
             if (adminSearchSection) adminSearchSection.style.display = 'none'; 
@@ -1864,22 +1294,7 @@
             // General messages/loading indicators
             if (loadingMessage) loadingMessage.style.display = 'none';
             if (errorMessage) errorMessage.style.display = 'none';
-            // Analyzer-specific messages removed:
-            // if (videoGeneratingMessage) videoGeneratingMessage.style.display = 'none';
             if (authMessageBox) authMessageBox.style.display = 'none'; 
-        }
-
-        // Function to clear analyzer report data (REMOVED)
-        function clearAnalyzerReport() {
-            // All analyzer-specific DOM manipulation removed from here
-            // managerNameElem.textContent = '';
-            // overallRankElem.textContent = 'N/A';
-            // ... (rest of analyzer clearing)
-            // managerOverallRankHistory = []; 
-            // if (rankJourneyChartInstance) { rankJourneyChartInstance.destroy(); rankJourneyChartInstance = null; }
-            // if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
-            // animationStartTime = null;
-            // isAnalyzerReportDataFetched = false; 
         }
 
         // Function to clear admin search results and input fields
@@ -2062,7 +1477,6 @@
                             if (loggedInContent) loggedInContent.style.display = 'block'; // Show the main logged-in container
                             
                             currentManagerId = userManagerId; 
-                            // isAnalyzerReportDataFetched = false; // Analyzer-specific flag removed
 
                             // Check if current user is an admin to show Admin Dashboard menu item
                             const adminDocRef = doc(db, "admins", user.uid);
@@ -2197,7 +1611,6 @@
                             if (loggedInContent) loggedInContent.style.display = 'block'; 
                             
                             currentManagerId = userManagerId; 
-                            // isAnalyzerReportDataFetched = false; // Analyzer-specific flag removed
 
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
@@ -2250,7 +1663,6 @@
                 if (loginForm) loginForm.style.display = 'block'; 
                 if (signupForm) signupForm.style.display = 'none';
                 if (loggedInContent) loggedInContent.style.display = 'none'; 
-                // clearAnalyzerReport(); // Analyzer-specific function removed
                 isAdminUser = false; 
                 if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; 
                 if (menuToggle) menuToggle.style.display = 'none'; 
@@ -2272,7 +1684,7 @@
             
             if (sectionId === 'analyzerReport') {
                 // This section is now empty as Analyzer is removed.
-                // It will simply hide everything else.
+                // It will simply display a message.
                 if (analyzerReportContent) analyzerReportContent.style.display = 'block';
                 console.log("DEBUG: Analyzer Report section is now empty.");
             } else if (sectionId === 'controlRoom') {
@@ -2292,20 +1704,10 @@
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
                 } else {
                     console.warn("Attempted to access Admin Dashboard without admin privileges.");
-                    showAnalyzerMessage("Access Denied: You do not have administrator privileges.", "error"); 
+                    showGeneralErrorMessage("Access Denied: You do not have administrator privileges.", "error"); 
                 }
             }
         }
-
-
-        // --- Original Analyzer Data Fetching Logic (REMOVED) ---
-        // async function fetchAndDisplaySPLReport(managerId) { ... }
-        // function extractAndFormatRound(rankValueString) { ... }
-        // function renderRankJourneyChart(fullRankHistoryData) { ... }
-        // async function prepareChartForCapture() { ... }
-        // async function captureAndPrepareSectionsForGIF() { ... }
-        // async function generateGIF() { ... }
-
 
         // --- Admin Dashboard Logic ---
 
@@ -2835,18 +2237,9 @@
             }
 
             // --- Menu Item Click Listeners ---
-            // Removed event listener for menuAnalyzeMyTeam
-            // if (menuAnalyzeMyTeam) {
-            //     menuAnalyzeMyTeam.addEventListener('click', (e) => {
-            //         e.preventDefault();
-            //         showContentSection('analyzerReport');
-            //         sidebarMenu.classList.remove('open'); // Close menu after click
-            //         overlay.style.display = 'none';
-            //         if (currentManagerId && !isAnalyzerReportDataFetched) {
-            //             fetchAndDisplaySPLReport(currentManagerId);
-            //         }
-            //     });
-            // }
+            // The 'Analyze My Team' menu item and its event listener are removed.
+            // The menu item itself is commented out in HTML.
+            // The JS variable `menuAnalyzeMyTeam` is still declared but its listener is removed.
             if (menuMyControlRoom) {
                 menuMyControlRoom.addEventListener('click', (e) => {
                     e.preventDefault();
