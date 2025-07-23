@@ -1730,6 +1730,9 @@
     <canvas id="gifCaptureCanvas" style="position: absolute; left: -9999px; top: -9999px;"></canvas>
 
     <script type="module">
+        // Log to confirm script starts execution
+        console.log("DEBUG: index.html script started.");
+
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { 
@@ -1799,6 +1802,7 @@
 
 
         // --- DOM Element References ---
+        // It's crucial that these are defined before DOMContentLoaded uses them
         const mainLogo = document.getElementById('mainLogo');
         const darkModeToggle = document.getElementById('darkModeToggle');
         const lightModeLogoSrc = 'unnamed.jpg'; 
@@ -1819,6 +1823,8 @@
         const signupManagerIdInput = document.getElementById('signupManagerId'); 
         const signupButton = document.getElementById('signupButton');
         const showLoginLink = document.getElementById('showLoginLink'); 
+        const instructionsBox = document.getElementById('instructionsBox'); 
+
 
         // Logged-in / Analyzer UI elements
         const loggedInContent = document.getElementById('loggedInContent');
@@ -1827,22 +1833,21 @@
         const menuToggle = document.getElementById('menuToggle');
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
-        const sidebarTeamName = document.getElementById('sidebarTeamName'); // New element
+        const sidebarTeamName = document.getElementById('sidebarTeamName'); 
         const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam');
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
-        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); // New element
-        const displayLoggedInManagerId = sidebarManagerIdText.querySelector('span'); // Span inside the new P tag
-        const logoutButton = document.getElementById('logoutButton'); // Moved to sidebar
+        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); 
+        const displayLoggedInManagerId = sidebarManagerIdText ? sidebarManagerIdText.querySelector('span') : null; 
+        const logoutButton = document.getElementById('logoutButton'); 
         
         // Content areas to toggle
         const analyzerReportContent = document.getElementById('analyzerReportContent');
-        const myControlRoomContent = document.getElementById('myControlRoomContent'); // Renamed for clarity, was just myControlRoomContent
+        const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
         const managerIdInput = document.getElementById('managerIdInput'); 
         const analyzeButton = document.getElementById('analyzeButton'); 
-        const instructionsBox = document.getElementById('instructionsBox'); 
 
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
@@ -1912,11 +1917,11 @@
         const fdrOptionsContainer = document.getElementById('fdrOptionsContainer');
         const overallFDRButton = document.getElementById('overallFDRButton');
         const homeAwayFDRButton = document.getElementById('homeAwayFDRButton');
-        const customizedFDRButton = document.getElementById('customizedFDRButton');
+        const customizedFDRButton = document.getElementById('customizedFDRButton'); // Corrected casing here
 
         const overallFDRDisplayArea = document.getElementById('overallFDRDisplayArea');
         const homeAwayFDRDisplayArea = document.getElementById('homeAwayFDRDisplayArea');
-        const customizedFDRInputArea = document.getElementById('customizedFDRInputArea');
+        const customizedFDRInputArea = document.getElementById('customizedFDRInputArea'); // Corrected casing here
         const customFDRInputsContainer = document.getElementById('customFDRInputsContainer');
         const saveCustomFDRButton = document.getElementById('saveCustomFDRButton');
 
@@ -1936,77 +1941,97 @@
 
         // Function to display messages in the authMessageBox
         function showAuthMessage(message, type = 'info') {
-            authMessageBox.textContent = ''; 
-            authMessageBox.className = `message-box ${type}`; 
-            authMessageBox.textContent = message; 
-            authMessageBox.style.display = 'block'; 
+            if (authMessageBox) {
+                authMessageBox.textContent = ''; 
+                authMessageBox.className = `message-box ${type}`; 
+                authMessageBox.textContent = message; 
+                authMessageBox.style.display = 'block'; 
+            } else {
+                console.warn("Auth message box element not found.");
+            }
         }
 
         // Function to display messages in the general errorMessage (for analyzer part)
         function showAnalyzerMessage(message, type = 'info') {
-            errorMessage.textContent = ''; 
-            errorMessage.className = `error-message ${type}`; 
-            errorMessage.textContent = message; 
-            errorMessage.style.display = 'block'; 
+            if (errorMessage) {
+                errorMessage.textContent = ''; 
+                errorMessage.className = `error-message ${type}`; 
+                errorMessage.textContent = message; 
+                errorMessage.style.display = 'block'; 
+            } else {
+                console.warn("Analyzer error message element not found.");
+            }
         }
 
         // Function to display messages specific to Admin Dashboard
         function showAdminMessage(message, type = 'info') {
-            adminMessage.textContent = '';
-            adminMessage.className = `message-box ${type}`;
-            adminMessage.textContent = message;
-            adminMessage.style.display = 'block';
-            adminSearchResults.style.display = 'none'; // Hide results when a new admin message is shown
+            if (adminMessage) {
+                adminMessage.textContent = '';
+                adminMessage.className = `message-box ${type}`;
+                adminMessage.textContent = message;
+                adminMessage.style.display = 'block';
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results when a new admin message is shown
+            } else {
+                console.warn("Admin message element not found.");
+            }
         }
 
         // Function to display messages specific to Excel Upload (NEW)
         function showExcelUploadMessage(message, type = 'info') {
-            excelUploadMessage.textContent = '';
-            excelUploadMessage.className = `message-box ${type}`;
-            excelUploadMessage.textContent = message;
-            excelUploadMessage.style.display = 'block';
+            if (excelUploadMessage) {
+                excelUploadMessage.textContent = '';
+                excelUploadMessage.className = `message-box ${type}`;
+                excelUploadMessage.textContent = message;
+                excelUploadMessage.style.display = 'block';
+            } else {
+                console.warn("Excel upload message element not found.");
+            }
         }
 
         // Function to display messages in My Control Room FDR sections
         function showMyControlRoomFDRMessage(messageBoxElement, message, type = 'info') {
-            messageBoxElement.textContent = '';
-            messageBoxElement.className = `message-box ${type}`;
-            messageBoxElement.textContent = message;
-            messageBoxElement.style.display = 'block';
+            if (messageBoxElement) {
+                messageBoxElement.textContent = '';
+                messageBoxElement.className = `message-box ${type}`;
+                messageBoxElement.textContent = message;
+                messageBoxElement.style.display = 'block';
+            } else {
+                console.warn("My Control Room FDR message box element not found.");
+            }
         }
 
         function hideAllContentSections() {
-            analyzerReportContent.style.display = 'none';
-            myControlRoomContent.style.display = 'none';
-            adminDashboardContent.style.display = 'none'; 
+            if (analyzerReportContent) analyzerReportContent.style.display = 'none';
+            if (myControlRoomContent) myControlRoomContent.style.display = 'none';
+            if (adminDashboardContent) adminDashboardContent.style.display = 'none'; 
             
             // Also hide specific elements that show up in sub-sections
-            shareVideoButton.style.display = 'none'; 
-            managerStatsDiv.style.display = 'none'; 
-            rankJourneyBox.style.display = 'none';
-            rankJourneyChartContainer.style.display = 'none';
+            if (shareVideoButton) shareVideoButton.style.display = 'none'; 
+            if (managerStatsDiv) managerStatsDiv.style.display = 'none'; 
+            if (rankJourneyBox) rankJourneyBox.style.display = 'none';
+            if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = 'none';
 
             // Admin Dashboard specific elements to manage
-            if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'none'; // Hide Admin buttons initially
-            if (adminSearchSection) adminSearchSection.style.display = 'none'; // Hide search input/button
-            if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide search results
+            if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'none'; 
+            if (adminSearchSection) adminSearchSection.style.display = 'none'; 
+            if (adminSearchResults) adminSearchResults.style.display = 'none'; 
             if (adminMessage) adminMessage.style.display = 'none';      
             
             // NEW: Hide data upload specific elements
             if (dataUploadSection) dataUploadSection.style.display = 'none';
             if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none';
             if (excelUploadMessage) excelUploadMessage.style.display = 'none';
-            if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; // Hide all Admin FDR sections
+            if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
             if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
             if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
 
             // My Control Room FDR specific elements to manage
             // Note: mainFDRButton and fdrOptionsContainer are intentionally NOT hidden here,
             // as per the user's latest request for persistence.
-            if (overallFDRDisplayArea) overallFDRDisplayArea.style.display = 'none'; // Hide all My Control Room FDR sections
+            if (overallFDRDisplayArea) overallFDRDisplayArea.style.display = 'none'; 
             if (homeAwayFDRDisplayArea) homeAwayFDRDisplayArea.style.display = 'none';
-            if (customizedFDRInputArea) customizedFDRInputArea.style.display = 'none';
-            if (overallFDRMessage) overallFDRMessage.style.display = 'none'; // Hide messages
+            if (customizedFDRInputArea) customizedFDRInputArea.style.display = 'none'; // Corrected casing here
+            if (overallFDRMessage) overallFDRMessage.style.display = 'none'; 
             if (homeAwayFDRMessage) homeAwayFDRMessage.style.display = 'none';
             if (customFDRMessage) customFDRMessage.style.display = 'none';
 
@@ -2060,7 +2085,7 @@
             if (adminEditEmailInput) adminEditEmailInput.value = '';
             if (adminEditSplManagerIdInput) adminEditSplManagerIdInput.value = '';
             foundUserForAdminEdit = null;
-            if (adminSearchSection) adminSearchSection.style.display = 'none'; // Ensure search is hidden
+            if (adminSearchSection) adminSearchSection.style.display = 'none'; 
             if (adminSearchResults) adminSearchResults.style.display = 'none'; 
             if (adminMessage) adminMessage.style.display = 'none';      
         }
@@ -2329,58 +2354,63 @@
 
         // --- Authentication State Listener (Core UI Logic) ---
         onAuthStateChanged(auth, async (user) => {
+            console.log("DEBUG: onAuthStateChanged fired. User:", user ? user.uid : "null");
+
             if (isProcessingAuth) { 
                 console.log("DEBUG: onAuthStateChanged deferred due to active auth process.");
                 return; 
             }
 
             if (user) {
+                console.log("DEBUG: User detected, checking email verification and data...");
                 await reload(user); 
 
                 if (user.emailVerified) {
+                    console.log("DEBUG: Email verified. Fetching user document...");
                     const userDocRef = doc(db, "users", user.uid);
                     const userDocSnap = await getDoc(userDocRef);
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
+                        console.log("DEBUG: User data from Firestore:", userData);
                         
+                        // Update emailVerified status in Firestore if it's false but Firebase auth says true
                         if (!userData.emailVerified && user.emailVerified) {
                             await updateDoc(userDocRef, { emailVerified: true });
                             userData.emailVerified = true; 
+                            console.log("DEBUG: Updated emailVerified status in Firestore.");
                         }
 
                         const userManagerId = userData.splManagerId;
-                        const teamName = userData.teamName || 'Your Team'; // Get team name from user data or default
+                        const teamName = userData.teamName || 'Your Team'; 
 
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
+                            console.log("DEBUG: Valid Manager ID found. Displaying logged-in content.");
                             if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
-                            if (sidebarTeamName) sidebarTeamName.textContent = teamName; // Set team name in sidebar
+                            if (sidebarTeamName) sidebarTeamName.textContent = teamName; 
                             
                             if (authSection) authSection.style.display = 'none'; 
                             if (loggedInContent) loggedInContent.style.display = 'block'; 
                             
                             currentManagerId = userManagerId; 
-                            isAnalyzerReportDataFetched = false; // Ensure flag is reset on fresh login
+                            isAnalyzerReportDataFetched = false; 
 
-                            // Check if current user is an admin to show Admin Dashboard menu item
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
-                            console.log(`DEBUG AUTH STATE (onAuthStateChanged): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
+                            console.log(`DEBUG: User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
                             
-                            // Update visibility of the Admin Dashboard menu item
                             if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
-                            console.log(`DEBUG ADMIN MENU ITEM RENDER (onAuthStateChanged Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
-
-                            // Show menu toggle icon
                             if (menuToggle) menuToggle.style.display = 'block';
 
-                            // Default to Analyzer Report section
                             showContentSection('analyzerReport');
+                            console.log("DEBUG: showContentSection('analyzerReport') called.");
 
                         } else {
+                            console.warn("DEBUG: No valid SPL Manager ID found for user. Logging out.");
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support or re-signup.", "error");
                             await signOut(auth); 
+                            // Ensure auth section is visible after logout
                             if (authSection) authSection.style.display = 'block';
                             if (loginForm) loginForm.style.display = 'block'; 
                             if (signupForm) signupForm.style.display = 'none';
@@ -2388,9 +2418,10 @@
                             if (instructionsBox) instructionsBox.style.display = 'none'; 
                         }
                     } else {
-                        console.warn("Firestore document for user does not exist. Logging out.");
+                        console.warn("DEBUG: Firestore document for user does not exist. Logging out.");
                         showAuthMessage("User data not found. Please contact support. Logging out.", "error");
                         await signOut(auth); 
+                        // Ensure auth section is visible after logout
                         if (authSection) authSection.style.display = 'block';
                         if (loginForm) loginForm.style.display = 'block'; 
                         if (signupForm) signupForm.style.display = 'none';
@@ -2398,7 +2429,9 @@
                         if (instructionsBox) instructionsBox.style.display = 'none'; 
                     }
                 } else {
+                    console.log("DEBUG: Email not verified. Logging out.");
                     showAuthMessage("Please verify your email address to access the analyzer.", "info");
+                    // Ensure auth section is visible
                     if (authSection) authSection.style.display = 'block';
                     if (loginForm) loginForm.style.display = 'block'; 
                     if (signupForm) signupForm.style.display = 'none';
@@ -2406,20 +2439,21 @@
                     if (instructionsBox) instructionsBox.style.display = 'none'; 
                 }
             } else {
+                console.log("DEBUG: No user detected. Displaying authentication section.");
                 // User is not logged in
                 if (authSection) authSection.style.display = 'block'; 
                 if (loginForm) loginForm.style.display = 'block'; 
                 if (signupForm) signupForm.style.display = 'none';
                 if (loggedInContent) loggedInContent.style.display = 'none'; 
-                clearAnalyzerReport(); // Clear any previous report data when logging out
+                clearAnalyzerReport(); 
                 isAdminUser = false; 
-                if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; // Hide admin menu item
-                if (menuToggle) menuToggle.style.display = 'none'; // Hide menu toggle
-                if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure instructions are hidden on logout
-                if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close sidebar on logout
-                if (overlay) overlay.style.display = 'none'; // Hide overlay on logout
-                if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; // Reset team name
-                if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; // Clear manager ID
+                if (menuAdminDashboard) menuAdminDashboard.style.display = 'none'; 
+                if (menuToggle) menuToggle.style.display = 'none'; 
+                if (instructionsBox) instructionsBox.style.display = 'none'; 
+                if (sidebarMenu) sidebarMenu.classList.remove('open'); 
+                if (overlay) overlay.style.display = 'none'; 
+                if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; 
+                if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; 
             }
         });
 
@@ -2438,17 +2472,21 @@
                 if (managerStatsDiv) managerStatsDiv.style.display = 'none'; 
                 if (rankJourneyBox) rankJourneyBox.style.display = 'none';
 
-                if (isAnalyzerReportDataFetched) {
+                if (currentManagerId && isAnalyzerReportDataFetched) { 
                     if (managerStatsDiv) managerStatsDiv.style.display = 'block';
                     if (rankJourneyBox) rankJourneyBox.style.display = 'flex'; 
                     if (shareVideoButton) shareVideoButton.style.display = 'block';
+                } else if (currentManagerId && !isAnalyzerReportDataFetched) {
+                    console.log("DEBUG: Analyzer report data not fetched yet, triggering fetch.");
+                    fetchAndDisplaySPLReport(currentManagerId);
                 } else {
-                    console.log("DEBUG: Analyzer report data not fetched yet, waiting for 'Analyze My Team' menu click.");
+                    console.log("DEBUG: No currentManagerId, cannot fetch analyzer report. User needs to set it.");
+                    // Optionally show a message asking user to set manager ID if not set
                 }
 
             } else if (sectionId === 'controlRoom') {
                 if (myControlRoomContent) myControlRoomContent.style.display = 'block';
-                initializeFDRSection(); // Initialize FDR feature when My Control Room is shown
+                initializeFDRSection(); 
             } else if (sectionId === 'adminDashboard') {
                 if (isAdminUser) { 
                     if (adminDashboardContent) adminDashboardContent.style.display = 'block'; 
@@ -2456,9 +2494,9 @@
                     if (adminSearchSection) adminSearchSection.style.display = 'flex'; 
                     if (adminSearchResults) adminSearchResults.style.display = 'none'; 
                     if (adminMessage) adminMessage.style.display = 'none'; 
-                    if (dataUploadSection) dataUploadSection.style.display = 'none'; // Hide data upload by default when entering admin
-                    if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
-                    if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; // Hide all FDR sections
+                    if (dataUploadSection) dataUploadSection.style.display = 'none'; 
+                    if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
+                    if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
                     if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
                     if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
                     showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
@@ -2680,7 +2718,7 @@
 
                     } else {
                         console.error('DEBUG: API response not OK:', data.error || 'Unknown error');
-                        showAnalyzerMessage(data.error || 'An unknown error occurred.', 'error');
+                        showAnalyzerMessage(data.error || 'An unknown error occurred.', "error");
                         if (managerStatsDiv) managerStatsDiv.style.display = 'none';
                         if (rankJourneyBox) rankJourneyBox.style.display = 'none';
                         if (shareVideoButton) shareVideoButton.style.display = 'none';
@@ -2688,7 +2726,7 @@
 
                 } catch (error) {
                     console.error("DEBUG: Critical fetchAndDisplaySPLReport error (outer catch):", error);
-                    showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, 'error');
+                    showAnalyzerMessage(`Failed to fetch data: ${error.message}. This might be due to a network issue, an invalid Manager ID, or a temporary API problem. Please try again.`, "error");
                     if (loadingMessage) loadingMessage.style.display = 'none';
                     if (managerStatsDiv) managerStatsDiv.style.display = 'none';
                     if (rankJourneyBox) rankJourneyBox.style.display = 'none';
@@ -2713,6 +2751,11 @@
         }
 
         function renderRankJourneyChart(fullRankHistoryData) {
+            if (!rankJourneyChartCanvas) {
+                console.error("ERROR: rankJourneyChartCanvas element not found for chart rendering.");
+                return;
+            }
+
             if (!fullRankHistoryData || fullRankHistoryData.length === 0) {
                 console.warn("DEBUG: No rank data to render chart.");
                 return;
@@ -2906,6 +2949,7 @@
                     }
                 }
 
+                let interpolatedRank;
                 if (prevDataPoint && nextDataPoint) {
                     const roundRange = nextDataPoint.round - prevDataPoint.round;
                     const rankRange = nextDataPoint.rank - prevDataPoint.rank;
@@ -2918,7 +2962,7 @@
                 }
                 
                 if (interpolatedRank !== null) {
-                    rankJourneyChartInstance.data.datasets[1].data = [{ x: dotXPosition, y: interpolatedRank }];
+                    rankJourneyChartInstance.data.datasets[1].data = [{ x: currentRoundForDot, y: interpolatedRank }]; 
                 } else {
                     rankJourneyChartInstance.data.datasets[1].data = [];
                 }
@@ -2931,10 +2975,10 @@
                         break;
                     }
                 }
-                if (interpolatedRank !== null && traceData.length > 0 && dotXPosition > traceData[traceData.length - 1].x) {
-                    traceData.push({ x: dotXPosition, y: interpolatedRank });
-                } else if (interpolatedRank !== null && traceData.length === 0 && fullRankHistoryData.length > 0 && dotXPosition >= fullRankHistoryData[0].round) {
-                    traceData.push({ x: dotXPosition, y: interpolatedRank });
+                if (interpolatedRank !== null && traceData.length > 0 && currentRoundForDot > traceData[traceData.length - 1].x) {
+                    traceData.push({ x: currentRoundForDot, y: interpolatedRank });
+                } else if (interpolatedRank !== null && traceData.length === 0 && fullRankHistoryData.length > 0 && currentRoundForDot >= fullRankHistoryData[0].round) {
+                    traceData.push({ x: currentRoundForDot, y: interpolatedRank });
                 }
                 
                 rankJourneyChartInstance.data.datasets[0].data = traceData;
@@ -2968,12 +3012,17 @@
          * Renders the chart to its final state onto a hidden canvas for GIF capture.
          */
         async function prepareChartForCapture() {
+            if (!rankJourneyChartCanvas || !hiddenChartCaptureCanvas) {
+                console.error("ERROR: Chart canvases not found for GIF capture preparation.");
+                return null;
+            }
+
             if (!managerOverallRankHistory || managerOverallRankHistory.length === 0) {
                 console.warn("DEBUG: No rank data to prepare chart for capture.");
                 return null;
             }
             
-            const originalChartContainerDisplay = rankJourneyChartContainer.style.display;
+            const originalChartContainerDisplay = rankJourneyChartContainer ? rankJourneyChartContainer.style.display : 'none';
             if (rankJourneyChartContainer) rankJourneyChartContainer.style.display = 'flex';
             if (rankJourneyChartCanvas) rankJourneyChartCanvas.style.display = 'block'; 
             
@@ -3136,7 +3185,7 @@
                 const chartWidth = rankJourneyChartCanvas.width * chartRatio;
                 const chartHeight = rankJourneyChartCanvas.height * chartRatio;
                 const chartX = (hiddenChartCaptureCanvas.width - chartWidth) / 2;
-                const chartY = (hiddenChartCaptureCanvas.height - chartHeight) / 2; // Corrected to use chartHeight
+                const chartY = (hiddenChartCaptureCanvas.height - chartHeight) / 2; 
 
                 hiddenCtx.drawImage(rankJourneyChartCanvas, chartX, chartY, chartWidth, chartHeight);
             }
@@ -3365,7 +3414,7 @@
 
             gif.on('error', function(error) {
                 console.error("DEBUG: GIF generation error:", error);
-                showAnalyzerMessage(`GIF generation failed: ${error.message}. Please try again.`, 'error');
+                showAnalyzerMessage(`GIF generation failed: ${error.message}. Please try again.`, "error");
                 if (videoGeneratingMessage) videoGeneratingMessage.style.display = 'none'; 
             });
 
@@ -3553,12 +3602,12 @@
         // Admin Dashboard Sub-Navigation Logic
         if (adminUsersButton) {
             adminUsersButton.addEventListener('click', () => {
-                if (adminSearchSection) adminSearchSection.style.display = 'flex'; // Show search input/button
-                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results until search is run
-                if (adminMessage) adminMessage.style.display = 'none'; // Clear previous messages
-                if (dataUploadSection) dataUploadSection.style.display = 'none'; // Hide data upload section
-                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; // Hide current rankings display
-                if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; // Hide all FDR sections
+                if (adminSearchSection) adminSearchSection.style.display = 'flex'; 
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                if (adminMessage) adminMessage.style.display = 'none'; 
+                if (dataUploadSection) dataUploadSection.style.display = 'none'; 
+                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'none'; 
+                if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
                 if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
                 if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
                 showAdminMessage("Enter user details to search.", "info");
@@ -3567,13 +3616,13 @@
 
         if (adminDataButton) {
             adminDataButton.addEventListener('click', () => {
-                if (adminSearchSection) adminSearchSection.style.display = 'none'; // Hide search input/button
-                if (adminSearchResults) adminSearchResults.style.display = 'none'; // Hide results
-                if (adminMessage) adminMessage.style.display = 'none'; // Clear previous messages
-                if (dataUploadSection) dataUploadSection.style.display = 'block'; // Show the data upload section
-                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'block'; // Show current rankings display
+                if (adminSearchSection) adminSearchSection.style.display = 'none'; 
+                if (adminSearchResults) adminSearchResults.style.display = 'none'; 
+                if (adminMessage) adminMessage.style.display = 'none'; 
+                if (dataUploadSection) dataUploadSection.style.display = 'block'; 
+                if (currentRankingsDisplay) currentRankingsDisplay.style.display = 'block'; 
                 showExcelUploadMessage("Upload your league table Excel file here.", "info");
-                fetchAndDisplayCurrentRankingsAdmin(); // Fetch and display existing rankings for Admin
+                fetchAndDisplayCurrentRankingsAdmin(); 
             });
         }
 
@@ -3583,31 +3632,30 @@
             excelFileUploadInput.addEventListener('change', async (event) => {
                 const file = event.target.files[0];
                 if (!file) {
-                    showExcelUploadMessage('No file selected.', 'error');
+                    showExcelUploadMessage('No file selected.', "error");
                     return;
                 }
 
-                // Check window.XLSX directly here (it's loaded from CDN in HTML)
                 if (typeof window.XLSX === 'undefined') {
-                    showExcelUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', 'error');
+                    showExcelUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', "error");
                     console.error("window.XLSX is not defined. Excel library not loaded.");
                     return;
                 }
 
-                showExcelUploadMessage('Uploading and processing Excel file...', 'info');
+                showExcelUploadMessage('Uploading and processing Excel file...', "info");
 
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     try {
                         const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' }); // Use XLSX directly
+                        const workbook = XLSX.read(data, { type: 'array' }); 
 
                         const sheetName = workbook.SheetNames[0];
                         const worksheet = workbook.Sheets[sheetName];
-                        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Use XLSX directly
+                        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); 
 
                         if (jsonRows.length < 2) {
-                            showExcelUploadMessage('Excel file is empty or missing data rows.', 'error');
+                            showExcelUploadMessage('Excel file is empty or missing data rows.', "error");
                             return;
                         }
 
@@ -3615,8 +3663,8 @@
                         
                         const selectedRankingType = rankingTypeSelect.value; 
                         let expectedHeaders;
-                        let fdrColumnName1, fdrColumnName2; // For overall
-                        let fdrColumnNameSingle; // For home/away
+                        let fdrColumnName1, fdrColumnName2; 
+                        let fdrColumnNameSingle; 
 
                         if (selectedRankingType === 'overall') {
                             expectedHeaders = {
@@ -3631,14 +3679,14 @@
                             expectedHeaders = {
                                 rank: ['rank', 'ranking number'],
                                 team: ['team', 'team name'],
-                                fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] // Home sheet has FDR Away
+                                fdrAway: ['fdr away', 'away fdr', 'fdr rating away'] 
                             };
                             fdrColumnNameSingle = 'fdrAway';
                         } else if (selectedRankingType === 'away') {
                             expectedHeaders = {
                                 rank: ['rank', 'ranking number'],
                                 team: ['team', 'team name'],
-                                fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] // Away sheet has FDR Home
+                                fdrHome: ['fdr home', 'home fdr', 'fdr rating home'] 
                             };
                             fdrColumnNameSingle = 'fdrHome';
                         } else {
@@ -3696,11 +3744,11 @@
                             } else {
                                 fdrValue1 = parseInt(row[fdrColSingleIndex], 10);
                                 if (!isNaN(rank) && team && !isNaN(fdrValue1) &&
-                                    fdrValue1 >=1 && fdrValue1 <= 6) { // FDR 1-6 for Home/Away
+                                    fdrValue1 >=1 && fdrValue1 <= 6) { 
                                     if (selectedRankingType === 'home') {
-                                        parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); // Store as fdrAway for Home rankings
+                                        parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); 
                                     } else if (selectedRankingType === 'away') {
-                                        parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); // Store as fdrHome for Away rankings
+                                        parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); 
                                     }
                                     isValid = true;
                                 }
@@ -3734,8 +3782,8 @@
 
                         await setDoc(splRankingsDocRef, newData, { merge: true });
                         showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, "success");
-                        event.target.value = null; // Clear file input
-                        fetchAndDisplayCurrentRankingsAdmin(); // Refresh display after upload
+                        event.target.value = null; 
+                        fetchAndDisplayCurrentRankingsAdmin(); 
                     } catch (error) {
                         console.error('Error processing Excel file or uploading to Firestore:', error);
                         showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, "error");
@@ -3805,7 +3853,7 @@
                             
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrAway}`;
-                            teamItem.innerHTML = `${teamName} ✈️`; // Changed to airplane for Home rankings
+                            teamItem.innerHTML = `${teamName} ✈️`; 
                             if (homeFDRGridAdmin) homeFDRGridAdmin.appendChild(teamItem);
                         });
                         if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'block';
@@ -3828,7 +3876,7 @@
 
                             const teamItem = document.createElement('div');
                             teamItem.className = `fdr-grid-item fdr-${fdrHome}`;
-                            teamItem.innerHTML = `${teamName} 🏠`; // Changed to house for Away rankings
+                            teamItem.innerHTML = `${teamName} 🏠`; 
                             if (awayFDRGridAdmin) awayFDRGridAdmin.appendChild(teamItem);
                         });
                         if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'block';
@@ -3849,12 +3897,12 @@
         }
 
         // --- My Control Room FDR Feature Logic (NEW) ---
-        const currentSeasonId = "2025-2026"; // Define current season ID
+        const currentSeasonId = "2025-2026"; 
 
         async function initializeFDRSection() {
-            if (mainFDRButton) mainFDRButton.style.display = 'block'; // Ensure main FDR button is visible
-            if (fdrOptionsContainer) fdrOptionsContainer.style.display = 'flex'; // Ensure options are visible
-            hideFDRDisplayAreas(); // Hide all specific FDR content areas
+            if (mainFDRButton) mainFDRButton.style.display = 'block'; 
+            if (fdrOptionsContainer) fdrOptionsContainer.style.display = 'flex'; 
+            hideFDRDisplayAreas(); 
 
             const user = auth.currentUser;
             if (!user) {
@@ -3909,7 +3957,7 @@
             hideFDRDisplayAreas();
             if (overallFDRDisplayArea) overallFDRDisplayArea.style.display = 'block';
             showMyControlRoomFDRMessage(overallFDRMessage, "Loading Overall FDR...", "info");
-            if (overallFDRGridMyControlRoom) overallFDRGridMyControlRoom.innerHTML = ''; // Clear previous content
+            if (overallFDRGridMyControlRoom) overallFDRGridMyControlRoom.innerHTML = ''; 
 
             const data = await fetchPublicFDRData();
             if (data && data.overall && data.overall.length > 0) {
@@ -3942,8 +3990,8 @@
             hideFDRDisplayAreas();
             if (homeAwayFDRDisplayArea) homeAwayFDRDisplayArea.style.display = 'block';
             showMyControlRoomFDRMessage(homeAwayFDRMessage, "Loading Home/Away FDR...", "info");
-            if (homeFDRGridMyControlRoom) homeFDRGridMyControlRoom.innerHTML = ''; // Clear previous content
-            if (awayFDRGridMyControlRoom) awayFDRGridMyControlRoom.innerHTML = ''; // Clear previous content
+            if (homeFDRGridMyControlRoom) homeFDRGridMyControlRoom.innerHTML = ''; 
+            if (awayFDRGridMyControlRoom) awayFDRGridMyControlRoom.innerHTML = ''; 
 
             const data = await fetchPublicFDRData();
             if (data) {
@@ -3956,7 +4004,7 @@
                     data.home.forEach(item => {
                         const teamItem = document.createElement('div');
                         teamItem.className = `fdr-grid-item fdr-${item.fdrAway}`;
-                        teamItem.innerHTML = `${item.team} ✈️`; // Airplane for Home
+                        teamItem.innerHTML = `${item.team} ✈️`; 
                         if (homeFDRGridMyControlRoom) homeFDRGridMyControlRoom.appendChild(teamItem);
                     });
                 } else {
@@ -3972,7 +4020,7 @@
                     data.away.forEach(item => {
                         const teamItem = document.createElement('div');
                         teamItem.className = `fdr-grid-item fdr-${item.fdrHome}`;
-                        teamItem.innerHTML = `${item.team} 🏠`; // House for Away
+                        teamItem.innerHTML = `${item.team} 🏠`; 
                         if (awayFDRGridMyControlRoom) awayFDRGridMyControlRoom.appendChild(teamItem);
                     });
                 } else {
@@ -3986,7 +4034,8 @@
 
         async function displayCustomFDR(customRatings = null) {
             hideFDRDisplayAreas();
-            if (customizedFDRInputArea) customizedFDRInputArea.style.display = 'block';
+            // Corrected typo here: used customizedFDRInputArea
+            if (customizedFDRInputArea) customizedFDRInputArea.style.display = 'block'; 
             showMyControlRoomFDRMessage(customFDRMessage, "Loading Customized FDR...", "info");
             
             const user = auth.currentUser;
@@ -4010,11 +4059,11 @@
                 }
             }
             
-            if (customFDRInputsContainer) customFDRInputsContainer.innerHTML = ''; // Clear previous inputs
+            if (customFDRInputsContainer) customFDRInputsContainer.innerHTML = ''; 
             splTeams.forEach(team => {
-                const teamId = team.replace(/\s/g, ''); // Remove spaces for ID
-                const homeRating = loadedCustomRatings && loadedCustomRatings[teamId] ? loadedCustomRatings[teamId].home : 4; // Default to 4
-                const awayRating = loadedCustomRatings && loadedCustomRatings[teamId] ? loadedCustomRatings[teamId].away : 4; // Default to 4
+                const teamId = team.replace(/\s/g, ''); 
+                const homeRating = loadedCustomRatings && loadedCustomRatings[teamId] ? loadedCustomRatings[teamId].home : 4; 
+                const awayRating = loadedCustomRatings && loadedCustomRatings[teamId] ? loadedCustomRatings[teamId].away : 4; 
 
                 const teamRow = document.createElement('div');
                 teamRow.className = 'custom-fdr-team-row';
@@ -4073,15 +4122,15 @@
 
         if (mainFDRButton) {
             mainFDRButton.addEventListener('click', () => {
-                if (fdrOptionsContainer) fdrOptionsContainer.style.display = 'flex'; // Ensure options are visible
-                hideFDRDisplayAreas(); // Hide any previously shown content areas
-                // No message needed here, as "Please Choose FDR System" is already there.
+                if (fdrOptionsContainer) fdrOptionsContainer.style.display = 'flex'; 
+                hideFDRDisplayAreas(); 
             });
         }
 
         if (overallFDRButton) overallFDRButton.addEventListener('click', displayOverallFDR);
         if (homeAwayFDRButton) homeAwayFDRButton.addEventListener('click', displayHomeAwayFDR);
-        if (customizedFDRButton) customizedFDRButton.addEventListener('click', () => displayCustomFDR()); // Call without args to load from Firestore
+        // Corrected typo here: used customizedFDRButton
+        if (customizedFDRButton) customizedFDRButton.addEventListener('click', () => displayCustomFDR()); 
 
         if (saveOverallFDRButton) saveOverallFDRButton.addEventListener('click', () => savePreferredFDRSystem('overall'));
         if (saveHomeAwayFDRButton) saveHomeAwayFDRButton.addEventListener('click', () => savePreferredFDRSystem('homeAway'));
@@ -4105,9 +4154,25 @@
         }
 
 
-        // --- Initial Load & Theme ---
+        // --- Initial Load & Theme & Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DEBUG: DOMContentLoaded fired.");
+
+            // Explicitly set initial display state for main sections based on current auth state
+            // This is crucial to prevent a blank page before onAuthStateChanged fully resolves
+            if (auth.currentUser) { 
+                console.log("DEBUG: DOMContentLoaded: User already logged in, showing loggedInContent.");
+                if (loggedInContent) loggedInContent.style.display = 'block';
+                if (authSection) authSection.style.display = 'none';
+            } else { 
+                console.log("DEBUG: DOMContentLoaded: No user logged in, showing authSection.");
+                if (authSection) authSection.style.display = 'block';
+                if (loginForm) loginForm.style.display = 'block';
+                if (signupForm) signupForm.style.display = 'none';
+                if (loggedInContent) loggedInContent.style.display = 'none';
+            }
+            if (instructionsBox) instructionsBox.style.display = 'none'; // Ensure hidden initially
+
             if (darkModeToggle) {
                 console.log("DEBUG: darkModeToggle element found.");
                 const savedTheme = localStorage.getItem('theme');
@@ -4145,18 +4210,16 @@
                 menuAnalyzeMyTeam.addEventListener('click', (e) => {
                     e.preventDefault();
                     showContentSection('analyzerReport');
-                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close menu after click
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); 
                     if (overlay) overlay.style.display = 'none';
-                    if (currentManagerId && !isAnalyzerReportDataFetched) {
-                        fetchAndDisplaySPLReport(currentManagerId);
-                    }
+                    // The fetchAndDisplaySPLReport call is now handled inside showContentSection
                 });
             }
             if (menuMyControlRoom) {
                 menuMyControlRoom.addEventListener('click', (e) => {
                     e.preventDefault();
-                    showContentSection('controlRoom'); // This now calls initializeFDRSection
-                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close menu after click
+                    showContentSection('controlRoom'); 
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); 
                     if (overlay) overlay.style.display = 'none';
                 });
             }
@@ -4165,7 +4228,7 @@
                     e.preventDefault();
                     console.trace("DEBUG: Admin Dashboard menu item clicked!"); 
                     showContentSection('adminDashboard');
-                    if (sidebarMenu) sidebarMenu.classList.remove('open'); // Close menu after click
+                    if (sidebarMenu) sidebarMenu.classList.remove('open'); 
                     if (overlay) overlay.style.display = 'none';
                 });
             }
