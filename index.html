@@ -1804,7 +1804,7 @@
         const adminSearchResults = document.getElementById('adminSearchResults');
         const adminUserUidElem = document.getElementById('adminUserUid');
         const adminEditEmailInput = document.getElementById('adminEditEmail');
-        const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId');
+        const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId'); // Corrected variable name
         const adminUpdateUserButton = document.getElementById('adminUpdateUserButton');
         const adminMessage = document.getElementById('adminMessage');
 
@@ -2515,7 +2515,8 @@
                 showAdminMessage("Updating user...", "info");
 
                 const newEmail = adminEditEmailInput.value.trim();
-                const newSplManagerId = convertArabicToWesternNumerals(adminEditSplSplManagerIdInput.value.trim());
+                // FIX: Corrected typo from adminEditSplSplManagerIdInput to adminEditSplManagerIdInput
+                const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim()); 
                 const userToUpdateUid = foundUserForAdminEdit.id;
 
                 if (!newEmail || !newSplManagerId) {
@@ -2842,9 +2843,14 @@
                     return;
                 }
 
+                // Ensure team mappings are loaded before parsing schedule
                 if (Object.keys(globalTeamShortCodeMap).length === 0) {
-                    showScheduleUploadMessage('Team names mapping not loaded. Please upload the "Team Names Mapping" file first.', "error");
-                    return;
+                    showScheduleUploadMessage('Team names mapping not loaded. Attempting to fetch...', "info");
+                    await fetchGlobalFDRData(); // Try to fetch again
+                    if (Object.keys(globalTeamShortCodeMap).length === 0) {
+                        showScheduleUploadMessage('Team names mapping still not available. Please upload the "Team Names Mapping" file first via Admin Dashboard.', "error");
+                        return;
+                    }
                 }
 
                 showScheduleUploadMessage('Uploading and processing schedule file...', "info");
@@ -2860,33 +2866,38 @@
                         
                         // --- Robust parsing for merged cells ---
                         const range = XLSX.utils.decode_range(worksheet['!ref']);
-                        const sheetData = []; // This will be our normalized 2D array
+                        const numRows = range.e.r - range.s.r + 1;
+                        const numCols = range.e.c - range.s.c + 1;
+                        const normalizedSheetData = Array.from({ length: numRows }, () => Array(numCols).fill('')); // Initialize with empty strings
+
+                        // Populate initial data from cells
                         for (let R = range.s.r; R <= range.e.r; ++R) {
-                            const row = [];
                             for (let C = range.s.c; C <= range.e.c; ++C) {
                                 const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-                                let cell = worksheet[cellAddress];
-                                let cellValue = cell ? (cell.v === undefined ? '' : String(cell.v).trim()) : '';
-                                row.push(cellValue);
+                                const cell = worksheet[cellAddress];
+                                if (cell && cell.v !== undefined) {
+                                    normalizedSheetData[R - range.s.r][C - range.s.c] = String(cell.v).trim();
+                                }
                             }
-                            sheetData.push(row);
                         }
 
-                        // Apply merged cell values
+                        // Apply merged cell values to fill in blanks
                         if (worksheet['!merges']) {
                             worksheet['!merges'].forEach(merge => {
                                 const startRow = merge.s.r;
                                 const endRow = merge.e.r;
                                 const startCol = merge.s.c;
                                 const endCol = merge.e.c;
+                                
+                                // Get the value from the top-left cell of the merged range
                                 const firstCellAddress = XLSX.utils.encode_cell({ r: startRow, c: startCol });
                                 const mergedValue = worksheet[firstCellAddress] ? String(worksheet[firstCellAddress].v).trim() : '';
 
                                 for (let r = startRow; r <= endRow; ++r) {
                                     for (let c = startCol; c <= endCol; ++c) {
-                                        // Ensure we don't go out of bounds of our sheetData
+                                        // Only fill if within the actual data range we're processing
                                         if (r >= range.s.r && r <= range.e.r && c >= range.s.c && c <= range.e.c) {
-                                            sheetData[r - range.s.r][c - range.s.c] = mergedValue;
+                                            normalizedSheetData[r - range.s.r][c - range.s.c] = mergedValue;
                                         }
                                     }
                                 }
@@ -2894,31 +2905,29 @@
                         }
                         // --- End robust parsing ---
 
-                        if (sheetData.length < 2) {
+                        if (normalizedSheetData.length < 2) {
                             showScheduleUploadMessage('Schedule file is empty or missing data rows after parsing.', "error");
                             return;
                         }
 
-                        const headerRow = sheetData[0];
+                        const headerRow = normalizedSheetData[0];
                         const teams = []; // To store full team names
                         const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
-                        const rounds = []; // Ordered list of round names
+                        const rounds = []; // Ordered list of unique round names
 
-                        // Parse header row to get round numbers and column indices for each round
-                        let currentRoundColStart = -1;
+                        // Extract unique round names from the header row
                         for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
-                            const headerCell = String(headerRow[i] || '').trim();
+                            const headerCell = headerRow[i];
                             if (headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)))) {
-                                if (!rounds.includes(headerCell)) { // Add only unique rounds
+                                if (!rounds.includes(headerCell)) {
                                     rounds.push(headerCell);
                                 }
                             }
                         }
-                        globalSeasonSchedule.rounds = rounds; // Store all found rounds
-
+                        
                         // Parse data rows
-                        for (let i = 1; i < sheetData.length; i++) { // Start from second row (after header)
-                            const row = sheetData[i];
+                        for (let i = 1; i < normalizedSheetData.length; i++) { // Start from second row (after header)
+                            const row = normalizedSheetData[i];
                             const teamShortName = String(row[0] || '').trim(); // First cell is team short name
                             if (!teamShortName) continue; // Skip empty rows
 
@@ -2930,23 +2939,23 @@
                             teams.push(teamFullName);
                             schedule[teamFullName] = {};
 
-                            // Iterate through rounds and extract fixtures
-                            let colIndex = 1; // Start from column 1 (after Team column)
+                            let currentDataColIndex = 1; // Start from column 1 (after Team column)
                             rounds.forEach(roundName => {
                                 schedule[teamFullName][roundName] = [];
-                                // Find how many columns this round spans (e.g., for double rounds)
-                                let spanCount = 0;
-                                let tempColIndex = colIndex;
-                                while (tempColIndex < headerRow.length && (String(headerRow[tempColIndex] || '').trim() === roundName || String(headerRow[tempColIndex] || '').trim() === '')) {
-                                    spanCount++;
-                                    tempColIndex++;
-                                    // Break if we hit a new round header
-                                    if (tempColIndex < headerRow.length && String(headerRow[tempColIndex] || '').trim().startsWith('R')) break;
+                                
+                                // Determine how many columns this specific round spans in the header
+                                let roundSpan = 0;
+                                for (let h = currentDataColIndex; h < headerRow.length; h++) {
+                                    if (headerRow[h] === roundName) {
+                                        roundSpan++;
+                                    } else if (roundSpan > 0) { // If we've started counting and hit a different header, break
+                                        break;
+                                    }
                                 }
-                                if (spanCount === 0) spanCount = 1; // Default to 1 if no clear span
+                                if (roundSpan === 0) roundSpan = 1; // Default to 1 if not explicitly spanned
 
-                                for (let s = 0; s < spanCount; s++) {
-                                    const fixtureString = String(row[colIndex + s] || '').trim();
+                                for (let s = 0; s < roundSpan; s++) {
+                                    const fixtureString = String(row[currentDataColIndex + s] || '').trim();
                                     if (fixtureString) {
                                         // Convert opponent short code to full name
                                         const match = fixtureString.match(/(.+) (🏠|✈️)/);
@@ -2970,7 +2979,7 @@
                                 if (schedule[teamFullName][roundName].length === 0) {
                                     delete schedule[teamFullName][roundName];
                                 }
-                                colIndex += spanCount; // Move to the next round's starting column
+                                currentDataColIndex += roundSpan; // Move to the next round's starting column
                             });
                         }
                         
@@ -3074,13 +3083,21 @@
             const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
             const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
 
-            if (fdrType === 'overall' && opponentOverallData) {
-                fdrValue = isHomeGame ? opponentOverallData.fdrAway : opponentOverallData.fdrHome; // Opponent's FDR for their away/home game is our difficulty
+            if (fdrType === 'overall') {
+                if (opponentOverallData) {
+                    // For overall FDR, we look at the opponent's home FDR if we are away, and opponent's away FDR if we are home.
+                    // This represents the difficulty *they* pose to us in that specific venue.
+                    fdrValue = isHomeGame ? opponentOverallData.fdrAway : opponentOverallData.fdrHome; 
+                }
             } else if (fdrType === 'homeAway') {
-                if (isHomeGame && opponentAwayData) { // Home game for our team means opponent is playing away
-                    fdrValue = opponentAwayData.fdrAway;
-                } else if (!isHomeGame && opponentHomeData) { // Away game for our team means opponent is playing home
-                    fdrValue = opponentHomeData.fdrHome;
+                if (isHomeGame) { // If our team is home, we look at the opponent's AWAY rating
+                    if (opponentAwayData) { 
+                        fdrValue = opponentAwayData.fdrAway;
+                    }
+                } else { // If our team is away, we look at the opponent's HOME rating
+                    if (opponentHomeData) { 
+                        fdrValue = opponentHomeData.fdrHome;
+                    }
                 }
             }
             return fdrValue;
