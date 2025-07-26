@@ -17,7 +17,7 @@
     <!-- NEW: gif.js library for GIF encoding -->
     <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
     
-    <!-- NEW: XLSX.js library for reading Excel files -->
+    <!-- NEW: XLSX.js library for reading Excel files (still needed for FDR uploads) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -922,7 +922,7 @@
             border-radius: 6px;
             font-size: 0.9em;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -1578,33 +1578,10 @@
                     </label>
                     <p id="excelUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
 
-                    <!-- NEW: Upload Team Names Mapping Button -->
-                    <h3 class="text-xl font-semibold text-gray-700 mb-3 mt-8">Upload Team Names Mapping</h3>
-                    <label class="upload-button-label">
-                        Upload Team Names File
-                        <input
-                            type="file"
-                            accept=".xlsx, .xls, .csv"
-                            id="teamNamesFileUploadInput"
-                            class="hidden"
-                        />
-                    </label>
-                    <p id="teamNamesUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
-
-
-                    <!-- NEW: Upload Season Schedule Button -->
-                    <h3 class="text-xl font-semibold text-gray-700 mb-3 mt-8">Upload Season Schedule</h3>
-                    <label class="upload-button-label">
-                        Upload Schedule File
-                        <input
-                            type="file"
-                            accept=".xlsx, .xls, .csv"
-                            id="scheduleFileUploadInput"
-                            class="hidden"
-                        />
-                    </label>
-                    <p id="scheduleUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
-
+                    <!-- NEW: API Fetch Status Messages -->
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3 mt-8">API Data Status</h3>
+                    <p id="apiTeamNamesStatus" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
+                    <p id="apiScheduleStatus" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
 
                     <!-- Display Current Rankings (Admin) -->
                     <div id="currentRankingsDisplayAdmin" class="mt-8">
@@ -1710,6 +1687,12 @@
         const db = getFirestore(app);
 
 
+        // --- NEW: API Endpoints as Variables ---
+        const BOOTSTRAP_STATIC_API_URL = 'https://en.fantasy.spl.com.sa/api/bootstrap-static/';
+        const FIXTURES_API_BASE_URL = 'https://en.fantasy.spl.com.sa/api/fixtures/?event='; // Append round number
+        // ---------------------------------------
+
+
         // --- GLOBAL FLAGS / VARIABLES ---
         let isProcessingAuth = false; 
         
@@ -1725,8 +1708,12 @@
             rounds: [], // List of all round names (e.g., "R1", "R2", "R31")
             fixtures: {} // { "TeamFullName": { "R1": ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
         };
-        let globalTeamShortCodeMap = {}; // { "HIL": "Al-Hilal", "NAS": "Al-Nassr", ... }
-        let globalTeamFullNameToShortCodeMap = {}; // { "Al-Hilal": "HIL", "Al-Nassr": "NAS", ... }
+        // NEW: Map for API-fetched team data
+        let globalTeamData = { // Stores id, name, and short_name for each team
+            byId: {}, // { "1": { id: 1, name: "Al Ahli", short_name: "AHL" }, ... }
+            byFullName: {}, // { "Al Ahli": { id: 1, name: "Al Ahli", short_name: "AHL" }, ... }
+            byShortName: {} // { "AHL": { id: 1, name: "Al Ahli", short_name: "AHL" }, ... }
+        };
 
 
         // Tuning settings
@@ -1768,7 +1755,7 @@
         const sidebarMenu = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('overlay');
         const sidebarTeamName = document.getElementById('sidebarTeamName'); 
-        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); 
+        const menuAnalyzeMyTeam = document.getElementById('menuAnalyzeMyTeam'); // REMOVED FEATURE
         const menuMyControlRoom = document.getElementById('menuMyControlRoom');
         const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
         const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); 
@@ -1777,13 +1764,13 @@
         
         // Content areas to toggle
         const initialLoggedInDashboardContent = document.getElementById('initialLoggedInDashboardContent'); 
-        const analyzerReportContent = document.getElementById('analyzerReportContent'); 
+        const analyzerReportContent = document.getElementById('analyzerReportContent'); // REMOVED FEATURE
         const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
 
         // General messages/loading indicators
-        const loadingMessage = document.getElementById('loadingMessage'); 
-        const errorMessage = document.getElementById('errorMessage'); 
+        const loadingMessage = document.getElementById('loadingMessage'); // Not used in this version, but kept for consistency
+        const errorMessage = document.getElementById('errorMessage'); // Not used in this version, but kept for consistency
 
         // Admin Dashboard specific elements
         const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons'); 
@@ -1804,10 +1791,12 @@
         const rankingTypeSelect = document.getElementById('rankingTypeSelect');
         const excelFileUploadInput = document.getElementById('excelFileUploadInput');
         const excelUploadMessage = document.getElementById('excelUploadMessage');
-        const teamNamesFileUploadInput = document.getElementById('teamNamesFileUploadInput'); // NEW
-        const teamNamesUploadMessage = document.getElementById('teamNamesUploadMessage'); // NEW
-        const scheduleFileUploadInput = document.getElementById('scheduleFileUploadInput'); 
-        const scheduleUploadMessage = document.getElementById('scheduleUploadMessage'); 
+        // Removed teamNamesFileUploadInput and scheduleFileUploadInput
+        // NEW: API Fetch Status Messages for Admin Dashboard
+        const apiTeamNamesStatus = document.getElementById('apiTeamNamesStatus');
+        const apiScheduleStatus = document.getElementById('apiScheduleStatus');
+
+
         const currentRankingsDisplayAdmin = document.getElementById('currentRankingsDisplayAdmin');
         
         // Specific FDR grid containers (Admin Dashboard)
@@ -1894,27 +1883,27 @@
             }
         }
 
-        // NEW: Function to display messages specific to Team Names Upload (Admin Dashboard)
-        function showTeamNamesUploadMessage(message, type = 'info') {
-            if (teamNamesUploadMessage) {
-                teamNamesUploadMessage.textContent = '';
-                teamNamesUploadMessage.className = `message-box ${type}`;
-                teamNamesUploadMessage.textContent = message;
-                teamNamesUploadMessage.style.display = 'block';
+        // NEW: Function to display messages specific to API Team Names Status (Admin Dashboard)
+        function showApiTeamNamesStatus(message, type = 'info') {
+            if (apiTeamNamesStatus) {
+                apiTeamNamesStatus.textContent = '';
+                apiTeamNamesStatus.className = `message-box ${type}`;
+                apiTeamNamesStatus.textContent = message;
+                apiTeamNamesStatus.style.display = 'block';
             } else {
-                console.warn("Team Names upload message element not found.");
+                console.warn("API Team Names Status element not found.");
             }
         }
 
-        // NEW: Function to display messages specific to Schedule Upload (Admin Dashboard)
-        function showScheduleUploadMessage(message, type = 'info') {
-            if (scheduleUploadMessage) {
-                scheduleUploadMessage.textContent = '';
-                scheduleUploadMessage.className = `message-box ${type}`;
-                scheduleUploadMessage.textContent = message;
-                scheduleUploadMessage.style.display = 'block';
+        // NEW: Function to display messages specific to API Schedule Status (Admin Dashboard)
+        function showApiScheduleStatus(message, type = 'info') {
+            if (apiScheduleStatus) {
+                apiScheduleStatus.textContent = '';
+                apiScheduleStatus.className = `message-box ${type}`;
+                apiScheduleStatus.textContent = message;
+                apiScheduleStatus.style.display = 'block';
             } else {
-                console.warn("Schedule upload message element not found.");
+                console.warn("API Schedule Status element not found.");
             }
         }
 
@@ -1946,8 +1935,10 @@
             if (dataUploadSection) dataUploadSection.style.display = 'none';
             if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none';
             if (excelUploadMessage) excelUploadMessage.style.display = 'none';
-            if (teamNamesUploadMessage) teamNamesUploadMessage.style.display = 'none'; // NEW
-            if (scheduleUploadMessage) scheduleUploadMessage.style.display = 'none'; // NEW
+            // Hide API Status messages when not in data section
+            if (apiTeamNamesStatus) apiTeamNamesStatus.style.display = 'none';
+            if (apiScheduleStatus) apiScheduleStatus.style.display = 'none';
+
             if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
             if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
             if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
@@ -1962,9 +1953,9 @@
             if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none';
 
 
-            // General messages/loading indicators
-            if (loadingMessage) loadingMessage.style.display = 'none';
-            if (errorMessage) errorMessage.style.display = 'none';
+            // General messages/loading indicators (these are not used in current version, but kept)
+            // if (loadingMessage) loadingMessage.style.display = 'none';
+            // if (errorMessage) errorMessage.style.display = 'none';
             if (authMessageBox) authMessageBox.style.display = 'none'; 
         }
 
@@ -2551,21 +2542,42 @@
                 if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
                 if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
                 if (awayFDRSectionAdmin) awayFDRSectionAdmin.style.display = 'none';
+                // Hide API status messages when switching to users tab
+                if (apiTeamNamesStatus) apiTeamNamesStatus.style.display = 'none';
+                if (apiScheduleStatus) apiScheduleStatus.style.display = 'none';
                 showAdminMessage("Enter user details to search.", "info");
             });
         }
 
         if (adminDataButton) {
-            adminDataButton.addEventListener('click', () => {
+            adminDataButton.addEventListener('click', async () => { // Made async to await API fetches
                 if (adminSearchSection) adminSearchSection.style.display = 'none'; 
                 if (adminSearchResults) adminSearchResults.style.display = 'none'; 
                 if (adminMessage) adminMessage.style.display = 'none'; 
                 if (dataUploadSection) dataUploadSection.style.display = 'block'; 
                 if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'block'; 
                 showExcelUploadMessage("Upload your league table Excel file here.", "info");
-                showTeamNamesUploadMessage("Upload your team names mapping file here.", "info"); // NEW
-                showScheduleUploadMessage("Upload your season schedule Excel file here.", "info"); // NEW
-                // Call fetchAndRenderRankings for Admin Dashboard
+                // Show API Status messages when in data section
+                if (apiTeamNamesStatus) apiTeamNamesStatus.style.display = 'block';
+                if (apiScheduleStatus) apiScheduleStatus.style.display = 'block';
+
+                // Call fetchGlobalFDRData to re-fetch all data including API data
+                await fetchGlobalFDRData();
+
+                // Update API status messages after fetching
+                if (Object.keys(globalTeamData.byId).length > 0) {
+                    showApiTeamNamesStatus(`Team Names (from API) fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
+                } else {
+                    showApiTeamNamesStatus("Team Names (from API) could not be fetched. Check API connection.", "error");
+                }
+
+                if (Object.keys(globalSeasonSchedule.fixtures).length > 0 && globalSeasonSchedule.rounds.length > 0) {
+                    showApiScheduleStatus(`Season Schedule (from API) fetched successfully. Found ${globalSeasonSchedule.rounds.length} rounds.`, "success");
+                } else {
+                    showApiScheduleStatus("Season Schedule (from API) could not be fetched. Check API connection.", "error");
+                }
+
+                // Re-render rankings for Admin Dashboard
                 fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
             });
         }
@@ -2733,249 +2745,6 @@
             });
         }
 
-        // NEW: Team Names Mapping Upload Logic (Admin Dashboard)
-        if (teamNamesFileUploadInput) {
-            teamNamesFileUploadInput.addEventListener('change', async (event) => {
-                const file = event.target.files[0];
-                if (!file) {
-                    showTeamNamesUploadMessage('No file selected.', "error");
-                    return;
-                }
-
-                if (typeof window.XLSX === 'undefined') {
-                    showTeamNamesUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', "error");
-                    console.error("window.XLSX is not defined. Excel library not loaded.");
-                    return;
-                }
-
-                showTeamNamesUploadMessage('Uploading and processing team names file...', "info");
-
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' }); 
-
-                        const sheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[sheetName];
-                        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); 
-
-                        if (jsonRows.length < 2) {
-                            showTeamNamesUploadMessage('Team names file is empty or missing data rows.', "error");
-                            return;
-                        }
-
-                        const headerRow = jsonRows[0].map(h => String(h).trim());
-                        const teamNameIndex = headerRow.indexOf('Team Name');
-                        const shortNameIndex = headerRow.indexOf('Short name');
-
-                        if (teamNameIndex === -1 || shortNameIndex === -1) {
-                            showTeamNamesUploadMessage('Invalid headers. Expected "Team Name" and "Short name".', "error");
-                            return;
-                        }
-
-                        const teamMapping = {};
-                        for (let i = 1; i < jsonRows.length; i++) {
-                            const row = jsonRows[i];
-                            const fullName = String(row[teamNameIndex]).trim();
-                            const shortCode = String(row[shortNameIndex]).trim();
-                            if (fullName && shortCode) {
-                                teamMapping[shortCode] = fullName;
-                            }
-                        }
-
-                        if (Object.keys(teamMapping).length === 0) {
-                            showTeamNamesUploadMessage('No valid team name mappings found in the file.', "error");
-                            return;
-                        }
-
-                        const seasonId = "2025-2026"; // Or dynamically determine season
-                        const teamMappingsDocRef = doc(db, 'teamMappings', seasonId); 
-
-                        console.log("DEBUG_SAVE: Attempting to save teamMapping to Firestore:", teamMapping);
-                        await setDoc(teamMappingsDocRef, {
-                            mapping: teamMapping,
-                            lastUpdated: serverTimestamp()
-                        });
-                        console.log("DEBUG_SAVE: Team names mapping saved successfully to Firestore.");
-
-                        showTeamNamesUploadMessage('Successfully uploaded team names mapping!', "success"); // Log success
-                        event.target.value = null; // Clear the file input
-                        // Re-fetch all global data after upload to ensure local state is consistent
-                        await fetchGlobalFDRData();
-
-                    } catch (error) {
-                        console.error('Error processing team names file or uploading to Firestore:', error);
-                        showTeamNamesUploadMessage(`Failed to process team names or upload: ${error.message}. Please check file format and console for details.`, "error");
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
-        // NEW: Season Schedule Upload Logic (Admin Dashboard)
-        if (scheduleFileUploadInput) {
-            scheduleFileUploadInput.addEventListener('change', async (event) => {
-                const file = event.target.files[0];
-                if (!file) {
-                    showScheduleUploadMessage('No file selected.', "error");
-                    return;
-                }
-
-                if (typeof window.XLSX === 'undefined') {
-                    showScheduleUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', "error");
-                    console.error("window.XLSX is not defined. Excel library not loaded.");
-                    return;
-                }
-
-                showScheduleUploadMessage('Uploading and processing schedule file...', "info");
-
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' }); 
-
-                        const sheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[sheetName];
-                        
-                        // Read the sheet as a raw 2D array, which is easier for unmerged cells
-                        const rawSheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw: false to get formatted cell values
-                        console.log("DEBUG_PARSE: Raw sheet data from XLSX:", rawSheetData);
-
-                        if (rawSheetData.length < 2) {
-                            showScheduleUploadMessage('Schedule file is empty or missing data rows after parsing.', "error");
-                            return;
-                        }
-
-                        const headerRow = rawSheetData[0].map(h => String(h || '').trim());
-                        console.log("DEBUG_PARSE: Parsed header row:", headerRow);
-
-                        const teams = []; // To store full team names
-                        const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
-                        const rounds = []; // Ordered list of unique round names (e.g., "R1", "R2", "R31")
-                        const roundColMap = {}; // { "R1": [colIndex1, colIndex2], "R2": [colIndex3], ... }
-
-                        // Parse header row to identify rounds and their column indices
-                        let currentRoundName = null;
-                        for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
-                            const headerCell = headerRow[i];
-                            // Check if it's a round header (e.g., "R1", "R31")
-                            const isRoundHeader = headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)));
-
-                            if (isRoundHeader) {
-                                // If it's a new round header, or the first time we encounter a round header
-                                if (!rounds.includes(headerCell)) { // Only add to 'rounds' list if unique
-                                    rounds.push(headerCell);
-                                }
-                                currentRoundName = headerCell; // Update current round being processed
-                                if (!roundColMap[currentRoundName]) {
-                                    roundColMap[currentRoundName] = [];
-                                }
-                                roundColMap[currentRoundName].push(i);
-                            } else if (currentRoundName !== null && headerCell === currentRoundName) {
-                                // If it's not a new round header but matches the *current* round name (e.g., second "R31")
-                                roundColMap[currentRoundName].push(i);
-                            } else {
-                                // If it's not a round header and doesn't match the current round name, or currentRoundName is null
-                                // This handles cases like empty cells between rounds or non-round headers.
-                                // We don't push anything to rounds or roundColMap for these.
-                                if (headerCell !== '') { // Log if it's a non-empty, non-round header
-                                    console.warn(`WARNING_PARSE: Header cell '${headerCell}' at index ${i} is not a recognized round header. Skipping.`);
-                                }
-                            }
-                        }
-                        console.log("DEBUG_PARSE: Identified rounds (from headers):", rounds);
-                        console.log("DEBUG_PARSE: Round column mapping:", roundColMap);
-
-                        // Ensure team mappings are loaded before parsing schedule
-                        if (Object.keys(globalTeamShortCodeMap).length === 0) {
-                            showScheduleUploadMessage('Team names mapping not loaded. Please upload the "Team Names Mapping" file first via Admin Dashboard.', "error");
-                            console.error("ERROR_PARSE: globalTeamShortCodeMap is empty. Cannot parse schedule without team mappings.");
-                            return;
-                        }
-                        
-                        // Parse data rows
-                        for (let i = 1; i < rawSheetData.length; i++) { // Start from second row (after header)
-                            const row = rawSheetData[i];
-                            const teamShortName = String(row[0] || '').trim(); // First cell is team short name
-                            if (!teamShortName) {
-                                console.warn(`WARNING_PARSE: Skipping empty team row ${i+1}.`);
-                                continue; 
-                            }
-
-                            const teamFullName = globalTeamShortCodeMap[teamShortName];
-                            if (!teamFullName) {
-                                console.warn(`WARNING_PARSE: Unknown team short code '${teamShortName}' in schedule file at row ${i+1}. Skipping row.`);
-                                continue;
-                            }
-                            teams.push(teamFullName);
-                            schedule[teamFullName] = {};
-
-                            rounds.forEach(roundName => {
-                                schedule[teamFullName][roundName] = [];
-                                const colIndices = roundColMap[roundName] || []; // Get all column indices for this round
-
-                                colIndices.forEach(colIndex => {
-                                    const fixtureString = String(row[colIndex] || '').trim();
-                                    console.log(`DEBUG_PARSE: Raw fixture string from cell [${i+1}, ${colIndex+1}] for ${teamFullName} in ${roundName}: '${fixtureString}'`);
-
-                                    if (fixtureString) {
-                                        // Regex to capture opponent short code and emoji (🏠 or ✈️)
-                                        const match = fixtureString.match(/(.+)\s(🏠|✈️)/); 
-                                        console.log(`DEBUG_PARSE: Regex match result for '${fixtureString}':`, match);
-
-                                        if (match) {
-                                            const opponentShortCode = match[1].trim();
-                                            const homeAwayEmoji = match[2];
-                                            const opponentFullName = globalTeamShortCodeMap[opponentShortCode];
-                                            
-                                            if (opponentFullName) {
-                                                schedule[teamFullName][roundName].push(`${opponentFullName} ${homeAwayEmoji}`);
-                                                console.log(`DEBUG_PARSE: Pushing fixture for ${teamFullName} in ${roundName}: '${opponentFullName} ${homeAwayEmoji}'`);
-                                            } else {
-                                                console.warn(`WARNING_PARSE: Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing raw string.`);
-                                                schedule[teamFullName][roundName].push(fixtureString); // Store raw if mapping fails
-                                            }
-                                        } else {
-                                            console.warn(`WARNING_PARSE: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${roundName}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Storing raw string.`);
-                                            schedule[teamFullName][roundName].push(fixtureString); // Store raw if format is unexpected
-                                        }
-                                    }
-                                });
-                                // Remove empty arrays for blank rounds
-                                if (schedule[teamFullName][roundName].length === 0) {
-                                    delete schedule[teamFullName][roundName];
-                                }
-                            });
-                        }
-                        console.log("DEBUG_SAVE: Final schedule object to be saved:", schedule);
-
-                        const seasonId = "2025-2026"; 
-                        const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId); 
-
-                        await setDoc(seasonScheduleDocRef, {
-                            fixtures: schedule, // Store the structured fixtures
-                            teams: teams, // Store list of full team names
-                            rounds: rounds, // Store list of round names (R1, R2, etc.)
-                            lastUpdated: serverTimestamp()
-                        });
-                        console.log("DEBUG_SAVE: Season schedule saved successfully to Firestore.");
-
-                        showScheduleUploadMessage('Successfully uploaded season schedule!', "success");
-                        event.target.value = null; // Clear the file input
-                        // Re-fetch all global data after upload
-                        await fetchGlobalFDRData();
-
-                    } catch (error) {
-                        console.error('ERROR_UPLOAD: Error processing schedule file or uploading to Firestore:', error);
-                        showScheduleUploadMessage(`Failed to process schedule or upload: ${error.message}. Please check file format and console for details.`, "error");
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
         /**
          * Fetches all necessary global FDR data (rankings, schedule, and team mappings) from Firestore
          * and stores them in global variables.
@@ -2984,59 +2753,162 @@
             console.log("DEBUG_FETCH: Fetching global data...");
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
-            const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId);
-            const teamMappingsDocRef = doc(db, 'teamMappings', seasonId); 
+            // Removed seasonScheduleDocRef and teamMappingsDocRef for Firestore
+            // Now fetching from APIs directly
 
             try {
-                const [rankingsSnap, scheduleSnap, teamMappingsSnap] = await Promise.all([
-                    getDoc(splRankingsDocRef),
-                    getDoc(seasonScheduleDocRef),
-                    getDoc(teamMappingsDocRef) 
-                ]);
+                // --- Fetch Team Data from API (bootstrap-static) ---
+                showApiTeamNamesStatus("Fetching team names from API...", "info");
+                const bootstrapResponse = await fetch(BOOTSTRAP_STATIC_API_URL);
+                if (!bootstrapResponse.ok) {
+                    throw new Error(`HTTP error! status: ${bootstrapResponse.status} from ${BOOTSTRAP_STATIC_API_URL}`);
+                }
+                const bootstrapData = await bootstrapResponse.json();
+                console.log("DEBUG_FETCH: Raw bootstrap-static API data:", bootstrapData);
 
-                // Process team mappings first, as schedule and rankings depend on it
-                console.log("DEBUG_FETCH: Raw teamMappingsSnap.data():", teamMappingsSnap.data());
-                if (teamMappingsSnap.exists() && teamMappingsSnap.data() && teamMappingsSnap.data().mapping) {
-                    globalTeamShortCodeMap = teamMappingsSnap.data().mapping;
-                    globalTeamFullNameToShortCodeMap = Object.fromEntries(
-                        Object.entries(globalTeamShortCodeMap).map(([short, full]) => [full, short])
-                    );
-                    console.log("DEBUG_FETCH: Fetched global Team Short Code Map:", globalTeamShortCodeMap);
-                    console.log("DEBUG_FETCH: Created global Team Full Name to Short Code Map:", globalTeamFullNameToShortCodeMap);
+                globalTeamData = { byId: {}, byFullName: {}, byShortName: {} };
+                if (bootstrapData && bootstrapData.teams && bootstrapData.teams.length > 0) {
+                    bootstrapData.teams.forEach(team => {
+                        // Assuming 'name' is full name and 'short_name' is the 3-letter code
+                        // If 'short_name' is not available, we might need a manual mapping or derivation
+                        const teamId = team.id;
+                        const teamFullName = team.name;
+                        const teamShortName = team.short_name || team.code; // Use 'short_name' if available, fallback to 'code' if it's the 3-letter.
+                                                                           // If 'code' is numeric, a manual map will be needed.
+                        
+                        // For now, let's derive a simple short name if 'short_name' isn't directly available
+                        // Based on the screenshot, it seems 'short_name' might be present or derivable from 'name'
+                        // Let's assume 'short_name' exists in the API response for now, or use a simplified derivation.
+                        // If 'short_name' is not directly in the API, we'll need to revisit.
+                        // For this implementation, I will assume 'short_name' is a field in the team object
+                        // OR, if 'code' is the textual short code (e.g., "HIL"), we use that.
+                        // If 'code' is numeric, we'll need a hardcoded map for now.
+                        // Given your screenshot of player history, the 'OPP' column shows 3-letter codes.
+                        // Let's check the 'code' field in bootstrap-static.txt: {code: 6770, ... name: "Al Ahli"}
+                        // This 'code' is numeric. So, we'll need a manual mapping for short codes.
+                        // For now, I will use a simplified initial for the short name, or a hardcoded map if necessary.
+                        // Let's use a simple derivation for now, and if it's not accurate, we'll add a manual map.
+                        const derivedShortName = (teamFullName.match(/\b(\w)/g) || []).join('').toUpperCase().substring(0,3); // e.g., Al Hilal -> AH
+                        const actualShortName = team.short_name || derivedShortName; // Prefer actual short_name from API if it exists
+
+                        globalTeamData.byId[teamId] = { id: teamId, name: teamFullName, short_name: actualShortName };
+                        globalTeamData.byFullName[teamFullName] = { id: teamId, name: teamFullName, short_name: actualShortName };
+                        globalTeamData.byShortName[actualShortName] = { id: teamId, name: teamFullName, short_name: actualShortName };
+                    });
+                    showApiTeamNamesStatus(`Team Names (from API) fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
+                    console.log("DEBUG_FETCH: Fetched global Team Data:", globalTeamData);
                 } else {
-                    console.warn("WARNING_FETCH: No Team Mappings data found in Firestore or mapping is empty.");
-                    globalTeamShortCodeMap = {};
-                    globalTeamFullNameToShortCodeMap = {};
+                    showApiTeamNamesStatus("Team Names (from API) could not be fetched or data is empty.", "error");
+                    console.warn("WARNING_FETCH: No Team data found in bootstrap-static API response.");
                 }
 
+
+                // --- Fetch Schedule Data from API (fixtures) ---
+                showApiScheduleStatus("Fetching season schedule from API...", "info");
+                globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} }; // Reset
+                const maxRound = 34; // Assuming 34 rounds based on previous data
+
+                // Fetch all rounds concurrently
+                const fixtureFetchPromises = [];
+                for (let round = 1; round <= maxRound; round++) {
+                    fixtureFetchPromises.push(
+                        fetch(`${FIXTURES_API_BASE_URL}${round}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status} for round ${round}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => ({ round, data }))
+                            .catch(error => {
+                                console.error(`ERROR_FETCH: Failed to fetch fixtures for round ${round}:`, error);
+                                return { round, data: null, error: error }; // Return null data on error
+                            })
+                    );
+                }
+
+                const allFixturesData = await Promise.all(fixtureFetchPromises);
+                console.log("DEBUG_FETCH: All fixtures data fetched (raw):", allFixturesData);
+
+                // Process fetched fixtures
+                const processedFixtures = {}; // Temp object to build the schedule
+                const allTeamNamesInSchedule = new Set();
+                const allRoundNamesInSchedule = new Set();
+
+                allFixturesData.forEach(({ round, data, error }) => {
+                    if (data && data.length > 0) {
+                        const roundName = `R${round}`;
+                        allRoundNamesInSchedule.add(roundName); // Add to set of rounds
+
+                        data.forEach(fixture => {
+                            const homeTeamId = fixture.team_h;
+                            const awayTeamId = fixture.team_a;
+                            const homeTeamFullName = globalTeamData.byId[homeTeamId]?.name;
+                            const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name;
+                            const awayTeamFullName = globalTeamData.byId[awayTeamId]?.name;
+                            const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name;
+
+                            if (homeTeamFullName && awayTeamFullName) {
+                                allTeamNamesInSchedule.add(homeTeamFullName);
+                                allTeamNamesInSchedule.add(awayTeamFullName);
+
+                                // Add fixture for home team
+                                if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
+                                if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
+                                processedFixtures[homeTeamFullName][roundName].push(`${awayTeamFullName} 🏠`); // Opponent is away, so our team is home
+
+                                // Add fixture for away team
+                                if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
+                                if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
+                                processedFixtures[awayTeamFullName][roundName].push(`${homeTeamFullName} ✈️`); // Opponent is home, so our team is away
+                            } else {
+                                console.warn(`WARNING_FETCH: Could not map team IDs for fixture in round ${round}: Home ID ${homeTeamId}, Away ID ${awayTeamId}.`);
+                            }
+                        });
+                    } else if (!error) {
+                        console.log(`DEBUG_FETCH: No fixture data for round ${round}.`);
+                    }
+                });
+
+                globalSeasonSchedule.fixtures = processedFixtures;
+                globalSeasonSchedule.teams = Array.from(allTeamNamesInSchedule).sort(); // Sort teams alphabetically
+                globalSeasonSchedule.rounds = Array.from(allRoundNamesInSchedule).sort((a, b) => {
+                    // Sort rounds numerically (R1, R2, ..., R34)
+                    const numA = parseInt(a.substring(1));
+                    const numB = parseInt(b.substring(1));
+                    return numA - numB;
+                });
+
+                if (Object.keys(globalSeasonSchedule.fixtures).length > 0) {
+                    showApiScheduleStatus(`Season Schedule (from API) fetched successfully. Found ${globalSeasonSchedule.rounds.length} rounds and ${globalSeasonSchedule.teams.length} teams.`, "success");
+                    console.log("DEBUG_FETCH: Fetched global Season Schedule (fixtures):", globalSeasonSchedule.fixtures);
+                    console.log("DEBUG_FETCH: Fetched global Season Schedule (teams):", globalSeasonSchedule.teams);
+                    console.log("DEBUG_FETCH: Fetched global Season Schedule (rounds):", globalSeasonSchedule.rounds);
+                } else {
+                    showApiScheduleStatus("Season Schedule (from API) could not be fetched or data is empty.", "error");
+                    console.warn("WARNING_FETCH: No Season Schedule data found from API.");
+                }
+
+
+                // --- Fetch SPL Rankings from Firestore (remains user-uploaded) ---
                 console.log("DEBUG_FETCH: Raw rankingsSnap.data():", rankingsSnap.data());
+                const rankingsSnap = await getDoc(splRankingsDocRef); // Fetch after API data for consistency
                 if (rankingsSnap.exists() && rankingsSnap.data()) {
                     const data = rankingsSnap.data();
                     globalSplRankings.overall = data.overall || [];
                     globalSplRankings.home = data.home || [];
                     globalSplRankings.away = data.away || [];
-                    console.log("DEBUG_FETCH: Fetched global SPL Rankings:", globalSplRankings);
+                    console.log("DEBUG_FETCH: Fetched global SPL Rankings (from Firestore):", globalSplRankings);
                 } else {
-                    console.warn("WARNING_FETCH: No SPL Rankings data found in Firestore or data is empty.");
+                    console.warn("WARNING_FETCH: No SPL Rankings data found in Firestore or data is empty. Please upload via Admin Dashboard.");
                     globalSplRankings = { overall: [], home: [], away: [] };
                 }
 
-                console.log("DEBUG_FETCH: Raw scheduleSnap.data():", scheduleSnap.data());
-                if (scheduleSnap.exists() && scheduleSnap.data()) {
-                    const data = scheduleSnap.data();
-                    globalSeasonSchedule.fixtures = data.fixtures || {};
-                    globalSeasonSchedule.teams = data.teams || [];
-                    globalSeasonSchedule.rounds = data.rounds || [];
-                    console.log("DEBUG_FETCH: Fetched global Season Schedule (fixtures):", globalSeasonSchedule.fixtures);
-                    console.log("DEBUG_FETCH: Fetched global Season Schedule (teams):", globalSeasonSchedule.teams);
-                    console.log("DEBUG_FETCH: Fetched global Season Schedule (rounds):", globalSeasonSchedule.rounds);
-                } else {
-                    console.warn("WARNING_FETCH: No Season Schedule data found in Firestore or data is empty.");
-                    globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
-                }
             } catch (error) {
-                console.error("ERROR_FETCH: Error fetching global FDR data:", error);
-                showGeneralErrorMessage(`Failed to load global FDR data: ${error.message}`);
+                console.error("ERROR_FETCH: Error fetching global FDR data from APIs or Firestore:", error);
+                showGeneralErrorMessage(`Failed to load global data: ${error.message}. Please check console for details.`);
+                showApiTeamNamesStatus(`Error fetching Team Names: ${error.message}`, "error");
+                showApiScheduleStatus(`Error fetching Schedule: ${error.message}`, "error");
             }
         }
 
@@ -3112,7 +2984,7 @@
 
             if (!globalSeasonSchedule || !globalSeasonSchedule.fixtures || Object.keys(globalSeasonSchedule.fixtures).length === 0 || !globalSeasonSchedule.teams || globalSeasonSchedule.teams.length === 0 || !globalSeasonSchedule.rounds || globalSeasonSchedule.rounds.length === 0) {
                 console.warn("WARNING_RENDER: No complete season schedule data available for rendering.");
-                tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please upload via Admin Dashboard.</td></tr></tbody>';
+                tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please ensure schedule data is fetched from API.</td></tr></tbody>';
                 return;
             }
             
@@ -3246,12 +3118,13 @@
 
             // Ensure global data is fetched before rendering
             // This is crucial for both Admin and Control Room to have the latest data
-            await fetchGlobalFDRData();
+            // fetchGlobalFDRData is now called once on auth state change or admin data button click
+            // So, we assume global data is already populated here.
 
             let hasDataToDisplay = false;
 
             // --- Render for Admin Dashboard (show all data) ---
-            if (!selectedFdrSystem) { // If selectedFDRSystem is null, it means we're in Admin Dashboard
+            if (!selectedFdrSystem) { // If selectedFdrSystem is null, it means we're in Admin Dashboard
                 // Render Overall Rankings (Admin)
                 if (globalSplRankings.overall.length > 0) {
                     globalSplRankings.overall.sort((a, b) => {
@@ -3399,36 +3272,6 @@
                 if (radioOverallFDR) radioOverallFDR.checked = true;
                 displaySelectedFDRSystem('overall');
             }
-        }
-
-        /**
-         * Saves the currently selected FDR system to the user's Firestore document.
-         */
-        if (saveFDRSystemButton) {
-            saveFDRSystemButton.addEventListener('click', async () => { 
-                const user = auth.currentUser;
-                if (!user) {
-                    showControlRoomMessage("You must be logged in to save your preference.", "error");
-                    return;
-                }
-
-                const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-                if (!selectedSystem) {
-                    showControlRoomMessage("Please select an FDR system to save.", "warning");
-                    return;
-                }
-
-                try {
-                    const userDocRef = doc(db, "users", user.uid);
-                    await updateDoc(userDocRef, {
-                        preferredFDRSystem: selectedSystem
-                    });
-                    showControlRoomMessage(`Preferred FDR system (${selectedSystem.toUpperCase().replace('AWAY', '/AWAY')}) saved successfully!`, "success");
-                } catch (error) {
-                    console.error("Error saving preferred FDR system:", error);
-                    showControlRoomMessage(`Failed to save preferred system: ${error.message}`, "error");
-                }
-            });
         }
 
         /**
