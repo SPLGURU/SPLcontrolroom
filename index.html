@@ -1217,27 +1217,13 @@
             border-radius: 3px;
             font-size: 0.85em; /* Smaller font for individual fixture in a cell */
             white-space: nowrap;
+            /* No background-color or color for FDR here anymore */
         }
 
-        /* FDR coloring for schedule cells */
-        .fixture-item-display.fdr-1 { background-color: #00B050; color: white; }
-        .fixture-item-display.fdr-2 { background-color: #92D050; color: black; }
-        .fixture-item-display.fdr-3 { background-color: #FFFF00; color: black; }
-        .fixture-item-display.fdr-4 { background-color: #FFC000; color: black; }
-        .fixture-item-display.fdr-5 { background-color: #FF0000; color: white; }
-        .fixture-item-display.fdr-6 { background-color: #C00000; color: white; }
-        .fixture-item-display.fdr-7 { background-color: #800000; color: white; }
-        .fixture-item-display.fdr-na { background-color: #ccc; color: #666; } /* For N/A or missing FDR */
-
-        /* Dark Mode Adjustments for fixture cells */
-        body.dark-mode .fixture-item-display.fdr-1 { background-color: #008037; }
-        body.dark-mode .fixture-item-display.fdr-2 { background-color: #6B9F3B; }
-        body.dark-mode .fixture-item-display.fdr-3 { background-color: #B3B300; }
-        body.dark-mode .fixture-item-display.fdr-4 { background-color: #B38600; }
-        body.dark-mode .fixture-item-display.fdr-5 { background-color: #B30000; }
-        body.dark-mode .fixture-item-display.fdr-6 { background-color: #800000; }
-        body.dark-mode .fixture-item-display.fdr-7 { background-color: #530000; }
-        body.dark-mode .fixture-item-display.fdr-na { background-color: #555; color: #bbb; }
+        /* No FDR coloring for schedule cells in this version */
+        /* .fixture-item-display.fdr-1 { background-color: #00B050; color: white; } */
+        /* ... removed other fdr- classes for fixture-item-display ... */
+        /* .fixture-item-display.fdr-na { background-color: #ccc; color: #666; } */
 
         /* Tuning section styles */
         .tuning-section {
@@ -1743,7 +1729,8 @@
 
         // Tuning settings
         let roundsToShow = 5;
-        let showColors = true;
+        // The following flags are now ignored for schedule rendering, but kept for future use
+        let showColors = true; 
         let showTeamRatings = true;
 
 
@@ -2915,7 +2902,7 @@
 
                             const teamFullName = globalTeamShortCodeMap[teamShortName];
                             if (!teamFullName) {
-                                console.warn(`Unknown team short code '${teamShortName}' in schedule file at row ${i+1}. Skipping row.`);
+                                console.warn(`WARNING: Unknown team short code '${teamShortName}' in schedule file at row ${i+1}. Skipping row.`);
                                 continue;
                             }
                             teams.push(teamFullName);
@@ -2928,24 +2915,22 @@
                                 colIndices.forEach(colIndex => {
                                     const fixtureString = String(row[colIndex] || '').trim();
                                     if (fixtureString) {
-                                        // Regex to capture opponent short code and emoji (🏠 or ✈️)
-                                        // This regex is crucial: it looks for any characters (opponent short code)
-                                        // followed by a space and then either the home or away emoji.
-                                        const match = fixtureString.match(/(.+)\s(🏠|✈️)/); 
+                                        // MODIFIED REGEX to capture opponent short code and (H) or (A)
+                                        const match = fixtureString.match(/(.+)\s\((H|A)\)/); 
                                         if (match) {
                                             const opponentShortCode = match[1].trim();
-                                            const homeAwayEmoji = match[2];
+                                            const homeAwayIndicator = match[2]; // 'H' or 'A'
                                             const opponentFullName = globalTeamShortCodeMap[opponentShortCode];
                                             
                                             if (opponentFullName) {
-                                                schedule[teamFullName][roundName].push(`${opponentFullName} ${homeAwayEmoji}`);
-                                                console.log(`DEBUG: Parsed fixture for ${teamFullName} ${roundName}: '${fixtureString}' -> Opponent: '${opponentFullName}', Home/Away: '${homeAwayEmoji}'`);
+                                                schedule[teamFullName][roundName].push(`${opponentFullName} (${homeAwayIndicator})`);
+                                                console.log(`DEBUG: Parsed fixture for ${teamFullName} ${roundName}: '${fixtureString}' -> Opponent: '${opponentFullName}', Home/Away: '(${homeAwayIndicator})'`);
                                             } else {
                                                 console.warn(`WARNING: Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing raw string.`);
                                                 schedule[teamFullName][roundName].push(fixtureString); // Store raw if mapping fails
                                             }
                                         } else {
-                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${roundName}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Storing raw string.`);
+                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${roundName}' does not match expected format (e.g., 'HIL (H)' or 'NAS (A)'). Storing raw string.`);
                                             schedule[teamFullName][roundName].push(fixtureString); // Store raw if format is unexpected
                                         }
                                     }
@@ -3042,6 +3027,7 @@
 
         /**
          * Helper function to get the FDR value for a given team, opponent, and home/away status.
+         * This function is kept for future use but is currently not called by renderScheduleTable.
          * @param {string} teamFullName - The full name of the team whose FDR is being calculated.
          * @param {string} opponentFullName - The full name of the opponent.
          * @param {boolean} isHomeGame - True if it's a home game for `teamFullName`, false for away.
@@ -3117,7 +3103,7 @@
             
             const teamsToDisplay = globalSeasonSchedule.teams;
             const allRounds = globalSeasonSchedule.rounds;
-            const roundsToRender = allRrounds.slice(0, roundsToShow); // Use the tuning setting
+            const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
             console.log("DEBUG: Teams to display:", teamsToDisplay);
             console.log("DEBUG: Rounds to render:", roundsToRender);
 
@@ -3160,82 +3146,39 @@
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
-                            const match = fixtureString.match(/(.+)\s(🏠|✈️)/);
+                            // The fixture string is now expected to be "Full Team Name (H)" or "Full Team Name (A)"
+                            const match = fixtureString.match(/(.+) \((H|A)\)/);
                             let opponentFullName = null;
-                            let isHomeGame = null; 
+                            let homeAwayIndicator = null; 
 
                             if (match) {
-                                const opponentPart = match[1].trim();
-                                const homeAwayEmoji = match[2];
-
-                                // Try to get full name from globalTeamShortCodeMap first
-                                opponentFullName = globalTeamShortCodeMap[opponentPart];
-                                if (!opponentFullName) {
-                                    // If not found in short code map, assume it's already a full name
-                                    opponentFullName = opponentPart;
-                                }
-
-                                isHomeGame = (homeAwayEmoji === '🏠'); 
+                                opponentFullName = match[1].trim();
+                                homeAwayIndicator = match[2]; 
                             } else {
-                                // If the fixture string doesn't match the expected format (e.g., "TeamName 🏠"),
-                                // it might be a raw full name or an unparseable string.
-                                // For now, we'll try to use it as is for opponentFullName, but FDR will likely be N/A.
-                                opponentFullName = fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
-                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Opponent assumed as '${opponentFullName}'.`);
+                                // Fallback for unexpected formats, though the parsing should prevent this now
+                                opponentFullName = fixtureString.replace(/(\s*\(H\)|\s*\(A\))/g, '').trim();
+                                homeAwayIndicator = 'N/A'; // Indicate unknown status
+                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Team (H/A)" format during rendering. Displaying as raw.`);
                             }
+                            
+                            const fixtureDisplayItem = document.createElement('div');
+                            fixtureDisplayItem.className = `fixture-item-display`; // No FDR classes here
+                            fixtureDisplayItem.textContent = `${opponentFullName} (${homeAwayIndicator})`;
+                            fixtureCell.appendChild(fixtureDisplayItem);
 
-                            let fdrValue = 'N/A';
-                            let fdrClass = 'fdr-na';
-
+                            // For customized, still provide input fields for future use
                             if (fdrType === 'customized') {
-                                // For customized, use stored custom rating
-                                // Key includes index for multiple fixtures in one round
                                 const fixtureKey = `${teamFullName}-${round}-${index}`; 
-                                fdrValue = customRatings[fixtureKey] || ''; // Use empty string for no value
-                                fdrClass = `fdr-${fdrValue || 'na'}`; // Ensure 'na' class if no value
-
                                 const inputElement = document.createElement('input');
                                 inputElement.type = 'number';
                                 inputElement.min = '1';
                                 inputElement.max = '7';
-                                inputElement.value = fdrValue;
+                                inputElement.value = customRatings[fixtureKey] || ''; // Pre-fill if saved
                                 inputElement.dataset.fixtureId = fixtureKey;
                                 inputElement.oninput = function() {
                                     this.value = Math.max(1, Math.min(7, parseInt(this.value) || ''));
                                 };
-                                
-                                const spanOpponent = document.createElement('span');
-                                spanOpponent.textContent = `${opponentFullName} ${isHomeGame ? '🏠' : '✈️'}`;
-                                
-                                const customInputGroup = document.createElement('div');
-                                customInputGroup.className = 'custom-fdr-input-group';
-                                customInputGroup.appendChild(spanOpponent);
-                                customInputGroup.appendChild(inputElement);
-                                fixtureCell.appendChild(customInputGroup);
-
-                            } else {
-                                // For Overall and Home/Away, calculate FDR from global rankings
-                                if (opponentFullName && isHomeGame !== null) { // Only calculate if opponent and home/away status are clear
-                                    fdrValue = getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType);
-                                } else {
-                                    console.warn(`WARNING: Cannot calculate FDR for fixture '${fixtureString}' (team: ${teamFullName}, round: ${round}) due to missing opponent or home/away status.`);
-                                }
-                                
-                                fdrClass = `fdr-${fdrValue}`;
-                                
-                                const fixtureDisplayItem = document.createElement('div');
-                                if (showColors) {
-                                    fixtureDisplayItem.className = `fixture-item-display ${fdrClass}`;
-                                } else {
-                                    fixtureDisplayItem.className = `fixture-item-display`; // No color class
-                                }
-
-                                if (showTeamRatings) {
-                                    fixtureDisplayItem.textContent = `${opponentFullName} ${isHomeGame ? '🏠' : '✈️'} (${fdrValue})`;
-                                } else {
-                                    fixtureDisplayItem.textContent = `${opponentFullName} ${isHomeGame ? '🏠' : '✈️'}`;
-                                }
-                                fixtureCell.appendChild(fixtureDisplayItem);
+                                fixtureCell.appendChild(inputElement);
                             }
                         });
                     } else {
