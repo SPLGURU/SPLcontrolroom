@@ -1693,7 +1693,7 @@
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", // This must be a string.
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", 
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
@@ -2281,7 +2281,7 @@
                             const adminDocRef = doc(db, "admins", user.uid);
                             const adminDocSnap = await getDoc(adminDocRef);
                             isAdminUser = adminDocSnap.exists();
-                            console.log(`DEBUG: User UID: ${user.uid}, Is Admin: ${isAdminUser}`);
+                            console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                             
                             if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
                             console.log(`DEBUG ADMIN MENU ITEM RENDER (onAuthStateChanged): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
@@ -2844,7 +2844,7 @@
                         
                         // Read the sheet as a raw 2D array, which is easier for unmerged cells
                         const rawSheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw: false to get formatted cell values
-                        console.log("DEBUG: Raw sheet data:", rawSheetData);
+                        console.log("DEBUG: Raw sheet data from XLSX:", rawSheetData);
 
                         if (rawSheetData.length < 2) {
                             showScheduleUploadMessage('Schedule file is empty or missing data rows after parsing.', "error");
@@ -2852,7 +2852,7 @@
                         }
 
                         const headerRow = rawSheetData[0].map(h => String(h || '').trim());
-                        console.log("DEBUG: Header row:", headerRow);
+                        console.log("DEBUG: Parsed header row:", headerRow);
 
                         const teams = []; // To store full team names
                         const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
@@ -2863,31 +2863,38 @@
                         let currentRoundName = null;
                         for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
                             const headerCell = headerRow[i];
+                            // Check if it's a round header (e.g., "R1", "R31")
                             const isRoundHeader = headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)));
 
                             if (isRoundHeader) {
                                 // If it's a new round header, or the first time we encounter a round header
-                                if (headerCell !== currentRoundName) {
-                                    currentRoundName = headerCell;
-                                    if (!rounds.includes(currentRoundName)) {
-                                        rounds.push(currentRoundName);
-                                    }
+                                if (!rounds.includes(headerCell)) { // Only add to 'rounds' list if unique
+                                    rounds.push(headerCell);
+                                }
+                                currentRoundName = headerCell; // Update current round being processed
+                                if (!roundColMap[currentRoundName]) {
                                     roundColMap[currentRoundName] = [];
                                 }
                                 roundColMap[currentRoundName].push(i);
-                            } else if (currentRoundName !== null) {
-                                // If it's not a round header, but we were previously in a round (e.g., empty cell for double gameweek)
-                                // This column also belongs to the current round.
+                            } else if (currentRoundName !== null && headerCell === currentRoundName) {
+                                // If it's not a new round header but matches the *current* round name (e.g., second "R31")
                                 roundColMap[currentRoundName].push(i);
+                            } else {
+                                // If it's not a round header and doesn't match the current round name, or currentRoundName is null
+                                // This handles cases like empty cells between rounds or non-round headers.
+                                // We don't push anything to rounds or roundColMap for these.
+                                if (headerCell !== '') { // Log if it's a non-empty, non-round header
+                                    console.warn(`WARNING: Header cell '${headerCell}' at index ${i} is not a recognized round header. Skipping.`);
+                                }
                             }
-                            // If it's not a round header and currentRoundName is null, it's just a blank/non-round column, ignore.
                         }
-                        console.log("DEBUG: Rounds identified:", rounds);
-                        console.log("DEBUG: Round column map:", roundColMap);
+                        console.log("DEBUG: Identified rounds (from headers):", rounds);
+                        console.log("DEBUG: Round column mapping:", roundColMap);
 
                         // Ensure team mappings are loaded before parsing schedule
                         if (Object.keys(globalTeamShortCodeMap).length === 0) {
                             showScheduleUploadMessage('Team names mapping not loaded. Please upload the "Team Names Mapping" file first via Admin Dashboard.', "error");
+                            console.error("ERROR: globalTeamShortCodeMap is empty. Cannot parse schedule without team mappings.");
                             return;
                         }
                         
@@ -2896,7 +2903,7 @@
                             const row = rawSheetData[i];
                             const teamShortName = String(row[0] || '').trim(); // First cell is team short name
                             if (!teamShortName) {
-                                console.warn(`Skipping empty team row ${i+1}.`);
+                                console.warn(`WARNING: Skipping empty team row ${i+1}.`);
                                 continue; 
                             }
 
@@ -2910,13 +2917,17 @@
 
                             rounds.forEach(roundName => {
                                 schedule[teamFullName][roundName] = [];
-                                const colIndices = roundColMap[roundName]; // Get all column indices for this round
+                                const colIndices = roundColMap[roundName] || []; // Get all column indices for this round
 
                                 colIndices.forEach(colIndex => {
                                     const fixtureString = String(row[colIndex] || '').trim();
+                                    console.log(`DEBUG: Raw fixture string from cell [${i+1}, ${colIndex+1}] for ${teamFullName} in ${roundName}: '${fixtureString}'`);
+
                                     if (fixtureString) {
-                                        // MODIFIED REGEX to capture opponent short code and emoji (🏠 or ✈️)
+                                        // Regex to capture opponent short code and emoji (🏠 or ✈️)
                                         const match = fixtureString.match(/(.+)\s(🏠|✈️)/); 
+                                        console.log(`DEBUG: Regex match result for '${fixtureString}':`, match);
+
                                         if (match) {
                                             const opponentShortCode = match[1].trim();
                                             const homeAwayEmoji = match[2];
@@ -2924,13 +2935,13 @@
                                             
                                             if (opponentFullName) {
                                                 schedule[teamFullName][roundName].push(`${opponentFullName} ${homeAwayEmoji}`);
-                                                console.log(`DEBUG: Parsed fixture for ${teamFullName} ${roundName}: '${fixtureString}' -> Opponent: '${opponentFullName}', Home/Away: '${homeAwayEmoji}'`);
+                                                console.log(`DEBUG: Pushing fixture for ${teamFullName} in ${roundName}: '${opponentFullName} ${homeAwayEmoji}'`);
                                             } else {
                                                 console.warn(`WARNING: Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing raw string.`);
                                                 schedule[teamFullName][roundName].push(fixtureString); // Store raw if mapping fails
                                             }
                                         } else {
-                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Storing raw string.`);
+                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${roundName}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Storing raw string.`);
                                             schedule[teamFullName][roundName].push(fixtureString); // Store raw if format is unexpected
                                         }
                                     }
@@ -2941,7 +2952,7 @@
                                 }
                             });
                         }
-                        console.log("DEBUG: Final parsed schedule object:", schedule);
+                        console.log("DEBUG: Final schedule object to be saved:", schedule);
 
                         const seasonId = "2025-2026"; 
                         const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId); 
@@ -2972,6 +2983,7 @@
          * and stores them in global variables.
          */
         async function fetchGlobalFDRData() {
+            console.log("DEBUG: Fetching global data...");
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
             const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId);
@@ -3014,14 +3026,13 @@
                     globalSeasonSchedule.fixtures = data.fixtures || {};
                     globalSeasonSchedule.teams = data.teams || [];
                     globalSeasonSchedule.rounds = data.rounds || [];
-                    console.log("DEBUG: Fetched global Season Schedule:", globalSeasonSchedule);
+                    console.log("DEBUG: Fetched global Season Schedule (fixtures):", globalSeasonSchedule.fixtures);
+                    console.log("DEBUG: Fetched global Season Schedule (teams):", globalSeasonSchedule.teams);
+                    console.log("DEBUG: Fetched global Season Schedule (rounds):", globalSeasonSchedule.rounds);
                 } else {
                     console.warn("WARNING: No Season Schedule data found in Firestore.");
                     globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
                 }
-                console.log("DEBUG: globalSeasonSchedule after fetch:", globalSeasonSchedule); // Explicit log for schedule
-                console.log("DEBUG: globalSeasonSchedule.rounds after fetch:", globalSeasonSchedule.rounds); // Explicit log for rounds
-
             } catch (error) {
                 console.error("ERROR: Error fetching global FDR data:", error);
                 showGeneralErrorMessage(`Failed to load global FDR data: ${error.message}`);
@@ -3095,7 +3106,7 @@
          * @param {Object} customRatings - Object containing custom ratings for 'customized' type.
          */
         function renderScheduleTable(tableElement, fdrType, customRatings = {}) {
-            console.log(`DEBUG: renderScheduleTable called for FDR Type: ${fdrType}`);
+            console.log(`DEBUG: renderScheduleTable called for FDR Type: ${fdrType}, Rounds to show: ${roundsToShow}`);
             tableElement.innerHTML = ''; // Clear existing table content
 
             if (!globalSeasonSchedule || !globalSeasonSchedule.fixtures || Object.keys(globalSeasonSchedule.fixtures).length === 0 || !globalSeasonSchedule.teams || globalSeasonSchedule.teams.length === 0 || !globalSeasonSchedule.rounds || globalSeasonSchedule.rounds.length === 0) {
@@ -3107,7 +3118,7 @@
             const teamsToDisplay = globalSeasonSchedule.teams;
             const allRounds = globalSeasonSchedule.rounds;
             const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
-            console.log("DEBUG: Teams to display:", teamsToDisplay);
+            console.log("DEBUG: Teams to display in table:", teamsToDisplay);
             console.log("DEBUG: All rounds from globalSeasonSchedule:", allRounds);
             console.log("DEBUG: Rounds to render (based on slider):", roundsToRender);
 
@@ -3146,12 +3157,14 @@
                     fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures in a double round
 
                     const fixturesInRound = teamFixtures[round] || []; // This is now an array of fixture strings
-                    console.log(`DEBUG: Fixtures for ${teamFullName} in ${round}:`, fixturesInRound);
+                    console.log(`DEBUG: Fixtures for ${teamFullName} in ${round} (from globalSeasonSchedule):`, fixturesInRound);
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
                             // The fixture string is now expected to be "Full Team Name 🏠" or "Full Team Name ✈️"
                             const match = fixtureString.match(/(.+) (🏠|✈️)/);
+                            console.log(`DEBUG: Rendering Regex match result for '${fixtureString}' for ${teamFullName} in ${round}:`, match);
+
                             let opponentFullName = null;
                             let homeAwayEmoji = null; 
 
@@ -3187,6 +3200,7 @@
                         });
                     } else {
                         // For blank rounds, the cell remains empty
+                        console.log(`DEBUG: Cell for ${teamFullName}, ${round} is empty.`);
                         fixtureCell.textContent = ''; 
                     }
                     row.appendChild(fixtureCell);
@@ -3210,7 +3224,7 @@
          * @param {HTMLElement} displayContainer - The main display container for rankings (e.g., currentRankingsDisplayAdmin or myControlRoomFDRDisplay).
          * @param {string | null} selectedFDRSystem - The currently selected FDR system ('overall', 'homeAway', 'customized') for Control Room, or null for Admin.
          */
-        async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, selectedFDRSystem = null) {
+        async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, selectedFdrSystem = null) {
             messageBox.textContent = '';
             messageBox.style.display = 'block';
             messageBox.className = 'message-box info';
@@ -3232,7 +3246,7 @@
             let hasDataToDisplay = false;
 
             // --- Render for Admin Dashboard (show all data) ---
-            if (!selectedFDRSystem) { // If selectedFDRSystem is null, it means we're in Admin Dashboard
+            if (!selectedFdrSystem) { // If selectedFDRSystem is null, it means we're in Admin Dashboard
                 // Render Overall Rankings (Admin)
                 if (globalSplRankings.overall.length > 0) {
                     globalSplRankings.overall.sort((a, b) => {
@@ -3307,15 +3321,15 @@
                 // Show the main FDR display container (which contains the scales and fixture lists/tables)
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
-                if (selectedFDRSystem === 'overall') {
+                if (selectedFdrSystem === 'overall') {
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(overallScheduleTable, 'overall');
                     hasDataToDisplay = true;
-                } else if (selectedFDRSystem === 'homeAway') {
+                } else if (selectedFdrSystem === 'homeAway') {
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(homeAwayScheduleTable, 'homeAway');
                     hasDataToDisplay = true;
-                } else if (selectedFDRSystem === 'customized') {
+                } else if (selectedFdrSystem === 'customized') {
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                     // Fetch custom ratings for the current user
                     const user = auth.currentUser;
@@ -3480,9 +3494,9 @@
             // Now call the generalized fetchAndRenderRankings with Control Room specific elements
             fetchAndRenderRankings(
                 controlRoomMessageBox,
-                overallScheduleTable, // Now passing the table element
-                homeAwayScheduleTable,    // Now passing the table element
-                customizedScheduleTable,    // Now passing the table element
+                overallScheduleTable, 
+                homeAwayScheduleTable,    
+                customizedScheduleTable,    
                 overallFDRSectionControlRoom,
                 homeAwayFDRSectionControlRoom,
                 customizedFDRSectionControlRoom,
