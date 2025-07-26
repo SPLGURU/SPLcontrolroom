@@ -414,7 +414,7 @@
         }
         body.dark-mode .red-button {
             background-color: #f44336 !important;
-            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2) !important;
+            box-shadow: 0 44px 8px rgba(244, 67, 54, 0.2) !important;
         }
         body.dark-mode .red-button:hover {
             background-color: #d32f2f !important;
@@ -1022,12 +1022,14 @@
         /* Styles for Customized FDR inputs */
         .custom-fdr-input-group {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
+            flex-direction: column; /* Stack opponent and input */
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            padding: 5px; /* Reduced padding */
             border-bottom: 1px solid var(--spl-border-light);
             background-color: var(--spl-container-bg);
             transition: background-color 0.3s ease;
+            min-height: 60px; /* Ensure enough height for stacked elements */
         }
         .custom-fdr-input-group:last-child {
             border-bottom: none;
@@ -1035,15 +1037,16 @@
         .custom-fdr-input-group span {
             font-weight: bold;
             color: var(--spl-text-dark);
-            flex-grow: 1;
+            text-align: center;
+            margin-bottom: 5px; /* Space between opponent name and input */
         }
         .custom-fdr-input-group input[type="number"] {
-            width: 60px;
-            padding: 5px;
+            width: 50px; /* Slightly smaller input */
+            padding: 3px; /* Reduced padding */
             border: 1px solid var(--spl-border-light);
             border-radius: 4px;
             text-align: center;
-            font-size: 0.9em;
+            font-size: 0.8em; /* Smaller font size */
             background-color: var(--spl-table-bg);
             color: var(--spl-text-dark);
         }
@@ -1197,6 +1200,7 @@
         /* Specific styling for fixture cells */
         .fixture-cell {
             display: flex;
+            flex-direction: column; /* Stack multiple fixtures */
             align-items: center;
             justify-content: center;
             gap: 5px;
@@ -1205,26 +1209,35 @@
             border-radius: 4px;
             min-width: 60px; /* Ensure enough space for opponent + FDR */
         }
+        .fixture-item-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.85em; /* Smaller font for individual fixture in a cell */
+            white-space: nowrap;
+        }
 
         /* FDR coloring for schedule cells */
-        .fixture-cell.fdr-1 { background-color: #00B050; color: white; }
-        .fixture-cell.fdr-2 { background-color: #92D050; color: black; }
-        .fixture-cell.fdr-3 { background-color: #FFFF00; color: black; }
-        .fixture-cell.fdr-4 { background-color: #FFC000; color: black; }
-        .fixture-cell.fdr-5 { background-color: #FF0000; color: white; }
-        .fixture-cell.fdr-6 { background-color: #C00000; color: white; }
-        .fixture-cell.fdr-7 { background-color: #800000; color: white; }
-        .fixture-cell.fdr-na { background-color: #ccc; color: #666; } /* For N/A or missing FDR */
+        .fixture-item-display.fdr-1 { background-color: #00B050; color: white; }
+        .fixture-item-display.fdr-2 { background-color: #92D050; color: black; }
+        .fixture-item-display.fdr-3 { background-color: #FFFF00; color: black; }
+        .fixture-item-display.fdr-4 { background-color: #FFC000; color: black; }
+        .fixture-item-display.fdr-5 { background-color: #FF0000; color: white; }
+        .fixture-item-display.fdr-6 { background-color: #C00000; color: white; }
+        .fixture-item-display.fdr-7 { background-color: #800000; color: white; }
+        .fixture-item-display.fdr-na { background-color: #ccc; color: #666; } /* For N/A or missing FDR */
 
         /* Dark Mode Adjustments for fixture cells */
-        body.dark-mode .fixture-cell.fdr-1 { background-color: #008037; }
-        body.dark-mode .fixture-cell.fdr-2 { background-color: #6B9F3B; }
-        body.dark-mode .fixture-cell.fdr-3 { background-color: #B3B300; }
-        body.dark-mode .fixture-cell.fdr-4 { background-color: #B38600; }
-        body.dark-mode .fixture-cell.fdr-5 { background-color: #B30000; }
-        body.dark-mode .fixture-cell.fdr-6 { background-color: #800000; }
-        body.dark-mode .fixture-cell.fdr-7 { background-color: #530000; }
-        body.dark-mode .fixture-cell.fdr-na { background-color: #555; color: #bbb; }
+        body.dark-mode .fixture-item-display.fdr-1 { background-color: #008037; }
+        body.dark-mode .fixture-item-display.fdr-2 { background-color: #6B9F3B; }
+        body.dark-mode .fixture-item-display.fdr-3 { background-color: #B3B300; }
+        body.dark-mode .fixture-item-display.fdr-4 { background-color: #B38600; }
+        body.dark-mode .fixture-item-display.fdr-5 { background-color: #B30000; }
+        body.dark-mode .fixture-item-display.fdr-6 { background-color: #800000; }
+        body.dark-mode .fixture-item-display.fdr-7 { background-color: #530000; }
+        body.dark-mode .fixture-item-display.fdr-na { background-color: #555; color: #bbb; }
 
         /* Tuning section styles */
         .tuning-section {
@@ -1553,13 +1566,6 @@
                 <!-- Data Upload Section (Admin Dashboard) -->
                 <div id="dataUploadSection" style="display: none;">
                     <h3 class="text-xl font-semibold text-gray-700 mb-3">Upload League Tables</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Upload Excel files for Overall, Home, or Away rankings.
-                        Overall FDR sheet: "Rank", "Team", "FDR Home", "FDR Away".
-                        Home FDR sheet: "Rank", "Team", "FDR Away".
-                        Away FDR sheet: "Rank", "Team", "FDR Home".
-                        FDRs should be numbers between 1-7 (Overall) or 1-6 (Home/Away).
-                    </p>
                     <div class="mb-3 input-group">
                         <label for="rankingTypeSelect" class="block text-gray-700 text-sm font-bold mb-2">
                             Select Ranking Type for Upload:
@@ -1584,13 +1590,22 @@
                     </label>
                     <p id="excelUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
 
+                    <!-- NEW: Upload Team Names Mapping Button -->
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3 mt-8">Upload Team Names Mapping</h3>
+                    <label class="upload-button-label">
+                        Upload Team Names File
+                        <input
+                            type="file"
+                            accept=".xlsx, .xls, .csv"
+                            id="teamNamesFileUploadInput"
+                            class="hidden"
+                        />
+                    </label>
+                    <p id="teamNamesUploadMessage" class="mt-2 text-sm text-center message-box" style="display: none;"></p>
+
+
                     <!-- NEW: Upload Season Schedule Button -->
                     <h3 class="text-xl font-semibold text-gray-700 mb-3 mt-8">Upload Season Schedule</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Upload the full season schedule Excel file.
-                        Ensure the first column is "Team" and subsequent columns are "R1", "R2", etc.
-                        Fixtures should be in "Opponent (🏠/✈️)" format.
-                    </p>
                     <label class="upload-button-label">
                         Upload Schedule File
                         <input
@@ -1711,11 +1726,16 @@
         let currentManagerId = null; 
         let isAdminUser = false; 
         let foundUserForAdminEdit = null; 
-        let userTeamName = 'Your Team'; // Store user's team name (placeholder for now)
+        // IMPORTANT: Set this to a full team name that exists in your 'team names.xlsx'
+        // For example, if your CSV has "Al-Hilal", set it to "Al-Hilal".
+        let userTeamName = 'Al-Hilal'; 
 
-        // Store fetched FDR and schedule data globally for easy access
+        // Store fetched FDR, schedule, and team mapping data globally
         let globalSplRankings = { overall: [], home: [], away: [] };
-        let globalSeasonSchedule = {}; // Keyed by team short name, value is array of fixtures
+        let globalSeasonSchedule = {}; // Keyed by team full name, value is array of fixtures
+        let globalTeamShortCodeMap = {}; // { "HIL": "Al-Hilal", "NAS": "Al-Nassr", ... }
+        let globalTeamFullNameToShortCodeMap = {}; // { "Al-Hilal": "HIL", "Al-Nassr": "NAS", ... }
+
 
         // Tuning settings
         let roundsToShow = 5;
@@ -1791,8 +1811,10 @@
         const rankingTypeSelect = document.getElementById('rankingTypeSelect');
         const excelFileUploadInput = document.getElementById('excelFileUploadInput');
         const excelUploadMessage = document.getElementById('excelUploadMessage');
-        const scheduleFileUploadInput = document.getElementById('scheduleFileUploadInput'); // NEW
-        const scheduleUploadMessage = document.getElementById('scheduleUploadMessage'); // NEW
+        const teamNamesFileUploadInput = document.getElementById('teamNamesFileUploadInput'); // NEW
+        const teamNamesUploadMessage = document.getElementById('teamNamesUploadMessage'); // NEW
+        const scheduleFileUploadInput = document.getElementById('scheduleFileUploadInput'); 
+        const scheduleUploadMessage = document.getElementById('scheduleUploadMessage'); 
         const currentRankingsDisplayAdmin = document.getElementById('currentRankingsDisplayAdmin');
         
         // Specific FDR grid containers (Admin Dashboard)
@@ -1879,6 +1901,18 @@
             }
         }
 
+        // NEW: Function to display messages specific to Team Names Upload (Admin Dashboard)
+        function showTeamNamesUploadMessage(message, type = 'info') {
+            if (teamNamesUploadMessage) {
+                teamNamesUploadMessage.textContent = '';
+                teamNamesUploadMessage.className = `message-box ${type}`;
+                teamNamesUploadMessage.textContent = message;
+                teamNamesUploadMessage.style.display = 'block';
+            } else {
+                console.warn("Team Names upload message element not found.");
+            }
+        }
+
         // NEW: Function to display messages specific to Schedule Upload (Admin Dashboard)
         function showScheduleUploadMessage(message, type = 'info') {
             if (scheduleUploadMessage) {
@@ -1919,6 +1953,7 @@
             if (dataUploadSection) dataUploadSection.style.display = 'none';
             if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'none';
             if (excelUploadMessage) excelUploadMessage.style.display = 'none';
+            if (teamNamesUploadMessage) teamNamesUploadMessage.style.display = 'none'; // NEW
             if (scheduleUploadMessage) scheduleUploadMessage.style.display = 'none'; // NEW
             if (overallFDRSectionAdmin) overallFDRSectionAdmin.style.display = 'none'; 
             if (homeFDRSectionAdmin) homeFDRSectionAdmin.style.display = 'none';
@@ -2024,7 +2059,7 @@
                         splManagerId: managerId,
                         createdAt: serverTimestamp(),
                         emailVerified: false,
-                        teamName: 'Your Team', // Default team name on signup
+                        teamName: userTeamName, // Default team name on signup (now using full name)
                         preferredFDRSystem: 'overall' // NEW: Default preferred FDR system
                     });
                     console.log("DEBUG: User data saved to Firestore with default team name and FDR system.");
@@ -2270,7 +2305,7 @@
                             // Default to the initial logged-in dashboard (empty home page)
                             showContentSection('initialLoggedInDashboard');
 
-                            // Fetch all global data (rankings, schedule) once on auth state change
+                            // Fetch all global data (rankings, schedule, team mappings) once on auth state change
                             await fetchGlobalFDRData();
 
                         } else {
@@ -2540,6 +2575,7 @@
                 if (dataUploadSection) dataUploadSection.style.display = 'block'; 
                 if (currentRankingsDisplayAdmin) currentRankingsDisplayAdmin.style.display = 'block'; 
                 showExcelUploadMessage("Upload your league table Excel file here.", "info");
+                showTeamNamesUploadMessage("Upload your team names mapping file here.", "info"); // NEW
                 showScheduleUploadMessage("Upload your season schedule Excel file here.", "info"); // NEW
                 // Call fetchAndRenderRankings for Admin Dashboard
                 fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null);
@@ -2716,6 +2752,84 @@
             });
         }
 
+        // NEW: Team Names Mapping Upload Logic (Admin Dashboard)
+        if (teamNamesFileUploadInput) {
+            teamNamesFileUploadInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    showTeamNamesUploadMessage('No file selected.', "error");
+                    return;
+                }
+
+                if (typeof window.XLSX === 'undefined') {
+                    showTeamNamesUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', "error");
+                    console.error("window.XLSX is not defined. Excel library not loaded.");
+                    return;
+                }
+
+                showTeamNamesUploadMessage('Uploading and processing team names file...', "info");
+
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' }); 
+
+                        const sheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[sheetName];
+                        const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); 
+
+                        if (jsonRows.length < 2) {
+                            showTeamNamesUploadMessage('Team names file is empty or missing data rows.', "error");
+                            return;
+                        }
+
+                        const headerRow = jsonRows[0].map(h => String(h).trim());
+                        const teamNameIndex = headerRow.indexOf('Team Name');
+                        const shortNameIndex = headerRow.indexOf('Short name');
+
+                        if (teamNameIndex === -1 || shortNameIndex === -1) {
+                            showTeamNamesUploadMessage('Invalid headers. Expected "Team Name" and "Short name".', "error");
+                            return;
+                        }
+
+                        const teamMapping = {};
+                        for (let i = 1; i < jsonRows.length; i++) {
+                            const row = jsonRows[i];
+                            const fullName = String(row[teamNameIndex]).trim();
+                            const shortCode = String(row[shortNameIndex]).trim();
+                            if (fullName && shortCode) {
+                                teamMapping[shortCode] = fullName;
+                            }
+                        }
+
+                        if (Object.keys(teamMapping).length === 0) {
+                            showTeamNamesUploadMessage('No valid team name mappings found in the file.', "error");
+                            return;
+                        }
+
+                        const seasonId = "2025-2026"; // Or dynamically determine season
+                        const teamMappingsDocRef = doc(db, 'teamMappings', seasonId); 
+
+                        await setDoc(teamMappingsDocRef, {
+                            mapping: teamMapping,
+                            lastUpdated: serverTimestamp()
+                        });
+
+                        showTeamNamesUploadMessage('Successfully uploaded team names mapping!', "success");
+                        event.target.value = null; // Clear the file input
+                        // Re-fetch all global data after upload
+                        await fetchGlobalFDRData();
+
+                    } catch (error) {
+                        console.error('Error processing team names file or uploading to Firestore:', error);
+                        showTeamNamesUploadMessage(`Failed to process team names or upload: ${error.message}. Please check file format and console for details.`, "error");
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
         // NEW: Season Schedule Upload Logic (Admin Dashboard)
         if (scheduleFileUploadInput) {
             scheduleFileUploadInput.addEventListener('change', async (event) => {
@@ -2728,6 +2842,11 @@
                 if (typeof window.XLSX === 'undefined') {
                     showScheduleUploadMessage('Excel library (XLSX.js) not loaded. Please try refreshing the page.', "error");
                     console.error("window.XLSX is not defined. Excel library not loaded.");
+                    return;
+                }
+
+                if (Object.keys(globalTeamShortCodeMap).length === 0) {
+                    showScheduleUploadMessage('Team names mapping not loaded. Please upload the "Team Names Mapping" file first.', "error");
                     return;
                 }
 
@@ -2750,47 +2869,74 @@
                         }
 
                         const headerRow = rawData[0];
-                        const teams = [];
-                        const schedule = {}; // { TeamShortName: { R1: "Opponent (H/A)", R2: "Opponent (H/A)", ... } }
+                        const teams = []; // To store full team names
+                        const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
 
-                        // Parse header row to get round numbers
-                        const rounds = [];
+                        // Parse header row to get round numbers and column indices for each round
+                        const roundsInfo = []; // [{ name: "R1", colIndices: [1] }, { name: "R31", colIndices: [31, 32] }]
+                        let currentRound = null;
                         for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
-                            const headerCell = String(headerRow[i]).trim();
+                            const headerCell = String(headerRow[i] || '').trim();
                             if (headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)))) {
-                                rounds.push(headerCell);
+                                currentRound = headerCell;
+                                roundsInfo.push({ name: currentRound, colIndices: [i] });
+                            } else if (currentRound) {
+                                // If header cell is empty or doesn't start with R, it's part of the previous round (double round)
+                                roundsInfo[roundsInfo.length - 1].colIndices.push(i);
                             }
                         }
 
                         // Parse data rows
                         for (let i = 1; i < rawData.length; i++) { // Start from second row (after header)
                             const row = rawData[i];
-                            const teamShortName = String(row[0]).trim(); // First cell is team short name
+                            const teamShortName = String(row[0] || '').trim(); // First cell is team short name
                             if (!teamShortName) continue; // Skip empty rows
 
-                            teams.push(teamShortName);
-                            schedule[teamShortName] = {};
-
-                            for (let j = 1; j < row.length; j++) { // Iterate through fixture cells
-                                const roundName = headerRow[j]; // Get the round name from the header
-                                const fixtureString = String(row[j] || '').trim(); // Get fixture string
-
-                                if (roundName && rounds.includes(roundName)) {
-                                    schedule[teamShortName][roundName] = fixtureString;
-                                }
+                            const teamFullName = globalTeamShortCodeMap[teamShortName];
+                            if (!teamFullName) {
+                                console.warn(`Skipping row for unknown team short name: ${teamShortName}`);
+                                continue;
                             }
+                            teams.push(teamFullName);
+                            schedule[teamFullName] = {};
+
+                            roundsInfo.forEach(round => {
+                                schedule[teamFullName][round.name] = []; // Initialize as an array for multiple fixtures
+                                round.colIndices.forEach(colIndex => {
+                                    const fixtureString = String(row[colIndex] || '').trim();
+                                    if (fixtureString) {
+                                        // Convert opponent short code to full name
+                                        const match = fixtureString.match(/(.+) (🏠|✈️)/);
+                                        if (match) {
+                                            const opponentShortCode = match[1].trim();
+                                            const homeAwayEmoji = match[2];
+                                            const opponentFullName = globalTeamShortCodeMap[opponentShortCode];
+                                            if (opponentFullName) {
+                                                schedule[teamFullName][round.name].push(`${opponentFullName} ${homeAwayEmoji}`);
+                                            } else {
+                                                console.warn(`Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${round.name}'. Storing as is.`);
+                                                schedule[teamFullName][round.name].push(fixtureString);
+                                            }
+                                        } else {
+                                            // If no emoji, just store as is (e.g., blank round)
+                                            schedule[teamFullName][round.name].push(fixtureString);
+                                        }
+                                    }
+                                });
+                                // Remove empty arrays for blank rounds
+                                if (schedule[teamFullName][round.name].length === 0) {
+                                    delete schedule[teamFullName][round.name];
+                                }
+                            });
                         }
                         
-                        // Convert schedule to a more Firestore-friendly format if needed,
-                        // or store as is if it fits document size limits.
-                        // For now, storing as a map of team schedules.
                         const seasonId = "2025-2026"; 
                         const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId); 
 
                         await setDoc(seasonScheduleDocRef, {
                             scheduleData: schedule,
-                            teams: teams, // Store list of teams for easy lookup
-                            rounds: rounds, // Store list of rounds
+                            teams: teams, // Store list of full team names
+                            rounds: roundsInfo.map(r => r.name), // Store list of round names (R1, R2, etc.)
                             lastUpdated: serverTimestamp()
                         });
 
@@ -2809,18 +2955,20 @@
         }
 
         /**
-         * Fetches all necessary global FDR data (rankings and schedule) from Firestore
+         * Fetches all necessary global FDR data (rankings, schedule, and team mappings) from Firestore
          * and stores them in global variables.
          */
         async function fetchGlobalFDRData() {
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
             const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId);
+            const teamMappingsDocRef = doc(db, 'teamMappings', seasonId); // NEW
 
             try {
-                const [rankingsSnap, scheduleSnap] = await Promise.all([
+                const [rankingsSnap, scheduleSnap, teamMappingsSnap] = await Promise.all([
                     getDoc(splRankingsDocRef),
-                    getDoc(seasonScheduleDocRef)
+                    getDoc(seasonScheduleDocRef),
+                    getDoc(teamMappingsDocRef) // NEW
                 ]);
 
                 if (rankingsSnap.exists()) {
@@ -2834,10 +2982,25 @@
                     globalSplRankings = { overall: [], home: [], away: [] };
                 }
 
+                // NEW: Process team mappings first
+                if (teamMappingsSnap.exists()) {
+                    globalTeamShortCodeMap = teamMappingsSnap.data().mapping || {};
+                    // Create reverse map for easy lookup from full name to short code if needed
+                    globalTeamFullNameToShortCodeMap = Object.fromEntries(
+                        Object.entries(globalTeamShortCodeMap).map(([short, full]) => [full, short])
+                    );
+                    console.log("DEBUG: Fetched global Team Short Code Map:", globalTeamShortCodeMap);
+                    console.log("DEBUG: Created global Team Full Name to Short Code Map:", globalTeamFullNameToShortCodeMap);
+                } else {
+                    console.warn("No Team Mappings data found in Firestore. Schedule parsing might fail.");
+                    globalTeamShortCodeMap = {};
+                    globalTeamFullNameToShortCodeMap = {};
+                }
+
+
                 if (scheduleSnap.exists()) {
                     const data = scheduleSnap.data();
-                    globalSeasonSchedule = data.scheduleData || {};
-                    // Store teams and rounds for easier iteration
+                    globalSeasonSchedule.scheduleData = data.scheduleData || {};
                     globalSeasonSchedule._teams = data.teams || [];
                     globalSeasonSchedule._rounds = data.rounds || [];
                     console.log("DEBUG: Fetched global Season Schedule:", globalSeasonSchedule);
@@ -2861,17 +3024,18 @@
         function renderScheduleTable(tableElement, fdrType, customRatings = {}) {
             tableElement.innerHTML = ''; // Clear existing table content
 
-            if (!globalSeasonSchedule || Object.keys(globalSeasonSchedule).length === 0 || !globalSeasonSchedule._teams || globalSeasonSchedule._teams.length === 0) {
+            if (!globalSeasonSchedule || !globalSeasonSchedule.scheduleData || Object.keys(globalSeasonSchedule.scheduleData).length === 0 || !globalSeasonSchedule._teams || globalSeasonSchedule._teams.length === 0) {
                 tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please upload via Admin Dashboard.</td></tr></tbody>';
                 return;
             }
             
             // Get the current user's team name (for filtering if showTeamRatings is true)
-            const userTeam = userTeamName; 
+            // This `userTeamName` should now be a full team name, e.g., "Al-Hilal"
+            const teamToFilter = userTeamName; 
 
-            const teamsToDisplay = showTeamRatings ? [userTeam] : globalSeasonSchedule._teams;
+            const teamsToDisplay = showTeamRatings ? [teamToFilter] : globalSeasonSchedule._teams;
             if (teamsToDisplay.length === 0) {
-                 tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No teams to display.</td></tr></tbody>';
+                 tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No teams to display based on current filters.</td></tr></tbody>';
                  return;
             }
 
@@ -2896,84 +3060,93 @@
 
             // Create table body (Teams and their fixtures)
             const tbody = document.createElement('tbody');
-            teamsToDisplay.forEach(teamShortName => {
-                const teamSchedule = globalSeasonSchedule.scheduleData[teamShortName];
+            teamsToDisplay.forEach(teamFullName => {
+                const teamSchedule = globalSeasonSchedule.scheduleData[teamFullName];
                 if (!teamSchedule) return; // Skip if no schedule for this team
 
                 const row = document.createElement('tr');
                 const teamCell = document.createElement('td');
-                teamCell.textContent = teamShortName;
+                teamCell.textContent = teamFullName;
                 row.appendChild(teamCell);
 
                 roundsToRender.forEach(round => {
                     const fixtureCell = document.createElement('td');
-                    const fixtureString = teamSchedule[round] || ''; // e.g., "HIL (A)" or "NAS (H)"
+                    fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures
 
-                    if (fixtureString) {
-                        const match = fixtureString.match(/(.+) (🏠|✈️)/);
-                        let opponent = match ? match[1].trim() : fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
-                        let isHomeGame = match ? (match[2] === '🏠') : null; // null if no emoji found
+                    const fixturesInRound = teamSchedule[round] || []; // This is now an array of fixture strings
 
-                        let fdrValue = 'N/A';
-                        let fdrClass = 'fdr-na';
+                    if (fixturesInRound.length > 0) {
+                        fixturesInRound.forEach((fixtureString, index) => {
+                            const match = fixtureString.match(/(.+) (🏠|✈️)/);
+                            let opponentFullName = match ? match[1].trim() : fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
+                            let isHomeGame = match ? (match[2] === '🏠') : null; // null if no emoji found
 
-                        if (fdrType === 'customized') {
-                            // For customized, use stored custom rating
-                            const fixtureKey = `${teamShortName}-${round}`; // Unique key for this fixture
-                            fdrValue = customRatings[fixtureKey] || 'N/A';
-                            fdrClass = `fdr-${fdrValue}`;
+                            let fdrValue = 'N/A';
+                            let fdrClass = 'fdr-na';
 
-                            const inputElement = document.createElement('input');
-                            inputElement.type = 'number';
-                            inputElement.min = '1';
-                            inputElement.max = '7';
-                            inputElement.value = fdrValue !== 'N/A' ? fdrValue : '';
-                            inputElement.dataset.fixtureId = fixtureKey;
-                            inputElement.oninput = function() {
-                                this.value = Math.max(1, Math.min(7, parseInt(this.value) || ''));
-                            };
-                            
-                            const spanOpponent = document.createElement('span');
-                            spanOpponent.textContent = `${opponent} ${isHomeGame ? '🏠' : '✈️'}`;
-                            
-                            fixtureCell.className = 'custom-fdr-input-group'; // Apply custom input group style
-                            fixtureCell.appendChild(spanOpponent);
-                            fixtureCell.appendChild(inputElement);
-                            
-                        } else {
-                            // For Overall and Home/Away, calculate FDR from global rankings
-                            const opponentOverallData = globalSplRankings.overall.find(item => item.team === opponent);
-                            const opponentHomeData = globalSplRankings.home.find(item => item.team === opponent);
-                            const opponentAwayData = globalSplRankings.away.find(item => item.team === opponent);
+                            if (fdrType === 'customized') {
+                                // For customized, use stored custom rating
+                                // Key includes index for multiple fixtures in one round
+                                const fixtureKey = `${teamFullName}-${round}-${index}`; 
+                                fdrValue = customRatings[fixtureKey] || ''; // Use empty string for no value
+                                fdrClass = `fdr-${fdrValue || 'na'}`; // Ensure 'na' class if no value
 
-                            if (fdrType === 'overall' && opponentOverallData) {
-                                fdrValue = isHomeGame ? opponentOverallData.fdrHome : opponentOverallData.fdrAway;
-                                fdrClass = `fdr-${fdrValue}`;
-                            } else if (fdrType === 'homeAway') {
-                                if (isHomeGame && opponentAwayData) { // Home game for user's team means opponent is away
-                                    fdrValue = opponentAwayData.fdrAway; 
+                                const inputElement = document.createElement('input');
+                                inputElement.type = 'number';
+                                inputElement.min = '1';
+                                inputElement.max = '7';
+                                inputElement.value = fdrValue;
+                                inputElement.dataset.fixtureId = fixtureKey;
+                                inputElement.oninput = function() {
+                                    this.value = Math.max(1, Math.min(7, parseInt(this.value) || ''));
+                                };
+                                
+                                const spanOpponent = document.createElement('span');
+                                spanOpponent.textContent = `${opponentFullName} ${isHomeGame ? '🏠' : '✈️'}`;
+                                
+                                const customInputGroup = document.createElement('div');
+                                customInputGroup.className = 'custom-fdr-input-group';
+                                customInputGroup.appendChild(spanOpponent);
+                                customInputGroup.appendChild(inputElement);
+                                fixtureCell.appendChild(customInputGroup);
+
+                            } else {
+                                // For Overall and Home/Away, calculate FDR from global rankings
+                                const opponentOverallData = globalSplRankings.overall.find(item => item.team === opponentFullName);
+                                const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
+                                const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
+
+                                if (fdrType === 'overall' && opponentOverallData) {
+                                    fdrValue = isHomeGame ? opponentOverallData.fdrHome : opponentOverallData.fdrAway;
                                     fdrClass = `fdr-${fdrValue}`;
-                                } else if (!isHomeGame && opponentHomeData) { // Away game for user's team means opponent is home
-                                    fdrValue = opponentHomeData.fdrHome; 
-                                    fdrClass = `fdr-${fdrValue}`;
+                                } else if (fdrType === 'homeAway') {
+                                    if (isHomeGame && opponentAwayData) { // Home game for user's team means opponent is away
+                                        fdrValue = opponentAwayData.fdrAway; 
+                                        fdrClass = `fdr-${fdrValue}`;
+                                    } else if (!isHomeGame && opponentHomeData) { // Away game for user's team means opponent is home
+                                        fdrValue = opponentHomeData.fdrHome; 
+                                        fdrClass = `fdr-${fdrValue}`;
+                                    }
                                 }
-                            }
-                            
-                            if (showColors) {
-                                fixtureCell.className = `fixture-cell ${fdrClass}`;
-                            } else {
-                                fixtureCell.className = `fixture-cell`; // No color class
-                            }
+                                
+                                const fixtureDisplayItem = document.createElement('div');
+                                if (showColors) {
+                                    fixtureDisplayItem.className = `fixture-item-display ${fdrClass}`;
+                                } else {
+                                    fixtureDisplayItem.className = `fixture-item-display`; // No color class
+                                }
 
-                            if (showTeamRatings) {
-                                fixtureCell.textContent = `${opponent} ${isHomeGame ? '🏠' : '✈️'} (${fdrValue})`;
-                            } else {
-                                fixtureCell.textContent = `${opponent} ${isHomeGame ? '🏠' : '✈️'}`;
+                                if (showTeamRatings) {
+                                    fixtureDisplayItem.textContent = `${opponentFullName} ${isHomeGame ? '🏠' : '✈️'} (${fdrValue})`;
+                                } else {
+                                    fixtureDisplayItem.textContent = `${opponentFullName} ${isHomeGame ? '🏠' : '✈️'}`;
+                                }
+                                fixtureCell.appendChild(fixtureDisplayItem);
                             }
-                        }
+                        });
                     } else {
-                        // Handle blank rounds or missing fixtures
-                        fixtureCell.textContent = ''; // Empty cell for blank rounds
+                        // For blank rounds, the cell remains empty
+                        fixtureCell.textContent = ''; 
                     }
                     row.appendChild(fixtureCell);
                 });
@@ -3013,7 +3186,7 @@
             if (displayContainer) displayContainer.style.display = 'block';
 
             // Ensure global data is fetched before rendering
-            if (Object.keys(globalSplRankings.overall).length === 0 && Object.keys(globalSeasonSchedule).length === 0) {
+            if (Object.keys(globalSplRankings.overall).length === 0 || Object.keys(globalSeasonSchedule).length === 0 || Object.keys(globalTeamShortCodeMap).length === 0) {
                 await fetchGlobalFDRData();
             }
 
@@ -3024,9 +3197,10 @@
                 // Render Overall Rankings (Admin)
                 if (globalSplRankings.overall.length > 0) {
                     globalSplRankings.overall.sort((a, b) => {
-                        if (b.fdrAway !== a.fdrAway) return b.fdrAway - a.fdrAway;
-                        if (b.fdrHome !== a.fdrHome) return b.fdrHome - a.fdrHome;
-                        return a.rank - b.rank;
+                        // Sort by average FDR (fdrHome + fdrAway) / 2
+                        const avgFDR_A = (a.fdrHome + a.fdrAway) / 2;
+                        const avgFDR_B = (b.fdrHome + b.fdrAway) / 2;
+                        return avgFDR_B - avgFDR_A; // Higher average FDR first
                     });
 
                     globalSplRankings.overall.forEach(item => {
@@ -3048,10 +3222,7 @@
 
                 // Render Home Rankings (Admin)
                 if (globalSplRankings.home.length > 0) {
-                    globalSplRankings.home.sort((a, b) => {
-                        if (b.fdrAway !== a.fdrAway) return b.fdrAway - a.fdrAway;
-                        return a.rank - b.rank;
-                    });
+                    globalSplRankings.home.sort((a, b) => b.fdrAway - a.fdrAway); // Sort by Away FDR for Home rankings
 
                     globalSplRankings.home.forEach(item => {
                         const teamName = item.team;
@@ -3070,10 +3241,7 @@
 
                 // Render Away Rankings (Admin)
                 if (globalSplRankings.away.length > 0) {
-                    globalSplRankings.away.sort((a, b) => {
-                        if (b.fdrHome !== a.fdrHome) return b.fdrHome - a.fdrHome;
-                        return a.rank - b.rank;
-                    });
+                    globalSplRankings.away.sort((a, b) => b.fdrHome - a.fdrHome); // Sort by Home FDR for Away rankings
 
                     globalSplRankings.away.forEach(item => {
                         const teamName = item.team;
@@ -3128,7 +3296,7 @@
                 messageBox.textContent = 'FDR data loaded.';
             } else {
                 messageBox.className = 'message-box info';
-                messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data and schedule are uploaded via Admin Dashboard and your team name is correct.';
+                messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data, team mappings, and schedule are uploaded via Admin Dashboard and your team name is correct.';
             }
         }
 
