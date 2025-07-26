@@ -1804,7 +1804,7 @@
         const adminSearchResults = document.getElementById('adminSearchResults');
         const adminUserUidElem = document.getElementById('adminUserUid');
         const adminEditEmailInput = document.getElementById('adminEditEmail');
-        const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId'); // Corrected variable name
+        const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId');
         const adminUpdateUserButton = document.getElementById('adminUpdateUserButton');
         const adminMessage = document.getElementById('adminMessage');
 
@@ -2515,7 +2515,6 @@
                 showAdminMessage("Updating user...", "info");
 
                 const newEmail = adminEditEmailInput.value.trim();
-                // FIX: Corrected typo from adminEditSplSplManagerIdInput to adminEditSplManagerIdInput
                 const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim()); 
                 const userToUpdateUid = foundUserForAdminEdit.id;
 
@@ -2864,70 +2863,47 @@
                         const sheetName = workbook.SheetNames[0];
                         const worksheet = workbook.Sheets[sheetName];
                         
-                        // --- Robust parsing for merged cells ---
-                        const range = XLSX.utils.decode_range(worksheet['!ref']);
-                        const numRows = range.e.r - range.s.r + 1;
-                        const numCols = range.e.c - range.s.c + 1;
-                        const normalizedSheetData = Array.from({ length: numRows }, () => Array(numCols).fill('')); // Initialize with empty strings
+                        // Read the sheet as a raw 2D array, which is easier for unmerged cells
+                        const rawSheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw: false to get formatted cell values
 
-                        // Populate initial data from cells
-                        for (let R = range.s.r; R <= range.e.r; ++R) {
-                            for (let C = range.s.c; C <= range.e.c; ++C) {
-                                const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-                                const cell = worksheet[cellAddress];
-                                if (cell && cell.v !== undefined) {
-                                    normalizedSheetData[R - range.s.r][C - range.s.c] = String(cell.v).trim();
-                                }
-                            }
-                        }
-
-                        // Apply merged cell values to fill in blanks
-                        if (worksheet['!merges']) {
-                            worksheet['!merges'].forEach(merge => {
-                                const startRow = merge.s.r;
-                                const endRow = merge.e.r;
-                                const startCol = merge.s.c;
-                                const endCol = merge.e.c;
-                                
-                                // Get the value from the top-left cell of the merged range
-                                const firstCellAddress = XLSX.utils.encode_cell({ r: startRow, c: startCol });
-                                const mergedValue = worksheet[firstCellAddress] ? String(worksheet[firstCellAddress].v).trim() : '';
-
-                                for (let r = startRow; r <= endRow; ++r) {
-                                    for (let c = startCol; c <= endCol; ++c) {
-                                        // Only fill if within the actual data range we're processing
-                                        if (r >= range.s.r && r <= range.e.r && c >= range.s.c && c <= range.e.c) {
-                                            normalizedSheetData[r - range.s.r][c - range.s.c] = mergedValue;
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                        // --- End robust parsing ---
-
-                        if (normalizedSheetData.length < 2) {
+                        if (rawSheetData.length < 2) {
                             showScheduleUploadMessage('Schedule file is empty or missing data rows after parsing.', "error");
                             return;
                         }
 
-                        const headerRow = normalizedSheetData[0];
+                        const headerRow = rawSheetData[0].map(h => String(h || '').trim());
                         const teams = []; // To store full team names
                         const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
-                        const rounds = []; // Ordered list of unique round names
+                        const rounds = []; // Ordered list of unique round names (e.g., "R1", "R2", "R31")
+                        const roundColMap = {}; // Maps unique round name to an array of column indices it spans { "R1": [1], "R31": [3, 4] }
 
-                        // Extract unique round names from the header row
+                        // Parse header row to identify rounds and their column indices
+                        let currentRound = null;
                         for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
                             const headerCell = headerRow[i];
+                            // Check if the header cell starts with 'R' and has a number following it
                             if (headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)))) {
-                                if (!rounds.includes(headerCell)) {
-                                    rounds.push(headerCell);
+                                // If the current header cell is different from the previous 'currentRound',
+                                // or if currentRound is null (start of a new sequence of rounds)
+                                if (headerCell !== currentRound) {
+                                    currentRound = headerCell;
+                                    // Add to unique rounds list if not already present
+                                    if (!rounds.includes(currentRound)) {
+                                        rounds.push(currentRound);
+                                    }
+                                    roundColMap[currentRound] = []; // Initialize array for this new round
                                 }
+                                roundColMap[currentRound].push(i); // Store the column index for this round
+                            } else {
+                                // If the header cell is not a round header (e.g., empty cell or different text),
+                                // reset currentRound to null to indicate a break in round sequence.
+                                currentRound = null; 
                             }
                         }
                         
                         // Parse data rows
-                        for (let i = 1; i < normalizedSheetData.length; i++) { // Start from second row (after header)
-                            const row = normalizedSheetData[i];
+                        for (let i = 1; i < rawSheetData.length; i++) { // Start from second row (after header)
+                            const row = rawSheetData[i];
                             const teamShortName = String(row[0] || '').trim(); // First cell is team short name
                             if (!teamShortName) continue; // Skip empty rows
 
@@ -2939,23 +2915,12 @@
                             teams.push(teamFullName);
                             schedule[teamFullName] = {};
 
-                            let currentDataColIndex = 1; // Start from column 1 (after Team column)
                             rounds.forEach(roundName => {
                                 schedule[teamFullName][roundName] = [];
-                                
-                                // Determine how many columns this specific round spans in the header
-                                let roundSpan = 0;
-                                for (let h = currentDataColIndex; h < headerRow.length; h++) {
-                                    if (headerRow[h] === roundName) {
-                                        roundSpan++;
-                                    } else if (roundSpan > 0) { // If we've started counting and hit a different header, break
-                                        break;
-                                    }
-                                }
-                                if (roundSpan === 0) roundSpan = 1; // Default to 1 if not explicitly spanned
+                                const colIndices = roundColMap[roundName]; // Get all column indices for this round
 
-                                for (let s = 0; s < roundSpan; s++) {
-                                    const fixtureString = String(row[currentDataColIndex + s] || '').trim();
+                                colIndices.forEach(colIndex => {
+                                    const fixtureString = String(row[colIndex] || '').trim();
                                     if (fixtureString) {
                                         // Convert opponent short code to full name
                                         const match = fixtureString.match(/(.+) (🏠|✈️)/);
@@ -2974,12 +2939,11 @@
                                             schedule[teamFullName][roundName].push(fixtureString);
                                         }
                                     }
-                                }
+                                });
                                 // Remove empty arrays for blank rounds
                                 if (schedule[teamFullName][roundName].length === 0) {
                                     delete schedule[teamFullName][roundName];
                                 }
-                                currentDataColIndex += roundSpan; // Move to the next round's starting column
                             });
                         }
                         
@@ -3383,8 +3347,8 @@
                 const docSnap = await getDoc(userDocRef);
                 let preferredSystem = 'overall'; // Default if not found
 
-                if (docSnap.exists() && docSnap.data().preferredFDRSystem) {
-                    preferredSystem = docSnap.data().preferredFDRSystem;
+                if (docSnap.exists() && docSnap.data().preferredFDRSystem) { // Corrected property name
+                    preferredSystem = docSnap.data().preferredFDRSystem; // Corrected property name
                 }
                 
                 // Set the radio button based on preferredSystem
