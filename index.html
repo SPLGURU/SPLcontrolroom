@@ -1726,9 +1726,6 @@
         let currentManagerId = null; 
         let isAdminUser = false; 
         let foundUserForAdminEdit = null; 
-        // IMPORTANT: Set this to a full team name that exists in your 'team names.xlsx'
-        // For example, if your CSV has "Al-Hilal", set it to "Al-Hilal".
-        let userTeamName = 'Al-Hilal'; 
 
         // Store fetched FDR, schedule, and team mapping data globally
         let globalSplRankings = { overall: [], home: [], away: [] };
@@ -2052,17 +2049,16 @@
                     const user = userCredential.user;
                     console.log("DEBUG: User created successfully. UID:", user.uid, "Email:", user.email);
 
-                    // Save user data to Firestore (teamName will be added on first analyzer report fetch)
+                    // Save user data to Firestore
                     console.log("DEBUG: Attempting to save user data to Firestore for UID:", user.uid);
                     await setDoc(doc(db, "users", user.uid), {
                         email: user.email,
                         splManagerId: managerId,
                         createdAt: serverTimestamp(),
                         emailVerified: false,
-                        teamName: userTeamName, // Default team name on signup (now using full name)
-                        preferredFDRSystem: 'overall' // NEW: Default preferred FDR system
+                        preferredFDRSystem: 'overall' // Default preferred FDR system
                     });
-                    console.log("DEBUG: User data saved to Firestore with default team name and FDR system.");
+                    console.log("DEBUG: User data saved to Firestore with default FDR system.");
 
                     // Send email verification
                     console.log("DEBUG: Attempting to send email verification for user:", user.email, "UID:", user.uid);
@@ -2146,11 +2142,10 @@
                         }
 
                         const userManagerId = userData.splManagerId;
-                        userTeamName = userData.teamName || 'Your Team'; // Get team name from user data or default
 
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
                             if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
-                            if (sidebarTeamName) sidebarTeamName.textContent = userTeamName; // Set team name in sidebar
+                            // sidebarTeamName is now just a static "Your Team" or similar, no dynamic user team name
                             
                             if (authSection) authSection.style.display = 'none'; // Hide auth section
                             if (loggedInContent) loggedInContent.style.display = 'block'; // Show the main logged-in container
@@ -2213,9 +2208,8 @@
                     if (instructionsBox) instructionsBox.style.display = 'none';
                     if (sidebarMenu) sidebarMenu.classList.remove('open');
                     if (overlay) overlay.style.display = 'none';
-                    if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team';
+                    if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; // Reset to generic
                     if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = '';
-                    userTeamName = 'Your Team'; // Reset team name on logout
                 } catch (error) {
                     console.error("Logout error:", error);
                     showAuthMessage("Failed to logout. Please try again.", "error"); 
@@ -2279,12 +2273,11 @@
                         }
 
                         const userManagerId = userData.splManagerId;
-                        userTeamName = userData.teamName || 'Your Team'; 
 
                         if (userManagerId && /^\d+$/.test(userManagerId)) {
                             console.log("DEBUG: Valid Manager ID found. Displaying logged-in content.");
                             if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = userManagerId;
-                            if (sidebarTeamName) sidebarTeamName.textContent = userTeamName; 
+                            // sidebarTeamName is now just a static "Your Team" or similar, no dynamic user team name
                             
                             if (authSection) authSection.style.display = 'none'; 
                             if (loggedInContent) loggedInContent.style.display = 'block'; 
@@ -2355,7 +2348,6 @@
                 if (overlay) overlay.style.display = 'none'; 
                 if (sidebarTeamName) sidebarTeamName.textContent = 'Your Team'; 
                 if (displayLoggedInManagerId) displayLoggedInManagerId.textContent = ''; 
-                userTeamName = 'Your Team'; // Reset team name
             }
         });
 
@@ -2578,7 +2570,7 @@
                 showTeamNamesUploadMessage("Upload your team names mapping file here.", "info"); // NEW
                 showScheduleUploadMessage("Upload your season schedule Excel file here.", "info"); // NEW
                 // Call fetchAndRenderRankings for Admin Dashboard
-                fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null);
+                fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
             });
         }
 
@@ -2742,7 +2734,7 @@
                         // Re-fetch all global data after upload
                         await fetchGlobalFDRData();
                         // Re-render rankings for Admin Dashboard
-                        fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin, null);
+                        fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
                     } catch (error) {
                         console.error('Error processing Excel file or uploading to Firestore:', error);
                         showExcelUploadMessage(`Failed to process Excel or upload: ${error.message}. Please check file format and console for details.`, "error");
@@ -2894,7 +2886,7 @@
 
                             const teamFullName = globalTeamShortCodeMap[teamShortName];
                             if (!teamFullName) {
-                                console.warn(`Skipping row for unknown team short name: ${teamShortName}`);
+                                console.warn(`Unknown team short code '${teamShortName}' in schedule file. Skipping row.`);
                                 continue;
                             }
                             teams.push(teamFullName);
@@ -2962,13 +2954,13 @@
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
             const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId);
-            const teamMappingsDocRef = doc(db, 'teamMappings', seasonId); // NEW
+            const teamMappingsDocRef = doc(db, 'teamMappings', seasonId); 
 
             try {
                 const [rankingsSnap, scheduleSnap, teamMappingsSnap] = await Promise.all([
                     getDoc(splRankingsDocRef),
                     getDoc(seasonScheduleDocRef),
-                    getDoc(teamMappingsDocRef) // NEW
+                    getDoc(teamMappingsDocRef) 
                 ]);
 
                 if (rankingsSnap.exists()) {
@@ -2982,7 +2974,7 @@
                     globalSplRankings = { overall: [], home: [], away: [] };
                 }
 
-                // NEW: Process team mappings first
+                // Process team mappings first
                 if (teamMappingsSnap.exists()) {
                     globalTeamShortCodeMap = teamMappingsSnap.data().mapping || {};
                     // Create reverse map for easy lookup from full name to short code if needed
@@ -3017,6 +3009,7 @@
 
         /**
          * Renders the schedule table for the My Control Room FDR feature.
+         * This now always displays the full league schedule.
          * @param {HTMLElement} tableElement - The <table> element to render into.
          * @param {string} fdrType - The type of FDR to apply ('overall', 'homeAway', 'customized').
          * @param {Object} customRatings - Object containing custom ratings for 'customized' type.
@@ -3029,15 +3022,8 @@
                 return;
             }
             
-            // Get the current user's team name (for filtering if showTeamRatings is true)
-            // This `userTeamName` should now be a full team name, e.g., "Al-Hilal"
-            const teamToFilter = userTeamName; 
-
-            const teamsToDisplay = showTeamRatings ? [teamToFilter] : globalSeasonSchedule._teams;
-            if (teamsToDisplay.length === 0) {
-                 tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No teams to display based on current filters.</td></tr></tbody>';
-                 return;
-            }
+            // Always display all teams from the global schedule
+            const teamsToDisplay = globalSeasonSchedule._teams;
 
             // Create table header (Rounds)
             const thead = document.createElement('thead');
@@ -3167,10 +3153,9 @@
          * @param {HTMLElement} homeSection - The section container for home FDR.
          * @param {HTMLElement} awaySection - The section container for away FDR.
          * @param {HTMLElement} displayContainer - The main display container for rankings (e.g., currentRankingsDisplayAdmin or myControlRoomFDRDisplay).
-         * @param {string | null} teamNameForFilter - The user's team name to filter fixtures, or null for Admin (show all).
          * @param {string | null} selectedFDRSystem - The currently selected FDR system ('overall', 'homeAway', 'customized') for Control Room, or null for Admin.
          */
-        async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, teamNameForFilter = null, selectedFDRSystem = null) {
+        async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, selectedFDRSystem = null) {
             messageBox.textContent = '';
             messageBox.style.display = 'block';
             messageBox.className = 'message-box info';
@@ -3193,7 +3178,7 @@
             let hasDataToDisplay = false;
 
             // --- Render for Admin Dashboard (show all data) ---
-            if (!teamNameForFilter) {
+            if (!selectedFDRSystem) { // If selectedFDRSystem is null, it means we're in Admin Dashboard
                 // Render Overall Rankings (Admin)
                 if (globalSplRankings.overall.length > 0) {
                     globalSplRankings.overall.sort((a, b) => {
@@ -3258,14 +3243,16 @@
                     if (awayGridOrList) awayGridOrList.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>';
                 }
             } 
-            // --- Render for My Control Room (user's team fixtures) ---
+            // --- Render for My Control Room (full league schedule) ---
             else {
                 // Ensure overall, homeAway, and customized sections are hidden initially for Control Room
                 if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
                 if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
                 if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
-                // Display the selected FDR system for the user
+                // Show the main FDR display container (which contains the scales and fixture lists/tables)
+                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
+
                 if (selectedFDRSystem === 'overall') {
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(overallScheduleTable, 'overall');
@@ -3274,7 +3261,7 @@
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(homeAwayScheduleTable, 'homeAway');
                     hasDataToDisplay = true;
-                } else if (selectedFDRSystem === 'customized') {
+                } else if (selectedFdrSystem === 'customized') {
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                     // Fetch custom ratings for the current user
                     const user = auth.currentUser;
@@ -3296,7 +3283,7 @@
                 messageBox.textContent = 'FDR data loaded.';
             } else {
                 messageBox.className = 'message-box info';
-                messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data, team mappings, and schedule are uploaded via Admin Dashboard and your team name is correct.';
+                messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data, team mappings, and schedule are uploaded via Admin Dashboard.';
             }
         }
 
@@ -3436,7 +3423,7 @@
             // Show the main FDR display container (which contains the scales and fixture lists/tables)
             if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
-            // Now call the generalized fetchAndRenderRankings with Control Room specific elements and userTeamName
+            // Now call the generalized fetchAndRenderRankings with Control Room specific elements
             fetchAndRenderRankings(
                 controlRoomMessageBox,
                 overallScheduleTable, // Now passing the table element
@@ -3446,7 +3433,6 @@
                 homeAwayFDRSectionControlRoom,
                 customizedFDRSectionControlRoom,
                 myControlRoomFDRDisplay, 
-                userTeamName, 
                 selectedSystem 
             );
         }
@@ -3462,7 +3448,6 @@
         if (showFDRButton) {
             showFDRButton.addEventListener('click', () => {
                 if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; // Show the systems container
-                // The main FDR button should NOT disappear as requested.
                 loadAndSetPreferredFDRSystem(); // Load and display the preferred system
             });
         }
