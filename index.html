@@ -965,7 +965,7 @@
             min-width: 40px;
             text-align: center;
         }
-        /* Specific FDR colors for fixture items */
+        /* Specific FDR Colors for fixture items */
         .fixture-item .fdr-1 { background-color: #00B050; }
         .fixture-item .fdr-2 { background-color: #92D050; color: black; }
         .fixture-item .fdr-3 { background-color: #FFFF00; color: black; }
@@ -1693,7 +1693,7 @@
 
         // --- Your Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___",
+            apiKey: "___FIREBASE_API_KEY_PLACEHOLDER___", // This must be a string.
             authDomain: "splcontrolroom-c02c0.firebaseapp.com",
             projectId: "splcontrolroom-c02c0",
             storageBucket: "splcontrolroom-c02c0.firebase-storage.app",
@@ -1824,7 +1824,7 @@
         const radioOverallFDR = document.getElementById('radioOverallFDR');
         const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
         const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); 
-        const saveFDRSystemButton = document.getElementById('saveFDRSystemButton');
+        const saveFDRSystemButton = document.getElementById('saveFDRSystemButton'); 
 
         // Tuning elements
         const roundsToShowSlider = document.getElementById('roundsToShow');
@@ -2802,7 +2802,7 @@
                             lastUpdated: serverTimestamp()
                         });
 
-                        showTeamNamesUploadMessage('Successfully uploaded team names mapping!', "success");
+                        showTeamNamesUploadMessage('Successfully uploaded team names mapping!', "success"); // Log success
                         event.target.value = null; // Clear the file input
                         // Re-fetch all global data after upload
                         await fetchGlobalFDRData();
@@ -2857,30 +2857,30 @@
                         const teams = []; // To store full team names
                         const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
                         const rounds = []; // Ordered list of unique round names (e.g., "R1", "R2", "R31")
-                        const roundColMap = {}; // Maps unique round name to an array of column indices it spans { "R1": [1], "R31": [3, 4] }
+                        const roundColMap = {}; // { "R1": [colIndex1, colIndex2], "R2": [colIndex3], ... }
 
                         // Parse header row to identify rounds and their column indices
-                        let currentRound = null;
+                        let currentRoundName = null;
                         for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
                             const headerCell = headerRow[i];
-                            // Check if the header cell starts with 'R' and has a number following it
-                            if (headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)))) {
-                                // If the current header cell is different from the previous 'currentRound',
-                                // or if currentRound is null (start of a new sequence of rounds)
-                                if (headerCell !== currentRound) {
-                                    currentRound = headerCell;
-                                    // Add to unique rounds list if not already present
-                                    if (!rounds.includes(currentRound)) {
-                                        rounds.push(currentRound);
+                            const isRoundHeader = headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)));
+
+                            if (isRoundHeader) {
+                                // If it's a new round header, or the first time we encounter a round header
+                                if (headerCell !== currentRoundName) {
+                                    currentRoundName = headerCell;
+                                    if (!rounds.includes(currentRoundName)) {
+                                        rounds.push(currentRoundName);
                                     }
-                                    roundColMap[currentRound] = []; // Initialize array for this new round
+                                    roundColMap[currentRoundName] = [];
                                 }
-                                roundColMap[currentRound].push(i); // Store the column index for this round
-                            } else {
-                                // If the header cell is not a round header (e.g., empty cell or different text),
-                                // reset currentRound to null to indicate a break in round sequence.
-                                currentRound = null; 
+                                roundColMap[currentRoundName].push(i);
+                            } else if (currentRoundName !== null) {
+                                // If it's not a round header, but we were previously in a round (e.g., empty cell for double gameweek)
+                                // This column also belongs to the current round.
+                                roundColMap[currentRoundName].push(i);
                             }
+                            // If it's not a round header and currentRoundName is null, it's just a blank/non-round column, ignore.
                         }
                         console.log("DEBUG: Rounds identified:", rounds);
                         console.log("DEBUG: Round column map:", roundColMap);
@@ -2915,22 +2915,22 @@
                                 colIndices.forEach(colIndex => {
                                     const fixtureString = String(row[colIndex] || '').trim();
                                     if (fixtureString) {
-                                        // MODIFIED REGEX to capture opponent short code and (H) or (A)
-                                        const match = fixtureString.match(/(.+)\s\((H|A)\)/); 
+                                        // MODIFIED REGEX to capture opponent short code and emoji (🏠 or ✈️)
+                                        const match = fixtureString.match(/(.+)\s(🏠|✈️)/); 
                                         if (match) {
                                             const opponentShortCode = match[1].trim();
-                                            const homeAwayIndicator = match[2]; // 'H' or 'A'
+                                            const homeAwayEmoji = match[2];
                                             const opponentFullName = globalTeamShortCodeMap[opponentShortCode];
                                             
                                             if (opponentFullName) {
-                                                schedule[teamFullName][roundName].push(`${opponentFullName} (${homeAwayIndicator})`);
-                                                console.log(`DEBUG: Parsed fixture for ${teamFullName} ${roundName}: '${fixtureString}' -> Opponent: '${opponentFullName}', Home/Away: '(${homeAwayIndicator})'`);
+                                                schedule[teamFullName][roundName].push(`${opponentFullName} ${homeAwayEmoji}`);
+                                                console.log(`DEBUG: Parsed fixture for ${teamFullName} ${roundName}: '${fixtureString}' -> Opponent: '${opponentFullName}', Home/Away: '${homeAwayEmoji}'`);
                                             } else {
                                                 console.warn(`WARNING: Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing raw string.`);
                                                 schedule[teamFullName][roundName].push(fixtureString); // Store raw if mapping fails
                                             }
                                         } else {
-                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${roundName}' does not match expected format (e.g., 'HIL (H)' or 'NAS (A)'). Storing raw string.`);
+                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Storing raw string.`);
                                             schedule[teamFullName][roundName].push(fixtureString); // Store raw if format is unexpected
                                         }
                                     }
@@ -2993,7 +2993,7 @@
                     console.log("DEBUG: Fetched global Team Short Code Map:", globalTeamShortCodeMap);
                     console.log("DEBUG: Created global Team Full Name to Short Code Map:", globalTeamFullNameToShortCodeMap);
                 } else {
-                    console.warn("WARNING: No Team Mappings data found in Firestore. Schedule parsing and FDR calculations might be affected.");
+                    console.warn("WARNING: No Team Mappings data found in Firestore.");
                     globalTeamShortCodeMap = {};
                     globalTeamFullNameToShortCodeMap = {};
                 }
@@ -3019,6 +3019,9 @@
                     console.warn("WARNING: No Season Schedule data found in Firestore.");
                     globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
                 }
+                console.log("DEBUG: globalSeasonSchedule after fetch:", globalSeasonSchedule); // Explicit log for schedule
+                console.log("DEBUG: globalSeasonSchedule.rounds after fetch:", globalSeasonSchedule.rounds); // Explicit log for rounds
+
             } catch (error) {
                 console.error("ERROR: Error fetching global FDR data:", error);
                 showGeneralErrorMessage(`Failed to load global FDR data: ${error.message}`);
@@ -3105,7 +3108,8 @@
             const allRounds = globalSeasonSchedule.rounds;
             const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
             console.log("DEBUG: Teams to display:", teamsToDisplay);
-            console.log("DEBUG: Rounds to render:", roundsToRender);
+            console.log("DEBUG: All rounds from globalSeasonSchedule:", allRounds);
+            console.log("DEBUG: Rounds to render (based on slider):", roundsToRender);
 
 
             // Create table header (Rounds)
@@ -3146,24 +3150,24 @@
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
-                            // The fixture string is now expected to be "Full Team Name (H)" or "Full Team Name (A)"
-                            const match = fixtureString.match(/(.+) \((H|A)\)/);
+                            // The fixture string is now expected to be "Full Team Name 🏠" or "Full Team Name ✈️"
+                            const match = fixtureString.match(/(.+) (🏠|✈️)/);
                             let opponentFullName = null;
-                            let homeAwayIndicator = null; 
+                            let homeAwayEmoji = null; 
 
                             if (match) {
                                 opponentFullName = match[1].trim();
-                                homeAwayIndicator = match[2]; 
+                                homeAwayEmoji = match[2]; 
                             } else {
                                 // Fallback for unexpected formats, though the parsing should prevent this now
-                                opponentFullName = fixtureString.replace(/(\s*\(H\)|\s*\(A\))/g, '').trim();
-                                homeAwayIndicator = 'N/A'; // Indicate unknown status
-                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Team (H/A)" format during rendering. Displaying as raw.`);
+                                opponentFullName = fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
+                                homeAwayEmoji = ''; // Indicate unknown status
+                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Team 🏠/✈️" format during rendering. Displaying as raw.`);
                             }
                             
                             const fixtureDisplayItem = document.createElement('div');
                             fixtureDisplayItem.className = `fixture-item-display`; // No FDR classes here
-                            fixtureDisplayItem.textContent = `${opponentFullName} (${homeAwayIndicator})`;
+                            fixtureDisplayItem.textContent = `${opponentFullName} ${homeAwayEmoji}`;
                             fixtureCell.appendChild(fixtureDisplayItem);
 
                             // For customized, still provide input fields for future use
@@ -3382,7 +3386,7 @@
          * Saves the currently selected FDR system to the user's Firestore document.
          */
         if (saveFDRSystemButton) {
-            saveFDRSystemButton.addEventListener('click', async () => {
+            saveFDRSystemButton.addEventListener('click', async () => { 
                 const user = auth.currentUser;
                 if (!user) {
                     showControlRoomMessage("You must be logged in to save your preference.", "error");
