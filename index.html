@@ -1733,7 +1733,7 @@
         let globalSeasonSchedule = {
             teams: [], // List of all full team names
             rounds: [], // List of all round names (e.g., "R1", "R2", "R31")
-            fixtures: {} // { "TeamFullName": { "R1": ["Opponent (H/A)", ...], "R2": [...], ... } }
+            fixtures: {} // { "TeamFullName": { "R1": ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
         };
         let globalTeamShortCodeMap = {}; // { "HIL": "Al-Hilal", "NAS": "Al-Nassr", ... }
         let globalTeamFullNameToShortCodeMap = {}; // { "Al-Hilal": "HIL", "Al-Nassr": "NAS", ... }
@@ -2842,16 +2842,6 @@
                     return;
                 }
 
-                // Ensure team mappings are loaded before parsing schedule
-                if (Object.keys(globalTeamShortCodeMap).length === 0) {
-                    showScheduleUploadMessage('Team names mapping not loaded. Attempting to fetch...', "info");
-                    await fetchGlobalFDRData(); // Try to fetch again
-                    if (Object.keys(globalTeamShortCodeMap).length === 0) {
-                        showScheduleUploadMessage('Team names mapping still not available. Please upload the "Team Names Mapping" file first via Admin Dashboard.', "error");
-                        return;
-                    }
-                }
-
                 showScheduleUploadMessage('Uploading and processing schedule file...', "info");
 
                 const reader = new FileReader();
@@ -2865,6 +2855,7 @@
                         
                         // Read the sheet as a raw 2D array, which is easier for unmerged cells
                         const rawSheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw: false to get formatted cell values
+                        console.log("DEBUG: Raw sheet data:", rawSheetData);
 
                         if (rawSheetData.length < 2) {
                             showScheduleUploadMessage('Schedule file is empty or missing data rows after parsing.', "error");
@@ -2872,6 +2863,8 @@
                         }
 
                         const headerRow = rawSheetData[0].map(h => String(h || '').trim());
+                        console.log("DEBUG: Header row:", headerRow);
+
                         const teams = []; // To store full team names
                         const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
                         const rounds = []; // Ordered list of unique round names (e.g., "R1", "R2", "R31")
@@ -2900,16 +2893,27 @@
                                 currentRound = null; 
                             }
                         }
+                        console.log("DEBUG: Rounds identified:", rounds);
+                        console.log("DEBUG: Round column map:", roundColMap);
+
+                        // Ensure team mappings are loaded before parsing schedule
+                        if (Object.keys(globalTeamShortCodeMap).length === 0) {
+                            showScheduleUploadMessage('Team names mapping not loaded. Please upload the "Team Names Mapping" file first via Admin Dashboard.', "error");
+                            return;
+                        }
                         
                         // Parse data rows
                         for (let i = 1; i < rawSheetData.length; i++) { // Start from second row (after header)
                             const row = rawSheetData[i];
                             const teamShortName = String(row[0] || '').trim(); // First cell is team short name
-                            if (!teamShortName) continue; // Skip empty rows
+                            if (!teamShortName) {
+                                console.warn(`Skipping empty team row ${i+1}.`);
+                                continue; 
+                            }
 
                             const teamFullName = globalTeamShortCodeMap[teamShortName];
                             if (!teamFullName) {
-                                console.warn(`Unknown team short code '${teamShortName}' in schedule file. Skipping row.`);
+                                console.warn(`Unknown team short code '${teamShortName}' in schedule file at row ${i+1}. Skipping row.`);
                                 continue;
                             }
                             teams.push(teamFullName);
@@ -2922,21 +2926,25 @@
                                 colIndices.forEach(colIndex => {
                                     const fixtureString = String(row[colIndex] || '').trim();
                                     if (fixtureString) {
-                                        // Convert opponent short code to full name
-                                        const match = fixtureString.match(/(.+) (🏠|✈️)/);
+                                        // Regex to capture opponent short code and emoji (🏠 or ✈️)
+                                        // This regex is crucial: it looks for any characters (opponent short code)
+                                        // followed by a space and then either the home or away emoji.
+                                        const match = fixtureString.match(/(.+)\s(🏠|✈️)/); 
                                         if (match) {
                                             const opponentShortCode = match[1].trim();
                                             const homeAwayEmoji = match[2];
                                             const opponentFullName = globalTeamShortCodeMap[opponentShortCode];
+                                            
                                             if (opponentFullName) {
                                                 schedule[teamFullName][roundName].push(`${opponentFullName} ${homeAwayEmoji}`);
+                                                console.log(`DEBUG: Parsed fixture for ${teamFullName} ${roundName}: '${fixtureString}' -> Opponent: '${opponentFullName}', Home/Away: '${homeAwayEmoji}'`);
                                             } else {
-                                                console.warn(`Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing as is.`);
-                                                schedule[teamFullName][roundName].push(fixtureString);
+                                                console.warn(`WARNING: Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing raw string.`);
+                                                schedule[teamFullName][roundName].push(fixtureString); // Store raw if mapping fails
                                             }
                                         } else {
-                                            // If no emoji, just store as is (e.g., blank round or malformed)
-                                            schedule[teamFullName][roundName].push(fixtureString);
+                                            console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${roundName}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Storing raw string.`);
+                                            schedule[teamFullName][roundName].push(fixtureString); // Store raw if format is unexpected
                                         }
                                     }
                                 });
@@ -2946,7 +2954,8 @@
                                 }
                             });
                         }
-                        
+                        console.log("DEBUG: Final parsed schedule object:", schedule);
+
                         const seasonId = "2025-2026"; 
                         const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId); 
 
@@ -2988,6 +2997,20 @@
                     getDoc(teamMappingsDocRef) 
                 ]);
 
+                // Process team mappings first, as schedule and rankings depend on it
+                if (teamMappingsSnap.exists()) {
+                    globalTeamShortCodeMap = teamMappingsSnap.data().mapping || {};
+                    globalTeamFullNameToShortCodeMap = Object.fromEntries(
+                        Object.entries(globalTeamShortCodeMap).map(([short, full]) => [full, short])
+                    );
+                    console.log("DEBUG: Fetched global Team Short Code Map:", globalTeamShortCodeMap);
+                    console.log("DEBUG: Created global Team Full Name to Short Code Map:", globalTeamFullNameToShortCodeMap);
+                } else {
+                    console.warn("WARNING: No Team Mappings data found in Firestore. Schedule parsing and FDR calculations might be affected.");
+                    globalTeamShortCodeMap = {};
+                    globalTeamFullNameToShortCodeMap = {};
+                }
+
                 if (rankingsSnap.exists()) {
                     const data = rankingsSnap.data();
                     globalSplRankings.overall = data.overall || [];
@@ -2995,25 +3018,9 @@
                     globalSplRankings.away = data.away || [];
                     console.log("DEBUG: Fetched global SPL Rankings:", globalSplRankings);
                 } else {
-                    console.warn("No SPL Rankings data found in Firestore.");
+                    console.warn("WARNING: No SPL Rankings data found in Firestore.");
                     globalSplRankings = { overall: [], home: [], away: [] };
                 }
-
-                // Process team mappings first
-                if (teamMappingsSnap.exists()) {
-                    globalTeamShortCodeMap = teamMappingsSnap.data().mapping || {};
-                    // Create reverse map for easy lookup from full name to short code if needed
-                    globalTeamFullNameToShortCodeMap = Object.fromEntries(
-                        Object.entries(globalTeamShortCodeMap).map(([short, full]) => [full, short])
-                    );
-                    console.log("DEBUG: Fetched global Team Short Code Map:", globalTeamShortCodeMap);
-                    console.log("DEBUG: Created global Team Full Name to Short Code Map:", globalTeamFullNameToShortCodeMap);
-                } else {
-                    console.warn("No Team Mappings data found in Firestore. Schedule parsing might fail.");
-                    globalTeamShortCodeMap = {};
-                    globalTeamFullNameToShortCodeMap = {};
-                }
-
 
                 if (scheduleSnap.exists()) {
                     const data = scheduleSnap.data();
@@ -3022,11 +3029,11 @@
                     globalSeasonSchedule.rounds = data.rounds || [];
                     console.log("DEBUG: Fetched global Season Schedule:", globalSeasonSchedule);
                 } else {
-                    console.warn("No Season Schedule data found in Firestore.");
+                    console.warn("WARNING: No Season Schedule data found in Firestore.");
                     globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
                 }
             } catch (error) {
-                console.error("Error fetching global FDR data:", error);
+                console.error("ERROR: Error fetching global FDR data:", error);
                 showGeneralErrorMessage(`Failed to load global FDR data: ${error.message}`);
             }
         }
@@ -3040,27 +3047,48 @@
          * @returns {number | string} The FDR value or 'N/A' if not found.
          */
         function getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType) {
+            console.log(`DEBUG: getFDRValue for Team: ${teamFullName}, Opponent: ${opponentFullName}, HomeGame: ${isHomeGame}, FDR Type: ${fdrType}`);
             let fdrValue = 'N/A';
+
+            // Ensure rankings data is available
+            if (!globalSplRankings || (!globalSplRankings.overall.length && !globalSplRankings.home.length && !globalSplRankings.away.length)) {
+                console.warn("WARNING: globalSplRankings is empty or not fully loaded in getFDRValue.");
+                return 'N/A';
+            }
 
             // Find the opponent's ranking data
             const opponentOverallData = globalSplRankings.overall.find(item => item.team === opponentFullName);
             const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
             const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
 
+            console.log(`DEBUG: Opponent Overall Data for ${opponentFullName}:`, opponentOverallData);
+            console.log(`DEBUG: Opponent Home Data for ${opponentFullName}:`, opponentHomeData);
+            console.log(`DEBUG: Opponent Away Data for ${opponentFullName}:`, opponentAwayData);
+
+
             if (fdrType === 'overall') {
                 if (opponentOverallData) {
                     // For overall FDR, we look at the opponent's home FDR if we are away, and opponent's away FDR if we are home.
                     // This represents the difficulty *they* pose to us in that specific venue.
                     fdrValue = isHomeGame ? opponentOverallData.fdrAway : opponentOverallData.fdrHome; 
+                    console.log(`DEBUG: Overall FDR calculated: ${fdrValue}`);
+                } else {
+                    console.warn(`WARNING: Opponent overall data not found for ${opponentFullName}.`);
                 }
             } else if (fdrType === 'homeAway') {
-                if (isHomeGame) { // If our team is home, we look at the opponent's AWAY rating
+                if (isHomeGame) { // If our team is home, we look at the opponent's AWAY rating (difficulty for THEM when THEY are away)
                     if (opponentAwayData) { 
                         fdrValue = opponentAwayData.fdrAway;
+                        console.log(`DEBUG: Home/Away (Home game) FDR calculated: ${fdrValue}`);
+                    } else {
+                        console.warn(`WARNING: Opponent away data not found for ${opponentFullName}.`);
                     }
-                } else { // If our team is away, we look at the opponent's HOME rating
+                } else { // If our team is away, we look at the opponent's HOME rating (difficulty for THEM when THEY are home)
                     if (opponentHomeData) { 
                         fdrValue = opponentHomeData.fdrHome;
+                        console.log(`DEBUG: Home/Away (Away game) FDR calculated: ${fdrValue}`);
+                    } else {
+                        console.warn(`WARNING: Opponent home data not found for ${opponentFullName}.`);
                     }
                 }
             }
@@ -3076,9 +3104,11 @@
          * @param {Object} customRatings - Object containing custom ratings for 'customized' type.
          */
         function renderScheduleTable(tableElement, fdrType, customRatings = {}) {
+            console.log(`DEBUG: renderScheduleTable called for FDR Type: ${fdrType}`);
             tableElement.innerHTML = ''; // Clear existing table content
 
             if (!globalSeasonSchedule || !globalSeasonSchedule.fixtures || Object.keys(globalSeasonSchedule.fixtures).length === 0 || !globalSeasonSchedule.teams || globalSeasonSchedule.teams.length === 0 || !globalSeasonSchedule.rounds || globalSeasonSchedule.rounds.length === 0) {
+                console.warn("WARNING: No complete season schedule data available for rendering.");
                 tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please upload via Admin Dashboard.</td></tr></tbody>';
                 return;
             }
@@ -3086,6 +3116,9 @@
             const teamsToDisplay = globalSeasonSchedule.teams;
             const allRounds = globalSeasonSchedule.rounds;
             const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
+            console.log("DEBUG: Teams to display:", teamsToDisplay);
+            console.log("DEBUG: Rounds to render:", roundsToRender);
+
 
             // Create table header (Rounds)
             const thead = document.createElement('thead');
@@ -3106,7 +3139,10 @@
             const tbody = document.createElement('tbody');
             teamsToDisplay.forEach(teamFullName => {
                 const teamFixtures = globalSeasonSchedule.fixtures[teamFullName];
-                if (!teamFixtures) return; // Skip if no fixtures for this team
+                if (!teamFixtures) {
+                    console.warn(`WARNING: No fixtures found for team: ${teamFullName}. Skipping row.`);
+                    return; // Skip if no fixtures for this team
+                }
 
                 const row = document.createElement('tr');
                 const teamCell = document.createElement('td');
@@ -3118,12 +3154,33 @@
                     fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures in a double round
 
                     const fixturesInRound = teamFixtures[round] || []; // This is now an array of fixture strings
+                    console.log(`DEBUG: Fixtures for ${teamFullName} in ${round}:`, fixturesInRound);
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
                             const match = fixtureString.match(/(.+) (🏠|✈️)/);
-                            let opponentFullName = match ? match[1].trim() : fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
-                            let isHomeGame = match ? (match[2] === '🏠') : null; 
+                            let opponentFullName = null;
+                            let isHomeGame = null; 
+
+                            if (match) {
+                                const opponentPart = match[1].trim();
+                                const homeAwayEmoji = match[2];
+
+                                // Try to get full name from globalTeamShortCodeMap first
+                                opponentFullName = globalTeamShortCodeMap[opponentPart];
+                                if (!opponentFullName) {
+                                    // If not found in short code map, assume it's already a full name
+                                    opponentFullName = opponentPart;
+                                }
+
+                                isHomeGame = (homeAwayEmoji === '🏠'); 
+                            } else {
+                                // If the fixture string doesn't match the expected format (e.g., "TeamName 🏠"),
+                                // it might be a raw full name or an unparseable string.
+                                // For now, we'll try to use it as is for opponentFullName, but FDR will likely be N/A.
+                                opponentFullName = fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
+                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' does not match expected format. Opponent assumed as '${opponentFullName}'.`);
+                            }
 
                             let fdrValue = 'N/A';
                             let fdrClass = 'fdr-na';
@@ -3156,7 +3213,12 @@
 
                             } else {
                                 // For Overall and Home/Away, calculate FDR from global rankings
-                                fdrValue = getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType);
+                                if (opponentFullName && isHomeGame !== null) { // Only calculate if opponent and home/away status are clear
+                                    fdrValue = getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType);
+                                } else {
+                                    console.warn(`WARNING: Cannot calculate FDR for fixture '${fixtureString}' (team: ${teamFullName}, round: ${round}) due to missing opponent or home/away status.`);
+                                }
+                                
                                 fdrClass = `fdr-${fdrValue}`;
                                 
                                 const fixtureDisplayItem = document.createElement('div');
@@ -3215,9 +3277,8 @@
             if (displayContainer) displayContainer.style.display = 'block';
 
             // Ensure global data is fetched before rendering
-            if (Object.keys(globalSplRankings.overall).length === 0 || Object.keys(globalSeasonSchedule.fixtures).length === 0 || Object.keys(globalTeamShortCodeMap).length === 0) {
-                await fetchGlobalFDRData();
-            }
+            // This is crucial for both Admin and Control Room to have the latest data
+            await fetchGlobalFDRData();
 
             let hasDataToDisplay = false;
 
@@ -3347,8 +3408,8 @@
                 const docSnap = await getDoc(userDocRef);
                 let preferredSystem = 'overall'; // Default if not found
 
-                if (docSnap.exists() && docSnap.data().preferredFDRSystem) { // Corrected property name
-                    preferredSystem = docSnap.data().preferredFDRSystem; // Corrected property name
+                if (docSnap.exists() && docSnap.data().preferredFDRSystem) { 
+                    preferredSystem = docSnap.data().preferredFDRSystem; 
                 }
                 
                 // Set the radio button based on preferredSystem
