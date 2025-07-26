@@ -1729,7 +1729,12 @@
 
         // Store fetched FDR, schedule, and team mapping data globally
         let globalSplRankings = { overall: [], home: [], away: [] };
-        let globalSeasonSchedule = {}; // Keyed by team full name, value is array of fixtures
+        // globalSeasonSchedule will now hold parsed schedule data in a more structured way
+        let globalSeasonSchedule = {
+            teams: [], // List of all full team names
+            rounds: [], // List of all round names (e.g., "R1", "R2", "R31")
+            fixtures: {} // { "TeamFullName": { "R1": ["Opponent (H/A)", ...], "R2": [...], ... } }
+        };
         let globalTeamShortCodeMap = {}; // { "HIL": "Al-Hilal", "NAS": "Al-Nassr", ... }
         let globalTeamFullNameToShortCodeMap = {}; // { "Al-Hilal": "HIL", "Al-Nassr": "NAS", ... }
 
@@ -2510,7 +2515,7 @@
                 showAdminMessage("Updating user...", "info");
 
                 const newEmail = adminEditEmailInput.value.trim();
-                const newSplManagerId = convertArabicToWesternNumerals(adminEditSplManagerIdInput.value.trim());
+                const newSplManagerId = convertArabicToWesternNumerals(adminEditSplSplManagerIdInput.value.trim());
                 const userToUpdateUid = foundUserForAdminEdit.id;
 
                 if (!newEmail || !newSplManagerId) {
@@ -2852,35 +2857,68 @@
 
                         const sheetName = workbook.SheetNames[0];
                         const worksheet = workbook.Sheets[sheetName];
-                        // Get data as array of arrays, without header processing by sheet_to_json
-                        const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); 
+                        
+                        // --- Robust parsing for merged cells ---
+                        const range = XLSX.utils.decode_range(worksheet['!ref']);
+                        const sheetData = []; // This will be our normalized 2D array
+                        for (let R = range.s.r; R <= range.e.r; ++R) {
+                            const row = [];
+                            for (let C = range.s.c; C <= range.e.c; ++C) {
+                                const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                                let cell = worksheet[cellAddress];
+                                let cellValue = cell ? (cell.v === undefined ? '' : String(cell.v).trim()) : '';
+                                row.push(cellValue);
+                            }
+                            sheetData.push(row);
+                        }
 
-                        if (rawData.length < 2) {
-                            showScheduleUploadMessage('Schedule file is empty or missing data rows.', "error");
+                        // Apply merged cell values
+                        if (worksheet['!merges']) {
+                            worksheet['!merges'].forEach(merge => {
+                                const startRow = merge.s.r;
+                                const endRow = merge.e.r;
+                                const startCol = merge.s.c;
+                                const endCol = merge.e.c;
+                                const firstCellAddress = XLSX.utils.encode_cell({ r: startRow, c: startCol });
+                                const mergedValue = worksheet[firstCellAddress] ? String(worksheet[firstCellAddress].v).trim() : '';
+
+                                for (let r = startRow; r <= endRow; ++r) {
+                                    for (let c = startCol; c <= endCol; ++c) {
+                                        // Ensure we don't go out of bounds of our sheetData
+                                        if (r >= range.s.r && r <= range.e.r && c >= range.s.c && c <= range.e.c) {
+                                            sheetData[r - range.s.r][c - range.s.c] = mergedValue;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        // --- End robust parsing ---
+
+                        if (sheetData.length < 2) {
+                            showScheduleUploadMessage('Schedule file is empty or missing data rows after parsing.', "error");
                             return;
                         }
 
-                        const headerRow = rawData[0];
+                        const headerRow = sheetData[0];
                         const teams = []; // To store full team names
                         const schedule = {}; // { FullTeamName: { R1: ["Opponent (H/A)", "Opponent2 (H/A)"], ... } }
+                        const rounds = []; // Ordered list of round names
 
                         // Parse header row to get round numbers and column indices for each round
-                        const roundsInfo = []; // [{ name: "R1", colIndices: [1] }, { name: "R31", colIndices: [31, 32] }]
-                        let currentRound = null;
+                        let currentRoundColStart = -1;
                         for (let i = 1; i < headerRow.length; i++) { // Start from second column (after 'Team')
                             const headerCell = String(headerRow[i] || '').trim();
                             if (headerCell.startsWith('R') && !isNaN(parseInt(headerCell.substring(1)))) {
-                                currentRound = headerCell;
-                                roundsInfo.push({ name: currentRound, colIndices: [i] });
-                            } else if (currentRound) {
-                                // If header cell is empty or doesn't start with R, it's part of the previous round (double round)
-                                roundsInfo[roundsInfo.length - 1].colIndices.push(i);
+                                if (!rounds.includes(headerCell)) { // Add only unique rounds
+                                    rounds.push(headerCell);
+                                }
                             }
                         }
+                        globalSeasonSchedule.rounds = rounds; // Store all found rounds
 
                         // Parse data rows
-                        for (let i = 1; i < rawData.length; i++) { // Start from second row (after header)
-                            const row = rawData[i];
+                        for (let i = 1; i < sheetData.length; i++) { // Start from second row (after header)
+                            const row = sheetData[i];
                             const teamShortName = String(row[0] || '').trim(); // First cell is team short name
                             if (!teamShortName) continue; // Skip empty rows
 
@@ -2892,10 +2930,23 @@
                             teams.push(teamFullName);
                             schedule[teamFullName] = {};
 
-                            roundsInfo.forEach(round => {
-                                schedule[teamFullName][round.name] = []; // Initialize as an array for multiple fixtures
-                                round.colIndices.forEach(colIndex => {
-                                    const fixtureString = String(row[colIndex] || '').trim();
+                            // Iterate through rounds and extract fixtures
+                            let colIndex = 1; // Start from column 1 (after Team column)
+                            rounds.forEach(roundName => {
+                                schedule[teamFullName][roundName] = [];
+                                // Find how many columns this round spans (e.g., for double rounds)
+                                let spanCount = 0;
+                                let tempColIndex = colIndex;
+                                while (tempColIndex < headerRow.length && (String(headerRow[tempColIndex] || '').trim() === roundName || String(headerRow[tempColIndex] || '').trim() === '')) {
+                                    spanCount++;
+                                    tempColIndex++;
+                                    // Break if we hit a new round header
+                                    if (tempColIndex < headerRow.length && String(headerRow[tempColIndex] || '').trim().startsWith('R')) break;
+                                }
+                                if (spanCount === 0) spanCount = 1; // Default to 1 if no clear span
+
+                                for (let s = 0; s < spanCount; s++) {
+                                    const fixtureString = String(row[colIndex + s] || '').trim();
                                     if (fixtureString) {
                                         // Convert opponent short code to full name
                                         const match = fixtureString.match(/(.+) (🏠|✈️)/);
@@ -2904,21 +2955,22 @@
                                             const homeAwayEmoji = match[2];
                                             const opponentFullName = globalTeamShortCodeMap[opponentShortCode];
                                             if (opponentFullName) {
-                                                schedule[teamFullName][round.name].push(`${opponentFullName} ${homeAwayEmoji}`);
+                                                schedule[teamFullName][roundName].push(`${opponentFullName} ${homeAwayEmoji}`);
                                             } else {
-                                                console.warn(`Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${round.name}'. Storing as is.`);
-                                                schedule[teamFullName][round.name].push(fixtureString);
+                                                console.warn(`Unknown opponent short code '${opponentShortCode}' in fixture '${fixtureString}' for team '${teamFullName}' in round '${roundName}'. Storing as is.`);
+                                                schedule[teamFullName][roundName].push(fixtureString);
                                             }
                                         } else {
-                                            // If no emoji, just store as is (e.g., blank round)
-                                            schedule[teamFullName][round.name].push(fixtureString);
+                                            // If no emoji, just store as is (e.g., blank round or malformed)
+                                            schedule[teamFullName][roundName].push(fixtureString);
                                         }
                                     }
-                                });
-                                // Remove empty arrays for blank rounds
-                                if (schedule[teamFullName][round.name].length === 0) {
-                                    delete schedule[teamFullName][round.name];
                                 }
+                                // Remove empty arrays for blank rounds
+                                if (schedule[teamFullName][roundName].length === 0) {
+                                    delete schedule[teamFullName][roundName];
+                                }
+                                colIndex += spanCount; // Move to the next round's starting column
                             });
                         }
                         
@@ -2926,9 +2978,9 @@
                         const seasonScheduleDocRef = doc(db, 'seasonSchedule', seasonId); 
 
                         await setDoc(seasonScheduleDocRef, {
-                            scheduleData: schedule,
+                            fixtures: schedule, // Store the structured fixtures
                             teams: teams, // Store list of full team names
-                            rounds: roundsInfo.map(r => r.name), // Store list of round names (R1, R2, etc.)
+                            rounds: rounds, // Store list of round names (R1, R2, etc.)
                             lastUpdated: serverTimestamp()
                         });
 
@@ -2992,13 +3044,13 @@
 
                 if (scheduleSnap.exists()) {
                     const data = scheduleSnap.data();
-                    globalSeasonSchedule.scheduleData = data.scheduleData || {};
-                    globalSeasonSchedule._teams = data.teams || [];
-                    globalSeasonSchedule._rounds = data.rounds || [];
+                    globalSeasonSchedule.fixtures = data.fixtures || {};
+                    globalSeasonSchedule.teams = data.teams || [];
+                    globalSeasonSchedule.rounds = data.rounds || [];
                     console.log("DEBUG: Fetched global Season Schedule:", globalSeasonSchedule);
                 } else {
                     console.warn("No Season Schedule data found in Firestore.");
-                    globalSeasonSchedule = {};
+                    globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
                 }
             } catch (error) {
                 console.error("Error fetching global FDR data:", error);
@@ -3006,10 +3058,38 @@
             }
         }
 
+        /**
+         * Helper function to get the FDR value for a given team, opponent, and home/away status.
+         * @param {string} teamFullName - The full name of the team whose FDR is being calculated.
+         * @param {string} opponentFullName - The full name of the opponent.
+         * @param {boolean} isHomeGame - True if it's a home game for `teamFullName`, false for away.
+         * @param {string} fdrType - The type of FDR to use ('overall', 'homeAway').
+         * @returns {number | string} The FDR value or 'N/A' if not found.
+         */
+        function getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType) {
+            let fdrValue = 'N/A';
+
+            // Find the opponent's ranking data
+            const opponentOverallData = globalSplRankings.overall.find(item => item.team === opponentFullName);
+            const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
+            const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
+
+            if (fdrType === 'overall' && opponentOverallData) {
+                fdrValue = isHomeGame ? opponentOverallData.fdrAway : opponentOverallData.fdrHome; // Opponent's FDR for their away/home game is our difficulty
+            } else if (fdrType === 'homeAway') {
+                if (isHomeGame && opponentAwayData) { // Home game for our team means opponent is playing away
+                    fdrValue = opponentAwayData.fdrAway;
+                } else if (!isHomeGame && opponentHomeData) { // Away game for our team means opponent is playing home
+                    fdrValue = opponentHomeData.fdrHome;
+                }
+            }
+            return fdrValue;
+        }
+
 
         /**
          * Renders the schedule table for the My Control Room FDR feature.
-         * This now always displays the full league schedule.
+         * This now always displays the full league schedule horizontally.
          * @param {HTMLElement} tableElement - The <table> element to render into.
          * @param {string} fdrType - The type of FDR to apply ('overall', 'homeAway', 'customized').
          * @param {Object} customRatings - Object containing custom ratings for 'customized' type.
@@ -3017,13 +3097,14 @@
         function renderScheduleTable(tableElement, fdrType, customRatings = {}) {
             tableElement.innerHTML = ''; // Clear existing table content
 
-            if (!globalSeasonSchedule || !globalSeasonSchedule.scheduleData || Object.keys(globalSeasonSchedule.scheduleData).length === 0 || !globalSeasonSchedule._teams || globalSeasonSchedule._teams.length === 0) {
+            if (!globalSeasonSchedule || !globalSeasonSchedule.fixtures || Object.keys(globalSeasonSchedule.fixtures).length === 0 || !globalSeasonSchedule.teams || globalSeasonSchedule.teams.length === 0 || !globalSeasonSchedule.rounds || globalSeasonSchedule.rounds.length === 0) {
                 tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please upload via Admin Dashboard.</td></tr></tbody>';
                 return;
             }
             
-            // Always display all teams from the global schedule
-            const teamsToDisplay = globalSeasonSchedule._teams;
+            const teamsToDisplay = globalSeasonSchedule.teams;
+            const allRounds = globalSeasonSchedule.rounds;
+            const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
 
             // Create table header (Rounds)
             const thead = document.createElement('thead');
@@ -3031,10 +3112,6 @@
             const teamHeader = document.createElement('th');
             teamHeader.textContent = 'Team';
             headerRow.appendChild(teamHeader);
-
-            // Determine which rounds to show based on `roundsToShow` setting
-            const allRounds = globalSeasonSchedule._rounds || [];
-            const roundsToRender = allRounds.slice(0, roundsToShow);
 
             roundsToRender.forEach(round => {
                 const th = document.createElement('th');
@@ -3047,8 +3124,8 @@
             // Create table body (Teams and their fixtures)
             const tbody = document.createElement('tbody');
             teamsToDisplay.forEach(teamFullName => {
-                const teamSchedule = globalSeasonSchedule.scheduleData[teamFullName];
-                if (!teamSchedule) return; // Skip if no schedule for this team
+                const teamFixtures = globalSeasonSchedule.fixtures[teamFullName];
+                if (!teamFixtures) return; // Skip if no fixtures for this team
 
                 const row = document.createElement('tr');
                 const teamCell = document.createElement('td');
@@ -3057,15 +3134,15 @@
 
                 roundsToRender.forEach(round => {
                     const fixtureCell = document.createElement('td');
-                    fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures
+                    fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures in a double round
 
-                    const fixturesInRound = teamSchedule[round] || []; // This is now an array of fixture strings
+                    const fixturesInRound = teamFixtures[round] || []; // This is now an array of fixture strings
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
                             const match = fixtureString.match(/(.+) (🏠|✈️)/);
                             let opponentFullName = match ? match[1].trim() : fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
-                            let isHomeGame = match ? (match[2] === '🏠') : null; // null if no emoji found
+                            let isHomeGame = match ? (match[2] === '🏠') : null; 
 
                             let fdrValue = 'N/A';
                             let fdrClass = 'fdr-na';
@@ -3098,22 +3175,8 @@
 
                             } else {
                                 // For Overall and Home/Away, calculate FDR from global rankings
-                                const opponentOverallData = globalSplRankings.overall.find(item => item.team === opponentFullName);
-                                const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
-                                const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
-
-                                if (fdrType === 'overall' && opponentOverallData) {
-                                    fdrValue = isHomeGame ? opponentOverallData.fdrHome : opponentOverallData.fdrAway;
-                                    fdrClass = `fdr-${fdrValue}`;
-                                } else if (fdrType === 'homeAway') {
-                                    if (isHomeGame && opponentAwayData) { // Home game for user's team means opponent is away
-                                        fdrValue = opponentAwayData.fdrAway; 
-                                        fdrClass = `fdr-${fdrValue}`;
-                                    } else if (!isHomeGame && opponentHomeData) { // Away game for user's team means opponent is home
-                                        fdrValue = opponentHomeData.fdrHome; 
-                                        fdrClass = `fdr-${fdrValue}`;
-                                    }
-                                }
+                                fdrValue = getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType);
+                                fdrClass = `fdr-${fdrValue}`;
                                 
                                 const fixtureDisplayItem = document.createElement('div');
                                 if (showColors) {
@@ -3171,7 +3234,7 @@
             if (displayContainer) displayContainer.style.display = 'block';
 
             // Ensure global data is fetched before rendering
-            if (Object.keys(globalSplRankings.overall).length === 0 || Object.keys(globalSeasonSchedule).length === 0 || Object.keys(globalTeamShortCodeMap).length === 0) {
+            if (Object.keys(globalSplRankings.overall).length === 0 || Object.keys(globalSeasonSchedule.fixtures).length === 0 || Object.keys(globalTeamShortCodeMap).length === 0) {
                 await fetchGlobalFDRData();
             }
 
@@ -3261,7 +3324,7 @@
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(homeAwayScheduleTable, 'homeAway');
                     hasDataToDisplay = true;
-                } else if (selectedFdrSystem === 'customized') {
+                } else if (selectedFDRSystem === 'customized') {
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                     // Fetch custom ratings for the current user
                     const user = auth.currentUser;
