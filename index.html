@@ -1678,6 +1678,8 @@
     </div>
 
     <script type="module">
+        console.log("DEBUG: Script started running."); // Added for initial script load confirmation
+
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { 
@@ -3115,7 +3117,7 @@
             
             const teamsToDisplay = globalSeasonSchedule.teams;
             const allRounds = globalSeasonSchedule.rounds;
-            const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
+            const roundsToRender = allRrounds.slice(0, roundsToShow); // Use the tuning setting
             console.log("DEBUG: Teams to display:", teamsToDisplay);
             console.log("DEBUG: Rounds to render:", roundsToRender);
 
@@ -3158,7 +3160,7 @@
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
-                            const match = fixtureString.match(/(.+) (🏠|✈️)/);
+                            const match = fixtureString.match(/(.+)\s(🏠|✈️)/);
                             let opponentFullName = null;
                             let isHomeGame = null; 
 
@@ -3179,7 +3181,7 @@
                                 // it might be a raw full name or an unparseable string.
                                 // For now, we'll try to use it as is for opponentFullName, but FDR will likely be N/A.
                                 opponentFullName = fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
-                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' does not match expected format. Opponent assumed as '${opponentFullName}'.`);
+                                console.warn(`WARNING: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' does not match expected format (e.g., 'HIL 🏠' or 'NAS ✈️'). Opponent assumed as '${opponentFullName}'.`);
                             }
 
                             let fdrValue = 'N/A';
