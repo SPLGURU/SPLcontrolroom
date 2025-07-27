@@ -1451,9 +1451,9 @@
 
                         <!-- FDR Display for My Control Room (dynamically shown based on selection, now contains the schedule tables) -->
                         <div id="myControlRoomFDRDisplay" style="display: none;"> <!-- Initially hidden -->
-                            <!-- Overall FDR Display Section for Control Room -->
+                            <!-- Overall FDR Display Section for Control Room (OLD TABLE) -->
                             <div id="overallFDRSectionControlRoom" style="display: none;">
-                                <h5 class="fdr-section-title">Overall Fixture Difficulty Schedule</h5>
+                                <h5 class="fdr-section-title">Overall Fixture Difficulty Schedule (Old Table)</h5>
                                 <div class="schedule-table-container">
                                     <table class="schedule-table" id="overallScheduleTable">
                                         <thead>
@@ -1505,6 +1505,28 @@
                                 </div>
                                 <button id="saveCustomFDRButton" class="mt-4">Save Custom Ratings</button>
                             </div>
+
+                            <hr style="margin: 40px 0; border-color: var(--spl-border-light);">
+
+                            <!-- NEW: Section for the completely new schedule table -->
+                            <div id="newScheduleTableSection">
+                                <h5 class="fdr-section-title">Overall Fixture Difficulty Schedule (NEW Table)</h5>
+                                <button id="showNewScheduleTableButton" class="mb-4">Render New Schedule Table</button>
+                                <div class="schedule-table-container">
+                                    <table class="schedule-table" id="newOverallScheduleTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Team</th>
+                                                <!-- Rounds will be dynamically inserted here -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Team rows and fixtures will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -1814,6 +1836,11 @@
             const customizedScheduleTable = document.getElementById('customizedScheduleTable'); 
             const saveCustomFDRButton = document.getElementById('saveCustomFDRButton'); 
 
+            // NEW Elements for the second schedule table
+            const newScheduleTableSection = document.getElementById('newScheduleTableSection');
+            const showNewScheduleTableButton = document.getElementById('showNewScheduleTableButton');
+            const newOverallScheduleTable = document.getElementById('newOverallScheduleTable');
+
 
             // --- Helper Functions ---
 
@@ -1933,6 +1960,8 @@
                 if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none'; 
                 if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none'; 
                 if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none';
+                // Hide new schedule table section
+                if (newScheduleTableSection) newScheduleTableSection.style.display = 'none';
 
 
                 // General messages/loading indicators (these are not used in current version, but kept)
@@ -3053,6 +3082,93 @@
 
 
             /**
+             * NEW: Renders a completely new schedule table for comparison.
+             * This function is independent of the existing renderScheduleTable.
+             */
+            function renderNewScheduleTable() {
+                console.log("DEBUG_NEW_RENDER: renderNewScheduleTable called.");
+                const tableElement = newOverallScheduleTable;
+                tableElement.innerHTML = ''; // Clear existing table content
+
+                if (!globalSeasonSchedule || !globalSeasonSchedule.fixtures || Object.keys(globalSeasonSchedule.fixtures).length === 0 || !globalSeasonSchedule.teams || globalSeasonSchedule.teams.length === 0 || !globalSeasonSchedule.rounds || globalSeasonSchedule.rounds.length === 0) {
+                    console.warn("WARNING_NEW_RENDER: No complete season schedule data available for rendering the new table.");
+                    tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available for the new table. Please ensure schedule data is fetched from API.</td></tr></tbody>';
+                    return;
+                }
+                
+                const teamsToDisplay = globalSeasonSchedule.teams;
+                const allRounds = globalSeasonSchedule.rounds;
+                const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
+                console.log("DEBUG_NEW_RENDER: Teams to display in new table:", teamsToDisplay);
+                console.log("DEBUG_NEW_RENDER: Rounds to render in new table:", roundsToRender);
+
+
+                // Create table header (Rounds)
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                const teamHeader = document.createElement('th');
+                teamHeader.textContent = 'Team';
+                headerRow.appendChild(teamHeader);
+
+                roundsToRender.forEach(round => {
+                    const th = document.createElement('th');
+                    th.textContent = round;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                tableElement.appendChild(thead);
+
+                // Create table body (Teams and their fixtures)
+                const tbody = document.createElement('tbody');
+                teamsToDisplay.forEach(teamFullName => {
+                    const row = document.createElement('tr');
+                    const teamCell = document.createElement('td');
+                    teamCell.textContent = teamFullName;
+                    row.appendChild(teamCell);
+
+                    const teamFixtures = globalSeasonSchedule.fixtures[teamFullName] || {};
+                    console.log(`DEBUG_NEW_RENDER_TEAM_FIXTURES: Team: ${teamFullName}, Fixtures for this team in new table:`, teamFixtures);
+
+
+                    roundsToRender.forEach(round => {
+                        const fixtureCell = document.createElement('td');
+                        fixtureCell.className = 'fixture-cell'; 
+                        fixtureCell.innerHTML = ''; // Ensure cell is empty before adding content
+
+                        const fixturesForThisRound = teamFixtures[round] || [];
+                        console.log(`DEBUG_NEW_RENDER_FIXTURES_IN_ROUND: For ${teamFullName} in ${round} (new table), fixturesForThisRound:`, fixturesForThisRound);
+
+                        if (fixturesForThisRound.length > 0) {
+                            fixturesForThisRound.forEach(fixtureString => {
+                                const fixtureDisplayItem = document.createElement('div'); // Create a NEW div for each fixture string
+                                fixtureDisplayItem.className = `fixture-item-display`; 
+
+                                const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/); 
+                                let opponentShortCode = fixtureString; 
+                                let homeAwayEmoji = ''; 
+
+                                if (match && match[1]) { 
+                                    opponentShortCode = match[1].trim();
+                                    homeAwayEmoji = match[2] || ''; 
+                                } else {
+                                     console.warn(`WARNING_NEW_RENDER: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' (new table) was not in expected "Short Code 🏠/✈️" format. Displaying as raw. Match result:`, match);
+                                }
+                                
+                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`; 
+                                fixtureCell.appendChild(fixtureDisplayItem);
+                            });
+                        } else {
+                            fixtureCell.textContent = ''; // Ensure blank cells are explicitly empty
+                        }
+                        row.appendChild(fixtureCell);
+                    });
+                    tbody.appendChild(row);
+                });
+                tableElement.appendChild(tbody);
+            }
+
+
+            /**
              * Fetches and renders current rankings from Firestore into specified grid/list elements.
              * This function is now generalized to serve both Admin Dashboard and My Control Room.
              * @param {HTMLElement} messageBox - The message box element to display status messages.
@@ -3160,6 +3276,7 @@
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
+                    if (newScheduleTableSection) newScheduleTableSection.style.display = 'none'; // Hide new table by default
 
                     // myControlRoomFDRDisplay is the parent of the schedule tables, it should be visible when an FDR system is selected
                     if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
@@ -3304,6 +3421,7 @@
                 if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
                 if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
                 if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
+                if (newScheduleTableSection) newScheduleTableSection.style.display = 'none'; // Also hide the new table section
 
                 // myControlRoomFDRDisplay is the parent of the schedule tables, it should be visible when an FDR system is selected
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
@@ -3389,8 +3507,33 @@
                     if (selectedSystem) {
                         displaySelectedFDRSystem(selectedSystem);
                     }
+                    // Also re-render the new table if it's currently visible
+                    if (newScheduleTableSection && newScheduleTableSection.style.display === 'block') {
+                        renderNewScheduleTable();
+                    }
                 });
             }
+
+            // NEW: Event listener for the "Render New Schedule Table" button
+            if (showNewScheduleTableButton) {
+                showNewScheduleTableButton.addEventListener('click', () => {
+                    // Hide other FDR sections and show only the new table section
+                    if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
+                    if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
+                    if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
+                    if (newScheduleTableSection) newScheduleTableSection.style.display = 'block';
+                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block'; // Ensure parent is visible
+                    
+                    // Uncheck all radio buttons to indicate a "special" display
+                    document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => {
+                        radio.checked = false;
+                    });
+
+                    renderNewScheduleTable(); // Call the new rendering function
+                    showControlRoomMessage("Displaying the NEW Schedule Table for comparison.", "info");
+                });
+            }
+
 
             // --- Initial Load & Theme & Event Listeners ---
             document.addEventListener('DOMContentLoaded', () => {
@@ -3445,7 +3588,7 @@
                     console.error("ERROR: Menu toggle or sidebar elements not found!");
                 }
 
-                // --- Menu Item Click Listeners ---
+                // --- Menu Item Click Listeners ---\
                 if (menuMyControlRoom) {
                     menuMyControlRoom.addEventListener('click', (e) => {
                         e.preventDefault();
