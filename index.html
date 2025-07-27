@@ -872,7 +872,7 @@
                 cursor: pointer;
                 font-size: 1em;
                 transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-                box_shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 margin-top: 10px;
             }
 
@@ -3000,6 +3000,7 @@
                     roundsToRender.forEach(round => {
                         const fixtureCell = document.createElement('td');
                         fixtureCell.className = 'fixture-cell'; 
+                        fixtureCell.innerHTML = ''; // Explicitly clear content for each cell
 
                         // Retrieve the specific array of fixtures for this team and this round
                         // Use a direct lookup and ensure it's an array, defaulting to empty array
@@ -3008,7 +3009,7 @@
 
                         if (fixturesForThisRound.length > 0) {
                             fixturesForThisRound.forEach((fixtureString, index) => {
-                                const fixtureDisplayItem = document.createElement('div');
+                                const fixtureDisplayItem = document.createElement('div'); // Create a NEW div for each fixture
                                 fixtureDisplayItem.className = `fixture-item-display`; 
 
                                 const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/); 
