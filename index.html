@@ -1227,7 +1227,7 @@
             }
 
             /* No FDR coloring for schedule cells in this version */
-            /* .fixture-item-display.fdr-1 { background-color: #00B050; color: white; } */
+            /* .fixture-item-display.fdr-1 { background-color: #00B050; } */
             /* ... removed other fdr- classes for fixture-item-display ... */
             /* .fixture-item-display.fdr-na { background-color: #ccc; color: #666; } */
 
@@ -1410,7 +1410,7 @@
                     <button id="showFDRButton">FDR</button>
 
                     <!-- FDR Systems Container (hidden until FDR button is clicked, contains radio buttons, message box, difficulty scale, tuning, and schedule) -->
-                    <div id="fdrSystemsContainer">
+                    <div id="fdrSystemsContainer" style="display: none;">
                         <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
                         <p>Please Choose FDR System</p>
 
@@ -2340,8 +2340,7 @@
                     if (showFDRButton) showFDRButton.style.display = 'block'; // Show the main FDR button
                     // Ensure FDR systems container is hidden until FDR button is clicked
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
-                    // myControlRoomFDRDisplay should be hidden initially in controlRoom
-                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; 
+                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Ensure this is hidden
                     if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; 
                 } else if (sectionId === 'adminDashboard') {
                     if (isAdminUser) { 
@@ -3167,18 +3166,17 @@
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
-                    // myControlRoomFDRDisplay is now the parent of the sections that contain schedules, so it should be visible
-                    // This is the key fix for the "schedule not displayed at all" issue
+                    // myControlRoomFDRDisplay is the parent of the schedule tables, it should be visible when an FDR system is selected
                     if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
                     if (selectedFdrSystem === 'overall') {
                         if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
                         renderScheduleTable(overallScheduleTable, 'overall');
-                        hasDataToDisplay = true;
+                        // showControlRoomMessage("Displaying Overall FDR Schedule.", "info");
                     } else if (selectedFdrSystem === 'homeAway') {
                         if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                         renderScheduleTable(homeAwayScheduleTable, 'homeAway');
-                        hasDataToDisplay = true;
+                        // showControlRoomMessage("Displaying Home/Away FDR Schedule.", "info");
                     } else if (selectedFdrSystem === 'customized') {
                         if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                         // Fetch custom ratings for the current user
@@ -3192,7 +3190,10 @@
                             }
                         }
                         renderScheduleTable(customizedScheduleTable, 'customized', customRatings);
-                        hasDataToDisplay = true;
+                        // showControlRoomMessage("Displaying Customized FDR Schedule. You can edit ratings.", "info");
+                    } else {
+                        console.warn(`WARNING: Unknown FDR system selected: ${selectedFdrSystem}`); // Keep this log for debugging
+                        showControlRoomMessage("Please select a valid FDR system.", "error");
                     }
                 }
 
@@ -3312,15 +3313,15 @@
                 // myControlRoomFDRDisplay is the parent of the schedule tables, it should be visible when an FDR system is selected
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
-                if (selectedFdrSystem === 'overall') {
+                if (selectedSystem === 'overall') { // Corrected variable name here
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(overallScheduleTable, 'overall');
                     // showControlRoomMessage("Displaying Overall FDR Schedule.", "info");
-                } else if (selectedFdrSystem === 'homeAway') {
+                } else if (selectedSystem === 'homeAway') { // Corrected variable name here
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(homeAwayScheduleTable, 'homeAway');
                     // showControlRoomMessage("Displaying Home/Away FDR Schedule.", "info");
-                } else if (selectedFdrSystem === 'customized') {
+                } else if (selectedSystem === 'customized') { // Corrected variable name here
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                     // Fetch custom ratings for the current user
                     const user = auth.currentUser;
@@ -3352,6 +3353,34 @@
                 showFDRButton.addEventListener('click', () => {
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; // Show the systems container
                     loadAndSetPreferredFDRSystem(); // Load and display the preferred system
+                });
+            }
+
+            // NEW: Event listener for "Save as My FDR System" button
+            if (saveFDRSystemButton) {
+                saveFDRSystemButton.addEventListener('click', async () => {
+                    const user = auth.currentUser;
+                    if (!user) {
+                        showControlRoomMessage("You must be logged in to save your preferred FDR system.", "error");
+                        return;
+                    }
+
+                    const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
+                    if (!selectedSystem) {
+                        showControlRoomMessage("Please select an FDR system to save.", "warning");
+                        return;
+                    }
+
+                    try {
+                        const userDocRef = doc(db, "users", user.uid);
+                        await updateDoc(userDocRef, {
+                            preferredFDRSystem: selectedSystem
+                        });
+                        showControlRoomMessage(`Your preferred FDR system (${selectedSystem.charAt(0).toUpperCase() + selectedSystem.slice(1)}) has been saved!`, "success");
+                    } catch (error) {
+                        console.error("Error saving preferred FDR system:", error);
+                        showControlRoomMessage(`Failed to save preferred FDR system: ${error.message}`, "error");
+                    }
                 });
             }
 
