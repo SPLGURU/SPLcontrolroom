@@ -872,7 +872,7 @@
                 cursor: pointer;
                 font-size: 1em;
                 transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                box_shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 margin-top: 10px;
             }
 
@@ -2124,7 +2124,6 @@
                                 isAdminUser = adminDocSnap.exists();
                                 console.log(`DEBUG AUTH STATE (Login Button): User UID: ${user.uid}, Is Admin: ${isAdminUser}, Admin doc exists: ${adminDocSnap.exists()}`);
                                 
-                                // Update visibility of the Admin Dashboard menu item
                                 if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
                                 console.log(`DEBUG ADMIN MENU ITEM RENDER (Login Button Direct): Admin menu item visibility set to: ${menuAdminDashboard.style.display}`);
 
@@ -2947,17 +2946,17 @@
 
             /**
              * Renders the schedule table for the My Control Room FDR feature.
-             * This now always displays the full league schedule horizontally.
+             * This function has been completely rewritten to ensure correct rendering.
              * @param {HTMLElement} tableElement - The <table> element to render into.
              * @param {string} fdrType - The type of FDR to apply ('overall', 'homeAway', 'customized').
              * @param {Object} customRatings - Object containing custom ratings for 'customized' type.
              */
             function renderScheduleTable(tableElement, fdrType, customRatings = {}) {
-                console.log(`DEBUG_RENDER: renderScheduleTable called for FDR Type: ${fdrType}, Rounds to show: ${roundsToShow}`);
+                console.log(`DEBUG_RENDER_REWRITE: renderScheduleTable called for FDR Type: ${fdrType}, Rounds to show: ${roundsToShow}`);
                 tableElement.innerHTML = ''; // Clear existing table content
 
                 if (!globalSeasonSchedule || !globalSeasonSchedule.fixtures || Object.keys(globalSeasonSchedule.fixtures).length === 0 || !globalSeasonSchedule.teams || globalSeasonSchedule.teams.length === 0 || !globalSeasonSchedule.rounds || globalSeasonSchedule.rounds.length === 0) {
-                    console.warn("WARNING_RENDER: No complete season schedule data available for rendering.");
+                    console.warn("WARNING_RENDER_REWRITE: No complete season schedule data available for rendering.");
                     tableElement.innerHTML = '<tbody><tr><td colspan="100%" style="text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please ensure schedule data is fetched from API.</td></tr></tbody>';
                     return;
                 }
@@ -2965,9 +2964,9 @@
                 const teamsToDisplay = globalSeasonSchedule.teams;
                 const allRounds = globalSeasonSchedule.rounds;
                 const roundsToRender = allRounds.slice(0, roundsToShow); // Use the tuning setting
-                console.log("DEBUG_RENDER: Teams to display in table:", teamsToDisplay);
-                console.log("DEBUG_RENDER: All rounds from globalSeasonSchedule.rounds:", allRounds);
-                console.log("DEBUG_RENDER: Rounds to render (based on slider):", roundsToRender);
+                console.log("DEBUG_RENDER_REWRITE: Teams to display in table:", teamsToDisplay);
+                console.log("DEBUG_RENDER_REWRITE: All rounds from globalSeasonSchedule.rounds:", allRounds);
+                console.log("DEBUG_RENDER_REWRITE: Rounds to render (based on slider):", roundsToRender);
 
 
                 // Create table header (Rounds)
@@ -2988,23 +2987,27 @@
                 // Create table body (Teams and their fixtures)
                 const tbody = document.createElement('tbody');
                 teamsToDisplay.forEach(teamFullName => {
-                    const teamFixtures = globalSeasonSchedule.fixtures[teamFullName];
-
                     const row = document.createElement('tr');
                     const teamCell = document.createElement('td');
                     teamCell.textContent = teamFullName;
                     row.appendChild(teamCell);
 
+                    // Get the fixtures object for the current team (e.g., { R1: [...], R2: [...] })
+                    const teamFixtures = globalSeasonSchedule.fixtures[teamFullName] || {};
+                    console.log(`DEBUG_RENDER_REWRITE_TEAM_FIXTURES: Team: ${teamFullName}, Fixtures for this team:`, teamFixtures);
+
+
                     roundsToRender.forEach(round => {
                         const fixtureCell = document.createElement('td');
                         fixtureCell.className = 'fixture-cell'; 
 
-                        // IMPORTANT FIX: Make a deep copy of the fixtures array for this specific cell
-                        // This helps rule out any subtle reference issues where data might be shared or mutated unintentionally.
-                        const fixturesForThisSpecificRound = JSON.parse(JSON.stringify(teamFixtures?.[round] || [])); 
-                        
-                        if (fixturesForThisSpecificRound.length > 0) {
-                            fixturesForThisSpecificRound.forEach((fixtureString, index) => {
+                        // Retrieve the specific array of fixtures for this team and this round
+                        // Use a direct lookup and ensure it's an array, defaulting to empty array
+                        const fixturesForThisRound = teamFixtures[round] || [];
+                        console.log(`DEBUG_RENDER_REWRITE_FIXTURES_IN_ROUND: For ${teamFullName} in ${round}, fixturesForThisRound:`, fixturesForThisRound);
+
+                        if (fixturesForThisRound.length > 0) {
+                            fixturesForThisRound.forEach((fixtureString, index) => {
                                 const fixtureDisplayItem = document.createElement('div');
                                 fixtureDisplayItem.className = `fixture-item-display`; 
 
@@ -3016,7 +3019,7 @@
                                     opponentShortCode = match[1].trim();
                                     homeAwayEmoji = match[2] || ''; 
                                 } else {
-                                     console.warn(`WARNING_RENDER: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Short Code 🏠/✈️" format. Displaying as raw. Match result:`, match);
+                                     console.warn(`WARNING_RENDER_REWRITE: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Short Code 🏠/✈️" format. Displaying as raw. Match result:`, match);
                                 }
                                 
                                 fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`; 
@@ -3038,7 +3041,7 @@
                                 }
                             });
                         } else {
-                            fixtureCell.textContent = ''; 
+                            fixtureCell.textContent = ''; // Ensure blank cells are explicitly empty
                         }
                         row.appendChild(fixtureCell);
                     });
