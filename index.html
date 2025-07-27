@@ -2808,36 +2808,53 @@
                             allRoundNamesInSchedule.add(roundName); // Add to set of rounds
 
                             data.forEach(fixture => {
-                                console.log("DEBUG_FETCH_FIXTURE: Processing fixture:", fixture); 
-                                const homeTeamId = fixture.team_h;
-                                const awayTeamId = fixture.team_a;
-                                const homeTeamFullName = globalTeamData.byId[homeTeamId]?.name;
-                                const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name; 
-                                const awayTeamFullName = globalTeamData.byId[awayTeamId]?.name;
-                                const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name; 
+                                // IMPORTANT FIX: Only process fixture if its 'event' matches the current 'round'
+                                // This prevents fixtures from other rounds being incorrectly aggregated.
+                                if (fixture.event === round) {
+                                    console.log("DEBUG_FETCH_FIXTURE: Processing fixture:", fixture); 
+                                    const homeTeamId = fixture.team_h;
+                                    const awayTeamId = fixture.team_a;
+                                    const homeTeamFullName = globalTeamData.byId[homeTeamId]?.name;
+                                    const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name; 
+                                    const awayTeamFullName = globalTeamData.byId[awayTeamId]?.name;
+                                    const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name; 
 
-                                if (homeTeamFullName && awayTeamFullName && homeTeamShortName && awayTeamShortName) {
-                                    console.log(`DEBUG_FETCH_FIXTURE: Adding fixture: ${homeTeamFullName} vs ${awayTeamFullName} (Round ${round})`); 
-                                    allTeamNamesInSchedule.add(homeTeamFullName);
-                                    allTeamNamesInSchedule.add(awayTeamFullName);
+                                    if (homeTeamFullName && awayTeamFullName && homeTeamShortName && awayTeamShortName) {
+                                        console.log(`DEBUG_FETCH_FIXTURE: Adding fixture for Round ${round}: ${homeTeamFullName} vs ${awayTeamFullName}`); 
+                                        allTeamNamesInSchedule.add(homeTeamFullName);
+                                        allTeamNamesInSchedule.add(awayTeamFullName);
 
-                                    // Add fixture for home team (using opponent's short name and home emoji)
-                                    if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
-                                    if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
-                                    processedFixtures[homeTeamFullName][roundName].push(`${awayTeamShortName} 🏠`); 
-                                    console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for home team ${homeTeamFullName} in R${round}: ${awayTeamShortName} 🏠`); 
+                                        // Add fixture for home team (using opponent's short name and home emoji)
+                                        if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
+                                        if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
+                                        processedFixtures[homeTeamFullName][roundName].push(`${awayTeamShortName} 🏠`); 
+                                        console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for home team ${homeTeamFullName} in ${roundName}: ${awayTeamShortName} 🏠`); 
 
-                                    // Add fixture for away team (using opponent's short name and away emoji)
-                                    if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
-                                    if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
-                                    processedFixtures[awayTeamFullName][roundName].push(`${homeTeamShortName} ✈️`); 
-                                    console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for away team ${awayTeamFullName} in R${round}: ${homeTeamShortName} ✈️`); 
+                                        // Add fixture for away team (using opponent's short name and away emoji)
+                                        if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
+                                        if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
+                                        processedFixtures[awayTeamFullName][roundName].push(`${homeTeamShortName} ✈️`); 
+                                        console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for away team ${awayTeamFullName} in ${roundName}: ${homeTeamShortName} ✈️`); 
+                                    } else {
+                                        console.warn(`WARNING_FETCH: Skipping fixture in round ${round} due to missing team data: Home ID ${homeTeamId} (${homeTeamFullName}), Away ID ${awayTeamId} (${awayTeamFullName}). Raw fixture:`, fixture); 
+                                    }
                                 } else {
-                                    console.warn(`WARNING_FETCH: Skipping fixture in round ${round} due to missing team data: Home ID ${homeTeamId} (${homeTeamFullName}), Away ID ${awayTeamId} (${awayTeamFullName}). Raw fixture:`, fixture); 
+                                    console.warn(`WARNING_FETCH: Fixture event (${fixture.event}) does not match current processing round (${round}). Skipping. Fixture:`, fixture);
                                 }
                             });
                         } else if (!error) {
-                            console.log(`DEBUG_FETCH: No fixture data for round ${round}.`);
+                            console.log(`DEBUG_FETCH: No fixture data for round ${round}. This might be a blank round.`);
+                            // Explicitly ensure an empty array for teams in blank rounds
+                            // This ensures the table cells for blank rounds are empty, not just missing
+                            const allTeams = Object.values(globalTeamData.byFullName).map(team => team.name);
+                            const roundName = `R${round}`;
+                            allTeams.forEach(teamFullName => {
+                                if (!processedFixtures[teamFullName]) processedFixtures[teamFullName] = {};
+                                if (!processedFixtures[teamFullName][roundName]) {
+                                    processedFixtures[teamFullName][roundName] = []; // Ensure empty array for blank rounds
+                                }
+                            });
+                            allRoundNamesInSchedule.add(roundName); // Still add the round name even if blank
                         }
                     });
 
@@ -2989,9 +3006,12 @@
                     const teamFixtures = globalSeasonSchedule.fixtures[teamFullName];
                     console.log(`DEBUG_RENDER: Processing team: ${teamFullName}. Team fixtures object:`, teamFixtures);
 
+                    // If a team has no fixtures at all, or no fixtures for the rounds being rendered,
+                    // we should still render its row, but with empty cells for rounds.
+                    // The `fetchGlobalFDRData` now ensures an empty array for blank rounds.
                     if (!teamFixtures) {
-                        console.warn(`WARNING_RENDER: No fixtures found for team: ${teamFullName} in globalSeasonSchedule.fixtures. Skipping row.`);
-                        return; // Skip if no fixtures for this team
+                        console.warn(`WARNING_RENDER: No fixtures object found for team: ${teamFullName}. Creating empty row.`);
+                        // Continue to create an empty row for this team
                     }
 
                     const row = document.createElement('tr');
@@ -3004,7 +3024,8 @@
                         const fixtureCell = document.createElement('td');
                         fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures in a double round
 
-                        const fixturesInRound = teamFixtures[round] || []; // This is now an array of fixture strings
+                        // Get fixtures for the current team and round. Ensure it's an array, even if empty.
+                        const fixturesInRound = teamFixtures?.[round] || []; 
                         console.log(`DEBUG_RENDER: Fixtures for ${teamFullName} in ${round} (from globalSeasonSchedule.fixtures):`, fixturesInRound);
 
                         if (fixturesInRound.length > 0) {
@@ -3046,9 +3067,9 @@
                                 }
                             });
                         } else {
-                            // For blank rounds, the cell remains empty
+                            // For blank rounds, the cell remains empty (or shows a placeholder like '-')
                             console.log(`DEBUG_RENDER: Cell for ${teamFullName}, ${round} is empty (no fixturesInRound).`);
-                            fixtureCell.textContent = ''; 
+                            fixtureCell.textContent = ''; // Ensure blank cells are explicitly empty
                         }
                         row.appendChild(fixtureCell);
                     });
