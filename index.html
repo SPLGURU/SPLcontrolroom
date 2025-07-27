@@ -603,7 +603,7 @@
                 border-radius: 6px;
                 font-size: 1em;
                 cursor: pointer;
-                transition: background-color 0.3s ease, transform 0.2s ease;
+                transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 min-width: 120px;
             }
@@ -1409,28 +1409,7 @@
                     <!-- Main FDR Button for My Control Room -->
                     <button id="showFDRButton">FDR</button>
 
-                    <!-- Difficulty Scale: Moved here, just right under the FDR button -->
-                    <h5 class="fdr-section-title" style="margin-top: 0;">Fixture Difficulty Scale</h5>
-                    <div class="fdr-scale">
-                        <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                        <div class="fdr-level fdr-2">2</div>
-                        <div class="fdr-level fdr-3">3</div>
-                        <div class="fdr-level fdr-4">4</div>
-                        <div class="fdr-level fdr-5">5</div>
-                        <div class="fdr-level fdr-6">6</div>
-                        <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
-                    </div>
-
-                    <!-- Tuning Section (minimal design, no header, only rounds slider) -->
-                    <div class="tuning-section">
-                        <div class="tuning-option">
-                            <label for="roundsToShow">Rounds: <span id="roundsToShowValue">5</span></label>
-                            <input type="range" id="roundsToShow" min="3" max="10" value="5">
-                        </div>
-                        <!-- Removed Show Colors and Show Team Ratings checkboxes -->
-                    </div>
-
-                    <!-- FDR Systems Container (hidden until FDR button is clicked, contains radio buttons and message box) -->
+                    <!-- FDR Systems Container (hidden until FDR button is clicked, contains radio buttons, message box, difficulty scale, tuning, and schedule) -->
                     <div id="fdrSystemsContainer">
                         <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
                         <p>Please Choose FDR System</p>
@@ -1448,63 +1427,84 @@
                             </label>
                             <button id="saveFDRSystemButton">Save as My FDR System</button>
                         </div>
-                    </div>
 
-                    <!-- FDR Display for My Control Room (dynamically shown based on selection, now contains the schedule tables) -->
-                    <div id="myControlRoomFDRDisplay">
-                        <!-- Overall FDR Display Section for Control Room -->
-                        <div id="overallFDRSectionControlRoom" style="display: none;">
-                            <h5 class="fdr-section-title">Overall Fixture Difficulty Schedule</h5>
-                            <div class="schedule-table-container">
-                                <table class="schedule-table" id="overallScheduleTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Team</th>
-                                            <!-- Rounds will be dynamically inserted here -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Team rows and fixtures will be dynamically inserted here -->
-                                    </tbody>
+                        <!-- Difficulty Scale: Moved here, just right under the FDR System Selection -->
+                        <h5 class="fdr-section-title" style="margin-top: 0;">Fixture Difficulty Scale</h5>
+                        <div class="fdr-scale">
+                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                            <div class="fdr-level fdr-2">2</div>
+                            <div class="fdr-level fdr-3">3</div>
+                            <div class="fdr-level fdr-4">4</div>
+                            <div class="fdr-level fdr-5">5</div>
+                            <div class="fdr-level fdr-6">6</div>
+                            <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                        </div>
+
+                        <!-- Tuning Section (minimal design, no header, only rounds slider) -->
+                        <div class="tuning-section">
+                            <div class="tuning-option">
+                                <label for="roundsToShow">Rounds: <span id="roundsToShowValue">5</span></label>
+                                <input type="range" id="roundsToShow" min="3" max="10" value="5">
+                            </div>
+                            <!-- Removed Show Colors and Show Team Ratings checkboxes -->
+                        </div>
+
+                        <!-- FDR Display for My Control Room (dynamically shown based on selection, now contains the schedule tables) -->
+                        <div id="myControlRoomFDRDisplay" style="display: none;"> <!-- Initially hidden -->
+                            <!-- Overall FDR Display Section for Control Room -->
+                            <div id="overallFDRSectionControlRoom" style="display: none;">
+                                <h5 class="fdr-section-title">Overall Fixture Difficulty Schedule</h5>
+                                <div class="schedule-table-container">
+                                    <table class="schedule-table" id="overallScheduleTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Team</th>
+                                                <!-- Rounds will be dynamically inserted here -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Team rows and fixtures will be dynamically inserted here -->
+                                        </tbody>
+                                        </table>
+                            </div>
+                        </div>
+
+                            <!-- Home/Away FDR Display Section for Control Room -->
+                            <div id="homeAwayFDRSectionControlRoom" style="display: none;">
+                                <h5 class="fdr-section-title">Home/Away Fixture Difficulty Schedule</h5>
+                                <div class="schedule-table-container">
+                                    <table class="schedule-table" id="homeAwayScheduleTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Team</th>
+                                                <!-- Rounds will be dynamically inserted here -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Team rows and fixtures will be dynamically inserted here -->
+                                        </tbody>
                                     </table>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Home/Away FDR Display Section for Control Room -->
-                        <div id="homeAwayFDRSectionControlRoom" style="display: none;">
-                            <h5 class="fdr-section-title">Home/Away Fixture Difficulty Schedule</h5>
-                            <div class="schedule-table-container">
-                                <table class="schedule-table" id="homeAwayScheduleTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Team</th>
-                                            <!-- Rounds will be dynamically inserted here -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Team rows and fixtures will be dynamically inserted here -->
-                                    </tbody>
-                                </table>
+                            <!-- Customized FDR Display Section for Control Room -->
+                            <div id="customizedFDRSectionControlRoom" style="display: none;">
+                                <h5 class="fdr-section-title">Customized Fixture Difficulty Schedule</h5>
+                                <div class="schedule-table-container">
+                                    <table class="schedule-table" id="customizedScheduleTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Team</th>
+                                                <!-- Rounds will be dynamically inserted here -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Team rows and fixtures will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button id="saveCustomFDRButton" class="mt-4">Save Custom Ratings</button>
                             </div>
-                        </div>
-
-                        <!-- Customized FDR Display Section for Control Room -->
-                        <div id="customizedFDRSectionControlRoom" style="display: none;">
-                            <h5 class="fdr-section-title">Customized Fixture Difficulty Schedule</h5>
-                            <div class="schedule-table-container">
-                                <table class="schedule-table" id="customizedScheduleTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Team</th>
-                                            <!-- Rounds will be dynamically inserted here -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Team rows and fixtures will be dynamically inserted here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <button id="saveCustomFDRButton" class="mt-4">Save Custom Ratings</button>
                         </div>
                     </div>
                 </div>
@@ -1928,8 +1928,7 @@
                 // Hide Control Room specific elements
                 if (showFDRButton) showFDRButton.style.display = 'none'; 
                 if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
-                // myControlRoomFDRDisplay should NOT be hidden by this function anymore, as it's a parent
-                // if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; 
+                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Ensure this is hidden
                 if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none'; 
                 if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none'; 
                 if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none'; 
@@ -2341,8 +2340,8 @@
                     if (showFDRButton) showFDRButton.style.display = 'block'; // Show the main FDR button
                     // Ensure FDR systems container is hidden until FDR button is clicked
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
-                    // myControlRoomFDRDisplay should now be visible by default when controlRoom is active
-                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block'; 
+                    // myControlRoomFDRDisplay should be hidden initially in controlRoom
+                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; 
                     if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; 
                 } else if (sectionId === 'adminDashboard') {
                     if (isAdminUser) { 
@@ -2810,16 +2809,16 @@
                             allRoundNamesInSchedule.add(roundName); // Add to set of rounds
 
                             data.forEach(fixture => {
-                                console.log("DEBUG_FETCH_FIXTURE: Processing fixture:", fixture); // NEW LOG
+                                console.log("DEBUG_FETCH_FIXTURE: Processing fixture:", fixture); 
                                 const homeTeamId = fixture.team_h;
                                 const awayTeamId = fixture.team_a;
                                 const homeTeamFullName = globalTeamData.byId[homeTeamId]?.name;
-                                const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name; // Use short_name from globalTeamData
+                                const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name; 
                                 const awayTeamFullName = globalTeamData.byId[awayTeamId]?.name;
-                                const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name; // Use short_name from globalTeamData
+                                const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name; 
 
                                 if (homeTeamFullName && awayTeamFullName && homeTeamShortName && awayTeamShortName) {
-                                    console.log(`DEBUG_FETCH_FIXTURE: Adding fixture: ${homeTeamFullName} vs ${awayTeamFullName} (Round ${round})`); // NEW LOG
+                                    console.log(`DEBUG_FETCH_FIXTURE: Adding fixture: ${homeTeamFullName} vs ${awayTeamFullName} (Round ${round})`); 
                                     allTeamNamesInSchedule.add(homeTeamFullName);
                                     allTeamNamesInSchedule.add(awayTeamFullName);
 
@@ -2827,15 +2826,15 @@
                                     if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
                                     if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
                                     processedFixtures[homeTeamFullName][roundName].push(`${awayTeamShortName} 🏠`); 
-                                    console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for home team ${homeTeamFullName} in R${round}: ${awayTeamShortName} 🏠`); // NEW LOG
+                                    console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for home team ${homeTeamFullName} in R${round}: ${awayTeamShortName} 🏠`); 
 
                                     // Add fixture for away team (using opponent's short name and away emoji)
                                     if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
                                     if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
                                     processedFixtures[awayTeamFullName][roundName].push(`${homeTeamShortName} ✈️`); 
-                                    console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for away team ${awayTeamFullName} in R${round}: ${homeTeamShortName} ✈️`); // NEW LOG
+                                    console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for away team ${awayTeamFullName} in R${round}: ${homeTeamShortName} ✈️`); 
                                 } else {
-                                    console.warn(`WARNING_FETCH: Skipping fixture in round ${round} due to missing team data: Home ID ${homeTeamId} (${homeTeamFullName}), Away ID ${awayTeamId} (${awayTeamFullName}). Raw fixture:`, fixture); // Enhanced log
+                                    console.warn(`WARNING_FETCH: Skipping fixture in round ${round} due to missing team data: Home ID ${homeTeamId} (${homeTeamFullName}), Away ID ${awayTeamId} (${awayTeamFullName}). Raw fixture:`, fixture); 
                                 }
                             });
                         } else if (!error) {
@@ -3086,7 +3085,7 @@
                 if (homeSection) homeSection.style.display = 'none';
                 if (awaySection) awaySection.style.display = 'none';
                 // displayContainer (myControlRoomFDRDisplay) is now always visible when myControlRoomContent is active
-                // if (displayContainer) displayContainer.style.display = 'block';
+                // if (displayContainer) displayContainer.style.display = 'block'; // This line was causing the premature display
 
                 // Ensure global data is fetched before rendering
                 // This is crucial for both Admin and Control Room to have the latest data
@@ -3169,6 +3168,7 @@
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
                     // myControlRoomFDRDisplay is now the parent of the sections that contain schedules, so it should be visible
+                    // This is the key fix for the "schedule not displayed at all" issue
                     if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
                     if (selectedFdrSystem === 'overall') {
@@ -3294,6 +3294,7 @@
             async function displaySelectedFDRSystem(systemType = null) {
                 let selectedSystem = systemType;
                 if (!selectedSystem) {
+                    // Ensure a default is set if no radio button is checked (e.g., first load)
                     selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value || 'overall';
                 }
 
@@ -3308,17 +3309,17 @@
                 if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
                 if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
 
-                // myControlRoomFDRDisplay is now the parent of the sections that contain schedules, so it should be visible
+                // myControlRoomFDRDisplay is the parent of the schedule tables, it should be visible when an FDR system is selected
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
                 if (selectedFdrSystem === 'overall') {
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(overallScheduleTable, 'overall');
-                    hasDataToDisplay = true;
+                    // showControlRoomMessage("Displaying Overall FDR Schedule.", "info");
                 } else if (selectedFdrSystem === 'homeAway') {
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                     renderScheduleTable(homeAwayScheduleTable, 'homeAway');
-                    hasDataToDisplay = true;
+                    // showControlRoomMessage("Displaying Home/Away FDR Schedule.", "info");
                 } else if (selectedFdrSystem === 'customized') {
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                     // Fetch custom ratings for the current user
@@ -3332,15 +3333,10 @@
                         }
                     }
                     renderScheduleTable(customizedScheduleTable, 'customized', customRatings);
-                    hasDataToDisplay = true;
-                }
-
-                if (hasDataToDisplay) {
-                    messageBox.className = 'message-box success';
-                    messageBox.textContent = 'FDR data loaded.';
+                    // showControlRoomMessage("Displaying Customized FDR Schedule. You can edit ratings.", "info");
                 } else {
-                    messageBox.className = 'message-box info';
-                    messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard, and API data is fetched.';
+                    console.warn(`WARNING: Unknown FDR system selected: ${selectedSystem}`);
+                    showControlRoomMessage("Please select a valid FDR system.", "error");
                 }
             }
 
@@ -3371,30 +3367,6 @@
                     }
                 });
             }
-
-            // Removed event listeners for showColorsToggle and showTeamRatingsToggle as elements are removed
-            // if (showColorsToggle) {
-            //     showColorsToggle.addEventListener('change', (e) => {
-            //         showColors = e.target.checked;
-            //         // Re-render the currently active FDR system
-            //         const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-            //         if (selectedSystem) {
-            //             displaySelectedFDRSystem(selectedSystem);
-            //         }
-            //     });
-            // }
-
-            // if (showTeamRatingsToggle) {
-            //     showTeamRatingsToggle.addEventListener('change', (e) => {
-            //         showTeamRatings = e.target.checked;
-            //         // Re-render the currently active FDR system
-            //         const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-            //         if (selectedSystem) {
-            //             displaySelectedFDRSystem(selectedSystem);
-            //         }
-            //     });
-            // }
-
 
             // --- Initial Load & Theme & Event Listeners ---
             document.addEventListener('DOMContentLoaded', () => {
