@@ -20,7 +20,7 @@
         <!-- NEW: XLSX.js library for reading Excel files (still needed for FDR uploads) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght=400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
         <!-- Font Awesome for Hamburger Icon -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style id="main-styles">
@@ -2553,7 +2553,7 @@
                     }
 
                     // Re-render rankings for Admin Dashboard
-                    fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFdrSectionAdmin, currentRankingsDisplayAdmin);
+                    fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
                 });
             }
 
@@ -2988,26 +2988,26 @@
 
                     // Get the fixtures object for the current team (e.g., { R1: [...], R2: [...] })
                     const teamFixtures = globalSeasonSchedule.fixtures[teamFullName] || {};
+                    
                     // --- NEW DEBUG LOG ---
                     console.log(`DEBUG_RENDER_TABLE_DATA: For team ${teamFullName}, teamFixtures object:`, teamFixtures);
                     // --- END NEW DEBUG LOG ---
 
-
                     roundsToRender.forEach(round => {
-                        const fixtureCell = document.createElement('td');
+                        // CRITICAL: Ensure fixtureCell is created *inside* this loop for each round
+                        const fixtureCell = document.createElement('td'); // <--- THIS IS THE KEY LINE
                         fixtureCell.className = 'fixture-cell'; 
-                        fixtureCell.innerHTML = ''; // Explicitly clear content for each cell
+                        // No need for fixtureCell.innerHTML = ''; here as it's a new element
 
-                        // Retrieve the specific array of fixtures for this team and this round
-                        // Use a direct lookup and ensure it's an array, defaulting to empty array
                         const fixturesForThisRound = teamFixtures[round] || [];
+                        
                         // --- NEW DEBUG LOG ---
                         console.log(`DEBUG_RENDER_TABLE_CELL: For team ${teamFullName}, round ${round}, fixturesForThisRound:`, fixturesForThisRound);
                         // --- END NEW DEBUG LOG ---
 
                         if (fixturesForThisRound.length > 0) {
                             fixturesForThisRound.forEach((fixtureString, index) => {
-                                const fixtureDisplayItem = document.createElement('div'); // Create a NEW div for each fixture
+                                const fixtureDisplayItem = document.createElement('div'); 
                                 fixtureDisplayItem.className = `fixture-item-display`; 
 
                                 const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/); 
@@ -3040,9 +3040,11 @@
                                 }
                             });
                         } else {
-                            fixtureCell.textContent = ''; // Ensure blank cells are explicitly empty
+                            // If no fixtures for this round, ensure the cell is visibly empty
+                            fixtureCell.textContent = ''; 
                         }
-                        row.appendChild(fixtureCell);
+                        // CRITICAL: Append the fixtureCell to the row *after* populating it
+                        row.appendChild(fixtureCell); // <--- THIS IS ALSO KEY
                     });
                     tbody.appendChild(row);
                 });
