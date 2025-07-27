@@ -1687,10 +1687,11 @@
         const db = getFirestore(app);
 
 
-        // --- NEW: API Endpoints as Variables ---
-        const BOOTSTRAP_STATIC_API_URL = 'https://en.fantasy.spl.com.sa/api/bootstrap-static/';
-        const FIXTURES_API_BASE_URL = 'https://en.fantasy.spl.com.sa/api/fixtures/?event='; // Append round number
-        // ---------------------------------------
+        // --- NEW: API Endpoints as Placeholder Variables (to be set in Netlify Environment) ---
+        // These will be replaced by Netlify at build time with the actual values.
+        const BOOTSTRAP_STATIC_API_URL = '___BOOTSTRAP_STATIC_API_URL_PLACEHOLDER___';
+        const FIXTURES_API_BASE_URL = '___FIXTURES_API_BASE_URL_PLACEHOLDER___'; 
+        // -------------------------------------------------------------------------------------
 
 
         // --- GLOBAL FLAGS / VARIABLES ---
@@ -2155,6 +2156,9 @@
                             // Show initial logged-in dashboard (empty home page)
                             showContentSection('initialLoggedInDashboard');
 
+                            // Fetch all global data (rankings, schedule, team mappings) once on auth state change
+                            await fetchGlobalFDRData();
+
                         } else {
                             showAuthMessage("No valid SPL Manager ID found for your account. Please contact support.", "error");
                             await signOut(auth); 
@@ -2568,13 +2572,13 @@
                 if (Object.keys(globalTeamData.byId).length > 0) {
                     showApiTeamNamesStatus(`Team Names (from API) fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
                 } else {
-                    showApiTeamNamesStatus("Team Names (from API) could not be fetched. Check API connection.", "error");
+                    showApiTeamNamesStatus("Team Names (from API) could not be fetched. Check API connection and Netlify environment variables.", "error");
                 }
 
                 if (Object.keys(globalSeasonSchedule.fixtures).length > 0 && globalSeasonSchedule.rounds.length > 0) {
                     showApiScheduleStatus(`Season Schedule (from API) fetched successfully. Found ${globalSeasonSchedule.rounds.length} rounds.`, "success");
                 } else {
-                    showApiScheduleStatus("Season Schedule (from API) could not be fetched. Check API connection.", "error");
+                    showApiScheduleStatus("Season Schedule (from API) could not be fetched. Check API connection and Netlify environment variables.", "error");
                 }
 
                 // Re-render rankings for Admin Dashboard
@@ -2683,8 +2687,8 @@
                         const parsedRankings = [];
                         for (let i = 1; i < jsonRows.length; i++) {
                             const row = jsonRows[i];
-                            const rank = parseInt(row[rankIndex], 10);
                             const team = String(row[teamIndex]).trim();
+                            const rank = parseInt(row[rankIndex], 10);
                             let fdrValue1, fdrValue2;
 
                             let isValid = false;
@@ -2732,7 +2736,7 @@
 
                         showExcelUploadMessage(`Successfully uploaded ${selectedRankingType} rankings from Excel!`, "success");
                         event.target.value = null; 
-                        // Re-fetch all global data after upload
+                        // Re-fetch all global data after upload (including API data)
                         await fetchGlobalFDRData();
                         // Re-render rankings for Admin Dashboard
                         fetchAndRenderRankings(excelUploadMessage, overallFDRGridAdmin, homeFDRGridAdmin, awayFDRGridAdmin, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin, currentRankingsDisplayAdmin);
@@ -2753,82 +2757,65 @@
             console.log("DEBUG_FETCH: Fetching global data...");
             const seasonId = "2025-2026";
             const splRankingsDocRef = doc(db, 'splRankings', seasonId);
-            // Removed seasonScheduleDocRef and teamMappingsDocRef for Firestore
-            // Now fetching from APIs directly
 
             try {
-                // --- Fetch Team Data from API (bootstrap-static) ---
+                // --- Fetch Team Data from API (bootstrap-static) via Netlify Proxy ---
                 showApiTeamNamesStatus("Fetching team names from API...", "info");
-                const bootstrapResponse = await fetch(BOOTSTRAP_STATIC_API_URL);
-                if (!bootstrapResponse.ok) {
-                    throw new Error(`HTTP error! status: ${bootstrapResponse.status} from ${BOOTSTRAP_STATIC_API_URL}`);
+                // Call the Netlify Function proxy
+                const bootstrapProxyResponse = await fetch(`/api/spl-proxy?url=${encodeURIComponent(BOOTSTRAP_STATIC_API_URL)}`);
+                
+                if (!bootstrapProxyResponse.ok) {
+                    throw new Error(`HTTP error! status: ${bootstrapProxyResponse.status} from proxy for ${BOOTSTRAP_STATIC_API_URL}`);
                 }
-                const bootstrapData = await bootstrapResponse.json();
-                console.log("DEBUG_FETCH: Raw bootstrap-static API data:", bootstrapData);
+                const bootstrapData = await bootstrapProxyResponse.json();
+                console.log("DEBUG_FETCH: Raw bootstrap-static API data (via proxy):", bootstrapData);
 
                 globalTeamData = { byId: {}, byFullName: {}, byShortName: {} };
                 if (bootstrapData && bootstrapData.teams && bootstrapData.teams.length > 0) {
                     bootstrapData.teams.forEach(team => {
-                        // Assuming 'name' is full name and 'short_name' is the 3-letter code
-                        // If 'short_name' is not available, we might need a manual mapping or derivation
                         const teamId = team.id;
                         const teamFullName = team.name;
-                        const teamShortName = team.short_name || team.code; // Use 'short_name' if available, fallback to 'code' if it's the 3-letter.
-                                                                           // If 'code' is numeric, a manual map will be needed.
+                        // The 'short_name' field is present in the API response (e.g., "ARS" for Arsenal in FPL, or "HIL" for Al Hilal)
+                        const teamShortName = team.short_name; 
                         
-                        // For now, let's derive a simple short name if 'short_name' isn't directly available
-                        // Based on the screenshot, it seems 'short_name' might be present or derivable from 'name'
-                        // Let's assume 'short_name' exists in the API response for now, or use a simplified derivation.
-                        // If 'short_name' is not directly in the API, we'll need to revisit.
-                        // For this implementation, I will assume 'short_name' is a field in the team object
-                        // OR, if 'code' is the textual short code (e.g., "HIL"), we use that.
-                        // If 'code' is numeric, we'll need a hardcoded map for now.
-                        // Given your screenshot of player history, the 'OPP' column shows 3-letter codes.
-                        // Let's check the 'code' field in bootstrap-static.txt: {code: 6770, ... name: "Al Ahli"}
-                        // This 'code' is numeric. So, we'll need a manual mapping for short codes.
-                        // For now, I will use a simplified initial for the short name, or a hardcoded map if necessary.
-                        // Let's use a simple derivation for now, and if it's not accurate, we'll add a manual map.
-                        const derivedShortName = (teamFullName.match(/\b(\w)/g) || []).join('').toUpperCase().substring(0,3); // e.g., Al Hilal -> AH
-                        const actualShortName = team.short_name || derivedShortName; // Prefer actual short_name from API if it exists
-
-                        globalTeamData.byId[teamId] = { id: teamId, name: teamFullName, short_name: actualShortName };
-                        globalTeamData.byFullName[teamFullName] = { id: teamId, name: teamFullName, short_name: actualShortName };
-                        globalTeamData.byShortName[actualShortName] = { id: teamId, name: teamFullName, short_name: actualShortName };
+                        globalTeamData.byId[teamId] = { id: teamId, name: teamFullName, short_name: teamShortName };
+                        globalTeamData.byFullName[teamFullName] = { id: teamId, name: teamFullName, short_name: teamShortName };
+                        globalTeamData.byShortName[teamShortName] = { id: teamId, name: teamFullName, short_name: teamShortName };
                     });
                     showApiTeamNamesStatus(`Team Names (from API) fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
                     console.log("DEBUG_FETCH: Fetched global Team Data:", globalTeamData);
                 } else {
-                    showApiTeamNamesStatus("Team Names (from API) could not be fetched or data is empty.", "error");
+                    showApiTeamNamesStatus("Team Names (from API) could not be fetched or data is empty. Check API connection and Netlify environment variables.", "error");
                     console.warn("WARNING_FETCH: No Team data found in bootstrap-static API response.");
                 }
 
 
-                // --- Fetch Schedule Data from API (fixtures) ---
+                // --- Fetch Schedule Data from API (fixtures) via Netlify Proxy ---
                 showApiScheduleStatus("Fetching season schedule from API...", "info");
                 globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} }; // Reset
                 const maxRound = 34; // Assuming 34 rounds based on previous data
 
-                // Fetch all rounds concurrently
+                // Fetch all rounds concurrently via the proxy
                 const fixtureFetchPromises = [];
                 for (let round = 1; round <= maxRound; round++) {
                     fixtureFetchPromises.push(
-                        fetch(`${FIXTURES_API_BASE_URL}${round}`)
+                        fetch(`/api/spl-proxy?url=${encodeURIComponent(`${FIXTURES_API_BASE_URL}${round}`)}`)
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status} for round ${round}`);
+                                    throw new Error(`HTTP error! status: ${response.status} from proxy for round ${round}`);
                                 }
                                 return response.json();
                             })
                             .then(data => ({ round, data }))
                             .catch(error => {
-                                console.error(`ERROR_FETCH: Failed to fetch fixtures for round ${round}:`, error);
+                                console.error(`ERROR_FETCH: Failed to fetch fixtures for round ${round} via proxy:`, error);
                                 return { round, data: null, error: error }; // Return null data on error
                             })
                     );
                 }
 
                 const allFixturesData = await Promise.all(fixtureFetchPromises);
-                console.log("DEBUG_FETCH: All fixtures data fetched (raw):", allFixturesData);
+                console.log("DEBUG_FETCH: All fixtures data fetched (raw via proxy):", allFixturesData);
 
                 // Process fetched fixtures
                 const processedFixtures = {}; // Temp object to build the schedule
@@ -2844,25 +2831,25 @@
                             const homeTeamId = fixture.team_h;
                             const awayTeamId = fixture.team_a;
                             const homeTeamFullName = globalTeamData.byId[homeTeamId]?.name;
-                            const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name;
+                            const homeTeamShortName = globalTeamData.byId[homeTeamId]?.short_name; // Use short_name from globalTeamData
                             const awayTeamFullName = globalTeamData.byId[awayTeamId]?.name;
-                            const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name;
+                            const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name; // Use short_name from globalTeamData
 
-                            if (homeTeamFullName && awayTeamFullName) {
+                            if (homeTeamFullName && awayTeamFullName && homeTeamShortName && awayTeamShortName) {
                                 allTeamNamesInSchedule.add(homeTeamFullName);
                                 allTeamNamesInSchedule.add(awayTeamFullName);
 
-                                // Add fixture for home team
+                                // Add fixture for home team (using opponent's short name and home emoji)
                                 if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
                                 if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
-                                processedFixtures[homeTeamFullName][roundName].push(`${awayTeamFullName} 🏠`); // Opponent is away, so our team is home
+                                processedFixtures[homeTeamFullName][roundName].push(`${awayTeamShortName} 🏠`); 
 
-                                // Add fixture for away team
+                                // Add fixture for away team (using opponent's short name and away emoji)
                                 if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
                                 if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
-                                processedFixtures[awayTeamFullName][roundName].push(`${homeTeamFullName} ✈️`); // Opponent is home, so our team is away
+                                processedFixtures[awayTeamFullName][roundName].push(`${homeTeamShortName} ✈️`); 
                             } else {
-                                console.warn(`WARNING_FETCH: Could not map team IDs for fixture in round ${round}: Home ID ${homeTeamId}, Away ID ${awayTeamId}.`);
+                                console.warn(`WARNING_FETCH: Could not map team IDs to full names/short names for fixture in round ${round}: Home ID ${homeTeamId}, Away ID ${awayTeamId}.`);
                             }
                         });
                     } else if (!error) {
@@ -2885,14 +2872,14 @@
                     console.log("DEBUG_FETCH: Fetched global Season Schedule (teams):", globalSeasonSchedule.teams);
                     console.log("DEBUG_FETCH: Fetched global Season Schedule (rounds):", globalSeasonSchedule.rounds);
                 } else {
-                    showApiScheduleStatus("Season Schedule (from API) could not be fetched or data is empty.", "error");
+                    showApiScheduleStatus("Season Schedule (from API) could not be fetched or data is empty. Check API connection and Netlify environment variables.", "error");
                     console.warn("WARNING_FETCH: No Season Schedule data found from API.");
                 }
 
 
                 // --- Fetch SPL Rankings from Firestore (remains user-uploaded) ---
-                console.log("DEBUG_FETCH: Raw rankingsSnap.data():", rankingsSnap.data());
                 const rankingsSnap = await getDoc(splRankingsDocRef); // Fetch after API data for consistency
+                console.log("DEBUG_FETCH: Raw rankingsSnap.data() (from Firestore):", rankingsSnap.data());
                 if (rankingsSnap.exists() && rankingsSnap.data()) {
                     const data = rankingsSnap.data();
                     globalSplRankings.overall = data.overall || [];
@@ -3038,26 +3025,26 @@
 
                     if (fixturesInRound.length > 0) {
                         fixturesInRound.forEach((fixtureString, index) => {
-                            // The fixture string is now expected to be "Full Team Name 🏠" or "Full Team Name ✈️"
+                            // The fixture string is now expected to be "Short Code 🏠" or "Short Code ✈️"
                             const match = fixtureString.match(/(.+) (🏠|✈️)/);
                             console.log(`DEBUG_RENDER: Rendering Regex match result for fixture string '${fixtureString}' for ${teamFullName} in ${round}:`, match);
 
-                            let opponentFullName = null;
+                            let opponentShortCode = null;
                             let homeAwayEmoji = null; 
 
                             if (match) {
-                                opponentFullName = match[1].trim();
+                                opponentShortCode = match[1].trim();
                                 homeAwayEmoji = match[2]; 
                             } else {
                                 // Fallback for unexpected formats, though the parsing should prevent this now
-                                opponentFullName = fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
+                                opponentShortCode = fixtureString.replace(/(\s*🏠|\s*✈️)/g, '').trim();
                                 homeAwayEmoji = ''; // Indicate unknown status
-                                console.warn(`WARNING_RENDER: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Team 🏠/✈️" format during rendering. Displaying as raw.`);
+                                console.warn(`WARNING_RENDER: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Short Code 🏠/✈️" format during rendering. Displaying as raw.`);
                             }
                             
                             const fixtureDisplayItem = document.createElement('div');
                             fixtureDisplayItem.className = `fixture-item-display`; 
-                            fixtureDisplayItem.textContent = `${opponentFullName} ${homeAwayEmoji}`;
+                            fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`; // Display short code
                             fixtureCell.appendChild(fixtureDisplayItem);
 
                             // For customized, still provide input fields for future use
@@ -3097,7 +3084,7 @@
          * @param {HTMLElement} awayGridOrList - The grid/list element for away FDR (Admin: grid, Control Room: table).
          * @param {HTMLElement} overallSection - The section container for overall FDR.
          * @param {HTMLElement} homeSection - The section container for home FDR.
-         * @param {HTMLElement} awaySection - The section container for away FDR.
+         * @param {HTMLElement} HTMLElement - The section container for away FDR.
          * @param {HTMLElement} displayContainer - The main display container for rankings (e.g., currentRankingsDisplayAdmin or myControlRoomFDRDisplay).
          * @param {string | null} selectedFdrSystem - The currently selected FDR system ('overall', 'homeAway', 'customized') for Control Room, or null for Admin.
          */
@@ -3229,7 +3216,7 @@
                 messageBox.textContent = 'FDR data loaded.';
             } else {
                 messageBox.className = 'message-box info';
-                messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data, team mappings, and schedule are uploaded via Admin Dashboard.';
+                messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard, and API data is fetched.';
             }
         }
 
