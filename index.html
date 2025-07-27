@@ -750,6 +750,10 @@
                 border-radius: 8px;
                 overflow: hidden;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                width: 100%; /* Ensure it takes full width of its container */
+                max-width: 700px; /* Limit max width for readability */
+                margin-left: auto;
+                margin-right: auto;
             }
             .fdr-level {
                 padding: 8px 12px;
@@ -1098,7 +1102,7 @@
             }
 
             #fdrSystemsContainer {
-                display: none; /* Hidden by default, shown when #showFDRButton is clicked */
+                display: none; /* Hidden by default, shown when FDR button is clicked */
                 flex-direction: column;
                 align-items: center;
                 gap: 20px;
@@ -1108,7 +1112,7 @@
                 background-color: var(--spl-container-bg);
                 box-shadow: 0 4px 8px var(--spl-shadow);
                 width: 100%;
-                max-width: 600px;
+                max-width: 1200px; /* Increased max-width to accommodate schedule table */
                 box-sizing: border-box;
                 margin-left: auto;
                 margin-right: auto;
@@ -1232,12 +1236,10 @@
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
-                margin-top: 20px;
+                margin-top: 20px; /* Adjusted margin */
                 padding: 15px;
-                border: 1px solid var(--spl-border-light);
+                /* Removed border, box-shadow, background-color for minimal design */
                 border-radius: 8px;
-                background-color: var(--spl-container-bg);
-                box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
                 max-width: 400px;
                 margin-left: auto;
                 margin-right: auto;
@@ -1278,17 +1280,17 @@
                 align-items: center;
                 gap: 10px;
             }
-            .tuning-option input[type="checkbox"] {
+            /* Removed styling for checkboxes as they are removed */
+            /* .tuning-option input[type="checkbox"] {
                 transform: scale(1.2);
                 accent-color: var(--spl-primary-accent);
-            }
+            } */
             .tuning-value {
                 font-weight: bold;
                 color: var(--spl-primary-accent);
             }
             body.dark-mode .tuning-section {
-                border-color: rgba(255,255,255,0.1);
-                box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
+                /* Removed border-color, box-shadow for minimal design */
             }
             body.dark-mode .tuning-section label {
                 color: var(--spl-text-dark);
@@ -1426,37 +1428,33 @@
                             <button id="saveFDRSystemButton">Save as My FDR System</button>
                         </div>
 
+                        <!-- Moved FDR Scale here to be global for My Control Room FDR displays -->
+                        <!-- Difficulty Scale: Moved to just under the FDR button -->
+                        <h5 class="fdr-section-title" style="margin-top: 0;">Fixture Difficulty Scale</h5>
+                        <div class="fdr-scale">
+                            <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
+                            <div class="fdr-level fdr-2">2</div>
+                            <div class="fdr-level fdr-3">3</div>
+                            <div class="fdr-level fdr-4">4</div>
+                            <div class="fdr-level fdr-5">5</div>
+                            <div class="fdr-level fdr-6">6</div>
+                            <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
+                        </div>
+
+                        <!-- Tuning Section (minimal design, no header, only rounds slider) -->
+                        <div class="tuning-section">
+                            <div class="tuning-option">
+                                <label for="roundsToShow">Rounds: <span id="roundsToShowValue">5</span></label>
+                                <input type="range" id="roundsToShow" min="3" max="10" value="5">
+                            </div>
+                            <!-- Removed Show Colors and Show Team Ratings checkboxes -->
+                        </div>
+
                         <!-- FDR Display for My Control Room (dynamically shown based on selection) -->
                         <div id="myControlRoomFDRDisplay">
-                            <!-- Tuning Section -->
-                            <div class="tuning-section">
-                                <h4 class="fdr-section-title" style="margin-top: 0;">Tuning Options</h4>
-                                <div class="tuning-option">
-                                    <label for="roundsToShow">Rounds to Show: <span id="roundsToShowValue">5</span></label>
-                                    <input type="range" id="roundsToShow" min="3" max="10" value="5">
-                                </div>
-                                <div class="tuning-option">
-                                    <input type="checkbox" id="showColorsToggle" checked>
-                                    <label for="showColorsToggle">Show Colors</label>
-                                </div>
-                                <div class="tuning-option">
-                                    <input type="checkbox" id="showTeamRatingsToggle" checked>
-                                    <label for="showTeamRatingsToggle">Show Team Ratings</label>
-                                </div>
-                            </div>
-
                             <!-- Overall FDR Display Section for Control Room -->
                             <div id="overallFDRSectionControlRoom" style="display: none;">
-                                <h5 class="fdr-section-title">Overall Fixture Difficulty</h5>
-                                <div class="fdr-scale">
-                                    <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                                    <div class="fdr-level fdr-2">2</div>
-                                    <div class="fdr-level fdr-3">3</div>
-                                    <div class="fdr-level fdr-4">4</div>
-                                    <div class="fdr-level fdr-5">5</div>
-                                    <div class="fdr-level fdr-6">6</div>
-                                    <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
-                                </div>
+                                <h5 class="fdr-section-title">Overall Fixture Difficulty Schedule</h5>
                                 <div class="schedule-table-container">
                                     <table class="schedule-table" id="overallScheduleTable">
                                         <thead>
@@ -1474,15 +1472,7 @@
 
                             <!-- Home/Away FDR Display Section for Control Room -->
                             <div id="homeAwayFDRSectionControlRoom" style="display: none;">
-                                <h5 class="fdr-section-title">Home/Away Fixture Difficulty</h5>
-                                <div class="fdr-scale">
-                                    <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                                    <div class="fdr-level fdr-2">2</div>
-                                    <div class="fdr-level fdr-3">3</div>
-                                    <div class="fdr-level fdr-4">4</div>
-                                    <div class="fdr-level fdr-5">5</div>
-                                    <div class="fdr-level fdr-6">6<span>Very Hard</span></div>
-                                </div>
+                                <h5 class="fdr-section-title">Home/Away Fixture Difficulty Schedule</h5>
                                 <div class="schedule-table-container">
                                     <table class="schedule-table" id="homeAwayScheduleTable">
                                         <thead>
@@ -1500,16 +1490,7 @@
 
                             <!-- Customized FDR Display Section for Control Room -->
                             <div id="customizedFDRSectionControlRoom" style="display: none;">
-                                <h5 class="fdr-section-title">Customized Fixture Difficulty</h5>
-                                <div class="fdr-scale">
-                                    <div class="fdr-level fdr-1">1<span>Very Easy</span></div>
-                                    <div class="fdr-level fdr-2">2</div>
-                                    <div class="fdr-level fdr-3">3</div>
-                                    <div class="fdr-level fdr-4">4</div>
-                                    <div class="fdr-level fdr-5">5</div>
-                                    <div class="fdr-level fdr-6">6</div>
-                                    <div class="fdr-level fdr-7">7<span>Very Hard</span></div>
-                                </div>
+                                <h5 class="fdr-section-title">Customized Fixture Difficulty Schedule</h5>
                                 <div class="schedule-table-container">
                                     <table class="schedule-table" id="customizedScheduleTable">
                                         <thead>
@@ -1718,7 +1699,7 @@
 
 
             // Tuning settings
-            let roundsToShow = 5;
+            let roundsToShow = 5; // Default to 5 rounds
             // The following flags are now ignored for schedule rendering, but kept for future use
             let showColors = true; 
             let showTeamRatings = true;
@@ -1821,8 +1802,9 @@
             // Tuning elements
             const roundsToShowSlider = document.getElementById('roundsToShow');
             const roundsToShowValueSpan = document.getElementById('roundsToShowValue');
-            const showColorsToggle = document.getElementById('showColorsToggle');
-            const showTeamRatingsToggle = document.getElementById('showTeamRatingsToggle');
+            // Removed Show Colors and Show Team Ratings toggles from JS as well
+            // const showColorsToggle = document.getElementById('showColorsToggle');
+            // const showTeamRatingsToggle = document.getElementById('showTeamRatingsToggle');
 
             // Schedule tables for My Control Room
             const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom');
@@ -2359,7 +2341,8 @@
                     if (showFDRButton) showFDRButton.style.display = 'block'; // Show the main FDR button
                     // Ensure FDR systems container is hidden until FDR button is clicked
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
-                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; 
+                    // myControlRoomFDRDisplay is now the parent of the sections that contain schedules, so it should be visible
+                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block'; 
                     if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; 
                 } else if (sectionId === 'adminDashboard') {
                     if (isAdminUser) { 
@@ -2571,13 +2554,13 @@
                     if (Object.keys(globalTeamData.byId).length > 0) {
                         showApiTeamNamesStatus(`Team Names (from API) fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
                     } else {
-                        showApiTeamNamesStatus("Team Names (from API) could not be fetched. Check API connection and Netlify environment variables.", "error");
+                        showApiTeamNamesStatus("Team Names (from API) could not be fetched or data is empty. Check API connection and Netlify environment variables.", "error");
                     }
 
                     if (Object.keys(globalSeasonSchedule.fixtures).length > 0 && globalSeasonSchedule.rounds.length > 0) {
                         showApiScheduleStatus(`Season Schedule (from API) fetched successfully. Found ${globalSeasonSchedule.rounds.length} rounds.`, "success");
                     } else {
-                        showApiScheduleStatus("Season Schedule (from API) could not be fetched. Check API connection and Netlify environment variables.", "error");
+                        showApiScheduleStatus("Season Schedule (from API) could not be fetched or data is empty. Check API connection and Netlify environment variables.", "error");
                     }
 
                     // Re-render rankings for Admin Dashboard
@@ -2706,7 +2689,7 @@
                                         fdrValue1 >=1 && fdrValue1 <= 6) { 
                                         if (selectedRankingType === 'home') {
                                             parsedRankings.push({ rank, team, fdrAway: fdrValue1 }); 
-                                        } else if (selectedRankingType === 'away') {
+                                        } else { // selectedRankingType === 'away'
                                             parsedRankings.push({ rank, team, fdrHome: fdrValue1 }); 
                                         }
                                         isValid = true;
@@ -2792,7 +2775,7 @@
                     // --- Fetch Schedule Data from API (fixtures) via Netlify Proxy ---
                     showApiScheduleStatus("Fetching season schedule from API...", "info");
                     globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} }; // Reset
-                    const maxRound = 34; // Assuming 34 rounds based on previous data
+                    const maxRound = 34; // Total rounds in SPL
 
                     // Fetch all rounds concurrently via the proxy
                     const fixtureFetchPromises = [];
@@ -3026,7 +3009,7 @@
                             fixturesInRound.forEach((fixtureString, index) => {
                                 // The fixture string is now expected to be "Short Code 🏠" or "Short Code ✈️"
                                 const match = fixtureString.match(/(.+) (🏠|✈️)/);
-                                console.log(`DEBUG_RENDER: Rendering Regex match result for fixture string '${fixtureString}' for ${teamFullName} in ${round}:`, match);
+                                console.log(`DEBUG_RENDER: Regex match result for fixture string '${fixtureString}' for ${teamFullName} in ${round}:`, match);
 
                                 let opponentShortCode = null;
                                 let homeAwayEmoji = null; 
@@ -3367,27 +3350,28 @@
                 });
             }
 
-            if (showColorsToggle) {
-                showColorsToggle.addEventListener('change', (e) => {
-                    showColors = e.target.checked;
-                    // Re-render the currently active FDR system
-                    const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-                    if (selectedSystem) {
-                        displaySelectedFDRSystem(selectedSystem);
-                    }
-                });
-            }
+            // Removed event listeners for showColorsToggle and showTeamRatingsToggle as elements are removed
+            // if (showColorsToggle) {
+            //     showColorsToggle.addEventListener('change', (e) => {
+            //         showColors = e.target.checked;
+            //         // Re-render the currently active FDR system
+            //         const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
+            //         if (selectedSystem) {
+            //             displaySelectedFDRSystem(selectedSystem);
+            //         }
+            //     });
+            // }
 
-            if (showTeamRatingsToggle) {
-                showTeamRatingsToggle.addEventListener('change', (e) => {
-                    showTeamRatings = e.target.checked;
-                    // Re-render the currently active FDR system
-                    const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-                    if (selectedSystem) {
-                        displaySelectedFDRSystem(selectedSystem);
-                    }
-                });
-            }
+            // if (showTeamRatingsToggle) {
+            //     showTeamRatingsToggle.addEventListener('change', (e) => {
+            //         showTeamRatings = e.target.checked;
+            //         // Re-render the currently active FDR system
+            //         const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
+            //         if (selectedSystem) {
+            //             displaySelectedFDRSystem(selectedSystem);
+            //         }
+            //     });
+            // }
 
 
             // --- Initial Load & Theme & Event Listeners ---
@@ -3470,4 +3454,3 @@
         </script>
     </body>
     </html>
-    
