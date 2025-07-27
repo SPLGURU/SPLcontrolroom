@@ -2065,8 +2065,6 @@
                             friendlyMessage = "Please enter a valid email address.";
                         } else if (error.code === 'auth/weak-password') {
                             friendlyMessage = "Password is too weak.";
-                        } else if (error.code === 'auth/network-request-failed') {
-                            friendlyMessage = "Network error. Please check your internet connection.";
                         } else {
                             friendlyMessage = `Failed to create account: ${error.message}`; 
                         }
@@ -2811,7 +2809,6 @@
                                 // IMPORTANT FIX: Only process fixture if its 'event' matches the current 'round'
                                 // This prevents fixtures from other rounds being incorrectly aggregated.
                                 if (fixture.event === round) {
-                                    console.log("DEBUG_FETCH_FIXTURE: Processing fixture:", fixture); 
                                     const homeTeamId = fixture.team_h;
                                     const awayTeamId = fixture.team_a;
                                     const homeTeamFullName = globalTeamData.byId[homeTeamId]?.name;
@@ -2820,7 +2817,6 @@
                                     const awayTeamShortName = globalTeamData.byId[awayTeamId]?.short_name; 
 
                                     if (homeTeamFullName && awayTeamFullName && homeTeamShortName && awayTeamShortName) {
-                                        console.log(`DEBUG_FETCH_FIXTURE: Adding fixture for Round ${round}: ${homeTeamFullName} vs ${awayTeamFullName}`); 
                                         allTeamNamesInSchedule.add(homeTeamFullName);
                                         allTeamNamesInSchedule.add(awayTeamFullName);
 
@@ -2828,13 +2824,11 @@
                                         if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
                                         if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
                                         processedFixtures[homeTeamFullName][roundName].push(`${awayTeamShortName} 🏠`); 
-                                        console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for home team ${homeTeamFullName} in ${roundName}: ${awayTeamShortName} 🏠`); 
 
                                         // Initialize the team's round array if it doesn't exist
                                         if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
                                         if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
                                         processedFixtures[awayTeamFullName][roundName].push(`${homeTeamShortName} ✈️`); 
-                                        console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for away team ${awayTeamFullName} in ${roundName}: ${homeTeamShortName} ✈️`); 
                                     } else {
                                         console.warn(`WARNING_FETCH: Skipping fixture in round ${round} due to missing team data: Home ID ${homeTeamId} (${homeTeamFullName}), Away ID ${awayTeamId} (${awayTeamFullName}). Raw fixture:`, fixture); 
                                     }
@@ -2910,7 +2904,6 @@
              * @returns {number | string} The FDR value or 'N/A' if not found.
              */
             function getFDRValue(teamFullName, opponentFullName, isHomeGame, fdrType) {
-                console.log(`DEBUG_FDR_CALC: getFDRValue for Team: ${teamFullName}, Opponent: ${opponentFullName}, HomeGame: ${isHomeGame}, FDR Type: ${fdrType}`);
                 let fdrValue = 'N/A';
 
                 // Ensure rankings data is available
@@ -2924,17 +2917,12 @@
                 const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
                 const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
 
-                console.log(`DEBUG_FDR_CALC: Opponent Overall Data for ${opponentFullName}:`, opponentOverallData);
-                console.log(`DEBUG_FDR_CALC: Opponent Home Data for ${opponentFullName}:`, opponentHomeData);
-                console.log(`DEBUG_FDR_CALC: Opponent Away Data for ${opponentFullName}:`, opponentAwayData);
-
 
                 if (fdrType === 'overall') {
                     if (opponentOverallData) {
                         // For overall FDR, we look at the opponent's home FDR if we are away, and opponent's away FDR if we are home.
                         // This represents the difficulty *they* pose to us in that specific venue.
                         fdrValue = isHomeGame ? opponentOverallData.fdrAway : opponentOverallData.fdrHome; 
-                        console.log(`DEBUG_FDR_CALC: Overall FDR calculated: ${fdrValue}`);
                     } else {
                         console.warn(`WARNING_FDR_CALC: Opponent overall data not found for ${opponentFullName}.`);
                     }
@@ -2942,14 +2930,12 @@
                     if (isHomeGame) { // If our team is home, we look at the opponent's AWAY rating (difficulty for THEM when THEY are away)
                         if (opponentAwayData) { 
                             fdrValue = opponentAwayData.fdrAway;
-                            console.log(`DEBUG_FDR_CALC: Home/Away (Home game) FDR calculated: ${fdrValue}`);
                         } else {
                             console.warn(`WARNING_FDR_CALC: Opponent away data not found for ${opponentFullName}.`);
                         }
                     } else { // If our team is away, we look at the opponent's HOME rating (difficulty for THEM when THEY are home)
                         if (opponentHomeData) { 
                             fdrValue = opponentHomeData.fdrHome;
-                            console.log(`DEBUG_FDR_CALC: Home/Away (Away game) FDR calculated: ${fdrValue}`);
                         } else {
                             console.warn(`WARNING_FDR_CALC: Opponent home data not found for ${opponentFullName}.`);
                         }
@@ -2992,7 +2978,6 @@
                 headerRow.appendChild(teamHeader);
 
                 roundsToRender.forEach(round => {
-                    console.log(`DEBUG_RENDER: Creating header for round: ${round}`);
                     const th = document.createElement('th');
                     th.textContent = round;
                     headerRow.appendChild(th);
@@ -3003,17 +2988,7 @@
                 // Create table body (Teams and their fixtures)
                 const tbody = document.createElement('tbody');
                 teamsToDisplay.forEach(teamFullName => {
-                    // DEBUG: Log the full teamFixtures object for the current team
                     const teamFixtures = globalSeasonSchedule.fixtures[teamFullName];
-                    console.log(`DEBUG_RENDER_TEAM_FIXTURES: Team: ${teamFullName}, Full Fixtures Object:`, teamFixtures);
-
-                    // If a team has no fixtures at all, or no fixtures for the rounds being rendered,
-                    // we should still render its row, but with empty cells for rounds.
-                    // The `fetchGlobalFDRData` now ensures an empty array for blank rounds.
-                    if (!teamFixtures) {
-                        console.warn(`WARNING_RENDER: No fixtures object found for team: ${teamFullName}. Creating empty row.`);
-                        // Continue to create an empty row for this team
-                    }
 
                     const row = document.createElement('tr');
                     const teamCell = document.createElement('td');
@@ -3021,35 +2996,30 @@
                     row.appendChild(teamCell);
 
                     roundsToRender.forEach(round => {
-                        console.log(`DEBUG_RENDER_ROUND_CELL: Processing round ${round} for team ${teamFullName}`);
                         const fixtureCell = document.createElement('td');
-                        fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures in a double round
+                        fixtureCell.className = 'fixture-cell'; 
 
-                        // DEBUG: Log the exact array retrieved for this specific round
-                        const fixturesInRound = teamFixtures?.[round] || []; 
-                        console.log(`DEBUG_RENDER_FIXTURES_IN_ROUND: For ${teamFullName} in ${round}, fixturesInRound:`, fixturesInRound);
+                        // IMPORTANT FIX: Make a deep copy of the fixtures array for this specific cell
+                        // This helps rule out any subtle reference issues where data might be shared or mutated unintentionally.
+                        const fixturesForThisSpecificRound = JSON.parse(JSON.stringify(teamFixtures?.[round] || [])); 
+                        
+                        if (fixturesForThisSpecificRound.length > 0) {
+                            fixturesForThisSpecificRound.forEach((fixtureString, index) => {
+                                const fixtureDisplayItem = document.createElement('div');
+                                fixtureDisplayItem.className = `fixture-item-display`; 
 
-                        if (fixturesInRound.length > 0) {
-                            fixturesInRound.forEach((fixtureString, index) => {
-                                // The fixture string is now expected to be "Short Code 🏠" or "Short Code ✈️"
-                                // Modified regex to be more lenient if emoji is missing
-                                const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/); // Make emoji optional and non-greedy for the team name
-                                console.log(`DEBUG_RENDER_REGEX_MATCH: Regex match result for fixture string '${fixtureString}' for ${teamFullName} in ${round}:`, match);
-
-                                let opponentShortCode = fixtureString; // Default to full string
+                                const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/); 
+                                let opponentShortCode = fixtureString; 
                                 let homeAwayEmoji = ''; 
 
-                                if (match && match[1]) { // If there's a match and the first capturing group exists
+                                if (match && match[1]) { 
                                     opponentShortCode = match[1].trim();
-                                    homeAwayEmoji = match[2] || ''; // Capture emoji or empty string if not found
+                                    homeAwayEmoji = match[2] || ''; 
                                 } else {
                                      console.warn(`WARNING_RENDER: Fixture string '${fixtureString}' for team '${teamFullName}' in round '${round}' was not in expected "Short Code 🏠/✈️" format. Displaying as raw. Match result:`, match);
                                 }
                                 
-                                const fixtureDisplayItem = document.createElement('div');
-                                fixtureDisplayItem.className = `fixture-item-display`; 
-                                // Removed fdr-${fdrValue} class from here as per user's request for no colors in schedule cells
-                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`; // Display short code + emoji (if present)
+                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`; 
                                 fixtureCell.appendChild(fixtureDisplayItem);
 
                                 // For customized, still provide input fields for future use
@@ -3059,7 +3029,7 @@
                                     inputElement.type = 'number';
                                     inputElement.min = '1';
                                     inputElement.max = '7';
-                                    inputElement.value = customRatings[fixtureKey] || ''; // Pre-fill if saved
+                                    inputElement.value = customRatings[fixtureKey] || ''; 
                                     inputElement.dataset.fixtureId = fixtureKey;
                                     inputElement.oninput = function() {
                                         this.value = Math.max(1, Math.min(7, parseInt(this.value) || ''));
@@ -3068,9 +3038,7 @@
                                 }
                             });
                         } else {
-                            // For blank rounds, the cell remains empty (or shows a placeholder like '-')
-                            console.log(`DEBUG_RENDER: Cell for ${teamFullName}, ${round} is empty (no fixturesInRound).`);
-                            fixtureCell.textContent = ''; // Ensure blank cells are explicitly empty
+                            fixtureCell.textContent = ''; 
                         }
                         row.appendChild(fixtureCell);
                     });
