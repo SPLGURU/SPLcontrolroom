@@ -2824,13 +2824,13 @@
                                         allTeamNamesInSchedule.add(homeTeamFullName);
                                         allTeamNamesInSchedule.add(awayTeamFullName);
 
-                                        // Add fixture for home team (using opponent's short name and home emoji)
+                                        // Initialize the team's round array if it doesn't exist
                                         if (!processedFixtures[homeTeamFullName]) processedFixtures[homeTeamFullName] = {};
                                         if (!processedFixtures[homeTeamFullName][roundName]) processedFixtures[homeTeamFullName][roundName] = [];
                                         processedFixtures[homeTeamFullName][roundName].push(`${awayTeamShortName} 🏠`); 
                                         console.log(`DEBUG_FETCH_FIXTURE_PUSH: Pushed for home team ${homeTeamFullName} in ${roundName}: ${awayTeamShortName} 🏠`); 
 
-                                        // Add fixture for away team (using opponent's short name and away emoji)
+                                        // Initialize the team's round array if it doesn't exist
                                         if (!processedFixtures[awayTeamFullName]) processedFixtures[awayTeamFullName] = {};
                                         if (!processedFixtures[awayTeamFullName][roundName]) processedFixtures[awayTeamFullName][roundName] = [];
                                         processedFixtures[awayTeamFullName][roundName].push(`${homeTeamShortName} ✈️`); 
@@ -2844,11 +2844,11 @@
                             });
                         } else if (!error) {
                             console.log(`DEBUG_FETCH: No fixture data for round ${round}. This might be a blank round.`);
-                            // Explicitly ensure an empty array for teams in blank rounds
-                            // This ensures the table cells for blank rounds are empty, not just missing
-                            const allTeams = Object.values(globalTeamData.byFullName).map(team => team.name);
+                            // Ensure all teams have an empty array for this round if it's blank, so the table renders correctly.
+                            // This is important for teams that have a blank round, but might have fixtures in other rounds.
+                            const allKnownTeams = Object.values(globalTeamData.byFullName).map(team => team.name);
                             const roundName = `R${round}`;
-                            allTeams.forEach(teamFullName => {
+                            allKnownTeams.forEach(teamFullName => {
                                 if (!processedFixtures[teamFullName]) processedFixtures[teamFullName] = {};
                                 if (!processedFixtures[teamFullName][roundName]) {
                                     processedFixtures[teamFullName][roundName] = []; // Ensure empty array for blank rounds
@@ -3003,8 +3003,9 @@
                 // Create table body (Teams and their fixtures)
                 const tbody = document.createElement('tbody');
                 teamsToDisplay.forEach(teamFullName => {
+                    // DEBUG: Log the full teamFixtures object for the current team
                     const teamFixtures = globalSeasonSchedule.fixtures[teamFullName];
-                    console.log(`DEBUG_RENDER: Processing team: ${teamFullName}. Team fixtures object:`, teamFixtures);
+                    console.log(`DEBUG_RENDER_TEAM_FIXTURES: Team: ${teamFullName}, Full Fixtures Object:`, teamFixtures);
 
                     // If a team has no fixtures at all, or no fixtures for the rounds being rendered,
                     // we should still render its row, but with empty cells for rounds.
@@ -3020,20 +3021,20 @@
                     row.appendChild(teamCell);
 
                     roundsToRender.forEach(round => {
-                        console.log(`DEBUG_RENDER: Processing round ${round} for team ${teamFullName}`);
+                        console.log(`DEBUG_RENDER_ROUND_CELL: Processing round ${round} for team ${teamFullName}`);
                         const fixtureCell = document.createElement('td');
                         fixtureCell.className = 'fixture-cell'; // Container for multiple fixtures in a double round
 
-                        // Get fixtures for the current team and round. Ensure it's an array, even if empty.
+                        // DEBUG: Log the exact array retrieved for this specific round
                         const fixturesInRound = teamFixtures?.[round] || []; 
-                        console.log(`DEBUG_RENDER: Fixtures for ${teamFullName} in ${round} (from globalSeasonSchedule.fixtures):`, fixturesInRound);
+                        console.log(`DEBUG_RENDER_FIXTURES_IN_ROUND: For ${teamFullName} in ${round}, fixturesInRound:`, fixturesInRound);
 
                         if (fixturesInRound.length > 0) {
                             fixturesInRound.forEach((fixtureString, index) => {
                                 // The fixture string is now expected to be "Short Code 🏠" or "Short Code ✈️"
                                 // Modified regex to be more lenient if emoji is missing
                                 const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/); // Make emoji optional and non-greedy for the team name
-                                console.log(`DEBUG_RENDER: Regex match result for fixture string '${fixtureString}' for ${teamFullName} in ${round}:`, match);
+                                console.log(`DEBUG_RENDER_REGEX_MATCH: Regex match result for fixture string '${fixtureString}' for ${teamFullName} in ${round}:`, match);
 
                                 let opponentShortCode = fixtureString; // Default to full string
                                 let homeAwayEmoji = ''; 
