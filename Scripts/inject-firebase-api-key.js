@@ -1,32 +1,23 @@
-// scripts/inject-firebase-api-key.js
 const fs = require('fs');
 const path = require('path');
 
-// Define the path to your index.html file relative to this script
-const filePath = path.join(__dirname, '..', 'index.html');
-// Define the placeholder string in index.html
-const placeholder = '___FIREBASE_API_KEY_PLACEHOLDER___';
+// Define the path to your index.html file
+const indexPath = path.resolve(__dirname, '../index.html');
 
-try {
-    let content = fs.readFileSync(filePath, 'utf8');
+// Read the content of index.html
+let htmlContent = fs.readFileSync(indexPath, 'utf8');
 
-    // Get the API key from Netlify's environment variable
-    const apiKey = process.env.FIREBASE_API_KEY;
+// Get environment variables from Netlify build environment
+const firebaseApiKey = process.env.FIREBASE_API_KEY || 'YOUR_FIREBASE_API_KEY_HERE_IF_LOCAL'; // Fallback for local testing
+const bootstrapStaticApiUrl = process.env.BOOTSTRAP_STATIC_API_URL_PLACEHOLDER || 'https://en.fantasy.spl.com.sa/api/bootstrap-static/'; // Fallback for local testing
+const fixturesApiBaseUrl = process.env.FIXTURES_API_BASE_URL_PLACEHOLDER || 'https://en.fantasy.spl.com.sa/api/fixtures/?event='; // Fallback for local testing
 
-    if (!apiKey) {
-        console.error('ERROR: FIREBASE_API_KEY environment variable is NOT set in Netlify. Please set it in Site settings -> Build & deploy -> Environment variables.');
-        process.exit(1); // Exit with an error code to fail the build
-    }
+// Replace the placeholders in the HTML content
+htmlContent = htmlContent.replace('___FIREBASE_API_KEY_PLACEHOLDER___', firebaseApiKey);
+htmlContent = htmlContent.replace('___BOOTSTRAP_STATIC_API_URL_PLACEHOLDER___', bootstrapStaticApiUrl);
+htmlContent = htmlContent.replace('___FIXTURES_API_BASE_URL_PLACEHOLDER___', fixturesApiBaseUrl);
 
-    // Replace the placeholder with the actual API key
-    content = content.replace(placeholder, apiKey);
+// Write the modified content back to index.html
+fs.writeFileSync(indexPath, htmlContent, 'utf8');
 
-    // Write the modified content back to index.html
-    fs.writeFileSync(filePath, content, 'utf8');
-
-    console.log('SUCCESS: Firebase API key securely injected into index.html from Netlify environment variable.');
-
-} catch (error) {
-    console.error('ERROR: Failed to inject Firebase API key during Netlify build:', error);
-    process.exit(1); // Exit with an error code to fail the build
-}
+console.log('Environment variables injected into index.html successfully!');
