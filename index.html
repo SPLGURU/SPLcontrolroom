@@ -1124,7 +1124,7 @@
 
 
             /* Styling for the main FDR button in My Control Room */
-            #showFDRButton {
+            #showFDRButton, #showCustomRatingsGridButton { /* Added new button */
                 display: block;
                 margin: 20px auto; /* Center the button */
                 background-color: var(--spl-primary-accent);
@@ -1138,15 +1138,15 @@
                 box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
                 max-width: fit-content; /* Adjust width to content */
             }
-            #showFDRButton:hover {
+            #showFDRButton:hover, #showCustomRatingsGridButton:hover { /* Added new button */
                 background-color: #0056b3;
                 transform: translateY(-2px);
                 box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
             }
-            body.dark-mode #showFDRButton {
+            body.dark-mode #showFDRButton, body.dark-mode #showCustomRatingsGridButton { /* Added new button */
                 background-color: #007bff;
             }
-            body.dark-mode #showFDRButton:hover {
+            body.dark-mode #showFDRButton:hover, body.dark-mode #showCustomRatingsGridButton:hover { /* Added new button */
                 background-color: #0056b3;
             }
 
@@ -1552,6 +1552,11 @@
                             <!-- Removed Show Colors and Show Team Ratings checkboxes -->
                         </div>
 
+                        <!-- NEW: Customize Ratings Button (for Customized FDR only) -->
+                        <button id="showCustomRatingsGridButton" style="display: none;">Customize Ratings</button>
+                        <!-- NEW: Message box for custom ratings validation -->
+                        <p id="customRatingsMessageBox" class="message-box" style="display: none;"></p>
+
                         <!-- FDR Display for My Control Room (dynamically shown based on selection, now contains the schedule tables) -->
                         <div id="myControlRoomFDRDisplay" style="display: none;"> <!-- Initially hidden -->
                             <!-- Overall FDR Display Section for Control Room -->
@@ -1583,7 +1588,7 @@
                                         <!-- Custom ratings input grid will be dynamically inserted here -->
                                     </div>
                                 </div>
-                                <button id="saveCustomFDRButton" class="mt-4">Save Custom Ratings</button>
+                                <button id="saveCustomFDRButton" class="mt-4" style="display: none;">Save Custom Ratings</button>
                                 <!-- The schedule grid will still be here, colored by the custom ratings -->
                                 <div class="schedule-grid-container">
                                     <div class="schedule-grid" id="customizedScheduleGrid">
@@ -1893,6 +1898,10 @@
             // NEW: Custom Ratings Input Grid elements
             const customRatingsInputGridContainer = document.getElementById('customRatingsInputGridContainer');
             const customRatingsGrid = document.getElementById('customRatingsGrid');
+            // NEW: Customize Ratings Button
+            const showCustomRatingsGridButton = document.getElementById('showCustomRatingsGridButton');
+            // NEW: Message box for custom ratings validation
+            const customRatingsMessageBox = document.getElementById('customRatingsMessageBox');
 
 
             // --- Helper Functions ---
@@ -1981,6 +1990,19 @@
                 }
             }
 
+            // NEW: Function to display messages specific to Custom Ratings
+            function showCustomRatingsMessage(message, type = 'info') {
+                if (customRatingsMessageBox) {
+                    customRatingsMessageBox.textContent = '';
+                    customRatingsMessageBox.className = `message-box ${type}`;
+                    customRatingsMessageBox.textContent = message;
+                    customRatingsMessageBox.style.display = 'block';
+                } else {
+                    console.warn("Custom Ratings message box element not found.");
+                }
+            }
+
+
             function hideAllContentSections() {
                 if (initialLoggedInDashboardContent) initialLoggedInDashboardContent.style.display = 'none'; 
                 if (analyzerReportContent) analyzerReportContent.style.display = 'none';
@@ -2013,7 +2035,10 @@
                 if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none'; 
                 if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none'; 
                 if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none';
-                if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none'; // Hide new custom ratings input grid
+                if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none'; // Hide custom ratings input grid
+                if (saveCustomFDRButton) saveCustomFDRButton.style.display = 'none'; // Hide save custom ratings button
+                if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; // Hide customize ratings button
+                if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; // Hide custom ratings message box
             }
 
             // Function to clear admin search results and input fields
@@ -3224,6 +3249,12 @@
                     const homeSelect = document.createElement('select');
                     homeSelect.dataset.teamFullName = teamFullName;
                     homeSelect.dataset.homeAway = 'Home';
+                    // Add an empty option as a placeholder for validation
+                    const emptyOptionHome = document.createElement('option');
+                    emptyOptionHome.value = '';
+                    emptyOptionHome.textContent = '-'; // Placeholder text
+                    homeSelect.appendChild(emptyOptionHome);
+
                     for (let i = 1; i <= 7; i++) {
                         const option = document.createElement('option');
                         option.value = i;
@@ -3241,6 +3272,12 @@
                     const awaySelect = document.createElement('select');
                     awaySelect.dataset.teamFullName = teamFullName;
                     awaySelect.dataset.homeAway = 'Away';
+                    // Add an empty option as a placeholder for validation
+                    const emptyOptionAway = document.createElement('option');
+                    emptyOptionAway.value = '';
+                    emptyOptionAway.textContent = '-'; // Placeholder text
+                    awaySelect.appendChild(emptyOptionAway);
+                    
                     for (let i = 1; i <= 7; i++) {
                         const option = document.createElement('option');
                         option.value = i;
@@ -3386,8 +3423,11 @@
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
-                    // Hide the custom ratings input grid by default
-                    if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none';
+                    // Hide the custom ratings input grid and save button by default
+                    if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none'; 
+                    if (saveCustomFDRButton) saveCustomFDRButton.style.display = 'none'; 
+                    if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; // Hide the new button initially
+                    if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; // Hide custom ratings message box
 
 
                     // myControlRoomFDRDisplay is the parent of the schedule grids, it should be visible when an FDR system is selected
@@ -3418,16 +3458,19 @@
                                 console.log("DEBUG_CUSTOM_FDR: No custom ratings found for user. Starting with empty ratings.");
                             }
                         }
-                        // Render the 36-rating input grid
-                        if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'block';
-                        renderCustomRatingsInputGrid(customRatingsGrid, globalSeasonSchedule.teams, userCustomFDRRatings);
-
                         // Render the schedule grid with the loaded/empty custom ratings
                         renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
                         renderFDRScale(fdrScaleDisplay, 7); // Customized is 1-7
                         // showControlRoomMessage("Displaying Customized FDR Schedule. You can edit ratings.", "info");
+                        
+                        // Show the "Customize Ratings" button
+                        if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block';
+                        // Hide the grid and save button until "Customize Ratings" is clicked
+                        if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none';
+                        if (saveCustomFDRButton) saveCustomFDRButton.style.display = 'none';
+                        if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; // Ensure message box is hidden
                     } else {
-                        console.warn(`WARNING: Unknown FDR system selected: ${selectedFdrSystem}`); // Keep this log for debugging
+                        console.warn(`WARNING: Unknown FDR system selected: ${selectedSystem}`); // Keep this log for debugging
                         showControlRoomMessage("Please select a valid FDR system.", "error");
                     }
                 }
@@ -3438,161 +3481,6 @@
                 } else {
                     messageBox.className = 'message-box info';
                     messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard, and API data is fetched.';
-                }
-            }
-
-            /**
-             * Fetches the user's preferred FDR system from Firestore and sets the radio button.
-             * Then, displays the corresponding FDR system.
-             */
-            async function loadAndSetPreferredFDRSystem() {
-                const user = auth.currentUser;
-                if (!user) {
-                    showControlRoomMessage("You must be logged in to view FDR systems.", "error");
-                    return;
-                }
-
-                try {
-                    const userDocRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(userDocRef);
-                    let preferredSystem = 'overall'; // Default if not found
-
-                    if (docSnap.exists() && docSnap.data().preferredFDRSystem) { 
-                        preferredSystem = docSnap.data().preferredFDRSystem; 
-                    }
-                    
-                    // Set the radio button based on preferredSystem
-                    const radioToSelect = document.querySelector(`input[name="fdrSystem"][value="${preferredSystem}"]`);
-                    if (radioToSelect) {
-                        radioToSelect.checked = true;
-                    } else {
-                        // Fallback to overall if saved preference is invalid or missing
-                        if (radioOverallFDR) radioOverallFDR.checked = true;
-                        preferredSystem = 'overall';
-                    }
-                    
-                    displaySelectedFDRSystem(preferredSystem); // Display the loaded/default system
-
-                } catch (error) {
-                    console.error("Error loading preferred FDR system:", error);
-                    showControlRoomMessage("Failed to load your preferred FDR system. Defaulting to Overall.", "error");
-                    // Fallback to overall if loading fails
-                    if (radioOverallFDR) radioOverallFDR.checked = true;
-                    displaySelectedFDRSystem('overall');
-                }
-            }
-
-            /**
-             * Saves the customized FDR ratings to the user's Firestore document.
-             */
-            if (saveCustomFDRButton) {
-                saveCustomFDRButton.addEventListener('click', async () => {
-                    const user = auth.currentUser;
-                    if (!user) {
-                        showControlRoomMessage("You must be logged in to save custom ratings.", "error");
-                        return;
-                    }
-
-                    const newCustomRatings = {};
-                    // Select inputs from the customRatingsGrid specifically
-                    const customInputs = customRatingsGrid.querySelectorAll('select'); // Changed to select
-                    let isValid = true;
-
-                    customInputs.forEach(select => { // Changed to select
-                        const teamFullName = select.dataset.teamFullName;
-                        const homeAway = select.dataset.homeAway; // 'Home' or 'Away'
-                        const value = parseInt(select.value, 10); // Changed to select.value
-
-                        if (isNaN(value) || value < 1 || value > 7) {
-                            isValid = false;
-                            showControlRoomMessage(`Invalid rating for ${teamFullName} (${homeAway}). Ratings must be between 1 and 7.`, "error");
-                            // Stop processing further inputs if one is invalid
-                            return; 
-                        }
-                        newCustomRatings[`${teamFullName}_${homeAway}`] = value;
-                    });
-
-                    if (!isValid) return; // Exit if any input was invalid
-
-                    try {
-                        const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
-                        await setDoc(customFDRDocRef, newCustomRatings); // Overwrite with new ratings
-                        userCustomFDRRatings = newCustomRatings; // Update global variable
-                        showControlRoomMessage("Custom FDR ratings saved successfully!", "success");
-                        // Re-render the schedule grid to reflect the newly saved ratings
-                        renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
-                    } catch (error) {
-                        console.error("Error saving custom FDR ratings:", error);
-                        showControlRoomMessage(`Failed to save custom ratings: ${error.message}`, "error");
-                    }
-                });
-            }
-
-            /**
-             * Central function to display the user's team FDR based on selected system.
-             * This will be called on Control Room load and radio button changes.
-             * @param {string | null} systemType - The system to display ('overall', 'homeAway', 'customized').
-             */
-            async function displaySelectedFDRSystem(systemType = null) {
-                let selectedSystem = systemType;
-                if (!selectedSystem) {
-                    // Ensure a default is set if no radio button is checked (e.g., first load)
-                    selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value || 'overall';
-                }
-
-                // Ensure the correct radio button is checked
-                const radioToSelect = document.querySelector(`input[name="fdrSystem"][value="${selectedSystem}"]`);
-                if (radioToSelect) {
-                    radioToSelect.checked = true;
-                }
-
-                // Hide all FDR sections for Control Room before rendering the selected one
-                if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
-                if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
-                if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
-                // Hide the custom ratings input grid by default
-                if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none';
-
-
-                // myControlRoomFDRDisplay is the parent of the schedule grids, it should be visible when an FDR system is selected
-                if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
-
-                if (selectedSystem === 'overall') { 
-                    if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
-                    renderScheduleGrid(overallScheduleGrid, globalSeasonSchedule, 'overall');
-                    renderFDRScale(fdrScaleDisplay, 7); // Overall is 1-7
-                    // showControlRoomMessage("Displaying Overall FDR Schedule.", "info");
-                } else if (selectedSystem === 'homeAway') { 
-                    if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
-                    renderScheduleGrid(homeAwayScheduleGrid, globalSeasonSchedule, 'homeAway');
-                    renderFDRScale(fdrScaleDisplay, 6); // Home/Away is 1-6
-                    // showControlRoomMessage("Displaying Home/Away FDR Schedule.", "info");
-                } else if (selectedSystem === 'customized') { 
-                    if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
-                    // Fetch custom ratings for the current user
-                    const user = auth.currentUser;
-                    userCustomFDRRatings = {}; // Reset global custom ratings
-                    if (user) {
-                        const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
-                        const customFDRDocSnap = await getDoc(customFDRDocRef);
-                        if (customFDRDocSnap.exists()) {
-                            userCustomFDRRatings = customFDRDocSnap.data();
-                            console.log("DEBUG_CUSTOM_FDR: Loaded user custom ratings:", userCustomFDRRatings);
-                        } else {
-                            console.log("DEBUG_CUSTOM_FDR: No custom ratings found for user. Starting with empty ratings.");
-                        }
-                    }
-                    // Render the 36-rating input grid
-                    if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'block';
-                    renderCustomRatingsInputGrid(customRatingsGrid, globalSeasonSchedule.teams, userCustomFDRRatings);
-
-                    // Render the schedule grid with the loaded/empty custom ratings
-                    renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
-                    renderFDRScale(fdrScaleDisplay, 7); // Customized is 1-7
-                    // showControlRoomMessage("Displaying Customized FDR Schedule. You can edit ratings.", "info");
-                } else {
-                    console.warn(`WARNING: Unknown FDR system selected: ${selectedSystem}`); // Keep this log for debugging
-                    showControlRoomMessage("Please select a valid FDR system.", "error");
                 }
             }
 
@@ -3611,30 +3499,62 @@
                 });
             }
 
+            // NEW: Event listener for the "Customize Ratings" button
+            if (showCustomRatingsGridButton) {
+                showCustomRatingsGridButton.addEventListener('click', () => {
+                    // Show the custom ratings input grid and save button
+                    if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'block';
+                    if (saveCustomFDRButton) saveCustomFDRButton.style.display = 'block';
+                    // Render the grid with current custom ratings
+                    renderCustomRatingsInputGrid(customRatingsGrid, globalSeasonSchedule.teams, userCustomFDRRatings);
+                    // Hide the "Customize Ratings" button itself after it's clicked
+                    if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none';
+                    if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; // Clear any messages
+                });
+            }
+
             // NEW: Event listener for "Save as My FDR System" button
             if (saveFDRSystemButton) {
                 saveFDRSystemButton.addEventListener('click', async () => {
                     const user = auth.currentUser;
                     if (!user) {
-                        showControlRoomMessage("You must be logged in to save your preferred FDR system.", "error");
+                        showCustomRatingsMessage("You must be logged in to save custom ratings.", "error");
                         return;
                     }
 
-                    const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-                    if (!selectedSystem) {
-                        showControlRoomMessage("Please select an FDR system to save.", "warning");
-                        return;
+                    const newCustomRatings = {};
+                    // Select inputs from the customRatingsGrid specifically
+                    const customSelects = customRatingsGrid.querySelectorAll('select'); // Changed to select
+                    let allRatingsFilled = true;
+
+                    customSelects.forEach(select => { // Changed to select
+                        const teamFullName = select.dataset.teamFullName;
+                        const homeAway = select.dataset.homeAway; // 'Home' or 'Away'
+                        const value = parseInt(select.value, 10); // Changed to select.value
+
+                        if (isNaN(value) || value < 1 || value > 7) {
+                            allRatingsFilled = false;
+                            // No need to show individual error here, the main message will cover it
+                            return; 
+                        }
+                        newCustomRatings[`${teamFullName}_${homeAway}`] = value;
+                    });
+
+                    if (!allRatingsFilled) {
+                        showCustomRatingsMessage("Please rate all fixtures to save your ratings.", "error");
+                        return; // Exit if any input was invalid
                     }
 
                     try {
-                        const userDocRef = doc(db, "users", user.uid);
-                        await updateDoc(userDocRef, {
-                            preferredFDRSystem: selectedSystem
-                        });
-                        showControlRoomMessage(`Your preferred FDR system (${selectedSystem.charAt(0).toUpperCase() + selectedSystem.slice(1)}) has been saved!`, "success");
+                        const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
+                        await setDoc(customFDRDocRef, newCustomRatings); // Overwrite with new ratings
+                        userCustomFDRRatings = newCustomRatings; // Update global variable
+                        showCustomRatingsMessage("Your ratings have been saved!", "success");
+                        // Re-render the schedule grid to reflect the newly saved ratings
+                        renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
                     } catch (error) {
-                        console.error("Error saving preferred FDR system:", error);
-                        showControlRoomMessage(`Failed to save preferred FDR system: ${error.message}`, "error");
+                        console.error("Error saving custom FDR ratings:", error);
+                        showCustomRatingsMessage(`Failed to save custom ratings: ${error.message}`, "error");
                     }
                 });
             }
