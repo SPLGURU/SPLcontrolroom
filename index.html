@@ -152,7 +152,7 @@
             body.dark-mode .instructions h3, body.dark-mode .instructions a { color: #FFD700; }
 
             /* FDR Difficulty Scale Colors */
-            .fdr-scale { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-weight: bold; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; }
+            .fdr-scale { display: flex; justify-content: center; align-items: center; margin-bottom: 15px; font-weight: bold; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; }
             .fdr-level { padding: 8px 12px; text-align: center; color: black; flex-grow: 1; min-width: 50px; transition: background-color 0.3s ease, color 0.3s ease; }
             .fdr-level span { display: block; font-size: 0.8em; margin-top: 2px; }
             .fdr-1 { background-color: #00B050; color: white; } .fdr-2 { background-color: #92D050; color: black; }
@@ -184,7 +184,7 @@
             @media (max-width: 480px) { .fdr-grid-item { font-size: 0.8em; padding: 8px 10px; min-height: 35px; } }
 
             /* FDR System Selection */
-            .fdr-system-selection { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+            .fdr-system-selection { display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
             .fdr-system-selection label { display: flex; align-items: center; cursor: pointer; font-weight: bold; color: var(--spl-text-dark); transition: color 0.3s ease; }
             .fdr-system-selection input[type="radio"] { margin-right: 8px; accent-color: var(--spl-primary-accent); transform: scale(1.2); }
             .fdr-system-selection button { background-color: var(--spl-primary-accent); color: white; padding: 8px 15px; border: none; border-radius: 6px; font-size: 0.9em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
@@ -202,11 +202,11 @@
             body.dark-mode .fixture-item span { color: var(--spl-text-dark); }
             .fixtures-list-container { border: 1px solid var(--spl-border-light); border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); margin-top: 20px; max-width: 400px; width: 100%; margin-left: auto; margin-right: auto; }
             body.dark-mode .fixtures-list-container { border-color: rgba(255,255,255,0.1); box-shadow: inset 0 0 5px rgba(255,255,255,0.05); }
-            .fdr-section-title { text-align: center; font-size: 1.1em; font-weight: bold; color: var(--spl-primary-accent); margin-top: 25px; margin-bottom: 15px; }
+            .fdr-section-title { text-align: center; font-size: 1.1em; font-weight: bold; color: var(--spl-primary-accent); margin-top: 20px; margin-bottom: 15px; }
             body.dark-mode .fdr-section-title { color: #FFD700; }
 
             /* Customized FDR inputs */
-            .custom-ratings-input-grid-container { margin-top: 20px; border: 1px solid var(--spl-border-light); border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); background-color: var(--spl-container-bg); width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; display: none; }
+            .custom-ratings-input-grid-container { margin-top: 15px; border: 1px solid var(--spl-border-light); border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); background-color: var(--spl-container-bg); width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; display: none; }
             body.dark-mode .custom-ratings-input-grid-container { border-color: rgba(255,255,255,0.1); box-shadow: inset 0 0 5px rgba(255,255,255,0.05); }
             .custom-ratings-grid { display: grid; grid-template-columns: 1fr 80px 80px; gap: 0; }
             .custom-ratings-grid-header, .custom-ratings-grid-item { padding: 10px 15px; text-align: center; font-weight: bold; font-size: 0.95em; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--spl-border-light); box-sizing: border-box; }
@@ -226,7 +226,7 @@
             body.dark-mode #showFDRButton, body.dark-mode #showCustomRatingsGridButton { background-color: #007bff; }
             body.dark-mode #showFDRButton:hover, body.dark-mode #showCustomRatingsGridButton:hover { background-color: #0056b3; }
 
-            #fdrSystemsContainer { display: none; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px; padding: 20px; border-radius: 12px; background-color: var(--spl-container-bg); box-shadow: 0 4px 8px var(--spl-shadow); width: 100%; max-width: 1200px; box-sizing: border-box; margin-left: auto; margin-right: auto; }
+            #fdrSystemsContainer { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; padding: 20px; border-radius: 12px; background-color: var(--spl-container-bg); box-shadow: 0 4px 8px var(--spl-shadow); width: 100%; max-width: 1200px; box-sizing: border-box; margin-left: auto; margin-right: auto; }
             #fdrSystemsContainer p { text-align: center; font-size: 1.1em; color: var(--spl-text-dark); margin-bottom: 10px; }
 
             /* Welcome Dashboard content */
@@ -234,7 +234,7 @@
             #initialLoggedInDashboardContent h2 { color: var(--spl-primary-accent); }
 
             /* CSS Grid Specific Styles for the Schedule */
-            .schedule-grid-container { width: 100%; overflow-x: auto; margin-top: 20px; border: 1px solid var(--spl-border-light); border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); background-color: var(--spl-container-bg); font-size: 0.9em; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+            .schedule-grid-container { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid var(--spl-border-light); border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); background-color: var(--spl-container-bg); font-size: 0.9em; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
             body.dark-mode .schedule-grid-container { border-color: rgba(255,255,255,0.1); box-shadow: inset 0 0 5px rgba(255,255,255,0.05); }
             .schedule-grid { display: grid; grid-auto-rows: minmax(40px, auto); min-width: 600px; }
             .grid-header-cell { background-color: var(--spl-table-header-bg); color: var(--spl-text-dark); font-weight: bold; padding: 8px 12px; text-align: center; border: 1px solid var(--spl-border-light); white-space: nowrap; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
@@ -258,7 +258,7 @@
             @media (max-width: 480px) { .schedule-grid { grid-template-columns: minmax(70px, 1fr) repeat(auto-fit, minmax(50px, 1fr)); } .grid-header-cell, .grid-row-team-cell, .grid-fixture-cell { padding: 5px 6px; font-size: 0.75em; } .fixture-item-display { font-size: 0.7em; gap: 3px; } }
 
             /* Tuning section styles */
-            .tuning-section { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; padding: 15px; border-radius: 8px; max-width: 400px; margin-left: auto; margin-right: auto; }
+            .tuning-section { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding: 15px; border-radius: 8px; max-width: 400px; margin-left: auto; margin-right: auto; margin-bottom: 10px; }
             .tuning-section label { font-weight: bold; color: var(--spl-text-dark); }
             .tuning-section input[type="range"] { width: 100%; -webkit-appearance: none; height: 8px; border-radius: 5px; background: var(--spl-border-light); outline: none; opacity: 0.7; -webkit-transition: .2s; transition: opacity .2s; }
             .tuning-section input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--spl-primary-accent); cursor: pointer; }
@@ -270,6 +270,11 @@
             body.dark-mode .tuning-section input[type="range"]::-webkit-slider-thumb { background: #007bff; }
             body.dark-mode .tuning-section input[type="range"]::-moz-range-thumb { background: #007bff; }
             body.dark-mode .tuning-value { color: #FFD700; }
+
+            /* Specific margin adjustments for compactness */
+            #showCustomRatingsGridButton { margin-top: 10px; margin-bottom: 10px; }
+            #saveCustomFDRRatingsButton { margin-top: 10px; margin-bottom: 5px; } /* Reduced to bring message closer */
+            #customRatingsMessageBox { margin-top: 5px; margin-bottom: 15px; } /* Adjust for tight placement */
         </style>
     </head>
     <body>
@@ -388,8 +393,7 @@
 
                         <!-- NEW: Customize Ratings Button (for Customized FDR only) -->
                         <button id="showCustomRatingsGridButton" style="display: none;">Customize Ratings</button>
-                        <p id="customRatingsMessageBox" class="message-box" style="display: none;"></p>
-
+                        
                         <!-- FDR Display for My Control Room -->
                         <div id="myControlRoomFDRDisplay" style="display: none;">
                             <div id="overallFDRSectionControlRoom" style="display: none;">
@@ -408,10 +412,15 @@
 
                             <div id="customizedFDRSectionControlRoom" style="display: none;">
                                 <h5 class="fdr-section-title">Customized Fixture Difficulty Schedule</h5>
+                                <!-- Custom Ratings Input Grid Container -->
                                 <div id="customRatingsInputGridContainer" class="custom-ratings-input-grid-container">
                                     <div class="custom-ratings-grid" id="customRatingsGrid"></div>
                                 </div>
+                                <!-- Save Custom Ratings Button -->
                                 <button id="saveCustomFDRRatingsButton" class="mt-4" style="display: none;">Save Custom Ratings</button>
+                                <!-- Message box for custom ratings validation - MOVED HERE -->
+                                <p id="customRatingsMessageBox" class="message-box" style="display: none;"></p>
+                                <!-- Schedule grid for Customized FDR -->
                                 <div class="schedule-grid-container">
                                     <div class="schedule-grid" id="customizedScheduleGrid"></div>
                                 </div>
@@ -590,7 +599,7 @@
 
             // Helper Functions
             const showAuthMessage = (msg, type = 'info') => { if (authMessageBox) { authMessageBox.className = `message-box ${type}`; authMessageBox.textContent = msg; authMessageBox.style.display = 'block'; }};
-            const showGeneralErrorMessage = (msg, type = 'info') => { /* ... (similar to above) */ }; // Not used in this version
+            // const showGeneralErrorMessage = (msg, type = 'info') => { /* ... (similar to above) */ }; // Not used in this version
             const showAdminMessage = (msg, type = 'info') => { if (adminMessage) { adminMessage.className = `message-box ${type}`; adminMessage.textContent = msg; adminMessage.style.display = 'block'; }};
             const showExcelUploadMessage = (msg, type = 'info') => { if (excelUploadMessage) { excelUploadMessage.className = `message-box ${type}`; excelUploadMessage.textContent = msg; excelUploadMessage.style.display = 'block'; }};
             const showApiTeamNamesStatus = (msg, type = 'info') => { if (apiTeamNamesStatus) { apiTeamNamesStatus.className = `message-box ${type}`; apiTeamNamesStatus.textContent = msg; apiTeamNamesStatus.style.display = 'block'; }};
@@ -907,7 +916,7 @@
                     } else { globalSplRankings = { overall: [], home: [], away: [] }; }
                 } catch (error) {
                     console.error("Error fetching global FDR data:", error);
-                    showGeneralErrorMessage(`Failed to load global data: ${error.message}.`);
+                    // showGeneralErrorMessage(`Failed to load global data: ${error.message}.`); // Removed to avoid double messages
                     showApiTeamNamesStatus(`Error fetching Team Names: ${error.message}`, "error");
                     showApiScheduleStatus(`Error fetching Schedule: ${error.message}`, "error");
                 }
@@ -943,11 +952,12 @@
             function renderScheduleGrid(gridContainerElement, scheduleData, fdrType, customRatings = {}) {
                 gridContainerElement.innerHTML = '';
                 if (!scheduleData || !scheduleData.fixtures || Object.keys(scheduleData.fixtures).length === 0 || !scheduleData.teams || scheduleData.teams.length === 0 || !scheduleData.rounds || scheduleData.rounds.length === 0) {
-                    gridContainerElement.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available.</div>'; return;
+                    gridContainerElement.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please ensure schedule data is fetched from API.</div>'; return;
                 }
                 
                 const teamsToDisplay = scheduleData.teams;
-                const roundsToRender = scheduleData.rounds.slice(0, roundsToShow);
+                const allRounds = scheduleData.rounds;
+                const roundsToRender = allRounds.slice(0, roundsToShow);
                 gridContainerElement.style.gridTemplateColumns = `minmax(100px, 1fr) repeat(${roundsToRender.length}, minmax(70px, 1fr))`;
 
                 const teamHeader = document.createElement('div'); teamHeader.className = 'grid-header-cell'; teamHeader.textContent = 'Team'; gridContainerElement.appendChild(teamHeader);
@@ -1062,12 +1072,12 @@
                         }
                         renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
                         renderFDRScale(fdrScaleDisplay, 7);
-                        if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block';
+                        if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block'; // Show the "Customize Ratings" button
                     } else { showControlRoomMessage("Please select a valid FDR system.", "error"); }
                 }
 
                 if (hasDataToDisplay || selectedFdrSystem) { messageBox.className = 'message-box success'; messageBox.textContent = 'FDR data loaded.'; }
-                else { messageBox.className = 'message-box info'; messageBox.textContent = 'No relevant FDR data found. Upload data via Admin Dashboard.'; }
+                else { messageBox.className = 'message-box info'; messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard, and API data is fetched.'; }
             }
 
             // NEW: Function to load and set the user's preferred FDR system
@@ -1094,9 +1104,15 @@
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
                 // Hide all specific FDR sections initially
-                [overallFDRSectionControlRoom, homeAwayFDRSectionControlRoom, customizedFDRSectionControlRoom].forEach(el => el && (el.style.display = 'none'));
+                if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'none';
+                if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'none';
+                if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'none';
+                
                 // Hide custom ratings specific UI elements when switching away from customized
-                [customRatingsInputGridContainer, saveCustomFDRRatingsButton, showCustomRatingsGridButton, customRatingsMessageBox].forEach(el => el && (el.style.display = 'none'));
+                if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none'; 
+                if (saveCustomFDRRatingsButton) saveCustomFDRRatingsButton.style.display = 'none'; 
+                if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; 
+                if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; 
 
                 if (selectedSystem === 'overall') {
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
@@ -1128,33 +1144,55 @@
                 showCustomRatingsGridButton.addEventListener('click', () => {
                     if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'block';
                     if (saveCustomFDRRatingsButton) saveCustomFDRRatingsButton.style.display = 'block';
-                    renderCustomRatingsInputGrid(customRatingsGrid, globalSeasonSchedule.teams, userCustomFDRRatings);
-                    if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none';
-                    if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none';
+                    renderCustomRatingsInputGrid(document.getElementById('customRatingsGrid'), globalSeasonSchedule.teams, userCustomFDRRatings);
+                    if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; // Hide itself
+                    if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; // Clear any messages
                 });
             }
 
             if (saveCustomFDRRatingsButton) {
                 saveCustomFDRRatingsButton.addEventListener('click', async () => {
-                    const user = auth.currentUser; if (!user) { showCustomRatingsMessage("You must be logged in to save custom ratings.", "error"); return; }
-                    const newCustomRatings = {}; let allRatingsFilled = true;
-                    const customSelects = customRatingsGrid.querySelectorAll('select');
+                    const user = auth.currentUser; 
+                    if (!user) { showCustomRatingsMessage("You must be logged in to save custom ratings.", "error"); return; }
+                    
+                    const newCustomRatings = {}; 
+                    let allRatingsFilled = true;
+                    const customSelects = document.getElementById('customRatingsGrid').querySelectorAll('select');
+                    
                     if (customSelects.length === 0) { showCustomRatingsMessage("No ratings to save. Please generate the grid first.", "error"); return; }
                     
                     customSelects.forEach(select => {
                         const [teamFullName, homeAway, value] = [select.dataset.teamFullName, select.dataset.homeAway, parseInt(select.value, 10)];
-                        if (isNaN(value) || value < 1 || value > 7) { allRatingsFilled = false; return; }
+                        if (isNaN(value) || value < 1 || value > 7) { 
+                            allRatingsFilled = false; 
+                            return; 
+                        }
                         newCustomRatings[`${teamFullName}_${homeAway}`] = value;
                     });
 
-                    if (!allRatingsFilled) { showCustomRatingsMessage("Please rate all fixtures to save your ratings.", "error"); return; }
+                    if (!allRatingsFilled) { 
+                        showCustomRatingsMessage("Please rate all fixtures to save your ratings.", "error"); 
+                        return; 
+                    }
 
                     try {
                         await setDoc(doc(db, "users", user.uid, "customFDR", "ratings"), newCustomRatings);
-                        userCustomFDRRatings = newCustomRatings;
+                        userCustomFDRRatings = newCustomRatings; // Update global variable
                         showCustomRatingsMessage("Your ratings have been saved!", "success");
+                        
+                        // NEW: Hide the custom ratings input grid and save button
+                        if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none';
+                        if (saveCustomFDRRatingsButton) saveCustomFDRRatingsButton.style.display = 'none';
+                        
+                        // NEW: Re-show the "Customize Ratings" button
+                        if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block';
+
+                        // Re-render the schedule grid with the newly saved ratings
                         renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
-                    } catch (error) { showCustomRatingsMessage(`Failed to save custom ratings: ${error.message}`, "error"); }
+
+                    } catch (error) { 
+                        showCustomRatingsMessage(`Failed to save custom ratings: ${error.message}`, "error"); 
+                    }
                 });
             }
 
