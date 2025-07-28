@@ -1047,7 +1047,7 @@
 
             .custom-ratings-grid {
                 display: grid;
-                grid-template-columns: 1fr 60px 60px; /* Team Name | Home Input | Away Input */
+                grid-template-columns: 1fr 80px 80px; /* Team Name | Home Input | Away Input */
                 gap: 0;
             }
 
@@ -1089,8 +1089,9 @@
                 border-bottom: none;
             }
 
-            .custom-ratings-grid-item input[type="number"] {
-                width: 50px;
+            /* Styles for the SELECT dropdowns */
+            .custom-ratings-grid-item select {
+                width: 70px; /* Adjust width to fit dropdown and arrow */
                 padding: 5px;
                 border: 1px solid var(--spl-border-light);
                 border-radius: 4px;
@@ -1098,22 +1099,27 @@
                 font-size: 0.9em;
                 background-color: var(--spl-table-bg);
                 color: var(--spl-text-dark);
-                -moz-appearance: textfield; /* Firefox */
+                appearance: none; /* Remove default arrow */
+                -webkit-appearance: none; /* For Safari */
+                -moz-appearance: none; /* For Firefox */
+                /* Custom arrow SVG for light mode */
+                background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2C197.3L159.9%2C69.8c-2.9-2.9-6.9-4.7-11.1-4.7s-8.2%2C1.8-11.1%2C4.7L5.4%2C197.3c-3%2C3-4.7%2C6.9-4.7%2C11.1c0%2C4.2%2C1.7%2C8.2%2C4.7%2C11.2l21.4%2C21.4c2.9%2C2.9%2C6.9%2C4.7%2C11.1%2C4.7s8.2-1.8%2C11.1-4.7l115.5-115.5l115.5%2C115.5c2.9%2C2.9%2C6.9%2C4.7%2C11.1%2C4.7s8.2-1.8%2C11.1-4.7l21.4-21.4c3-3%2C4.7-6.9%2C4.7-11.2C291.7%2C204.2%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
+                background-repeat: no-repeat;
+                background-position: right 5px center;
+                background-size: 12px;
+                padding-right: 25px; /* Make space for the arrow */
             }
-            .custom-ratings-grid-item input[type="number"]::-webkit-outer-spin-button,
-            .custom-ratings-grid-item input[type="number"]::-webkit-inner-spin-button {
-                -webkit-appearance: none; /* Safari, Chrome */
-                margin: 0;
-            }
-            .custom-ratings-grid-item input[type="number"]:focus {
+            .custom-ratings-grid-item select:focus {
                 outline: none;
                 border-color: var(--spl-primary-accent);
                 box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
             }
-            body.dark-mode .custom-ratings-grid-item input[type="number"] {
+            body.dark-mode .custom-ratings-grid-item select {
                 background-color: var(--spl-table-bg);
                 color: var(--spl-text-dark);
                 border-color: var(--spl-border-light);
+                /* Custom arrow SVG for dark mode (white arrow) */
+                background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2C197.3L159.9%2C69.8c-2.9-2.9-6.9-4.7-11.1-4.7s-8.2%2C1.8-11.1%2C4.7L5.4%2C197.3c-3%2C3-4.7%2C6.9-4.7%2C11.1c0%2C4.2%2C1.7%2C8.2%2C4.7%2C11.2l21.4%2C21.4c2.9%2C2.9%2C6.9%2C4.7%2C11.1%2C4.7s8.2-1.8%2C11.1-4.7l115.5-115.5l115.5%2C115.5c2.9%2C2.9%2C6.9%2C4.7%2C11.1%2C4.7s8.2-1.8%2C11.1-4.7l21.4-21.4c3-3%2C4.7-6.9%2C4.7-11.2C291.7%2C204.2%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E');
             }
 
 
@@ -3193,7 +3199,7 @@
             function renderCustomRatingsInputGrid(gridElement, teams, currentCustomRatings) {
                 console.log("DEBUG_CUSTOM_FDR: Rendering custom ratings input grid.");
                 gridElement.innerHTML = ''; // Clear existing grid content
-                gridElement.style.gridTemplateColumns = `1fr 60px 60px`; // Team Name | Home Input | Away Input
+                gridElement.style.gridTemplateColumns = `1fr 80px 80px`; // Team Name | Home Select | Away Select
 
                 // Headers
                 const headers = ['Team', 'Home', 'Away'];
@@ -3212,37 +3218,39 @@
                     teamCell.textContent = teamFullName;
                     gridElement.appendChild(teamCell);
 
-                    // Home Rating Input
-                    const homeInputCell = document.createElement('div');
-                    homeInputCell.className = 'custom-ratings-grid-item';
-                    const homeInput = document.createElement('input');
-                    homeInput.type = 'number';
-                    homeInput.min = '1';
-                    homeInput.max = '7';
-                    homeInput.value = currentCustomRatings[`${teamFullName}_Home`] || '';
-                    homeInput.dataset.teamFullName = teamFullName;
-                    homeInput.dataset.homeAway = 'Home';
-                    homeInput.oninput = function() {
-                        this.value = Math.max(1, Math.min(7, parseInt(this.value) || ''));
-                    };
-                    homeInputCell.appendChild(homeInput);
-                    gridElement.appendChild(homeInputCell);
+                    // Home Rating Select
+                    const homeSelectCell = document.createElement('div');
+                    homeSelectCell.className = 'custom-ratings-grid-item';
+                    const homeSelect = document.createElement('select');
+                    homeSelect.dataset.teamFullName = teamFullName;
+                    homeSelect.dataset.homeAway = 'Home';
+                    for (let i = 1; i <= 7; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        homeSelect.appendChild(option);
+                    }
+                    // Set selected value from currentCustomRatings
+                    homeSelect.value = currentCustomRatings[`${teamFullName}_Home`] || '';
+                    homeSelectCell.appendChild(homeSelect);
+                    gridElement.appendChild(homeSelectCell);
 
-                    // Away Rating Input
-                    const awayInputCell = document.createElement('div');
-                    awayInputCell.className = 'custom-ratings-grid-item';
-                    const awayInput = document.createElement('input');
-                    awayInput.type = 'number';
-                    awayInput.min = '1';
-                    awayInput.max = '7';
-                    awayInput.value = currentCustomRatings[`${teamFullName}_Away`] || '';
-                    awayInput.dataset.teamFullName = teamFullName;
-                    awayInput.dataset.homeAway = 'Away';
-                    awayInput.oninput = function() {
-                        this.value = Math.max(1, Math.min(7, parseInt(this.value) || ''));
-                    };
-                    awayInputCell.appendChild(awayInput);
-                    gridElement.appendChild(awayInputCell);
+                    // Away Rating Select
+                    const awaySelectCell = document.createElement('div');
+                    awaySelectCell.className = 'custom-ratings-grid-item';
+                    const awaySelect = document.createElement('select');
+                    awaySelect.dataset.teamFullName = teamFullName;
+                    awaySelect.dataset.homeAway = 'Away';
+                    for (let i = 1; i <= 7; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        awaySelect.appendChild(option);
+                    }
+                    // Set selected value from currentCustomRatings
+                    awaySelect.value = currentCustomRatings[`${teamFullName}_Away`] || '';
+                    awaySelectCell.appendChild(awaySelect);
+                    gridElement.appendChild(awaySelectCell);
                 });
             }
 
@@ -3487,13 +3495,13 @@
 
                     const newCustomRatings = {};
                     // Select inputs from the customRatingsGrid specifically
-                    const customInputs = customRatingsGrid.querySelectorAll('input[type="number"]');
+                    const customInputs = customRatingsGrid.querySelectorAll('select'); // Changed to select
                     let isValid = true;
 
-                    customInputs.forEach(input => {
-                        const teamFullName = input.dataset.teamFullName;
-                        const homeAway = input.dataset.homeAway; // 'Home' or 'Away'
-                        const value = parseInt(input.value, 10);
+                    customInputs.forEach(select => { // Changed to select
+                        const teamFullName = select.dataset.teamFullName;
+                        const homeAway = select.dataset.homeAway; // 'Home' or 'Away'
+                        const value = parseInt(select.value, 10); // Changed to select.value
 
                         if (isNaN(value) || value < 1 || value > 7) {
                             isValid = false;
