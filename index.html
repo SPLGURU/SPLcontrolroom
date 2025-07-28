@@ -221,13 +221,14 @@
             body.dark-mode .custom-ratings-grid-item select { background-color: var(--spl-table-bg); color: var(--spl-text-dark); border-color: var(--spl-border-light); background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2C197.3L159.9%2C69.8c-2.9-2.9-6.9-4.7-11.1-4.7s-8.2%2C1.8-11.1%2C4.7L5.4%2C197.3c-3%2C3-4.7%2C6.9-4.7%2C11.1c0%2C4.2%2C1.7%2C8.2%2C4.7%2C11.2l21.4%2C21.4c2.9%2C2.9%2C6.9%2C4.7%2C11.1%2C4.7s8.2-1.8%2C11.1-4.7l115.5-115.5l115.5%2C115.5c2.9%2C2.9%2C6.9%2C4.7%2C11.1%2C4.7s8.2-1.8%2C11.1-4.7l21.4-21.4c3-3%2C4.7-6.9%2C4.7-11.2C291.7%2C204.2%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E'); }
 
             /* Main FDR & Customize Ratings Buttons */
-            #showFDRButton, #showCustomRatingsGridButton { display: block; margin: 20px auto; background-color: var(--spl-primary-accent); color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); max-width: fit-content; }
-            #showFDRButton:hover, #showCustomRatingsGridButton:hover { background-color: #0056b3; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); }
-            body.dark-mode #showFDRButton, body.dark-mode #showCustomRatingsGridButton { background-color: #007bff; }
-            body.dark-mode #showFDRButton:hover, body.dark-mode #showCustomRatingsGridButton:hover { background-color: #0056b3; }
+            .control-room-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+            .control-room-buttons button { display: block; background-color: var(--spl-primary-accent); color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); max-width: fit-content; }
+            .control-room-buttons button:hover { background-color: #0056b3; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); }
+            body.dark-mode .control-room-buttons button { background-color: #007bff; }
+            body.dark-mode .control-room-buttons button:hover { background-color: #0056b3; }
 
-            #fdrSystemsContainer { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; padding: 20px; border-radius: 12px; background-color: var(--spl-container-bg); box-shadow: 0 4px 8px var(--spl-shadow); width: 100%; max-width: 1200px; box-sizing: border-box; margin-left: auto; margin-right: auto; }
-            #fdrSystemsContainer p { text-align: center; font-size: 1.1em; color: var(--spl-text-dark); margin-bottom: 10px; }
+            #fdrSystemsContainer, #teamsToTargetContainer { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; padding: 20px; border-radius: 12px; background-color: var(--spl-container-bg); box-shadow: 0 4px 8px var(--spl-shadow); width: 100%; max-width: 1200px; box-sizing: border-box; margin-left: auto; margin-right: auto; }
+            #fdrSystemsContainer p, #teamsToTargetContainer p { text-align: center; font-size: 1.1em; color: var(--spl-text-dark); margin-bottom: 10px; }
 
             /* Welcome Dashboard content */
             #initialLoggedInDashboardContent { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; text-align: center; padding: 20px; color: var(--spl-text-dark); }
@@ -256,6 +257,13 @@
             .fixture-item-display { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 2px 5px; border-radius: 3px; font-size: 0.85em; white-space: nowrap; font-weight: bold; width: 100%; box-sizing: border-box; }
             @media (max-width: 768px) { .schedule-grid { grid-template-columns: minmax(80px, 1fr) repeat(auto-fit, minmax(60px, 1fr)); min-width: unset; } .grid-header-cell, .grid-row-team-cell, .grid-fixture-cell { padding: 6px 8px; font-size: 0.8em; } .fixture-item-display { font-size: 0.75em; padding: 1px 3px; } }
             @media (max-width: 480px) { .schedule-grid { grid-template-columns: minmax(70px, 1fr) repeat(auto-fit, minmax(50px, 1fr)); } .grid-header-cell, .grid-row-team-cell, .grid-fixture-cell { padding: 5px 6px; font-size: 0.75em; } .fixture-item-display { font-size: 0.7em; gap: 3px; } }
+
+            /* Teams To Target specific styles */
+            .teams-to-target-grid .grid-header-cell.fdr-total-header { background-color: var(--spl-primary-accent); color: white; }
+            body.dark-mode .teams-to-target-grid .grid-header-cell.fdr-total-header { background-color: #007bff; }
+            .teams-to-target-grid .grid-fdr-total-cell { background-color: var(--spl-table-header-bg); color: var(--spl-text-dark); font-weight: bold; }
+            body.dark-mode .teams-to-target-grid .grid-fdr-total-cell { background-color: var(--spl-table-header-bg); color: var(--spl-text-dark); }
+
 
             /* Tuning section styles */
             .tuning-section { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding: 15px; border-radius: 8px; max-width: 400px; margin-left: auto; margin-right: auto; margin-bottom: 10px; }
@@ -361,10 +369,13 @@
                 <div id="myControlRoomContent" style="display: none;">
                     <h2>My Control Room</h2>
                     
-                    <button id="showFDRButton">FDR</button>
+                    <div class="control-room-buttons">
+                        <button id="showFDRButton">FDR</button>
+                        <button id="showTeamsToTargetButton">Teams To Target</button>
+                    </div>
 
                     <!-- FDR Systems Container -->
-                    <div id="fdrSystemsContainer" style="display: none;">
+                    <div id="fdrSystemsContainer">
                         <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
                         <p>Please Choose FDR System</p>
 
@@ -425,6 +436,21 @@
                                     <div class="schedule-grid" id="customizedScheduleGrid"></div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Teams To Target Container -->
+                    <div id="teamsToTargetContainer" style="display: none;">
+                        <h3 class="fdr-section-title">Teams To Target (Easiest Fixtures)</h3>
+                        <p>Teams are ranked by total FDR over the selected rounds (lowest total = easiest run).</p>
+                        <div class="tuning-section">
+                            <div class="tuning-option">
+                                <label for="roundsToShowTeamsToTarget">Rounds: <span id="roundsToShowValueTeamsToTarget">5</span></label>
+                                <input type="range" id="roundsToShowTeamsToTarget" min="3" max="10" value="5">
+                            </div>
+                        </div>
+                        <div class="schedule-grid-container">
+                            <div class="schedule-grid teams-to-target-grid" id="teamsToTargetScheduleGrid"></div>
                         </div>
                     </div>
                 </div>
@@ -542,7 +568,8 @@
             let globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
             let globalTeamData = { byId: {}, byFullName: {}, byShortName: {} };
             let userCustomFDRRatings = {};
-            let roundsToShow = 5;
+            let roundsToShow = 5; // Default for both FDR and Teams To Target
+            let selectedFDRSystem = 'overall'; // Default FDR system
 
             // DOM Element References (optimized to reduce lines)
             const mainLogo = document.getElementById('mainLogo'); const darkModeToggle = document.getElementById('darkModeToggle');
@@ -582,24 +609,30 @@
             const homeFDRScaleAdmin = document.getElementById('homeFDRScaleAdmin'); 
             const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin'); const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
             const awayFDRScaleAdmin = document.getElementById('awayFDRScaleAdmin');
-            const showFDRButton = document.getElementById('showFDRButton'); const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
+            const showFDRButton = document.getElementById('showFDRButton'); 
+            const showTeamsToTargetButton = document.getElementById('showTeamsToTargetButton'); // New button
+            const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
+            const teamsToTargetContainer = document.getElementById('teamsToTargetContainer'); // New container
             const controlRoomMessageBox = document.getElementById('controlRoomMessageBox'); const fdrScaleDisplay = document.getElementById('fdrScaleDisplay'); 
             const radioOverallFDR = document.getElementById('radioOverallFDR'); const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
             const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); const saveFDRSystemButton = document.getElementById('saveFDRSystemButton'); 
-            const roundsToShowSlider = document.getElementById('roundsToShow'); const roundsToShowValueSpan = document.getElementById('roundsToShowValue');
+            const roundsToShowSlider = document.getElementById('roundsToShow'); // Used for FDR
+            const roundsToShowValueSpan = document.getElementById('roundsToShowValue'); // Used for FDR
+            const roundsToShowTeamsToTargetSlider = document.getElementById('roundsToShowTeamsToTarget'); // New slider for Teams To Target
+            const roundsToShowValueTeamsToTargetSpan = document.getElementById('roundsToShowValueTeamsToTarget'); // New span for Teams To Target
             const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); 
             const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom'); const overallScheduleGrid = document.getElementById('overallScheduleGrid'); 
             const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); const homeAwayScheduleGrid = document.getElementById('homeAwayScheduleGrid'); 
             const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom'); const customizedScheduleGrid = document.getElementById('customizedScheduleGrid'); 
-            const saveCustomFDRRatingsButton = document.getElementById('saveCustomFDRRatingsButton'); // Renamed for clarity
+            const saveCustomFDRRatingsButton = document.getElementById('saveCustomFDRRatingsButton'); 
             const customRatingsInputGridContainer = document.getElementById('customRatingsInputGridContainer');
             const customRatingsGrid = document.getElementById('customRatingsGrid');
             const showCustomRatingsGridButton = document.getElementById('showCustomRatingsGridButton');
             const customRatingsMessageBox = document.getElementById('customRatingsMessageBox');
+            const teamsToTargetScheduleGrid = document.getElementById('teamsToTargetScheduleGrid'); // New schedule grid for Teams To Target
 
             // Helper Functions
             const showAuthMessage = (msg, type = 'info') => { if (authMessageBox) { authMessageBox.className = `message-box ${type}`; authMessageBox.textContent = msg; authMessageBox.style.display = 'block'; }};
-            // const showGeneralErrorMessage = (msg, type = 'info') => { /* ... (similar to above) */ }; // Not used in this version
             const showAdminMessage = (msg, type = 'info') => { if (adminMessage) { adminMessage.className = `message-box ${type}`; adminMessage.textContent = msg; adminMessage.style.display = 'block'; }};
             const showExcelUploadMessage = (msg, type = 'info') => { if (excelUploadMessage) { excelUploadMessage.className = `message-box ${type}`; excelUploadMessage.textContent = msg; excelUploadMessage.style.display = 'block'; }};
             const showApiTeamNamesStatus = (msg, type = 'info') => { if (apiTeamNamesStatus) { apiTeamNamesStatus.className = `message-box ${type}`; apiTeamNamesStatus.textContent = msg; apiTeamNamesStatus.style.display = 'block'; }};
@@ -610,7 +643,8 @@
             function hideAllContentSections() {
                 [initialLoggedInDashboardContent, analyzerReportContent, myControlRoomContent, adminDashboardContent].forEach(el => el && (el.style.display = 'none'));
                 [adminDashboardNavButtons, adminSearchSection, adminSearchResults, adminMessage, dataUploadSection, currentRankingsDisplayAdmin, excelUploadMessage, apiTeamNamesStatus, apiScheduleStatus, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin].forEach(el => el && (el.style.display = 'none'));
-                [showFDRButton, fdrSystemsContainer, myControlRoomFDRDisplay, overallFDRSectionControlRoom, homeAwayFDRSectionControlRoom, customizedFDRSectionControlRoom, controlRoomMessageBox, customRatingsInputGridContainer, saveCustomFDRRatingsButton, showCustomRatingsGridButton, customRatingsMessageBox].forEach(el => el && (el.style.display = 'none'));
+                // Also hide FDR and Teams To Target containers when switching main sections
+                [fdrSystemsContainer, teamsToTargetContainer].forEach(el => el && (el.style.display = 'none'));
             }
 
             function clearAdminSearchAndResults() {
@@ -746,14 +780,20 @@
                 hideAllContentSections();
                 if (sectionId === 'initialLoggedInDashboard') { if (initialLoggedInDashboardContent) initialLoggedInDashboardContent.style.display = 'flex'; }
                 else if (sectionId === 'analyzerReport') { if (analyzerReportContent) analyzerReportContent.style.display = 'block'; }
-                else if (sectionId === 'controlRoom') { if (myControlRoomContent) myControlRoomContent.style.display = 'block'; if (showFDRButton) showFDRButton.style.display = 'block'; }
+                else if (sectionId === 'controlRoom') { 
+                    if (myControlRoomContent) myControlRoomContent.style.display = 'block'; 
+                    // Default to showing FDR container when entering control room
+                    if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex';
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none'; // Ensure Teams To Target is hidden
+                    loadAndSetPreferredFDRSystem(); // Load and display the preferred FDR system
+                }
                 else if (sectionId === 'adminDashboard') {
                     if (isAdminUser) { 
                         if (adminDashboardContent) adminDashboardContent.style.display = 'flex'; 
                         if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'flex'; 
                         if (adminUsersButton) adminUsersButton.click(); 
                         showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
-                    } else { showGeneralErrorMessage("Access Denied: You do not have administrator privileges.", "error"); }
+                    } else { /* showGeneralErrorMessage("Access Denied: You do not have administrator privileges.", "error"); */ } // Removed to avoid double messages
                 }
             }
 
@@ -898,9 +938,13 @@
                                 }
                             });
                         } else {
+                            // If no fixtures for a round, ensure all teams have an empty entry for that round
                             const allKnownTeams = Object.values(globalTeamData.byFullName).map(team => team.name);
                             const roundName = `R${round}`; allRoundNamesInSchedule.add(roundName);
-                            allKnownTeams.forEach(teamFullName => { if (!processedFixtures[teamFullName]) processedFixtures[teamFullName] = {}; if (!processedFixtures[teamFullName][roundName]) { processedFixtures[teamFullName][roundName] = []; } });
+                            allKnownTeams.forEach(teamFullName => { 
+                                if (!processedFixtures[teamFullName]) processedFixtures[teamFullName] = {}; 
+                                if (!processedFixtures[teamFullName][roundName]) { processedFixtures[teamFullName][roundName] = []; } 
+                            });
                         }
                     });
                     globalSeasonSchedule.fixtures = processedFixtures;
@@ -916,7 +960,6 @@
                     } else { globalSplRankings = { overall: [], home: [], away: [] }; }
                 } catch (error) {
                     console.error("Error fetching global FDR data:", error);
-                    // showGeneralErrorMessage(`Failed to load global data: ${error.message}.`); // Removed to avoid double messages
                     showApiTeamNamesStatus(`Error fetching Team Names: ${error.message}`, "error");
                     showApiScheduleStatus(`Error fetching Schedule: ${error.message}`, "error");
                 }
@@ -948,7 +991,7 @@
                 return (typeof fdrValue === 'number' && fdrValue >= 1 && fdrValue <= maxScale) ? fdrValue : null;
             }
 
-            // Render Schedule Grid
+            // Render Schedule Grid (for FDR display)
             function renderScheduleGrid(gridContainerElement, scheduleData, fdrType, customRatings = {}) {
                 gridContainerElement.innerHTML = '';
                 if (!scheduleData || !scheduleData.fixtures || Object.keys(scheduleData.fixtures).length === 0 || !scheduleData.teams || scheduleData.teams.length === 0 || !scheduleData.rounds || scheduleData.rounds.length === 0) {
@@ -957,7 +1000,7 @@
                 
                 const teamsToDisplay = scheduleData.teams;
                 const allRounds = scheduleData.rounds;
-                const roundsToRender = allRounds.slice(0, roundsToShow);
+                const roundsToRender = allRounds.slice(0, roundsToShow); // Use global roundsToShow
                 gridContainerElement.style.gridTemplateColumns = `minmax(100px, 1fr) repeat(${roundsToRender.length}, minmax(70px, 1fr))`;
 
                 const teamHeader = document.createElement('div'); teamHeader.className = 'grid-header-cell'; teamHeader.textContent = 'Team'; gridContainerElement.appendChild(teamHeader);
@@ -1021,14 +1064,14 @@
             }
 
             // Fetch and Render Rankings (Admin & Control Room)
-            async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, selectedFdrSystem = null) {
+            async function fetchAndRenderRankings(messageBox, overallGridOrList, homeGridOrList, awayGridOrList, overallSection, homeSection, awaySection, displayContainer, selectedFdrSystemParam = null) {
                 messageBox.className = 'message-box info'; messageBox.textContent = 'Loading FDR data...'; messageBox.style.display = 'block';
                 [overallGridOrList, homeGridOrList, awayGridOrList].forEach(el => el && (el.innerHTML = ''));
                 [overallSection, homeSection, awaySection].forEach(el => el && (el.style.display = 'none'));
                 
                 let hasDataToDisplay = false;
 
-                if (!selectedFdrSystem) { // Admin Dashboard
+                if (!selectedFdrSystemParam) { // Admin Dashboard
                     if (globalSplRankings.overall.length > 0) {
                         globalSplRankings.overall.sort((a, b) => ((b.fdrHome + b.fdrAway) / 2) - ((a.fdrHome + a.fdrAway) / 2));
                         globalSplRankings.overall.forEach(item => {
@@ -1050,37 +1093,89 @@
                         if (awaySection) awaySection.style.display = 'block'; hasDataToDisplay = true;
                     } else { if (awayGridOrList) awayGridOrList.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>'; }
                 } 
-                else { // My Control Room
-                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
-                    [overallFDRSectionControlRoom, homeAwayFDRSectionControlRoom, customizedFDRSectionControlRoom].forEach(el => el && (el.style.display = 'none'));
-                    [customRatingsInputGridContainer, saveCustomFDRRatingsButton, showCustomRatingsGridButton, customRatingsMessageBox].forEach(el => el && (el.style.display = 'none'));
+                // This function is primarily for Admin display, Control Room display is handled by displaySelectedFDRSystem
+                // The selectedFdrSystemParam is only used here to differentiate call context, not for rendering.
 
-                    if (selectedFdrSystem === 'overall') { 
-                        if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
-                        renderScheduleGrid(overallScheduleGrid, globalSeasonSchedule, 'overall');
-                        renderFDRScale(fdrScaleDisplay, 7);
-                    } else if (selectedFdrSystem === 'homeAway') { 
-                        if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
-                        renderScheduleGrid(homeAwayScheduleGrid, globalSeasonSchedule, 'homeAway');
-                        renderFDRScale(fdrScaleDisplay, 6);
-                    } else if (selectedFdrSystem === 'customized') { 
-                        if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
-                        const user = auth.currentUser; userCustomFDRRatings = {};
-                        if (user) {
-                            const customFDRDocSnap = await getDoc(doc(db, "users", user.uid, "customFDR", "ratings"));
-                            if (customFDRDocSnap.exists()) userCustomFDRRatings = customFDRDocSnap.data();
-                        }
-                        renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
-                        renderFDRScale(fdrScaleDisplay, 7);
-                        if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block'; // Show the "Customize Ratings" button
-                    } else { showControlRoomMessage("Please select a valid FDR system.", "error"); }
-                }
-
-                if (hasDataToDisplay || selectedFdrSystem) { messageBox.className = 'message-box success'; messageBox.textContent = 'FDR data loaded.'; }
+                if (hasDataToDisplay) { messageBox.className = 'message-box success'; messageBox.textContent = 'FDR data loaded.'; }
                 else { messageBox.className = 'message-box info'; messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard, and API data is fetched.'; }
             }
 
-            // NEW: Function to load and set the user's preferred FDR system
+            // NEW: Render Teams To Target Schedule Grid
+            function renderTeamsToTargetScheduleGrid(scheduleData, fdrType, customRatings) {
+                teamsToTargetScheduleGrid.innerHTML = '';
+                if (!scheduleData || !scheduleData.fixtures || Object.keys(scheduleData.fixtures).length === 0 || !scheduleData.teams || scheduleData.teams.length === 0 || !scheduleData.rounds || scheduleData.rounds.length === 0) {
+                    teamsToTargetScheduleGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No season schedule data available. Please ensure schedule data is fetched from API.</div>'; return;
+                }
+
+                const teamsWithFDRTotal = [];
+                const allRounds = scheduleData.rounds;
+                const roundsToCalculate = allRounds.slice(0, roundsToShow); // Use global roundsToShow for Teams To Target
+
+                scheduleData.teams.forEach(teamFullName => {
+                    let fdrTotal = 0;
+                    let hasValidFixtures = false;
+                    const teamFixtures = scheduleData.fixtures[teamFullName] || {};
+
+                    roundsToCalculate.forEach(round => {
+                        const fixturesForThisRound = teamFixtures[round] || [];
+                        if (fixturesForThisRound.length > 0) {
+                            fixturesForThisRound.forEach(fixtureString => {
+                                const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
+                                const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
+                                const fdrValue = getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings);
+                                if (fdrValue !== null) {
+                                    fdrTotal += fdrValue;
+                                    hasValidFixtures = true;
+                                }
+                            });
+                        }
+                    });
+                    // Only add team if it has at least one valid fixture in the selected rounds
+                    if (hasValidFixtures) {
+                        teamsWithFDRTotal.push({ teamFullName, fdrTotal });
+                    }
+                });
+
+                // Sort teams by FDR Total (lowest first)
+                teamsWithFDRTotal.sort((a, b) => a.fdrTotal - b.fdrTotal);
+
+                // Determine grid columns: Team, Rounds, FDR Total
+                teamsToTargetScheduleGrid.style.gridTemplateColumns = `minmax(100px, 1fr) repeat(${roundsToCalculate.length}, minmax(70px, 1fr)) minmax(80px, 0.5fr)`;
+
+                // Add headers
+                const teamHeader = document.createElement('div'); teamHeader.className = 'grid-header-cell'; teamHeader.textContent = 'Team'; teamsToTargetScheduleGrid.appendChild(teamHeader);
+                roundsToCalculate.forEach(round => { const roundHeader = document.createElement('div'); roundHeader.className = 'grid-header-cell'; roundHeader.textContent = round; teamsToTargetScheduleGrid.appendChild(roundHeader); });
+                const fdrTotalHeader = document.createElement('div'); fdrTotalHeader.className = 'grid-header-cell fdr-total-header'; fdrTotalHeader.textContent = 'FDR Total'; teamsToTargetScheduleGrid.appendChild(fdrTotalHeader);
+
+                // Add team rows
+                teamsWithFDRTotal.forEach(teamData => {
+                    const teamFullName = teamData.teamFullName;
+                    const teamCell = document.createElement('div'); teamCell.className = 'grid-row-team-cell'; teamCell.textContent = teamFullName; teamsToTargetScheduleGrid.appendChild(teamCell);
+                    const teamFixtures = scheduleData.fixtures[teamFullName] || {};
+
+                    roundsToCalculate.forEach(round => {
+                        const fixtureCell = document.createElement('div'); fixtureCell.className = 'grid-fixture-cell';
+                        const fixturesForThisRound = teamFixtures[round] || [];
+                        if (fixturesForThisRound.length > 0) {
+                            fixturesForThisRound.forEach(fixtureString => {
+                                const fixtureDisplayItem = document.createElement('div'); fixtureDisplayItem.className = `fixture-item-display`;
+                                const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
+                                const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
+                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`;
+                                fixtureCell.appendChild(fixtureDisplayItem);
+                                // Apply FDR coloring based on the selected FDR system
+                                const fdrValue = getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings);
+                                fixtureCell.classList.add(fdrValue !== null ? `fdr-${fdrValue}` : 'fdr-na');
+                            });
+                        } else { fixtureCell.textContent = ''; fixtureCell.classList.add('fdr-na'); }
+                        teamsToTargetScheduleGrid.appendChild(fixtureCell);
+                    });
+
+                    const fdrTotalCell = document.createElement('div'); fdrTotalCell.className = 'grid-fixture-cell grid-fdr-total-cell'; fdrTotalCell.textContent = teamData.fdrTotal; teamsToTargetScheduleGrid.appendChild(fdrTotalCell);
+                });
+            }
+
+            // Function to load and set the user's preferred FDR system
             async function loadAndSetPreferredFDRSystem() {
                 const user = auth.currentUser;
                 let preferredSystem = 'overall'; // Default
@@ -1090,6 +1185,9 @@
                         preferredSystem = userDocSnap.data().preferredFDRSystem;
                     }
                 }
+                // Set the global variable
+                selectedFDRSystem = preferredSystem;
+
                 // Set the correct radio button
                 if (preferredSystem === 'overall' && radioOverallFDR) radioOverallFDR.checked = true;
                 else if (preferredSystem === 'homeAway' && radioHomeAwayFDR) radioHomeAwayFDR.checked = true;
@@ -1098,8 +1196,10 @@
                 displaySelectedFDRSystem(preferredSystem);
             }
 
-            // Function to display the selected FDR system
-            async function displaySelectedFDRSystem(selectedSystem) {
+            // Function to display the selected FDR system (for FDR section)
+            async function displaySelectedFDRSystem(system) {
+                selectedFDRSystem = system; // Update global variable
+
                 // Ensure the FDR display container is visible
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
 
@@ -1114,15 +1214,15 @@
                 if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; 
                 if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; 
 
-                if (selectedSystem === 'overall') {
+                if (selectedFDRSystem === 'overall') {
                     if (overallFDRSectionControlRoom) overallFDRSectionControlRoom.style.display = 'block';
                     renderScheduleGrid(overallScheduleGrid, globalSeasonSchedule, 'overall');
                     renderFDRScale(fdrScaleDisplay, 7);
-                } else if (selectedSystem === 'homeAway') {
+                } else if (selectedFDRSystem === 'homeAway') {
                     if (homeAwayFDRSectionControlRoom) homeAwayFDRSectionControlRoom.style.display = 'block';
                     renderScheduleGrid(homeAwayScheduleGrid, globalSeasonSchedule, 'homeAway');
                     renderFDRScale(fdrScaleDisplay, 6);
-                } else if (selectedSystem === 'customized') {
+                } else if (selectedFDRSystem === 'customized') {
                     if (customizedFDRSectionControlRoom) customizedFDRSectionControlRoom.style.display = 'block';
                     const user = auth.currentUser; userCustomFDRRatings = {};
                     if (user) {
@@ -1136,9 +1236,30 @@
             }
 
             // Event Listeners
-            document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => { radio.addEventListener('change', () => displaySelectedFDRSystem(radio.value)); });
+            document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => { radio.addEventListener('change', () => {
+                displaySelectedFDRSystem(radio.value);
+                // Also update the Teams To Target schedule if it's currently visible
+                if (teamsToTargetContainer.style.display === 'block') {
+                    renderTeamsToTargetScheduleGrid(globalSeasonSchedule, radio.value, userCustomFDRRatings);
+                }
+            }); });
 
-            if (showFDRButton) { showFDRButton.addEventListener('click', () => { if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; loadAndSetPreferredFDRSystem(); }); }
+            if (showFDRButton) { 
+                showFDRButton.addEventListener('click', () => { 
+                    if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; 
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none'; // Hide Teams To Target
+                    loadAndSetPreferredFDRSystem(); 
+                }); 
+            }
+
+            if (showTeamsToTargetButton) {
+                showTeamsToTargetButton.addEventListener('click', () => {
+                    if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Hide FDR
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'flex'; // Show Teams To Target
+                    // Render Teams To Target schedule based on current selected FDR system and roundsToShow
+                    renderTeamsToTargetScheduleGrid(globalSeasonSchedule, selectedFDRSystem, userCustomFDRRatings);
+                });
+            }
 
             if (showCustomRatingsGridButton) {
                 showCustomRatingsGridButton.addEventListener('click', () => {
@@ -1189,6 +1310,10 @@
 
                         // Re-render the schedule grid with the newly saved ratings
                         renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
+                        // Also update Teams To Target if visible and using customized FDR
+                        if (teamsToTargetContainer.style.display === 'block' && selectedFDRSystem === 'customized') {
+                            renderTeamsToTargetScheduleGrid(globalSeasonSchedule, 'customized', userCustomFDRRatings);
+                        }
 
                     } catch (error) { 
                         showCustomRatingsMessage(`Failed to save custom ratings: ${error.message}`, "error"); 
@@ -1196,19 +1321,41 @@
                 });
             }
 
-            if (roundsToShowSlider) {
+            if (roundsToShowSlider) { // FDR Rounds Slider
                 roundsToShowSlider.addEventListener('input', (e) => {
                     roundsToShow = parseInt(e.target.value, 10);
                     if (roundsToShowValueSpan) roundsToShowValueSpan.textContent = roundsToShow;
-                    const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
-                    if (selectedSystem) displaySelectedFDRSystem(selectedSystem);
+                    // Only re-render FDR schedule if FDR container is active
+                    if (fdrSystemsContainer.style.display === 'flex') {
+                        displaySelectedFDRSystem(selectedFDRSystem); // Re-render current FDR system
+                    }
+                });
+            }
+
+            if (roundsToShowTeamsToTargetSlider) { // Teams To Target Rounds Slider
+                roundsToShowTeamsToTargetSlider.addEventListener('input', (e) => {
+                    roundsToShow = parseInt(e.target.value, 10); // Update global roundsToShow
+                    if (roundsToShowValueTeamsToTargetSpan) roundsToShowValueTeamsToTargetSpan.textContent = roundsToShow;
+                    // Only re-render Teams To Target schedule if its container is active
+                    if (teamsToTargetContainer.style.display === 'flex') {
+                        renderTeamsToTargetScheduleGrid(globalSeasonSchedule, selectedFDRSystem, userCustomFDRRatings);
+                    }
                 });
             }
 
             // Initial Load
             document.addEventListener('DOMContentLoaded', () => {
-                if (auth.currentUser) { if (loggedInContent) loggedInContent.style.display = 'block'; if (authSection) authSection.style.display = 'none'; showContentSection('initialLoggedInDashboard'); }
-                else { if (authSection) authSection.style.display = 'block'; if (loginForm) loginForm.style.display = 'block'; if (signupForm) signupForm.style.display = 'none'; if (loggedInContent) loggedInContent.style.display = 'none'; }
+                if (auth.currentUser) { 
+                    if (loggedInContent) loggedInContent.style.display = 'block'; 
+                    if (authSection) authSection.style.display = 'none'; 
+                    showContentSection('initialLoggedInDashboard'); 
+                }
+                else { 
+                    if (authSection) authSection.style.display = 'block'; 
+                    if (loginForm) loginForm.style.display = 'block'; 
+                    if (signupForm) signupForm.style.display = 'none'; 
+                    if (loggedInContent) loggedInContent.style.display = 'none'; 
+                }
                 if (instructionsBox) instructionsBox.style.display = 'none';
 
                 if (darkModeToggle) {
@@ -1224,7 +1371,9 @@
                 if (menuMyControlRoom) { menuMyControlRoom.addEventListener('click', (e) => { e.preventDefault(); showContentSection('controlRoom'); sidebarMenu.classList.remove('open'); overlay.style.display = 'none'; }); }
                 if (menuAdminDashboard) { menuAdminDashboard.addEventListener('click', (e) => { e.preventDefault(); showContentSection('adminDashboard'); sidebarMenu.classList.remove('open'); overlay.style.display = 'none'; }); }
 
+                // Initialize slider values
                 if (roundsToShowSlider && roundsToShowValueSpan) { roundsToShowValueSpan.textContent = roundsToShowSlider.value; }
+                if (roundsToShowTeamsToTargetSlider && roundsToShowValueTeamsToTargetSpan) { roundsToShowValueTeamsToTargetSpan.textContent = roundsToShowTeamsToTargetSlider.value; }
             });
         </script>
     </body>
