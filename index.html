@@ -2673,15 +2673,38 @@
                             const parsedRankings = [];
                             for (let i = 1; i < jsonRows.length; i++) {
                                 const row = jsonRows[i];
-                                const team = String(row[teamIndex]).trim();
+                                const rawTeamName = String(row[teamIndex]).trim();
                                 const rank = parseInt(row[rankIndex], 10);
                                 let fdrValue1, fdrValue2;
 
-                                // Validate team name against globalTeamData (API-sourced full names)
-                                if (!globalTeamData.byFullName[team]) {
-                                    console.warn(`WARNING_EXCEL_PARSE: Skipping row ${i+1} for team "${team}" because its full name does not match any team fetched from the API. Please ensure team names in Excel match API names exactly.`);
+                                // --- NEW: Standardize team name from Excel against API team names ---
+                                let matchedApiTeamName = null;
+                                // Try exact match first
+                                if (globalTeamData.byFullName[rawTeamName]) {
+                                    matchedApiTeamName = rawTeamName;
+                                } else {
+                                    // Try matching by removing "Al " prefix from API names
+                                    for (const apiTeamFullName in globalTeamData.byFullName) {
+                                        const apiTeamNameWithoutAl = apiTeamFullName.startsWith('Al ') ? apiTeamFullName.substring(3) : apiTeamFullName;
+                                        if (apiTeamNameWithoutAl.toLowerCase() === rawTeamName.toLowerCase()) {
+                                            matchedApiTeamName = apiTeamFullName;
+                                            break;
+                                        }
+                                    }
+                                    // If still no match, try adding "Al " prefix to Excel name and match
+                                    if (!matchedApiTeamName) {
+                                        const excelTeamNameWithAl = `Al ${rawTeamName}`;
+                                        if (globalTeamData.byFullName[excelTeamNameWithAl]) {
+                                            matchedApiTeamName = excelTeamNameWithAl;
+                                        }
+                                    }
+                                }
+
+                                if (!matchedApiTeamName) {
+                                    console.warn(`WARNING_EXCEL_PARSE: Skipping row ${i+1} for team "${rawTeamName}" because its full name could not be confidently matched to any team fetched from the API. Please ensure team names in Excel match API names closely.`);
                                     continue; // Skip this row if team name doesn't match API data
                                 }
+                                const team = matchedApiTeamName; // Use the standardized API team name
 
                                 let isValid = false;
 
