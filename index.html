@@ -1158,14 +1158,8 @@
 
             .schedule-grid {
                 display: grid;
-                /* First column for Team Name, rest are dynamic for rounds */
-                grid-template-columns: minmax(100px, 1fr) repeat(auto-fit, minmax(70px, 1fr));
-                /* minmax(100px, 1fr) ensures team column is at least 100px but grows.
-                   repeat(auto-fit, minmax(70px, 1fr)) creates flexible columns for rounds, at least 70px wide. */
-                
-                /* Ensures rows are auto-sized based on content */
+                /* grid-template-columns will be set dynamically by JS */
                 grid-auto-rows: minmax(40px, auto); 
-                
                 min-width: 600px; /* Ensures grid doesn't get too squished horizontally */
             }
 
@@ -1206,10 +1200,6 @@
                 background-color: var(--spl-table-row-even); /* Darker for dark mode */
                 color: var(--spl-text-dark);
             }
-
-            /* Alternating row background for better readability (using pseudo-classes) */
-            /* This applies to the entire row of cells, not just the team cell */
-            /* Removed direct row styling as colors are now on fixture cells */
 
             /* Fixture Cell Styles - NOW RECEIVES FDR COLORS */
             .grid-fixture-cell {
@@ -2568,19 +2558,6 @@
                     // Call fetchGlobalFDRData to re-fetch all data including API data
                     await fetchGlobalFDRData();
 
-                    // Update API status messages after fetching
-                    if (Object.keys(globalTeamData.byId).length > 0) {
-                        showApiTeamNamesStatus(`Team Names (from API) fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
-                    } else {
-                        showApiTeamNamesStatus("Team Names (from API) could not be fetched or data is empty. Check API connection and Netlify environment variables.", "error");
-                    }
-
-                    if (Object.keys(globalSeasonSchedule.fixtures).length > 0 && globalSeasonSchedule.rounds.length > 0) {
-                        showApiScheduleStatus(`Season Schedule (from API) fetched successfully. Found ${globalSeasonSchedule.rounds.length} rounds.`, "success");
-                    } else {
-                        showApiScheduleStatus("Season Schedule (from API) could not be fetched or data is empty. Check API connection and Netlify environment variables.", "error");
-                    }
-
                     // Render FDR scales for Admin Dashboard
                     renderFDRScale(overallFDRScaleAdmin, 7); // Overall is 1-7
                     renderFDRScale(homeFDRScaleAdmin, 6); // Home/Away is 1-6
@@ -2933,16 +2910,16 @@
              * @param {boolean} isHomeGame - True if it's a home game for `teamFullName` (meaning opponent is away), false for away (meaning opponent is home).
              * @param {string} fdrType - The type of FDR to use ('overall', 'homeAway', 'customized').
              * @param {Object} customRatings - Object containing custom ratings for 'customized' type.
-             * @returns {number | string} The FDR value (1-7 or 1-6) or 'N/A' if not found.
+             * @returns {number | null} The FDR value (1-7 or 1-6) or `null` if not found/invalid.
              */
             function getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings = {}) {
-                let fdrValue = 'N/A';
+                let fdrValue = null; // Default to null for not found/invalid
 
                 // Convert opponent short code to full name for lookup in rankings
                 const opponentFullName = globalTeamData.byShortName[opponentShortCode]?.name;
                 if (!opponentFullName) {
                     console.warn(`WARNING_FDR_CALC: Opponent full name not found for short code: ${opponentShortCode}. Cannot determine FDR.`);
-                    return 'N/A';
+                    return null;
                 }
 
                 // Determine the unique key for customized ratings based on opponent short code and home/away status
@@ -2955,14 +2932,14 @@
                         return fdrValue;
                     } else {
                         console.warn(`WARNING_FDR_CALC: Invalid or missing custom rating for key: ${customRatingKey}. Value: ${fdrValue}`);
-                        return 'N/A';
+                        return null;
                     }
                 }
 
                 // Ensure rankings data is available for other FDR types
                 if (!globalSplRankings || (!globalSplRankings.overall.length && !globalSplRankings.home.length && !globalSplRankings.away.length)) {
                     console.warn("WARNING_FDR_CALC: globalSplRankings is empty or not fully loaded in getFDRValue.");
-                    return 'N/A';
+                    return null;
                 }
 
                 if (fdrType === 'overall') {
@@ -3002,8 +2979,8 @@
                 if (typeof fdrValue === 'number' && fdrValue >= minScale && fdrValue <= maxScale) {
                     return fdrValue;
                 } else {
-                    console.warn(`WARNING_FDR_CALC: Invalid FDR value (${fdrValue}) for type ${fdrType} and opponent ${opponentFullName}. Expected range ${minScale}-${maxScale}.`);
-                    return 'N/A';
+                    console.warn(`WARNING_FDR_CALC: Invalid FDR value (${fdrValue}) for type ${fdrType} and opponent ${opponentFullName}. Expected range ${minScale}-${maxScale}. Returning null.`);
+                    return null;
                 }
             }
 
@@ -3032,6 +3009,10 @@
                 console.log("DEBUG_RENDER_GRID: All rounds from globalSeasonSchedule.rounds:", allRounds);
                 console.log("DEBUG_RENDER_GRID: Rounds to render (based on slider):", roundsToRender);
 
+                // Dynamically set grid-template-columns based on the number of rounds to render
+                // One column for Team, plus one column for each round
+                gridContainerElement.style.gridTemplateColumns = `minmax(100px, 1fr) repeat(${roundsToRender.length}, minmax(70px, 1fr))`;
+
 
                 // --- Create Grid Headers (Team and Rounds) ---
                 // Team Header
@@ -3050,10 +3031,11 @@
 
                 // --- Create Grid Rows (Team Name and Fixture Cells) ---
                 teamsToDisplay.forEach(teamFullName => {
-                    // Team Name Cell for the current row
+                    // Team Name Cell for the current row - THIS IS THE FIX FOR POINT 1
                     const teamCell = document.createElement('div');
                     teamCell.className = 'grid-row-team-cell';
-                    teamCell.textContent = teamFullName;
+                    teamCell.textContent = teamFullName; // Only the team full name
+                    // No FDR classes or fixture content for this cell
                     gridContainerElement.appendChild(teamCell);
 
                     const teamFixtures = scheduleData.fixtures[teamFullName] || {};
@@ -3085,10 +3067,10 @@
 
                                 // Determine FDR and apply color class to the CELL (fixtureCell)
                                 const fdrValue = getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings);
-                                if (fdrValue !== 'N/A') {
+                                if (fdrValue !== null) { // Check for null, not 'N/A' string
                                     fixtureCell.classList.add(`fdr-${fdrValue}`);
                                 } else {
-                                    fixtureCell.classList.add('fdr-na'); // Apply N/A class if FDR not found
+                                    fixtureCell.classList.add('fdr-na'); // Apply N/A class if FDR not found/invalid
                                 }
 
                                 // For customized, provide input fields
