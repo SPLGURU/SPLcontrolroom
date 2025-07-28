@@ -283,6 +283,11 @@
             #showCustomRatingsGridButton { margin-top: 10px; margin-bottom: 10px; }
             #saveCustomFDRRatingsButton { margin-top: 10px; margin-bottom: 5px; } /* Reduced to bring message closer */
             #customRatingsMessageBox { margin-top: 5px; margin-bottom: 15px; } /* Adjust for tight placement */
+            #saveFDRSystemMessage { margin-top: 5px; margin-bottom: 10px; } /* For "FDR System Saved" message */
+
+            /* Chosen FDR System Display */
+            .chosen-fdr-system-display { text-align: center; font-size: 1.1em; font-weight: bold; color: var(--spl-primary-accent); margin-bottom: 15px; display: none; }
+            body.dark-mode .chosen-fdr-system-display { color: #FFD700; }
         </style>
     </head>
     <body>
@@ -377,6 +382,8 @@
                     <!-- FDR Systems Container -->
                     <div id="fdrSystemsContainer">
                         <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
+                        <p id="saveFDRSystemMessage" class="message-box success" style="display: none;"></p> <!-- New message for saving FDR system -->
+                        <p class="chosen-fdr-system-display" id="chosenFDRSystemDisplayFDR"></p> <!-- New display for chosen FDR system -->
                         <p>Please Choose FDR System</p>
 
                         <div class="fdr-system-selection">
@@ -441,6 +448,7 @@
 
                     <!-- Teams To Target Container -->
                     <div id="teamsToTargetContainer" style="display: none;">
+                        <p class="chosen-fdr-system-display" id="chosenFDRSystemDisplayTeamsToTarget"></p> <!-- New display for chosen FDR system -->
                         <h3 class="fdr-section-title">Teams To Target (Easiest Fixtures)</h3>
                         <p>Teams are ranked by total FDR over the selected rounds (lowest total = easiest run).</p>
                         <div class="tuning-section">
@@ -610,16 +618,16 @@
             const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin'); const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
             const awayFDRScaleAdmin = document.getElementById('awayFDRScaleAdmin');
             const showFDRButton = document.getElementById('showFDRButton'); 
-            const showTeamsToTargetButton = document.getElementById('showTeamsToTargetButton'); // New button
+            const showTeamsToTargetButton = document.getElementById('showTeamsToTargetButton'); 
             const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
-            const teamsToTargetContainer = document.getElementById('teamsToTargetContainer'); // New container
+            const teamsToTargetContainer = document.getElementById('teamsToTargetContainer'); 
             const controlRoomMessageBox = document.getElementById('controlRoomMessageBox'); const fdrScaleDisplay = document.getElementById('fdrScaleDisplay'); 
             const radioOverallFDR = document.getElementById('radioOverallFDR'); const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
             const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); const saveFDRSystemButton = document.getElementById('saveFDRSystemButton'); 
-            const roundsToShowSlider = document.getElementById('roundsToShow'); // Used for FDR
-            const roundsToShowValueSpan = document.getElementById('roundsToShowValue'); // Used for FDR
-            const roundsToShowTeamsToTargetSlider = document.getElementById('roundsToShowTeamsToTarget'); // New slider for Teams To Target
-            const roundsToShowValueTeamsToTargetSpan = document.getElementById('roundsToShowValueTeamsToTarget'); // New span for Teams To Target
+            const roundsToShowSlider = document.getElementById('roundsToShow'); 
+            const roundsToShowValueSpan = document.getElementById('roundsToShowValue'); 
+            const roundsToShowTeamsToTargetSlider = document.getElementById('roundsToShowTeamsToTarget'); 
+            const roundsToShowValueTeamsToTargetSpan = document.getElementById('roundsToShowValueTeamsToTarget'); 
             const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); 
             const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom'); const overallScheduleGrid = document.getElementById('overallScheduleGrid'); 
             const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); const homeAwayScheduleGrid = document.getElementById('homeAwayScheduleGrid'); 
@@ -629,7 +637,11 @@
             const customRatingsGrid = document.getElementById('customRatingsGrid');
             const showCustomRatingsGridButton = document.getElementById('showCustomRatingsGridButton');
             const customRatingsMessageBox = document.getElementById('customRatingsMessageBox');
-            const teamsToTargetScheduleGrid = document.getElementById('teamsToTargetScheduleGrid'); // New schedule grid for Teams To Target
+            const teamsToTargetScheduleGrid = document.getElementById('teamsToTargetScheduleGrid'); 
+            const saveFDRSystemMessage = document.getElementById('saveFDRSystemMessage'); // New message element
+            const chosenFDRSystemDisplayFDR = document.getElementById('chosenFDRSystemDisplayFDR'); // New element for FDR section
+            const chosenFDRSystemDisplayTeamsToTarget = document.getElementById('chosenFDRSystemDisplayTeamsToTarget'); // New element for Teams To Target section
+
 
             // Helper Functions
             const showAuthMessage = (msg, type = 'info') => { if (authMessageBox) { authMessageBox.className = `message-box ${type}`; authMessageBox.textContent = msg; authMessageBox.style.display = 'block'; }};
@@ -639,6 +651,14 @@
             const showApiScheduleStatus = (msg, type = 'info') => { if (apiScheduleStatus) { apiScheduleStatus.className = `message-box ${type}`; apiScheduleStatus.textContent = msg; apiScheduleStatus.style.display = 'block'; }};
             const showControlRoomMessage = (msg, type = 'info') => { if (controlRoomMessageBox) { controlRoomMessageBox.className = `message-box ${type}`; controlRoomMessageBox.textContent = msg; controlRoomMessageBox.style.display = 'block'; }};
             const showCustomRatingsMessage = (msg, type = 'info') => { if (customRatingsMessageBox) { customRatingsMessageBox.className = `message-box ${type}`; customRatingsMessageBox.textContent = msg; customRatingsMessageBox.style.display = 'block'; }};
+            const showSaveFDRSystemMessage = (msg, type = 'info') => { 
+                if (saveFDRSystemMessage) { 
+                    saveFDRSystemMessage.className = `message-box ${type}`; 
+                    saveFDRSystemMessage.textContent = msg; 
+                    saveFDRSystemMessage.style.display = 'block'; 
+                    setTimeout(() => { saveFDRSystemMessage.style.display = 'none'; }, 3000); // Hide after 3 seconds
+                }
+            };
 
             function hideAllContentSections() {
                 [initialLoggedInDashboardContent, analyzerReportContent, myControlRoomContent, adminDashboardContent].forEach(el => el && (el.style.display = 'none'));
@@ -1161,10 +1181,12 @@
                                 const fixtureDisplayItem = document.createElement('div'); fixtureDisplayItem.className = `fixture-item-display`;
                                 const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
                                 const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
-                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji}`;
-                                fixtureCell.appendChild(fixtureDisplayItem);
-                                // Apply FDR coloring based on the selected FDR system
+                                
+                                // Get FDR value for coloring and display
                                 const fdrValue = getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings);
+                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji} ${fdrValue !== null ? `(${fdrValue})` : ''}`; // Add FDR number
+                                
+                                fixtureCell.appendChild(fixtureDisplayItem);
                                 fixtureCell.classList.add(fdrValue !== null ? `fdr-${fdrValue}` : 'fdr-na');
                             });
                         } else { fixtureCell.textContent = ''; fixtureCell.classList.add('fdr-na'); }
@@ -1199,6 +1221,17 @@
             // Function to display the selected FDR system (for FDR section)
             async function displaySelectedFDRSystem(system) {
                 selectedFDRSystem = system; // Update global variable
+
+                // Update "Chosen FDR System" text for FDR section
+                if (chosenFDRSystemDisplayFDR) {
+                    const systemName = {
+                        'overall': 'Overall FDR',
+                        'homeAway': 'Home/Away FDR',
+                        'customized': 'Customized FDR'
+                    }[selectedFDRSystem] || 'Overall FDR';
+                    chosenFDRSystemDisplayFDR.textContent = `Chosen FDR System: ${systemName}`;
+                    chosenFDRSystemDisplayFDR.style.display = 'block';
+                }
 
                 // Ensure the FDR display container is visible
                 if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'block';
@@ -1236,13 +1269,36 @@
             }
 
             // Event Listeners
-            document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => { radio.addEventListener('change', () => {
+            document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => { radio.addEventListener('change', async () => {
                 displaySelectedFDRSystem(radio.value);
                 // Also update the Teams To Target schedule if it's currently visible
-                if (teamsToTargetContainer.style.display === 'block') {
+                if (teamsToTargetContainer.style.display === 'flex') {
+                    // Fetch custom ratings if switching to customized and Teams To Target is visible
+                    if (radio.value === 'customized') {
+                        const user = auth.currentUser; userCustomFDRRatings = {};
+                        if (user) {
+                            const customFDRDocSnap = await getDoc(doc(db, "users", user.uid, "customFDR", "ratings"));
+                            if (customFDRDocSnap.exists()) userCustomFDRRatings = customFDRDocSnap.data();
+                        }
+                    }
                     renderTeamsToTargetScheduleGrid(globalSeasonSchedule, radio.value, userCustomFDRRatings);
                 }
             }); });
+
+            if (saveFDRSystemButton) {
+                saveFDRSystemButton.addEventListener('click', async () => {
+                    const user = auth.currentUser;
+                    if (!user) { showControlRoomMessage("You must be logged in to save your preferred FDR system.", "error"); return; }
+
+                    try {
+                        await setDoc(doc(db, "users", user.uid), { preferredFDRSystem: selectedFDRSystem }, { merge: true });
+                        showSaveFDRSystemMessage("Your FDR System is Saved!", "success");
+                    } catch (error) {
+                        showControlRoomMessage(`Failed to save FDR system: ${error.message}`, "error");
+                    }
+                });
+            }
+
 
             if (showFDRButton) { 
                 showFDRButton.addEventListener('click', () => { 
@@ -1253,9 +1309,29 @@
             }
 
             if (showTeamsToTargetButton) {
-                showTeamsToTargetButton.addEventListener('click', () => {
+                showTeamsToTargetButton.addEventListener('click', async () => { // Made async to fetch custom ratings
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Hide FDR
                     if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'flex'; // Show Teams To Target
+                    
+                    // Update "Chosen FDR System" text for Teams To Target section
+                    if (chosenFDRSystemDisplayTeamsToTarget) {
+                        const systemName = {
+                            'overall': 'Overall FDR',
+                            'homeAway': 'Home/Away FDR',
+                            'customized': 'Customized FDR'
+                        }[selectedFDRSystem] || 'Overall FDR';
+                        chosenFDRSystemDisplayTeamsToTarget.textContent = `Chosen FDR System: ${systemName}`;
+                        chosenFDRSystemDisplayTeamsToTarget.style.display = 'block';
+                    }
+
+                    // Fetch custom ratings if the selected system is customized
+                    if (selectedFDRSystem === 'customized') {
+                        const user = auth.currentUser; userCustomFDRRatings = {};
+                        if (user) {
+                            const customFDRDocSnap = await getDoc(doc(db, "users", user.uid, "customFDR", "ratings"));
+                            if (customFDRDocSnap.exists()) userCustomFDRRatings = customFDRDocSnap.data();
+                        }
+                    }
                     // Render Teams To Target schedule based on current selected FDR system and roundsToShow
                     renderTeamsToTargetScheduleGrid(globalSeasonSchedule, selectedFDRSystem, userCustomFDRRatings);
                 });
@@ -1311,7 +1387,7 @@
                         // Re-render the schedule grid with the newly saved ratings
                         renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
                         // Also update Teams To Target if visible and using customized FDR
-                        if (teamsToTargetContainer.style.display === 'block' && selectedFDRSystem === 'customized') {
+                        if (teamsToTargetContainer.style.display === 'flex' && selectedFDRSystem === 'customized') {
                             renderTeamsToTargetScheduleGrid(globalSeasonSchedule, 'customized', userCustomFDRRatings);
                         }
 
