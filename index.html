@@ -2437,7 +2437,7 @@
                     if (showFDRButton) showFDRButton.style.display = 'block'; // Show the main FDR button
                     // Ensure FDR systems container is hidden until FDR button is clicked
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
-                    if (myControlRoomFDRDisplay) myControlRoomFDRDisplay.style.display = 'none'; // Ensure this is hidden
+                    // No need to set myControlRoomFDRDisplay to none here, as it's handled by hideAllContentSections
                     if (controlRoomMessageBox) controlRoomMessageBox.style.display = 'none'; 
                     if (fdrScaleDisplay) fdrScaleDisplay.innerHTML = ''; // Clear scale until system is selected
                 } else if (sectionId === 'adminDashboard') {
@@ -3522,39 +3522,21 @@
                         return;
                     }
 
-                    const newCustomRatings = {};
-                    // Select inputs from the customRatingsGrid specifically
-                    const customSelects = customRatingsGrid.querySelectorAll('select'); // Changed to select
-                    let allRatingsFilled = true;
-
-                    customSelects.forEach(select => { // Changed to select
-                        const teamFullName = select.dataset.teamFullName;
-                        const homeAway = select.dataset.homeAway; // 'Home' or 'Away'
-                        const value = parseInt(select.value, 10); // Changed to select.value
-
-                        if (isNaN(value) || value < 1 || value > 7) {
-                            allRatingsFilled = false;
-                            // No need to show individual error here, the main message will cover it
-                            return; 
-                        }
-                        newCustomRatings[`${teamFullName}_${homeAway}`] = value;
-                    });
-
-                    if (!allRatingsFilled) {
-                        showCustomRatingsMessage("Please rate all fixtures to save your ratings.", "error");
-                        return; // Exit if any input was invalid
+                    const selectedSystem = document.querySelector('input[name="fdrSystem"]:checked')?.value;
+                    if (!selectedSystem) {
+                        showCustomRatingsMessage("Please select an FDR system to save.", "warning");
+                        return;
                     }
 
                     try {
-                        const customFDRDocRef = doc(db, "users", user.uid, "customFDR", "ratings");
-                        await setDoc(customFDRDocRef, newCustomRatings); // Overwrite with new ratings
-                        userCustomFDRRatings = newCustomRatings; // Update global variable
-                        showCustomRatingsMessage("Your ratings have been saved!", "success");
-                        // Re-render the schedule grid to reflect the newly saved ratings
-                        renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
+                        const userDocRef = doc(db, "users", user.uid);
+                        await updateDoc(userDocRef, {
+                            preferredFDRSystem: selectedSystem
+                        });
+                        showCustomRatingsMessage(`Your preferred FDR system (${selectedSystem.charAt(0).toUpperCase() + selectedSystem.slice(1)}) has been saved!`, "success");
                     } catch (error) {
-                        console.error("Error saving custom FDR ratings:", error);
-                        showCustomRatingsMessage(`Failed to save custom ratings: ${error.message}`, "error");
+                        console.error("Error saving preferred FDR system:", error);
+                        showCustomRatingsMessage(`Failed to save preferred FDR system: ${error.message}`, "error");
                     }
                 });
             }
