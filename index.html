@@ -1810,7 +1810,6 @@
             const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
             const controlRoomMessageBox = document.getElementById('controlRoomMessageBox');
             const fdrScaleDisplay = document.getElementById('fdrScaleDisplay'); // Main FDR Scale for Control Room
-            const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); 
             const radioOverallFDR = document.getElementById('radioOverallFDR');
             const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
             const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); 
@@ -1824,6 +1823,7 @@
             // const showTeamRatingsToggle = document.getElementById('showTeamRatingsToggle');
 
             // Schedule grids for My Control Room
+            const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); 
             const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom');
             const overallScheduleGrid = document.getElementById('overallScheduleGrid'); // Changed from Table to Grid
             const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); 
@@ -2677,6 +2677,12 @@
                                 const rank = parseInt(row[rankIndex], 10);
                                 let fdrValue1, fdrValue2;
 
+                                // Validate team name against globalTeamData (API-sourced full names)
+                                if (!globalTeamData.byFullName[team]) {
+                                    console.warn(`WARNING_EXCEL_PARSE: Skipping row ${i+1} for team "${team}" because its full name does not match any team fetched from the API. Please ensure team names in Excel match API names exactly.`);
+                                    continue; // Skip this row if team name doesn't match API data
+                                }
+
                                 let isValid = false;
 
                                 if (selectedRankingType === 'overall') {
@@ -2701,12 +2707,12 @@
                                 }
 
                                 if (!isValid) {
-                                    console.warn(`Skipping row ${i+1} due to invalid data or FDR out of range (1-${maxFDRScale}): Row Data:`, row);
+                                    console.warn(`WARNING_EXCEL_PARSE: Skipping row ${i+1} due to invalid data or FDR out of range (1-${maxFDRScale}). Team: "${team}", Row Data:`, row);
                                 }
                             }
 
                             if (parsedRankings.length === 0) {
-                                showExcelUploadMessage(`No valid ranking data found in the Excel file after parsing. Ensure all columns are present and FDRs are in the correct range (1-${maxFDRScale}).`, "error");
+                                showExcelUploadMessage(`No valid ranking data found in the Excel file after parsing. Ensure all columns are present, FDRs are in the correct range (1-${maxFDRScale}), and team names match API data exactly.`, "error");
                                 return;
                             }
 
@@ -2915,12 +2921,18 @@
             function getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings = {}) {
                 let fdrValue = null; // Default to null for not found/invalid
 
+                console.log(`DEBUG_FDR_CALC: Calculating FDR for ${teamFullName} vs ${opponentShortCode} (${isHomeGame ? 'Home' : 'Away'}) for type: ${fdrType}`);
+
                 // Convert opponent short code to full name for lookup in rankings
-                const opponentFullName = globalTeamData.byShortName[opponentShortCode]?.name;
+                const opponentTeamData = globalTeamData.byShortName[opponentShortCode];
+                const opponentFullName = opponentTeamData?.name;
+                
                 if (!opponentFullName) {
-                    console.warn(`WARNING_FDR_CALC: Opponent full name not found for short code: ${opponentShortCode}. Cannot determine FDR.`);
+                    console.warn(`WARNING_FDR_CALC: Opponent full name not found for short code: "${opponentShortCode}". Cannot determine FDR for ${teamFullName} vs ${opponentShortCode}.`);
                     return null;
                 }
+                console.log(`DEBUG_FDR_CALC: Resolved opponent short code "${opponentShortCode}" to full name "${opponentFullName}".`);
+
 
                 // Determine the unique key for customized ratings based on opponent short code and home/away status
                 const customRatingKey = `${opponentShortCode}_${isHomeGame ? 'A' : 'H'}`; // Opponent's status: Away if we are Home, Home if we are Away
@@ -2929,27 +2941,28 @@
                     fdrValue = customRatings[customRatingKey];
                     // Ensure custom rating is within 1-7 range
                     if (typeof fdrValue === 'number' && fdrValue >= 1 && fdrValue <= 7) {
+                        console.log(`DEBUG_FDR_CALC: Customized FDR for ${customRatingKey}: ${fdrValue}`);
                         return fdrValue;
                     } else {
-                        console.warn(`WARNING_FDR_CALC: Invalid or missing custom rating for key: ${customRatingKey}. Value: ${fdrValue}`);
+                        console.warn(`WARNING_FDR_CALC: Invalid or missing custom rating for key: ${customRatingKey}. Value: ${fdrValue}. Returning null.`);
                         return null;
                     }
                 }
 
                 // Ensure rankings data is available for other FDR types
                 if (!globalSplRankings || (!globalSplRankings.overall.length && !globalSplRankings.home.length && !globalSplRankings.away.length)) {
-                    console.warn("WARNING_FDR_CALC: globalSplRankings is empty or not fully loaded in getFDRValue.");
+                    console.warn("WARNING_FDR_CALC: globalSplRankings is empty or not fully loaded in getFDRValue. Returning null.");
                     return null;
                 }
 
                 if (fdrType === 'overall') {
                     const opponentOverallData = globalSplRankings.overall.find(item => item.team === opponentFullName);
+                    console.log(`DEBUG_FDR_CALC: Looking up Overall FDR for opponent "${opponentFullName}". Found data:`, opponentOverallData);
                     if (opponentOverallData) {
-                        // If our team is home, we look at the opponent's AWAY FDR (difficulty for us when they are away).
-                        // If our team is away, we look at the opponent's HOME FDR (difficulty for us when they are home).
                         fdrValue = isHomeGame ? opponentOverallData.fdrAway : opponentOverallData.fdrHome; 
+                        console.log(`DEBUG_FDR_CALC: Overall FDR for ${teamFullName} vs ${opponentFullName} (${isHomeGame ? 'Home' : 'Away'}): ${fdrValue}`);
                     } else {
-                        console.warn(`WARNING_FDR_CALC: Opponent overall data not found for ${opponentFullName}.`);
+                        console.warn(`WARNING_FDR_CALC: Opponent overall data not found in globalSplRankings.overall for "${opponentFullName}". Returning null.`);
                     }
                 } else if (fdrType === 'homeAway') {
                     // For Home/Away FDR, the logic is slightly different based on the sheets.
@@ -2957,17 +2970,21 @@
                     // If our team is AWAY, we are looking for the opponent's HOME difficulty from the 'away' sheet.
                     if (isHomeGame) { // Our team is home, so we check opponent's AWAY FDR (from 'home' sheet)
                         const opponentHomeData = globalSplRankings.home.find(item => item.team === opponentFullName);
+                        console.log(`DEBUG_FDR_CALC: Looking up Home/Away FDR (Home Game) for opponent "${opponentFullName}" in globalSplRankings.home. Found data:`, opponentHomeData);
                         if (opponentHomeData) {
                             fdrValue = opponentHomeData.fdrAway; // 'fdrAway' column in the 'Home' sheet
+                            console.log(`DEBUG_FDR_CALC: Home/Away FDR (Home Game) for ${teamFullName} vs ${opponentFullName} (from home sheet's fdrAway): ${fdrValue}`);
                         } else {
-                            console.warn(`WARNING_FDR_CALC: Opponent home data (from home sheet) not found for ${opponentFullName}.`);
+                            console.warn(`WARNING_FDR_CALC: Opponent home data (from globalSplRankings.home) not found for "${opponentFullName}". Returning null.`);
                         }
                     } else { // Our team is away, so we check opponent's HOME FDR (from 'away' sheet)
                         const opponentAwayData = globalSplRankings.away.find(item => item.team === opponentFullName);
+                        console.log(`DEBUG_FDR_CALC: Looking up Home/Away FDR (Away Game) for opponent "${opponentFullName}" in globalSplRankings.away. Found data:`, opponentAwayData);
                         if (opponentAwayData) {
                             fdrValue = opponentAwayData.fdrHome; // 'fdrHome' column in the 'Away' sheet
+                            console.log(`DEBUG_FDR_CALC: Home/Away FDR (Away Game) for ${teamFullName} vs ${opponentFullName} (from away sheet's fdrHome): ${fdrValue}`);
                         } else {
-                            console.warn(`WARNING_FDR_CALC: Opponent away data (from away sheet) not found for ${opponentFullName}.`);
+                            console.warn(`WARNING_FDR_CALC: Opponent away data (from globalSplRankings.away) not found for "${opponentFullName}". Returning null.`);
                         }
                     }
                 }
