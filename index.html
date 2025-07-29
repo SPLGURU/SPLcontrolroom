@@ -767,7 +767,7 @@
                         <button id="nextRoundButton">Next Round</button>
                         <button id="savePlanButton">Save Plan</button>
                         <button id="loadPlanButton">Load Plan</button>
-                        <button id="resetPlanButton">Reset Plan</button>
+                        <button id="resetPlan">Reset Plan</button>
                     </div>
 
                     <div class="pitch-bench-area">
@@ -907,6 +907,117 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signOut, reload } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // DOM Element References
+        const mainLogo = document.getElementById('mainLogo');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const authSection = document.getElementById('authSection');
+        const loginForm = document.getElementById('loginForm');
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginButton = document.getElementById('loginButton');
+        const showSignupLink = document.getElementById('showSignupLink');
+        const signupForm = document.getElementById('signupForm');
+        const signupEmailInput = document.getElementById('signupEmail');
+        const signupPasswordInput = document.getElementById('signupPassword');
+        const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword');
+        const signupManagerIdInput = document.getElementById('signupManagerId');
+        const signupButton = document.getElementById('signupButton');
+        const showLoginLink = document.getElementById('showLoginLink');
+        const instructionsBox = document.getElementById('instructionsBox');
+        const authMessageBox = document.getElementById('authMessageBox');
+        const loggedInContent = document.getElementById('loggedInContent');
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('overlay');
+        const sidebarTeamName = document.getElementById('sidebarTeamName');
+        const menuMyControlRoom = document.getElementById('menuMyControlRoom');
+        const menuAdminDashboard = document.getElementById('menuAdminDashboard');
+        const displayLoggedInManagerId = document.getElementById('displayLoggedInManagerId');
+        const logoutButton = document.getElementById('logoutButton');
+        const initialLoggedInDashboardContent = document.getElementById('initialLoggedInDashboardContent');
+        const analyzerReportContent = document.getElementById('analyzerReportContent');
+        const myControlRoomContent = document.getElementById('myControlRoomContent');
+        const showFDRButton = document.getElementById('showFDRButton');
+        const showTeamsToTargetButton = document.getElementById('showTeamsToTargetButton');
+        const showTransferPlannerButton = document.getElementById('showTransferPlannerButton');
+        const fdrSystemsContainer = document.getElementById('fdrSystemsContainer');
+        const controlRoomMessageBox = document.getElementById('controlRoomMessageBox');
+        const saveFDRSystemMessage = document.getElementById('saveFDRSystemMessage');
+        const chosenFDRSystemDisplayFDR = document.getElementById('chosenFDRSystemDisplayFDR');
+        const radioOverallFDR = document.getElementById('radioOverallFDR');
+        const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR');
+        const radioCustomizedFDR = document.getElementById('radioCustomizedFDR');
+        const saveFDRSystemButton = document.getElementById('saveFDRSystemButton');
+        const fdrScaleDisplay = document.getElementById('fdrScaleDisplay');
+        const roundsToShowSlider = document.getElementById('roundsToShow');
+        const roundsToShowValueSpan = document.getElementById('roundsToShowValue');
+        const showCustomRatingsGridButton = document.getElementById('showCustomRatingsGridButton');
+        const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay');
+        const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom');
+        const overallScheduleGrid = document.getElementById('overallScheduleGrid');
+        const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom');
+        const homeAwayScheduleGrid = document.getElementById('homeAwayScheduleGrid');
+        const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom');
+        const customRatingsInputGridContainer = document.getElementById('customRatingsInputGridContainer');
+        const customRatingsGrid = document.getElementById('customRatingsGrid');
+        const saveCustomFDRRatingsButton = document.getElementById('saveCustomFDRRatingsButton');
+        const customRatingsMessageBox = document.getElementById('customRatingsMessageBox');
+        const customizedScheduleGrid = document.getElementById('customizedScheduleGrid');
+        const teamsToTargetContainer = document.getElementById('teamsToTargetContainer');
+        const chosenFDRSystemDisplayTeamsToTarget = document.getElementById('chosenFDRSystemDisplayTeamsToTarget');
+        const roundsToShowTeamsToTargetSlider = document.getElementById('roundsToShowTeamsToTarget');
+        const roundsToShowValueTeamsToTargetSpan = document.getElementById('roundsToShowValueTeamsToTarget');
+        const teamsToTargetScheduleGrid = document.getElementById('teamsToTargetScheduleGrid');
+        const transferPlannerContainer = document.getElementById('transferPlannerContainer');
+        const transferPlannerMessage = document.getElementById('transferPlannerMessage');
+        const prevRoundButton = document.getElementById('prevRoundButton');
+        const currentPlanningRoundDisplay = document.getElementById('currentPlanningRoundDisplay');
+        const freeTransfersDisplay = document.getElementById('freeTransfersDisplay');
+        const pointsHitDisplay = document.getElementById('pointsHitDisplay');
+        const fundsDisplay = document.getElementById('fundsDisplay');
+        const nextRoundButton = document.getElementById('nextRoundButton');
+        const savePlanButton = document.getElementById('savePlanButton');
+        const loadPlanButton = document.getElementById('loadPlanButton');
+        const resetPlanButton = document.getElementById('resetPlan'); // Corrected ID for reset button
+        const pitchArea = document.getElementById('pitchArea');
+        const benchArea = document.getElementById('benchArea');
+        const playerSearchInput = document.getElementById('playerSearchInput');
+        const playerFilters = document.getElementById('playerFilters');
+        const playerList = document.getElementById('playerList');
+        const adminDashboardContent = document.getElementById('adminDashboardContent');
+        const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons');
+        const adminUsersButton = document.getElementById('adminUsersButton');
+        const adminDataButton = document.getElementById('adminDataButton');
+        const adminSearchSection = document.querySelector('.admin-search-section');
+        const adminSearchInput = document.getElementById('adminSearchInput');
+        const adminSearchButton = document.getElementById('adminSearchButton');
+        const adminSearchResults = document.getElementById('adminSearchResults');
+        const adminUserUidElem = document.getElementById('adminUserUid');
+        const adminEditEmailInput = document.getElementById('adminEditEmail');
+        const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId');
+        const adminUpdateUserButton = document.getElementById('adminUpdateUserButton');
+        const adminMessage = document.getElementById('adminMessage');
+        const dataUploadSection = document.getElementById('dataUploadSection');
+        const rankingTypeSelect = document.getElementById('rankingTypeSelect');
+        const excelFileUploadInput = document.getElementById('excelFileUploadInput');
+        const excelUploadMessage = document.getElementById('excelUploadMessage');
+        const apiTeamNamesStatus = document.getElementById('apiTeamNamesStatus');
+        const apiScheduleStatus = document.getElementById('apiScheduleStatus');
+        const currentRankingsDisplayAdmin = document.getElementById('currentRankingsDisplayAdmin');
+        const overallFDRSectionAdmin = document.getElementById('overallFDRSectionAdmin');
+        const overallFDRScaleAdmin = document.getElementById('overallFDRScaleAdmin');
+        const overallFDRGridAdmin = document.getElementById('overallFDRGridAdmin');
+        const homeFDRSectionAdmin = document.getElementById('homeFDRSectionAdmin');
+        const homeFDRScaleAdmin = document.getElementById('homeFDRScaleAdmin');
+        const homeFDRGridAdmin = document.getElementById('homeFDRGridAdmin');
+        const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin');
+        const awayFDRScaleAdmin = document.getElementById('awayFDRScaleAdmin');
+        const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
+
+        // Logo paths
+        const lightModeLogoSrc = "unnamed.jpg";
+        const darkModeLogoSrc = "unnamed.jpg"; // Assuming the same logo for dark mode, or provide a different one if available
 
         // Firebase Config (PLACEHOLDER FOR NETLIFY INJECTION)
         // IMPORTANT: In your Netlify environment, you would set these as environment variables
@@ -1524,6 +1635,8 @@
                     const fixturesForThisRound = teamFixtures[round] || [];
                     if (fixturesForThisRound.length > 0) {
                         fixturesForThisRound.forEach(fixtureString => {
+                            const fixtureDisplayItem = document.createElement('div'); // Declare fixtureDisplayItem here
+                            fixtureDisplayItem.className = `fixture-item-display`;
                             const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
                             const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
                             
@@ -1548,7 +1661,7 @@
             if (user) {
                 const userDocSnap = await getDoc(doc(db, "users", user.uid));
                 if (userDocSnap.exists() && userDocSnap.data().preferredFDRSystem) {
-                    preferredSystem = userDocSnap.data().preferredFDRSystem;
+                    preferredSystem = userDocSnap.data().preferredFdrSystem; // Corrected: Use preferredFDRSystem
                 }
             }
             // Set the global variable
@@ -1625,13 +1738,7 @@
         async function fetchManagerSquadForRound(managerId, round) {
             showTransferPlannerMessage(`Fetching your actual team for Round ${round}...`, 'info');
             try {
-                // In a real scenario, you'd fetch the manager's picks for a specific round.
-                // For this simulation, we'll fetch general player data and construct a mock squad.
-                // The API_MANAGER_HISTORY_BASE is used for overall history, not specific round picks.
-                // We'll use the bootstrap-static data to pick players for the mock squad.
-
                 if (globalTeamData.allPlayers.length === 0) {
-                    // Ensure player data is loaded
                     await fetchGlobalFDRData(); 
                 }
 
@@ -1644,14 +1751,13 @@
                 const usedPlayerIds = new Set();
                 const playersByPosition = { 'GKP': [], 'DEF': [], 'MID': [], 'FWD': [] };
 
-                // Populate players by position
                 allPlayers.forEach(p => {
                     if (playersByPosition[p.position_short]) {
                         playersByPosition[p.position_short].push(p);
                     }
                 });
 
-                // Helper to get a random player of a specific position
+                // Helper to get a random player of a specific position, ensuring uniqueness
                 const getRandomPlayer = (pos, excludeIds = new Set()) => {
                     const availablePlayers = playersByPosition[pos].filter(p => !excludeIds.has(p.id));
                     if (availablePlayers.length > 0) {
@@ -1662,54 +1768,54 @@
                     return null;
                 };
 
-                // Fill the 11 starting players based on a common formation (e.g., 4-4-2)
-                // Ensure minimums are met for GKP, DEF, FWD
-                const formation = { GKP: 1, DEF: 4, MID: 4, FWD: 2 }; // Example formation for 11 players
+                // Define the exact slots from your HTML for pitch and bench
+                const pitchSlots = [
+                    { position: 'GKP', slotId: 1 },
+                    { position: 'DEF', slotId: 2 }, { position: 'DEF', slotId: 3 }, { position: 'DEF', slotId: 4 }, { position: 'DEF', slotId: 5 },
+                    { position: 'MID', slotId: 6 }, { position: 'MID', slotId: 7 }, { position: 'MID', slotId: 8 }, { position: 'MID', slotId: 9 },
+                    { position: 'FWD', slotId: 10 }, { position: 'FWD', slotId: 11 }
+                ];
+                const benchSlots = [
+                    { position: 'BENCH', slotId: 12 }, { position: 'BENCH', slotId: 13 }, { position: 'BENCH', slotId: 14 }, { position: 'BENCH', slotId: 15 }
+                ];
 
-                let currentSlotId = 1;
-
-                // Add Goalkeepers
-                for (let i = 0; i < formation.GKP; i++) {
-                    const player = getRandomPlayer('GKP', usedPlayerIds);
-                    if (player) mockSquad.push({ ...player, slot_id: currentSlotId++, slot_type: 'pitch', buying_price: player.current_price });
-                }
-                // Add Defenders
-                for (let i = 0; i < formation.DEF; i++) {
-                    const player = getRandomPlayer('DEF', usedPlayerIds);
-                    if (player) mockSquad.push({ ...player, slot_id: currentSlotId++, slot_type: 'pitch', buying_price: player.current_price });
-                }
-                // Add Midfielders
-                for (let i = 0; i < formation.MID; i++) {
-                    const player = getRandomPlayer('MID', usedPlayerIds);
-                    if (player) mockSquad.push({ ...player, slot_id: currentSlotId++, slot_type: 'pitch', buying_price: player.current_price });
-                }
-                // Add Forwards
-                for (let i = 0; i < formation.FWD; i++) {
-                    const player = getRandomPlayer('FWD', usedPlayerIds);
-                    if (player) mockSquad.push({ ...player, slot_id: currentSlotId++, slot_type: 'pitch', buying_price: player.current_price });
-                }
-
-                // Fill the 4 bench players (1 GKP, 1 DEF, 1 MID, 1 FWD if possible)
-                const benchPositions = ['GKP', 'DEF', 'MID', 'FWD'];
-                for (let i = 0; i < 4; i++) {
-                    const pos = benchPositions[i];
-                    const player = getRandomPlayer(pos, usedPlayerIds);
+                // Fill pitch players based on specific slots
+                pitchSlots.forEach(slot => {
+                    const player = getRandomPlayer(slot.position, usedPlayerIds);
                     if (player) {
-                        mockSquad.push({ ...player, slot_id: currentSlotId++, slot_type: 'bench', buying_price: player.current_price });
+                        mockSquad.push({ ...player, slot_id: slot.slotId, slot_type: 'pitch', buying_price: player.current_price });
                     } else {
-                        // If specific position not available, just get any remaining player
+                        console.warn(`Could not find a unique ${slot.position} player for pitch slot ${slot.slotId}.`);
+                        // Fallback: if no unique player, try to fill with any available player
                         const anyPlayer = getRandomPlayer('GKP', usedPlayerIds) || getRandomPlayer('DEF', usedPlayerIds) || getRandomPlayer('MID', usedPlayerIds) || getRandomPlayer('FWD', usedPlayerIds);
-                        if (anyPlayer) mockSquad.push({ ...anyPlayer, slot_id: currentSlotId++, slot_type: 'bench', buying_price: anyPlayer.current_price });
-                        else console.warn("Not enough unique players to fill bench completely.");
+                        if (anyPlayer) mockSquad.push({ ...anyPlayer, slot_id: slot.slotId, slot_type: 'pitch', buying_price: anyPlayer.current_price });
+                    }
+                });
+
+                // Fill bench players based on specific slots
+                benchSlots.forEach(slot => {
+                    const player = getRandomPlayer('GKP', usedPlayerIds) || getRandomPlayer('DEF', usedPlayerIds) || getRandomPlayer('MID', usedPlayerIds) || getRandomPlayer('FWD', usedPlayerIds); // Try any position for bench
+                    if (player) {
+                        mockSquad.push({ ...player, slot_id: slot.slotId, slot_type: 'bench', buying_price: player.current_price });
+                    } else {
+                        console.warn(`Could not find a unique player for bench slot ${slot.slotId}.`);
+                        // Fallback: if still no unique player, just add a random player (could be duplicate)
+                        const randomPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
+                        mockSquad.push({ ...randomPlayer, slot_id: slot.slotId, slot_type: 'bench', buying_price: randomPlayer.current_price });
+                    }
+                });
+
+                // Ensure exactly 15 players (should be handled by the above loops if slots are correct)
+                if (mockSquad.length !== MAX_SQUAD_SIZE) {
+                    console.error(`Generated squad size (${mockSquad.length}) does not match MAX_SQUAD_SIZE (${MAX_SQUAD_SIZE}). Adjusting.`);
+                    while (mockSquad.length < MAX_SQUAD_SIZE) {
+                        const player = allPlayers[Math.floor(Math.random() * allPlayers.length)];
+                        mockSquad.push({ ...player, slot_id: mockSquad.length + 1, slot_type: 'bench', buying_price: player.current_price }); // Assign new slot ID
+                    }
+                    while (mockSquad.length > MAX_SQUAD_SIZE) {
+                        mockSquad.pop(); // Remove excess players
                     }
                 }
-
-                // Ensure 15 players total, if not enough unique players, fill with duplicates (less ideal)
-                while (mockSquad.length < MAX_SQUAD_SIZE) {
-                    const player = allPlayers[Math.floor(Math.random() * allPlayers.length)];
-                    mockSquad.push({ ...player, slot_id: currentSlotId++, slot_type: 'bench', buying_price: player.current_price });
-                }
-
 
                 showTransferPlannerMessage(`Team loaded for Round ${round}.`, 'success');
                 return mockSquad;
@@ -1829,36 +1935,17 @@
                 slot.dataset.playerPos = ''; // Clear player position from slot
             });
 
-            // Group players by their current position (pitch/bench)
-            const pitchPlayers = squad.filter(p => p.slot_type === 'pitch');
-            const benchPlayers = squad.filter(p => p.slot_type === 'bench');
-
-            // Render Pitch Players
-            pitchPlayers.forEach(player => {
-                // Find the correct slot based on position and slot_id
-                const slotElement = document.querySelector(`.player-slot[data-position="${player.position_short}"][data-slot-id="${player.slot_id}"][data-slot-type="pitch"]`);
+            // Render Players into their assigned slots
+            squad.forEach(player => {
+                const slotElement = document.querySelector(`.player-slot[data-slot-id="${player.slot_id}"][data-slot-type="${player.slot_type}"]`);
                 if (slotElement) {
-                    const playerCard = renderPlayerCard(player, currentRound, true); // Show actions for pitch players
+                    const playerCard = renderPlayerCard(player, currentRound, true); // Show actions for squad players
                     slotElement.appendChild(playerCard);
                     slotElement.classList.add('has-player');
                     slotElement.dataset.playerId = player.id;
                     slotElement.dataset.playerPos = player.position_short;
                 } else {
-                    console.warn(`Could not find pitch slot for player: ${player.name} at ${player.position_short} slot ID ${player.slot_id}`);
-                }
-            });
-
-            // Render Bench Players
-            benchPlayers.forEach(player => {
-                const slotElement = document.querySelector(`.player-slot[data-position="BENCH"][data-slot-id="${player.slot_id}"][data-slot-type="bench"]`);
-                if (slotElement) {
-                    const playerCard = renderPlayerCard(player, currentRound, true); // Show actions for bench players
-                    slotElement.appendChild(playerCard);
-                    slotElement.classList.add('has-player');
-                    slotElement.dataset.playerId = player.id;
-                    slotElement.dataset.playerPos = player.position_short;
-                } else {
-                    console.warn(`Could not find bench slot for player: ${player.name} at BENCH slot ID ${player.slot_id}`);
+                    console.warn(`Could not find slot for player: ${player.name} (ID: ${player.id}) at slot ID ${player.slot_id} type ${player.slot_type}.`);
                 }
             });
             updateTransferSummary();
@@ -1882,6 +1969,10 @@
          */
         function filterAndRenderPlayerList() {
             let playersToDisplay = globalTeamData.allPlayers;
+
+            // Filter out players already in the current squad
+            const squadPlayerIds = new Set(currentSquad.map(p => p.id));
+            playersToDisplay = playersToDisplay.filter(p => !squadPlayerIds.has(p.id));
 
             // Apply position filter
             if (activePlayerFilter !== 'ALL') {
@@ -2167,7 +2258,7 @@
                 // Scenario 1: Dragging from Player List to an empty slot
                 if (draggedPlayerSourceSlot === 'playerList' && !playerInTargetSlot) {
                     // Check if the position matches
-                    if (droppedPlayer.position_short !== targetSlotPosition && targetSlotPosition !== 'BENCH') {
+                    if (targetSlotType === 'pitch' && droppedPlayer.position_short !== targetSlotPosition) {
                         showTransferPlannerMessage(`Cannot place a ${droppedPlayer.position_short} into a ${targetSlotPosition} slot.`, 'error');
                         return;
                     }
@@ -2463,140 +2554,182 @@
         }
 
         // Transfer Planner Controls
-        prevRoundButton.addEventListener('click', () => {
-            if (currentPlanningRound > INITIAL_PLANNING_ROUND) {
-                currentPlanningRound--;
-                // Logic to revert transfers for the previous round, or load a previous plan state
-                showTransferPlannerMessage(`Moved to Round ${currentPlanningRound}`, 'info');
-                renderSquad(currentSquad, currentPlanningRound); // Re-render squad with new opponents
-            } else {
-                showTransferPlannerMessage('Cannot go before the initial planning round.', 'warning');
-            }
-            updateTransferSummary();
-        });
-
-        nextRoundButton.addEventListener('click', () => {
-            if (currentPlanningRound < globalSeasonSchedule.rounds.length) { // Max round is 34
-                currentPlanningRound++;
-                // Logic to apply current round's planned transfers and prepare for next round
-                // For now, just advance round and re-render opponents
-                showTransferPlannerMessage(`Moved to Round ${currentPlanningRound}`, 'info');
-                renderSquad(currentSquad, currentPlanningRound); // Re-render squad with new opponents
-            } else {
-                showTransferPlannerMessage('Reached the last round of the season.', 'warning');
-            }
-            updateTransferSummary();
-        });
-
-        savePlanButton.addEventListener('click', async () => {
-            const user = auth.currentUser;
-            if (!user) {
-                showTransferPlannerMessage('You must be logged in to save a plan.', 'error');
-                return;
-            }
-
-            const planName = prompt("Enter a name for your transfer plan:");
-            if (!planName || planName.trim() === "") {
-                showTransferPlannerMessage('Plan name cannot be empty.', 'warning');
-                return;
-            }
-
-            // Create a simplified plan object for now
-            const planData = {
-                name: planName,
-                initialSquad: currentSquad.map(p => ({ id: p.id, slot_id: p.slot_id, slot_type: p.slot_type, buying_price: p.buying_price })),
-                transfersByRound: {}, // This would be more complex to implement fully
-                currentRound: currentPlanningRound,
-                createdAt: serverTimestamp(),
-                lastModified: serverTimestamp()
-            };
-
-            try {
-                // Save to a subcollection under the user's document
-                await setDoc(doc(db, `users/${user.uid}/transferPlans`, planName), planData);
-                showTransferPlannerMessage(`Plan "${planName}" saved successfully!`, 'success');
-            } catch (error) {
-                console.error("Error saving plan:", error);
-                showTransferPlannerMessage(`Failed to save plan: ${error.message}`, 'error');
-            }
-        });
-
-        loadPlanButton.addEventListener('click', async () => {
-            const user = auth.currentUser;
-            if (!user) {
-                showTransferPlannerMessage('You must be logged in to load a plan.', 'error');
-                return;
-            }
-
-            try {
-                const plansCollectionRef = collection(db, `users/${user.uid}/transferPlans`);
-                const querySnapshot = await getDocs(plansCollectionRef);
-
-                if (querySnapshot.empty) {
-                    showTransferPlannerMessage('No saved plans found.', 'info');
-                    return;
-                }
-
-                let planList = "Available Plans:\n";
-                const plans = [];
-                querySnapshot.forEach(doc => {
-                    const data = doc.data();
-                    plans.push({ id: doc.id, name: data.name, data: data });
-                    planList += `- ${data.name}\n`;
-                });
-
-                const planToLoadName = prompt(planList + "\nEnter the name of the plan to load:");
-                if (!planToLoadName || planToLoadName.trim() === "") {
-                    showTransferPlannerMessage('No plan selected.', 'warning');
-                    return;
-                }
-
-                const selectedPlan = plans.find(p => p.name === planToLoadName);
-                if (selectedPlan) {
-                    // Reconstruct the squad from the saved plan's initialSquad
-                    currentSquad = selectedPlan.data.initialSquad.map(p => {
-                        const playerDetails = globalTeamData.allPlayers.find(ap => ap.id === p.id);
-                        return { ...playerDetails, slot_id: p.slot_id, slot_type: p.slot_type, buying_price: p.buying_price };
-                    });
-                    currentPlanningRound = selectedPlan.data.currentRound || INITIAL_PLANNING_ROUND; // Load saved round
-                    // For now, free transfers and hits will reset, but in a full implementation,
-                    // you'd re-simulate transfersByRound to get the correct state.
-                    currentFreeTransfers = 1; 
-                    currentPointsHit = 0;
-                    pendingTransfers = []; // Clear pending transfers
-
-                    renderSquad(currentSquad, currentPlanningRound);
-                    updateTransferSummary();
-                    showTransferPlannerMessage(`Plan "${selectedPlan.name}" loaded successfully!`, 'success');
+        if (prevRoundButton) { // Check if element exists before adding listener
+            prevRoundButton.addEventListener('click', () => {
+                if (currentPlanningRound > INITIAL_PLANNING_ROUND) {
+                    currentPlanningRound--;
+                    // Logic to revert transfers for the previous round, or load a previous plan state
+                    showTransferPlannerMessage(`Moved to Round ${currentPlanningRound}`, 'info');
+                    renderSquad(currentSquad, currentPlanningRound); // Re-render squad with new opponents
+                    filterAndRenderPlayerList(); // Update player list as well
                 } else {
-                    showTransferPlannerMessage('Plan not found.', 'error');
+                    showTransferPlannerMessage('Cannot go before the initial planning round.', 'warning');
+                }
+                updateTransferSummary();
+            });
+        }
+
+        if (nextRoundButton) { // Check if element exists before adding listener
+            nextRoundButton.addEventListener('click', () => {
+                if (currentPlanningRound < globalSeasonSchedule.rounds.length) { // Max round is 34
+                    currentPlanningRound++;
+                    // Logic to apply current round's planned transfers and prepare for next round
+                    // For now, just advance round and re-render opponents
+                    showTransferPlannerMessage(`Moved to Round ${currentPlanningRound}`, 'info');
+                    renderSquad(currentSquad, currentPlanningRound); // Re-render squad with new opponents
+                    filterAndRenderPlayerList(); // Update player list as well
+                } else {
+                    showTransferPlannerMessage('Reached the last round of the season.', 'warning');
+                }
+                updateTransferSummary();
+            });
+        }
+
+        if (savePlanButton) { // Check if element exists before adding listener
+            savePlanButton.addEventListener('click', async () => {
+                const user = auth.currentUser;
+                if (!user) {
+                    showTransferPlannerMessage('You must be logged in to save a plan.', 'error');
+                    return;
                 }
 
-            } catch (error) {
-                console.error("Error loading plan:", error);
-                showTransferPlannerMessage(`Failed to load plan: ${error.message}`, 'error');
-            }
-        });
+                const planName = prompt("Enter a name for your transfer plan:");
+                if (!planName || planName.trim() === "") {
+                    showTransferPlannerMessage('Plan name cannot be empty.', 'warning');
+                    return;
+                }
 
-        resetPlanButton.addEventListener('click', () => {
-            showTransferPlannerMessage('Resetting current plan...', 'info');
-            initializeTransferPlanner(); // Re-initialize to the starting state
-        });
+                // Create a simplified plan object for now
+                const planData = {
+                    name: planName,
+                    // Store the current state of the squad, including slot_id and slot_type
+                    squadState: currentSquad.map(p => ({ 
+                        id: p.id, 
+                        slot_id: p.slot_id, 
+                        slot_type: p.slot_type, 
+                        buying_price: p.buying_price 
+                    })),
+                    currentRound: currentPlanningRound,
+                    currentFreeTransfers: currentFreeTransfers,
+                    currentPointsHit: currentPointsHit,
+                    currentFunds: currentFunds,
+                    pendingTransfers: pendingTransfers.map(t => ({ 
+                        type: t.type, 
+                        playerId: t.player.id, 
+                        newSlotId: t.newSlotId, 
+                        newSlotType: t.newSlotType 
+                    })), // Store simplified pending transfers
+                    createdAt: serverTimestamp(),
+                    lastModified: serverTimestamp()
+                };
+
+                try {
+                    // Save to a subcollection under the user's document
+                    await setDoc(doc(db, `users/${user.uid}/transferPlans`, planName), planData);
+                    showTransferPlannerMessage(`Plan "${planName}" saved successfully!`, 'success');
+                } catch (error) {
+                    console.error("Error saving plan:", error);
+                    showTransferPlannerMessage(`Failed to save plan: ${error.message}`, 'error');
+                }
+            });
+        }
+
+        if (loadPlanButton) { // Check if element exists before adding listener
+            loadPlanButton.addEventListener('click', async () => {
+                const user = auth.currentUser;
+                if (!user) {
+                    showTransferPlannerMessage('You must be logged in to load a plan.', 'error');
+                    return;
+                }
+
+                try {
+                    const plansCollectionRef = collection(db, `users/${user.uid}/transferPlans`);
+                    const querySnapshot = await getDocs(plansCollectionRef);
+
+                    if (querySnapshot.empty) {
+                        showTransferPlannerMessage('No saved plans found.', 'info');
+                        return;
+                    }
+
+                    let planList = "Available Plans:\n";
+                    const plans = [];
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        plans.push({ id: doc.id, name: data.name, data: data });
+                        planList += `- ${data.name}\n`;
+                    });
+
+                    const planToLoadName = prompt(planList + "\nEnter the name of the plan to load:");
+                    if (!planToLoadName || planToLoadName.trim() === "") {
+                        showTransferPlannerMessage('No plan selected.', 'warning');
+                        return;
+                    }
+
+                    const selectedPlan = plans.find(p => p.name === planToLoadName);
+                    if (selectedPlan) {
+                        // Reconstruct the squad from the saved plan's squadState
+                        currentSquad = selectedPlan.data.squadState.map(p => {
+                            const playerDetails = globalTeamData.allPlayers.find(ap => ap.id === p.id);
+                            // Ensure playerDetails is found before spreading
+                            if (playerDetails) {
+                                return { ...playerDetails, slot_id: p.slot_id, slot_type: p.slot_type, buying_price: p.buying_price };
+                            } else {
+                                console.warn(`Player with ID ${p.id} not found in globalTeamData.allPlayers when loading plan.`);
+                                return null; // Or handle this gracefully, e.g., by creating a placeholder player
+                            }
+                        }).filter(Boolean); // Remove any nulls if playerDetails wasn't found
+
+                        currentPlanningRound = selectedPlan.data.currentRound || INITIAL_PLANNING_ROUND; 
+                        currentFreeTransfers = selectedPlan.data.currentFreeTransfers !== undefined ? selectedPlan.data.currentFreeTransfers : 1;
+                        currentPointsHit = selectedPlan.data.currentPointsHit !== undefined ? selectedPlan.data.currentPointsHit : 0;
+                        currentFunds = selectedPlan.data.currentFunds !== undefined ? selectedPlan.data.currentFunds : 100.0;
+                        pendingTransfers = selectedPlan.data.pendingTransfers ? selectedPlan.data.pendingTransfers.map(t => ({
+                            type: t.type,
+                            player: globalTeamData.allPlayers.find(p => p.id === t.playerId), // Re-fetch full player object
+                            newSlotId: t.newSlotId,
+                            newSlotType: t.newSlotType
+                        })).filter(t => t.player) : []; // Filter out if player not found
+
+                        renderSquad(currentSquad, currentPlanningRound);
+                        updateTransferSummary();
+                        filterAndRenderPlayerList(); // Update player list after loading squad
+                        showTransferPlannerMessage(`Plan "${selectedPlan.name}" loaded successfully!`, 'success');
+                    } else {
+                        showTransferPlannerMessage('Plan not found.', 'error');
+                    }
+
+                } catch (error) {
+                    console.error("Error loading plan:", error);
+                    showTransferPlannerMessage(`Failed to load plan: ${error.message}`, 'error');
+                }
+            });
+        }
+
+        if (resetPlanButton) { // Check if element exists before adding listener
+            resetPlanButton.addEventListener('click', () => {
+                showTransferPlannerMessage('Resetting current plan...', 'info');
+                initializeTransferPlanner(); // Re-initialize to the starting state
+            });
+        }
 
         // Player List Filtering Buttons
-        playerFilters.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', () => {
-                playerFilters.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                activePlayerFilter = button.dataset.filter;
-                filterAndRenderPlayerList();
+        if (playerFilters) { // Check if element exists before adding listener
+            playerFilters.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    playerFilters.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    activePlayerFilter = button.dataset.filter;
+                    filterAndRenderPlayerList();
+                });
             });
-        });
+        }
 
         // Player Search Input
-        playerSearchInput.addEventListener('input', () => {
-            filterAndRenderPlayerList();
-        });
+        if (playerSearchInput) { // Check if element exists before adding listener
+            playerSearchInput.addEventListener('input', () => {
+                filterAndRenderPlayerList();
+            });
+        }
 
 
         // Initial Load
