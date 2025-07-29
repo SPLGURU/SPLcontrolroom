@@ -227,8 +227,8 @@
             body.dark-mode .control-room-buttons button { background-color: #007bff; }
             body.dark-mode .control-room-buttons button:hover { background-color: #0056b3; }
 
-            #fdrSystemsContainer, #teamsToTargetContainer { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; padding: 20px; border-radius: 12px; background-color: var(--spl-container-bg); box-shadow: 0 4px 8px var(--spl-shadow); width: 100%; max-width: 1200px; box-sizing: border-box; margin-left: auto; margin-right: auto; }
-            #fdrSystemsContainer p, #teamsToTargetContainer p { text-align: center; font-size: 1.1em; color: var(--spl-text-dark); margin-bottom: 10px; }
+            #fdrSystemsContainer, #teamsToTargetContainer, #transferPlannerContainer { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; padding: 20px; border-radius: 12px; background-color: var(--spl-container-bg); box-shadow: 0 4px 8px var(--spl-shadow); width: 100%; max-width: 1200px; box-sizing: border-box; margin-left: auto; margin-right: auto; }
+            #fdrSystemsContainer p, #teamsToTargetContainer p, #transferPlannerContainer p { text-align: center; font-size: 1.1em; color: var(--spl-text-dark); margin-bottom: 10px; }
 
             /* Welcome Dashboard content */
             #initialLoggedInDashboardContent { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; text-align: center; padding: 20px; color: var(--spl-text-dark); }
@@ -288,6 +288,225 @@
             /* Chosen FDR System Display */
             .chosen-fdr-system-display { text-align: center; font-size: 1.1em; font-weight: bold; color: var(--spl-primary-accent); margin-bottom: 15px; display: none; }
             body.dark-mode .chosen-fdr-system-display { color: #FFD700; }
+
+            /* Transfer Planner Specific Styles */
+            #transferPlannerContainer {
+                display: grid;
+                grid-template-columns: 2fr 1fr; /* Pitch/Bench on left, Player List/Summary on right */
+                gap: 20px;
+                padding: 20px;
+                min-height: 700px;
+                align-items: start; /* Align items to the start of their grid areas */
+                max-width: 1400px; /* Wider for planner */
+            }
+            @media (max-width: 1024px) {
+                #transferPlannerContainer {
+                    grid-template-columns: 1fr; /* Stack vertically on smaller screens */
+                }
+            }
+
+            .pitch-bench-area {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                background-color: var(--spl-container-bg);
+                border-radius: 12px;
+                padding: 15px;
+                box-shadow: 0 4px 8px var(--spl-shadow);
+                position: relative; /* For background image */
+            }
+
+            .pitch {
+                background-image: url('https://placehold.co/800x450/008000/ffffff?text=Football+Pitch'); /* Placeholder pitch image */
+                background-size: cover;
+                background-position: center;
+                border-radius: 8px;
+                padding: 10px;
+                display: grid;
+                grid-template-areas:
+                    ". . . ."
+                    ". gk gk ."
+                    ". def def ."
+                    ". mid mid ."
+                    ". fwd fwd ."
+                    ". . . ."; /* Basic grid for positions */
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+                height: 450px; /* Fixed height for pitch for now */
+                position: relative;
+            }
+            .bench {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+                background-color: rgba(0,0,0,0.1); /* Slightly transparent background */
+                border-radius: 8px;
+                min-height: 100px;
+            }
+
+            .player-slot {
+                border: 2px dashed var(--spl-border-light);
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 5px;
+                font-size: 0.8em;
+                color: var(--spl-text-dark);
+                background-color: rgba(255,255,255,0.1); /* Slightly transparent background */
+                min-width: 80px;
+                min-height: 100px;
+                position: relative; /* For player card positioning */
+                overflow: hidden; /* Hide overflow if player card is larger */
+                transition: background-color 0.2s ease, border-color 0.2s ease;
+            }
+            body.dark-mode .player-slot {
+                border-color: rgba(255,255,255,0.2);
+                background-color: rgba(255,255,255,0.05);
+            }
+
+            .player-slot.drag-over {
+                border-color: var(--spl-primary-accent);
+                background-color: rgba(0, 123, 255, 0.2);
+            }
+
+            /* Pitch specific slot positioning */
+            .gk-slot { grid-area: gk; }
+            .def-slot { grid-area: def; }
+            .mid-slot { grid-area: mid; }
+            .fwd-slot { grid-area: fwd; }
+
+            .player-card {
+                width: 100%;
+                height: 100%;
+                background-color: var(--spl-table-bg);
+                border-radius: 6px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 5px;
+                cursor: grab;
+                position: absolute; /* To fit within slot */
+                top: 0; left: 0;
+                box-sizing: border-box;
+                transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            body.dark-mode .player-card {
+                background-color: var(--spl-table-row-even);
+            }
+
+            .player-card img.player-image {
+                width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px;
+                border: 2px solid var(--spl-primary-accent);
+            }
+            .player-card img.team-logo {
+                width: 20px; height: 20px; object-fit: contain; margin-left: 5px;
+            }
+            .player-card .player-name { font-weight: bold; font-size: 0.9em; color: var(--spl-text-dark); }
+            .player-card .player-details { font-size: 0.75em; color: var(--spl-text-medium); display: flex; align-items: center; margin-top: 2px;}
+            .player-card .player-price { font-weight: bold; color: var(--spl-accent-green); font-size: 0.85em; margin-top: 2px; }
+            .player-card .player-opponent { font-size: 0.7em; color: var(--spl-text-medium); margin-top: 2px; }
+            .player-card .fdr-value-display { 
+                display: inline-block; 
+                padding: 2px 5px; 
+                border-radius: 4px; 
+                font-size: 0.65em; 
+                font-weight: bold; 
+                color: white; 
+                margin-left: 5px;
+            }
+            /* FDR colors for player card opponent display */
+            .fdr-value-display.fdr-1 { background-color: #00B050; } .fdr-value-display.fdr-2 { background-color: #92D050; color: black; }
+            .fdr-value-display.fdr-3 { background-color: #FFFF00; color: black; } .fdr-value-display.fdr-4 { background-color: #FFC000; color: black; }
+            .fdr-value-display.fdr-5 { background-color: #FF0000; } .fdr-value-display.fdr-6 { background-color: #C00000; }
+            .fdr-value-display.fdr-7 { background-color: #800000; } .fdr-value-display.fdr-na { background-color: #ccc; color: #666; }
+            body.dark-mode .fdr-value-display.fdr-2, body.dark-mode .fdr-value-display.fdr-3, body.dark-mode .fdr-value-display.fdr-4 { color: black; }
+            body.dark-mode .fdr-value-display.fdr-1 { background-color: #008037; } body.dark-mode .fdr-value-display.fdr-2 { background-color: #6B9F3B; }
+            body.dark-mode .fdr-value-display.fdr-3 { background-color: #B3B300; } body.dark-mode .fdr-value-display.fdr-4 { background-color: #B38600; }
+            body.dark-mode .fdr-value-display.fdr-5 { background-color: #B30000; } body.dark-mode .fdr-value-display.fdr-6 { background-color: #800000; }
+            body.dark-mode .fdr-value-display.fdr-7 { background-color: #530000; }
+            body.dark-mode .fdr-value-display.fdr-na { background-color: #555; color: #aaa; }
+
+
+            .player-list-sidebar {
+                background-color: var(--spl-container-bg);
+                border-radius: 12px;
+                padding: 15px;
+                box-shadow: 0 4px 8px var(--spl-shadow);
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                max-height: 700px; /* Fixed height for scrollability */
+                overflow-y: auto;
+            }
+            .player-list-sidebar .player-card {
+                position: relative; /* Override absolute for list */
+                width: auto; height: auto;
+                padding: 10px;
+                margin-bottom: 5px;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 10px;
+            }
+            .player-list-sidebar .player-card img.player-image {
+                width: 40px; height: 40px; min-width: 40px;
+            }
+            .player-list-sidebar .player-card .player-info {
+                display: flex; flex-direction: column; align-items: flex-start;
+            }
+            .player-list-sidebar .player-card .player-name { font-size: 1em; }
+            .player-list-sidebar .player-card .player-details { font-size: 0.8em; }
+            .player-list-sidebar .player-card .player-price { font-size: 0.9em; }
+
+
+            .transfer-controls {
+                grid-column: 1 / -1; /* Span across both columns */
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 20px;
+                flex-wrap: wrap;
+            }
+            .transfer-controls button {
+                background-color: var(--spl-primary-accent);
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 8px;
+                font-size: 1em;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+            .transfer-controls button:hover {
+                background-color: #0056b3;
+                transform: translateY(-1px);
+            }
+            .transfer-controls .info-display {
+                background-color: var(--spl-table-bg);
+                padding: 10px 15px;
+                border-radius: 8px;
+                color: var(--spl-text-dark);
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            body.dark-mode .transfer-controls .info-display {
+                background-color: var(--spl-table-row-even);
+            }
+
+            /* Player position specific grid areas for pitch */
+            .pitch-gk-slots { grid-area: gk; display: flex; justify-content: center; align-items: center; gap: 5px; }
+            .pitch-def-slots { grid-area: def; display: flex; justify-content: center; align-items: center; gap: 5px; }
+            .pitch-mid-slots { grid-area: mid; display: flex; justify-content: center; align-items: center; gap: 5px; }
+            .pitch-fwd-slots { grid-area: fwd; display: flex; justify-content: center; align-items: center; gap: 5px; }
+            
         </style>
     </head>
     <body>
@@ -377,13 +596,14 @@
                     <div class="control-room-buttons">
                         <button id="showFDRButton">FDR</button>
                         <button id="showTeamsToTargetButton">Teams To Target</button>
+                        <button id="showTransferPlannerButton">Transfer Planner</button> <!-- NEW BUTTON -->
                     </div>
 
                     <!-- FDR Systems Container -->
                     <div id="fdrSystemsContainer">
                         <p id="controlRoomMessageBox" class="message-box" style="display: none;"></p>
-                        <p id="saveFDRSystemMessage" class="message-box success" style="display: none;"></p> <!-- New message for saving FDR system -->
-                        <p class="chosen-fdr-system-display" id="chosenFDRSystemDisplayFDR"></p> <!-- New display for chosen FDR system -->
+                        <p id="saveFDRSystemMessage" class="message-box success" style="display: none;"></p>
+                        <p class="chosen-fdr-system-display" id="chosenFDRSystemDisplayFDR"></p>
                         <p>Please Choose FDR System</p>
 
                         <div class="fdr-system-selection">
@@ -448,7 +668,7 @@
 
                     <!-- Teams To Target Container -->
                     <div id="teamsToTargetContainer" style="display: none;">
-                        <p class="chosen-fdr-system-display" id="chosenFDRSystemDisplayTeamsToTarget"></p> <!-- New display for chosen FDR system -->
+                        <p class="chosen-fdr-system-display" id="chosenFDRSystemDisplayTeamsToTarget"></p>
                         <h3 class="fdr-section-title">Teams To Target (Easiest Fixtures)</h3>
                         <p>Teams are ranked by total FDR over the selected rounds (lowest total = easiest run).</p>
                         <div class="tuning-section">
@@ -459,6 +679,78 @@
                         </div>
                         <div class="schedule-grid-container">
                             <div class="schedule-grid teams-to-target-grid" id="teamsToTargetScheduleGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Transfer Planner Container -->
+                    <div id="transferPlannerContainer" style="display: none;">
+                        <h3 class="fdr-section-title">Transfer Planner</h3>
+                        <p id="transferPlannerMessage" class="message-box info" style="display: none;"></p>
+                        
+                        <div class="transfer-controls">
+                            <button id="prevRoundButton">Previous Round</button>
+                            <span class="info-display">Planning Round: <span id="currentPlanningRoundDisplay">2</span></span>
+                            <span class="info-display">Free Transfers: <span id="freeTransfersDisplay">1</span></span>
+                            <span class="info-display">Points Hit: <span id="pointsHitDisplay">0</span></span>
+                            <span class="info-display">Funds: <span id="fundsDisplay">0.0m</span></span>
+                            <button id="nextRoundButton">Next Round</button>
+                            <button id="savePlanButton">Save Plan</button>
+                            <button id="loadPlanButton">Load Plan</button>
+                            <button id="resetPlanButton">Reset Plan</button>
+                        </div>
+
+                        <div class="pitch-bench-area">
+                            <div class="pitch" id="pitchArea">
+                                <!-- GK slots -->
+                                <div class="pitch-gk-slots">
+                                    <div class="player-slot" data-position="GKP" data-slot="1"></div>
+                                    <div class="player-slot" data-position="GKP" data-slot="2"></div>
+                                </div>
+                                <!-- DEF slots -->
+                                <div class="pitch-def-slots">
+                                    <div class="player-slot" data-position="DEF" data-slot="3"></div>
+                                    <div class="player-slot" data-position="DEF" data-slot="4"></div>
+                                    <div class="player-slot" data-position="DEF" data-slot="5"></div>
+                                    <div class="player-slot" data-position="DEF" data-slot="6"></div>
+                                    <div class="player-slot" data-position="DEF" data-slot="7"></div>
+                                </div>
+                                <!-- MID slots -->
+                                <div class="pitch-mid-slots">
+                                    <div class="player-slot" data-position="MID" data-slot="8"></div>
+                                    <div class="player-slot" data-position="MID" data-slot="9"></div>
+                                    <div class="player-slot" data-position="MID" data-slot="10"></div>
+                                    <div class="player-slot" data-position="MID" data-slot="11"></div>
+                                    <div class="player-slot" data-position="MID" data-slot="12"></div>
+                                </div>
+                                <!-- FWD slots -->
+                                <div class="pitch-fwd-slots">
+                                    <div class="player-slot" data-position="FWD" data-slot="13"></div>
+                                    <div class="player-slot" data-position="FWD" data-slot="14"></div>
+                                    <div class="player-slot" data-position="FWD" data-slot="15"></div>
+                                </div>
+                            </div>
+                            <div class="bench" id="benchArea">
+                                <!-- Bench slots -->
+                                <div class="player-slot" data-position="BENCH" data-slot="16"></div>
+                                <div class="player-slot" data-position="BENCH" data-slot="17"></div>
+                                <div class="player-slot" data-position="BENCH" data-slot="18"></div>
+                                <div class="player-slot" data-position="BENCH" data-slot="19"></div>
+                            </div>
+                        </div>
+
+                        <div class="player-list-sidebar">
+                            <h4>Available Players</h4>
+                            <input type="text" id="playerSearchInput" placeholder="Search players...">
+                            <div id="playerFilters">
+                                <button data-filter="GKP">GK</button>
+                                <button data-filter="DEF">DEF</button>
+                                <button data-filter="MID">MID</button>
+                                <button data-filter="FWD">FWD</button>
+                                <button data-filter="ALL">All</button>
+                            </div>
+                            <div id="playerList" style="flex-grow: 1; overflow-y: auto;">
+                                <!-- Player cards will be rendered here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -550,7 +842,12 @@
             import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, signOut, reload } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
             import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-            // Firebase Config
+            // Firebase Config (PLACEHOLDER FOR NETLIFY INJECTION)
+            // IMPORTANT: In your Netlify environment, you would set these as environment variables
+            // and inject them into the client-side code during build or runtime.
+            // Example:
+            // const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+            // For now, using hardcoded values from a previous state for local testing.
             const firebaseConfig = {
                 apiKey: "AIzaSyABljnM2tU8eANL6Eblx_howQDPjB3X7VQ", 
                 authDomain: "splcontrolroom-c02c0.firebaseapp.com",
@@ -563,9 +860,14 @@
             const auth = getAuth(app);
             const db = getFirestore(app);
 
-            // API Endpoints
-            const BOOTSTRAP_STATIC_API_URL = 'https://en.fantasy.spl.com.sa/api/bootstrap-static/';
-            const FIXTURES_API_BASE_URL = 'https://en.fantasy.spl.com.sa/api/fixtures/?event='; 
+            // API Endpoints (PLACEHOLDERS FOR NETLIFY INJECTION)
+            // These should be configured in your Netlify functions or environment variables
+            // and passed to the client-side. For demonstration, using direct URLs.
+            const API_BOOTSTRAP_STATIC = 'https://en.fantasy.spl.com.sa/api/bootstrap-static/';
+            const API_FIXTURES_BASE = 'https://en.fantasy.spl.com.sa/api/fixtures/?event=';
+            // Assuming this Netlify function handles manager history/squad data
+            const API_MANAGER_HISTORY_BASE = '/.netlify/functions/fetch-spl-data?id='; 
+            // The existing fetch-spl-data function is used for manager history/squad data.
 
             // Global Variables
             let isProcessingAuth = false; 
@@ -574,10 +876,25 @@
             let foundUserForAdminEdit = null; 
             let globalSplRankings = { overall: [], home: [], away: [] };
             let globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
-            let globalTeamData = { byId: {}, byFullName: {}, byShortName: {} };
+            let globalTeamData = { byId: {}, byFullName: {}, byShortName: {}, byElementType: {} }; // Added byElementType
             let userCustomFDRRatings = {};
             let roundsToShow = 5; // Default for both FDR and Teams To Target
             let selectedFDRSystem = 'overall'; // Default FDR system
+
+            // Transfer Planner Specific Global Variables
+            const MAX_SQUAD_SIZE = 15;
+            const MAX_PLAYERS_PER_TEAM = 3;
+            const POSITIONAL_LIMITS = { 'GKP': 2, 'DEF': 5, 'MID': 5, 'FWD': 3 };
+            const INITIAL_PLANNING_ROUND = 2; // Starting point for planning
+            const MAX_SAVED_FREE_TRANSFERS = 2; // Configurable: Set to 5 for new season rule
+            const POINTS_HIT_PER_TRANSFER = 4;
+
+            let currentPlanningRound = INITIAL_PLANNING_ROUND;
+            let currentSquad = []; // Array of player objects with their assigned slot and buying price
+            let currentFreeTransfers = 1; // Start with 1 free transfer for Round 2
+            let currentPointsHit = 0;
+            let currentFunds = 100.0; // Placeholder, will be fetched from manager data
+            let pendingTransfers = []; // { type: 'in'/'out', playerId: ..., originalSlot: ..., newSlot: ... }
 
             // DOM Element References (optimized to reduce lines)
             const mainLogo = document.getElementById('mainLogo'); const darkModeToggle = document.getElementById('darkModeToggle');
@@ -619,8 +936,10 @@
             const awayFDRScaleAdmin = document.getElementById('awayFDRScaleAdmin');
             const showFDRButton = document.getElementById('showFDRButton'); 
             const showTeamsToTargetButton = document.getElementById('showTeamsToTargetButton'); 
+            const showTransferPlannerButton = document.getElementById('showTransferPlannerButton'); // NEW
             const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
             const teamsToTargetContainer = document.getElementById('teamsToTargetContainer'); 
+            const transferPlannerContainer = document.getElementById('transferPlannerContainer'); // NEW
             const controlRoomMessageBox = document.getElementById('controlRoomMessageBox'); const fdrScaleDisplay = document.getElementById('fdrScaleDisplay'); 
             const radioOverallFDR = document.getElementById('radioOverallFDR'); const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
             const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); const saveFDRSystemButton = document.getElementById('saveFDRSystemButton'); 
@@ -638,12 +957,29 @@
             const showCustomRatingsGridButton = document.getElementById('showCustomRatingsGridButton');
             const customRatingsMessageBox = document.getElementById('customRatingsMessageBox');
             const teamsToTargetScheduleGrid = document.getElementById('teamsToTargetScheduleGrid'); 
-            const saveFDRSystemMessage = document.getElementById('saveFDRSystemMessage'); // New message element
-            const chosenFDRSystemDisplayFDR = document.getElementById('chosenFDRSystemDisplayFDR'); // New element for FDR section
-            const chosenFDRSystemDisplayTeamsToTarget = document.getElementById('chosenFDRSystemDisplayTeamsToTarget'); // New element for Teams To Target section
+            const saveFDRSystemMessage = document.getElementById('saveFDRSystemMessage'); 
+            const chosenFDRSystemDisplayFDR = document.getElementById('chosenFDRSystemDisplayFDR'); 
+            const chosenFDRSystemDisplayTeamsToTarget = document.getElementById('chosenFDRSystemDisplayTeamsToTarget'); 
 
+            // Transfer Planner DOM Elements
+            const transferPlannerMessage = document.getElementById('transferPlannerMessage');
+            const currentPlanningRoundDisplay = document.getElementById('currentPlanningRoundDisplay');
+            const freeTransfersDisplay = document.getElementById('freeTransfersDisplay');
+            const pointsHitDisplay = document.getElementById('pointsHitDisplay');
+            const fundsDisplay = document.getElementById('fundsDisplay');
+            const prevRoundButton = document.getElementById('prevRoundButton');
+            const nextRoundButton = document.getElementById('nextRoundButton');
+            const savePlanButton = document.getElementById('savePlanButton');
+            const loadPlanButton = document.getElementById('loadPlanButton');
+            const resetPlanButton = document.getElementById('resetPlanButton');
+            const pitchArea = document.getElementById('pitchArea');
+            const benchArea = document.getElementById('benchArea');
+            const playerSearchInput = document.getElementById('playerSearchInput');
+            const playerFilters = document.getElementById('playerFilters');
+            const playerList = document.getElementById('playerList');
 
-            // Helper Functions
+            // --- Helper Functions ---
+
             const showAuthMessage = (msg, type = 'info') => { if (authMessageBox) { authMessageBox.className = `message-box ${type}`; authMessageBox.textContent = msg; authMessageBox.style.display = 'block'; }};
             const showAdminMessage = (msg, type = 'info') => { if (adminMessage) { adminMessage.className = `message-box ${type}`; adminMessage.textContent = msg; adminMessage.style.display = 'block'; }};
             const showExcelUploadMessage = (msg, type = 'info') => { if (excelUploadMessage) { excelUploadMessage.className = `message-box ${type}`; excelUploadMessage.textContent = msg; excelUploadMessage.style.display = 'block'; }};
@@ -656,15 +992,23 @@
                     saveFDRSystemMessage.className = `message-box ${type}`; 
                     saveFDRSystemMessage.textContent = msg; 
                     saveFDRSystemMessage.style.display = 'block'; 
-                    setTimeout(() => { saveFDRSystemMessage.style.display = 'none'; }, 3000); // Hide after 3 seconds
+                    setTimeout(() => { saveFDRSystemMessage.style.display = 'none'; }, 3000); 
+                }
+            };
+            const showTransferPlannerMessage = (msg, type = 'info') => { 
+                if (transferPlannerMessage) { 
+                    transferPlannerMessage.className = `message-box ${type}`; 
+                    transferPlannerMessage.textContent = msg; 
+                    transferPlannerMessage.style.display = 'block'; 
+                    setTimeout(() => { transferPlannerMessage.style.display = 'none'; }, 5000); 
                 }
             };
 
             function hideAllContentSections() {
                 [initialLoggedInDashboardContent, analyzerReportContent, myControlRoomContent, adminDashboardContent].forEach(el => el && (el.style.display = 'none'));
                 [adminDashboardNavButtons, adminSearchSection, adminSearchResults, adminMessage, dataUploadSection, currentRankingsDisplayAdmin, excelUploadMessage, apiTeamNamesStatus, apiScheduleStatus, overallFDRSectionAdmin, homeFDRSectionAdmin, awayFDRSectionAdmin].forEach(el => el && (el.style.display = 'none'));
-                // Also hide FDR and Teams To Target containers when switching main sections
-                [fdrSystemsContainer, teamsToTargetContainer].forEach(el => el && (el.style.display = 'none'));
+                // Also hide FDR, Teams To Target, and Transfer Planner containers when switching main sections
+                [fdrSystemsContainer, teamsToTargetContainer, transferPlannerContainer].forEach(el => el && (el.style.display = 'none'));
             }
 
             function clearAdminSearchAndResults() {
@@ -739,7 +1083,7 @@
                                 if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
                                 if (menuToggle) menuToggle.style.display = 'block';
                                 showContentSection('initialLoggedInDashboard');
-                                await fetchGlobalFDRData();
+                                await fetchGlobalFDRData(); // Fetch global data on login
                             } else { showAuthMessage("No valid SPL Manager ID found. Contact support.", "error"); await signOut(auth); }
                         } else { showAuthMessage("User data not found. Contact support.", "error"); await signOut(auth); }
                         if (loginPasswordInput) loginPasswordInput.value = '';
@@ -783,7 +1127,7 @@
                                 if (menuAdminDashboard) menuAdminDashboard.style.display = isAdminUser ? 'block' : 'none';
                                 if (menuToggle) menuToggle.style.display = 'block';
                                 showContentSection('initialLoggedInDashboard');
-                                await fetchGlobalFDRData();
+                                await fetchGlobalFDRData(); // Fetch global data on auth state change
                             } else { showAuthMessage("No valid SPL Manager ID found. Logging out.", "error"); await signOut(auth); }
                         } else { showAuthMessage("User data not found. Logging out.", "error"); await signOut(auth); }
                     } else { showAuthMessage("Please verify your email address.", "info"); if (authSection) authSection.style.display = 'block'; if (loginForm) loginForm.style.display = 'block'; if (signupForm) signupForm.style.display = 'none'; if (loggedInContent) loggedInContent.style.display = 'none'; }
@@ -804,8 +1148,9 @@
                     if (myControlRoomContent) myControlRoomContent.style.display = 'block'; 
                     // Default to showing FDR container when entering control room
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex';
-                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none'; // Ensure Teams To Target is hidden
-                    loadAndSetPreferredFDRSystem(); // Load and display the preferred FDR system
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none'; 
+                    if (transferPlannerContainer) transferPlannerContainer.style.display = 'none'; 
+                    loadAndSetPreferredFDRSystem(); 
                 }
                 else if (sectionId === 'adminDashboard') {
                     if (isAdminUser) { 
@@ -813,7 +1158,7 @@
                         if (adminDashboardNavButtons) adminDashboardNavButtons.style.display = 'flex'; 
                         if (adminUsersButton) adminUsersButton.click(); 
                         showAdminMessage("Admin Dashboard loaded. Select an option.", "info"); 
-                    } else { /* showGeneralErrorMessage("Access Denied: You do not have administrator privileges.", "error"); */ } // Removed to avoid double messages
+                    } else { /* showGeneralErrorMessage("Access Denied: You do not have administrator privileges.", "error"); */ } 
                 }
             }
 
@@ -919,24 +1264,46 @@
                 });
             }
 
-            // Fetch Global FDR Data
+            // Fetch Global Data (FDR, Teams, Players, Schedule)
             async function fetchGlobalFDRData() {
                 const seasonId = "2025-2026"; const splRankingsDocRef = doc(db, 'splRankings', seasonId);
                 try {
-                    showApiTeamNamesStatus("Fetching team names from API...", "info");
-                    const bootstrapProxyResponse = await fetch(`/api/spl-proxy?url=${encodeURIComponent(BOOTSTRAP_STATIC_API_URL)}`);
+                    showApiTeamNamesStatus("Fetching team names and player data from API...", "info");
+                    const bootstrapProxyResponse = await fetch(`/api/spl-proxy?url=${encodeURIComponent(API_BOOTSTRAP_STATIC)}`);
                     if (!bootstrapProxyResponse.ok) throw new Error(`HTTP error! status: ${bootstrapProxyResponse.status} from proxy for bootstrap-static`);
                     const bootstrapData = await bootstrapProxyResponse.json();
-                    globalTeamData = { byId: {}, byFullName: {}, byShortName: {} };
-                    if (bootstrapData && bootstrapData.teams && bootstrapData.teams.length > 0) {
+                    
+                    globalTeamData = { byId: {}, byFullName: {}, byShortName: {}, byElementType: {} };
+                    if (bootstrapData && bootstrapData.teams && bootstrapData.elements && bootstrapData.element_types) {
                         bootstrapData.teams.forEach(team => { globalTeamData.byId[team.id] = { id: team.id, name: team.name, short_name: team.short_name }; globalTeamData.byFullName[team.name] = { id: team.id, name: team.name, short_name: team.short_name }; globalTeamData.byShortName[team.short_name] = { id: team.id, name: team.name, short_name: team.short_name }; });
-                        showApiTeamNamesStatus(`Team Names fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams.`, "success");
-                    } else { showApiTeamNamesStatus("Team Names could not be fetched.", "error"); }
+                        bootstrapData.element_types.forEach(type => { globalTeamData.byElementType[type.id] = type.singular_name_short; }); // Store position names
+                        
+                        // Store all players with their full data
+                        globalTeamData.allPlayers = bootstrapData.elements.map(player => ({
+                            id: player.id,
+                            name: player.web_name,
+                            first_name: player.first_name,
+                            second_name: player.second_name,
+                            team_id: player.team,
+                            team_name: globalTeamData.byId[player.team]?.name,
+                            team_short_name: globalTeamData.byId[player.team]?.short_name,
+                            position_id: player.element_type,
+                            position_short: globalTeamData.byElementType[player.element_type],
+                            current_price: player.now_cost / 10, // Convert to actual price (e.g., 5.5)
+                            total_points: player.total_points,
+                            status: player.status, // 'a', 'i', 's', 'd' etc.
+                            chance_of_playing_this_round: player.chance_of_playing_this_round,
+                            chance_of_playing_next_round: player.chance_of_playing_next_round,
+                            // Add other relevant fields if needed for future features
+                        }));
+
+                        showApiTeamNamesStatus(`Team Names and Player Data fetched successfully. Found ${Object.keys(globalTeamData.byId).length} teams and ${globalTeamData.allPlayers.length} players.`, "success");
+                    } else { showApiTeamNamesStatus("Team Names and Player Data could not be fetched.", "error"); }
 
                     showApiScheduleStatus("Fetching season schedule from API...", "info");
                     globalSeasonSchedule = { teams: [], rounds: [], fixtures: {} };
                     const maxRound = 34; const fixtureFetchPromises = [];
-                    for (let round = 1; round <= maxRound; round++) { fixtureFetchPromises.push(fetch(`/api/spl-proxy?url=${encodeURIComponent(`${FIXTURES_API_BASE_URL}${round}`)}`).then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status} for round ${round}`); return res.json(); }).then(data => ({ round, data })).catch(error => ({ round, data: null, error: error }))); }
+                    for (let round = 1; round <= maxRound; round++) { fixtureFetchPromises.push(fetch(`/api/spl-proxy?url=${encodeURIComponent(`${API_FIXTURES_BASE}${round}`)}`).then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status} for round ${round}`); return res.json(); }).then(data => ({ round, data })).catch(error => ({ round, data: null, error: error }))); }
                     const allFixturesData = await Promise.all(fixtureFetchPromises);
 
                     const processedFixtures = {}; const allTeamNamesInSchedule = new Set(); const allRoundNamesInSchedule = new Set();
@@ -958,7 +1325,6 @@
                                 }
                             });
                         } else {
-                            // If no fixtures for a round, ensure all teams have an empty entry for that round
                             const allKnownTeams = Object.values(globalTeamData.byFullName).map(team => team.name);
                             const roundName = `R${round}`; allRoundNamesInSchedule.add(roundName);
                             allKnownTeams.forEach(teamFullName => { 
@@ -980,7 +1346,7 @@
                     } else { globalSplRankings = { overall: [], home: [], away: [] }; }
                 } catch (error) {
                     console.error("Error fetching global FDR data:", error);
-                    showApiTeamNamesStatus(`Error fetching Team Names: ${error.message}`, "error");
+                    showApiTeamNamesStatus(`Error fetching Team Names/Players: ${error.message}`, "error");
                     showApiScheduleStatus(`Error fetching Schedule: ${error.message}`, "error");
                 }
             }
@@ -1113,14 +1479,12 @@
                         if (awaySection) awaySection.style.display = 'block'; hasDataToDisplay = true;
                     } else { if (awayGridOrList) awayGridOrList.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 20px; color: var(--spl-text-medium);">No Away rankings data available.</div>'; }
                 } 
-                // This function is primarily for Admin display, Control Room display is handled by displaySelectedFDRSystem
-                // The selectedFdrSystemParam is only used here to differentiate call context, not for rendering.
 
                 if (hasDataToDisplay) { messageBox.className = 'message-box success'; messageBox.textContent = 'FDR data loaded.'; }
                 else { messageBox.className = 'message-box info'; messageBox.textContent = 'No relevant FDR data found for display. Please ensure league data is uploaded via Admin Dashboard, and API data is fetched.'; }
             }
 
-            // NEW: Render Teams To Target Schedule Grid
+            // Render Teams To Target Schedule Grid
             function renderTeamsToTargetScheduleGrid(scheduleData, fdrType, customRatings) {
                 teamsToTargetScheduleGrid.innerHTML = '';
                 if (!scheduleData || !scheduleData.fixtures || Object.keys(scheduleData.fixtures).length === 0 || !scheduleData.teams || scheduleData.teams.length === 0 || !scheduleData.rounds || scheduleData.rounds.length === 0) {
@@ -1182,9 +1546,8 @@
                                 const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
                                 const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
                                 
-                                // Get FDR value for coloring and display
                                 const fdrValue = getFDRValue(teamFullName, opponentShortCode, isHomeGame, fdrType, customRatings);
-                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji} ${fdrValue !== null ? `(${fdrValue})` : ''}`; // Add FDR number
+                                fixtureDisplayItem.textContent = `${opponentShortCode} ${homeAwayEmoji} ${fdrValue !== null ? `(${fdrValue})` : ''}`; 
                                 
                                 fixtureCell.appendChild(fixtureDisplayItem);
                                 fixtureCell.classList.add(fdrValue !== null ? `fdr-${fdrValue}` : 'fdr-na');
@@ -1268,12 +1631,246 @@
                 }
             }
 
-            // Event Listeners
+            // --- Transfer Planner Functions ---
+
+            /**
+             * Fetches the user's actual squad for a given round.
+             * For now, it will simulate fetching the initial squad for Round 2.
+             * In a real scenario, this would involve calling the manager history API
+             * to get the squad at the start of the specified round.
+             * @param {string} managerId The SPL Manager ID.
+             * @param {number} round The round number to fetch the squad for.
+             * @returns {Promise<Array<Object>>} An array of player objects in the squad.
+             */
+            async function fetchManagerSquadForRound(managerId, round) {
+                showTransferPlannerMessage(`Fetching your actual team for Round ${round}...`, 'info');
+                try {
+                    // This API call needs to be refined to get the squad for a specific round.
+                    // The current fetch-spl-data only gets overall history.
+                    // For now, we'll use a mocked initial squad for Round 2.
+                    const response = await fetch(`${API_MANAGER_HISTORY_BASE}${managerId}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+
+                    // MOCKING INITIAL SQUAD FOR ROUND 2
+                    // In a real scenario, you'd parse `data` to get the squad for `round`.
+                    // For now, let's pick 15 random players from globalTeamData.allPlayers
+                    // and assign them positions.
+                    const mockSquad = [];
+                    const allPlayers = globalTeamData.allPlayers || [];
+                    const usedPlayerIds = new Set();
+
+                    // Helper to get a random player of a specific position
+                    const getRandomPlayer = (pos) => {
+                        const playersOfPos = allPlayers.filter(p => 
+                            p.position_short === pos && !usedPlayerIds.has(p.id)
+                        );
+                        if (playersOfPos.length > 0) {
+                            const player = playersOfPos[Math.floor(Math.random() * playersOfPos.length)];
+                            usedPlayerIds.add(player.id);
+                            return player;
+                        }
+                        return null;
+                    };
+
+                    // Fill GK
+                    for (let i = 0; i < POSITIONAL_LIMITS['GKP']; i++) {
+                        const player = getRandomPlayer('GKP');
+                        if (player) mockSquad.push({ ...player, slot: `GKP_${i+1}`, buying_price: player.current_price });
+                    }
+                    // Fill DEF
+                    for (let i = 0; i < POSITIONAL_LIMITS['DEF']; i++) {
+                        const player = getRandomPlayer('DEF');
+                        if (player) mockSquad.push({ ...player, slot: `DEF_${i+1}`, buying_price: player.current_price });
+                    }
+                    // Fill MID
+                    for (let i = 0; i < POSITIONAL_LIMITS['MID']; i++) {
+                        const player = getRandomPlayer('MID');
+                        if (player) mockSquad.push({ ...player, slot: `MID_${i+1}`, buying_price: player.current_price });
+                    }
+                    // Fill FWD
+                    for (let i = 0; i < POSITIONAL_LIMITS['FWD']; i++) {
+                        const player = getRandomPlayer('FWD');
+                        if (player) mockSquad.push({ ...player, slot: `FWD_${i+1}`, buying_price: player.current_price });
+                    }
+                    
+                    // Assign slots based on the pitch/bench structure (this is a simplification)
+                    // For now, let's just assign sequential slots for the mock
+                    mockSquad[0].slot = 'GKP_1'; mockSquad[1].slot = 'GKP_2';
+                    mockSquad[2].slot = 'DEF_1'; mockSquad[3].slot = 'DEF_2'; mockSquad[4].slot = 'DEF_3'; mockSquad[5].slot = 'DEF_4'; mockSquad[6].slot = 'DEF_5';
+                    mockSquad[7].slot = 'MID_1'; mockSquad[8].slot = 'MID_2'; mockSquad[9].slot = 'MID_3'; mockSquad[10].slot = 'MID_4'; mockSquad[11].slot = 'MID_5';
+                    mockSquad[12].slot = 'FWD_1'; mockSquad[13].slot = 'FWD_2'; mockSquad[14].slot = 'FWD_3';
+
+                    // Assign bench slots (simplification)
+                    if (mockSquad.length > 11) {
+                        for (let i = 11; i < mockSquad.length; i++) {
+                            mockSquad[i].slot = `BENCH_${i - 10}`;
+                        }
+                    }
+
+                    showTransferPlannerMessage(`Team loaded for Round ${round}.`, 'success');
+                    return mockSquad;
+
+                } catch (error) {
+                    showTransferPlannerMessage(`Failed to load team for Round ${round}: ${error.message}`, 'error');
+                    console.error("Error fetching manager squad:", error);
+                    return [];
+                }
+            }
+
+            /**
+             * Calculates the selling price of a player based on FPL rules.
+             * @param {number} buyingPrice The price the player was bought for.
+             * @param {number} currentMarketPrice The player's current market price.
+             * @returns {number} The calculated selling price.
+             */
+            function calculateSellingPrice(buyingPrice, currentMarketPrice) {
+                if (currentMarketPrice <= buyingPrice) {
+                    return currentMarketPrice;
+                }
+                // Calculate profit in 0.1m increments
+                const profit = currentMarketPrice - buyingPrice;
+                const profitIncrements = Math.floor(profit / 0.2);
+                const sellingProfit = profitIncrements * 0.1;
+                return buyingPrice + sellingProfit;
+            }
+
+            /**
+             * Renders a player card HTML element.
+             * @param {Object} player The player data object.
+             * @param {string} position The position (e.g., 'GKP', 'DEF', 'BENCH').
+             * @param {number} slotIndex The index of the slot (e.g., 1, 2, 3).
+             * @param {number} currentRound The current planning round for opponent display.
+             * @returns {HTMLElement} The player card div.
+             */
+            function renderPlayerCard(player, currentRound) {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.setAttribute('draggable', true);
+                playerCard.dataset.playerId = player.id;
+                playerCard.dataset.currentPrice = player.current_price;
+                playerCard.dataset.buyingPrice = player.buying_price; // Store buying price
+
+                // Placeholder image for player
+                const playerImageSrc = `https://placehold.co/50x50/cccccc/000000?text=${player.position_short}`;
+                // Placeholder image for team logo
+                const teamLogoSrc = `https://placehold.co/20x20/007bff/ffffff?text=${player.team_short_name}`;
+
+                // Get opponent and FDR for the current planning round
+                let opponentDisplay = 'N/A';
+                let fdrValue = null;
+                const roundName = `R${currentRound}`;
+                const teamFixtures = globalSeasonSchedule.fixtures[player.team_name];
+                if (teamFixtures && teamFixtures[roundName] && teamFixtures[roundName].length > 0) {
+                    const fixtureString = teamFixtures[roundName][0]; // Assuming one fixture per round
+                    const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
+                    const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
+                    opponentDisplay = `${opponentShortCode} ${homeAwayEmoji}`;
+                    fdrValue = getFDRValue(player.team_name, opponentShortCode, isHomeGame, selectedFDRSystem, userCustomFDRRatings);
+                }
+
+                playerCard.innerHTML = `
+                    <img class="player-image" src="${playerImageSrc}" alt="${player.name}">
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-details">
+                        ${player.position_short} <img class="team-logo" src="${teamLogoSrc}" alt="${player.team_short_name}">
+                    </div>
+                    <div class="player-price">${player.current_price.toFixed(1)}m</div>
+                    <div class="player-opponent">
+                        ${opponentDisplay} 
+                        ${fdrValue !== null ? `<span class="fdr-value-display fdr-${fdrValue}">${fdrValue}</span>` : ''}
+                    </div>
+                `;
+                return playerCard;
+            }
+
+            /**
+             * Renders the current squad on the pitch and bench.
+             * @param {Array<Object>} squad The array of player objects in the current squad.
+             * @param {number} currentRound The current planning round for opponent display.
+             */
+            function renderSquad(squad, currentRound) {
+                // Clear all slots first
+                document.querySelectorAll('.player-slot').forEach(slot => {
+                    slot.innerHTML = '';
+                    slot.classList.remove('has-player');
+                    slot.dataset.playerId = ''; // Clear data attribute
+                });
+
+                squad.forEach(player => {
+                    const slotElement = document.querySelector(`.player-slot[data-position="${player.position_short}"][data-slot="${player.slot}"]`);
+                    if (slotElement) {
+                        const playerCard = renderPlayerCard(player, currentRound);
+                        slotElement.appendChild(playerCard);
+                        slotElement.classList.add('has-player');
+                        slotElement.dataset.playerId = player.id;
+                    } else {
+                        console.warn(`Could not find slot for player: ${player.name} at ${player.position_short} slot ${player.slot}`);
+                    }
+                });
+                updateTransferSummary();
+            }
+
+            /**
+             * Renders the list of available players in the sidebar.
+             * @param {Array<Object>} players The array of player objects to display.
+             */
+            function renderPlayerList(players) {
+                playerList.innerHTML = '';
+                players.forEach(player => {
+                    const playerCard = renderPlayerCard(player, currentPlanningRound); // Use current planning round for opponent
+                    playerCard.classList.add('player-card-list-item'); // Add a specific class for list items
+                    playerList.appendChild(playerCard);
+                });
+            }
+
+            /**
+             * Updates the transfer summary display (funds, free transfers, points hit).
+             */
+            function updateTransferSummary() {
+                // Dummy values for now, will implement actual calculation later
+                currentPlanningRoundDisplay.textContent = currentPlanningRound;
+                freeTransfersDisplay.textContent = currentFreeTransfers;
+                pointsHitDisplay.textContent = currentPointsHit;
+                fundsDisplay.textContent = `${currentFunds.toFixed(1)}m`;
+            }
+
+            /**
+             * Initializes the Transfer Planner when it's opened.
+             * Fetches the initial squad, sets up UI, and renders.
+             */
+            async function initializeTransferPlanner() {
+                showTransferPlannerMessage('Loading Transfer Planner...', 'info');
+                currentPlanningRound = INITIAL_PLANNING_ROUND;
+                currentFreeTransfers = 1; // Start with 1 free transfer for Round 2
+                currentPointsHit = 0;
+                pendingTransfers = []; // Clear pending transfers
+
+                if (!currentManagerId) {
+                    showTransferPlannerMessage('Manager ID not found. Please log in.', 'error');
+                    return;
+                }
+
+                // Fetch initial squad for Round 2
+                currentSquad = await fetchManagerSquadForRound(currentManagerId, INITIAL_PLANNING_ROUND);
+                
+                // For initial funds, let's assume a starting budget plus current squad value
+                // In a real FPL scenario, you'd fetch the user's current bank and team value.
+                // For now, a simplified calculation: sum of current prices of players in squad
+                currentFunds = currentSquad.reduce((sum, player) => sum + player.current_price, 0) / 2; // Arbitrary starting funds
+                currentFunds = Math.max(100.0, currentFunds); // Ensure a reasonable starting fund
+
+                renderSquad(currentSquad, currentPlanningRound);
+                renderPlayerList(globalTeamData.allPlayers); // Show all players initially
+                updateTransferSummary();
+                showTransferPlannerMessage('Transfer Planner ready!', 'success');
+            }
+
+            // --- Event Listeners ---
+
             document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => { radio.addEventListener('change', async () => {
                 displaySelectedFDRSystem(radio.value);
-                // Also update the Teams To Target schedule if it's currently visible
                 if (teamsToTargetContainer.style.display === 'flex') {
-                    // Fetch custom ratings if switching to customized and Teams To Target is visible
                     if (radio.value === 'customized') {
                         const user = auth.currentUser; userCustomFDRRatings = {};
                         if (user) {
@@ -1299,21 +1896,21 @@
                 });
             }
 
-
             if (showFDRButton) { 
                 showFDRButton.addEventListener('click', () => { 
                     if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'flex'; 
-                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none'; // Hide Teams To Target
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none'; 
+                    if (transferPlannerContainer) transferPlannerContainer.style.display = 'none'; // Hide Transfer Planner
                     loadAndSetPreferredFDRSystem(); 
                 }); 
             }
 
             if (showTeamsToTargetButton) {
-                showTeamsToTargetButton.addEventListener('click', async () => { // Made async to fetch custom ratings
-                    if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; // Hide FDR
-                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'flex'; // Show Teams To Target
+                showTeamsToTargetButton.addEventListener('click', async () => { 
+                    if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none'; 
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'flex'; 
+                    if (transferPlannerContainer) transferPlannerContainer.style.display = 'none'; // Hide Transfer Planner
                     
-                    // Update "Chosen FDR System" text for Teams To Target section
                     if (chosenFDRSystemDisplayTeamsToTarget) {
                         const systemName = {
                             'overall': 'Overall FDR',
@@ -1324,16 +1921,24 @@
                         chosenFDRSystemDisplayTeamsToTarget.style.display = 'block';
                     }
 
-                    // Fetch custom ratings if the selected system is customized
                     if (selectedFDRSystem === 'customized') {
                         const user = auth.currentUser; userCustomFDRRatings = {};
                         if (user) {
                             const customFDRDocSnap = await getDoc(doc(db, "users", user.uid, "customFDR", "ratings"));
-                            if (customFDRDocSnap.exists()) userCustomFDRRatings = customFDRDocSnap.data();
+                            if (customFDRDocSnap.exists()) userCustomFDRDocSnap = customFDRDocSnap.data();
                         }
                     }
-                    // Render Teams To Target schedule based on current selected FDR system and roundsToShow
                     renderTeamsToTargetScheduleGrid(globalSeasonSchedule, selectedFDRSystem, userCustomFDRRatings);
+                });
+            }
+
+            // NEW: Transfer Planner Button Click
+            if (showTransferPlannerButton) {
+                showTransferPlannerButton.addEventListener('click', async () => {
+                    if (fdrSystemsContainer) fdrSystemsContainer.style.display = 'none';
+                    if (teamsToTargetContainer) teamsToTargetContainer.style.display = 'none';
+                    if (transferPlannerContainer) transferPlannerContainer.style.display = 'grid'; // Use grid for planner layout
+                    await initializeTransferPlanner(); // Initialize the planner
                 });
             }
 
@@ -1342,8 +1947,8 @@
                     if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'block';
                     if (saveCustomFDRRatingsButton) saveCustomFDRRatingsButton.style.display = 'block';
                     renderCustomRatingsInputGrid(document.getElementById('customRatingsGrid'), globalSeasonSchedule.teams, userCustomFDRRatings);
-                    if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; // Hide itself
-                    if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; // Clear any messages
+                    if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'none'; 
+                    if (customRatingsMessageBox) customRatingsMessageBox.style.display = 'none'; 
                 });
             }
 
@@ -1374,19 +1979,15 @@
 
                     try {
                         await setDoc(doc(db, "users", user.uid, "customFDR", "ratings"), newCustomRatings);
-                        userCustomFDRRatings = newCustomRatings; // Update global variable
+                        userCustomFDRRatings = newCustomRatings; 
                         showCustomRatingsMessage("Your ratings have been saved!", "success");
                         
-                        // NEW: Hide the custom ratings input grid and save button
                         if (customRatingsInputGridContainer) customRatingsInputGridContainer.style.display = 'none';
                         if (saveCustomFDRRatingsButton) saveCustomFDRRatingsButton.style.display = 'none';
                         
-                        // NEW: Re-show the "Customize Ratings" button
                         if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block';
 
-                        // Re-render the schedule grid with the newly saved ratings
                         renderScheduleGrid(customizedScheduleGrid, globalSeasonSchedule, 'customized', userCustomFDRRatings);
-                        // Also update Teams To Target if visible and using customized FDR
                         if (teamsToTargetContainer.style.display === 'flex' && selectedFDRSystem === 'customized') {
                             renderTeamsToTargetScheduleGrid(globalSeasonSchedule, 'customized', userCustomFDRRatings);
                         }
@@ -1397,27 +1998,66 @@
                 });
             }
 
-            if (roundsToShowSlider) { // FDR Rounds Slider
+            if (roundsToShowSlider) { 
                 roundsToShowSlider.addEventListener('input', (e) => {
                     roundsToShow = parseInt(e.target.value, 10);
                     if (roundsToShowValueSpan) roundsToShowValueSpan.textContent = roundsToShow;
-                    // Only re-render FDR schedule if FDR container is active
                     if (fdrSystemsContainer.style.display === 'flex') {
-                        displaySelectedFDRSystem(selectedFDRSystem); // Re-render current FDR system
+                        displaySelectedFDRSystem(selectedFDRSystem); 
                     }
                 });
             }
 
-            if (roundsToShowTeamsToTargetSlider) { // Teams To Target Rounds Slider
+            if (roundsToShowTeamsToTargetSlider) { 
                 roundsToShowTeamsToTargetSlider.addEventListener('input', (e) => {
-                    roundsToShow = parseInt(e.target.value, 10); // Update global roundsToShow
+                    roundsToShow = parseInt(e.target.value, 10); 
                     if (roundsToShowValueTeamsToTargetSpan) roundsToShowValueTeamsToTargetSpan.textContent = roundsToShow;
-                    // Only re-render Teams To Target schedule if its container is active
                     if (teamsToTargetContainer.style.display === 'flex') {
                         renderTeamsToTargetScheduleGrid(globalSeasonSchedule, selectedFDRSystem, userCustomFDRRatings);
                     }
                 });
             }
+
+            // Transfer Planner Controls (Placeholder functionality)
+            prevRoundButton.addEventListener('click', () => {
+                if (currentPlanningRound > INITIAL_PLANNING_ROUND) {
+                    currentPlanningRound--;
+                    // Logic to revert transfers for the previous round, or load a previous plan state
+                    showTransferPlannerMessage(`Moved to Round ${currentPlanningRound}`, 'info');
+                    renderSquad(currentSquad, currentPlanningRound); // Re-render squad with new opponents
+                } else {
+                    showTransferPlannerMessage('Cannot go before the initial planning round.', 'warning');
+                }
+                updateTransferSummary();
+            });
+
+            nextRoundButton.addEventListener('click', () => {
+                if (currentPlanningRound < globalSeasonSchedule.rounds.length) { // Max round is 34
+                    currentPlanningRound++;
+                    // Logic to apply current round's planned transfers and prepare for next round
+                    // For now, just advance round and re-render opponents
+                    showTransferPlannerMessage(`Moved to Round ${currentPlanningRound}`, 'info');
+                    renderSquad(currentSquad, currentPlanningRound); // Re-render squad with new opponents
+                } else {
+                    showTransferPlannerMessage('Reached the last round of the season.', 'warning');
+                }
+                updateTransferSummary();
+            });
+
+            savePlanButton.addEventListener('click', () => {
+                showTransferPlannerMessage('Save Plan functionality coming soon!', 'info');
+                // Implement saving currentSquad and pendingTransfersByRound to Firestore
+            });
+
+            loadPlanButton.addEventListener('click', () => {
+                showTransferPlannerMessage('Load Plan functionality coming soon!', 'info');
+                // Implement loading a saved plan from Firestore
+            });
+
+            resetPlanButton.addEventListener('click', () => {
+                showTransferPlannerMessage('Resetting current plan...', 'info');
+                initializeTransferPlanner(); // Re-initialize to the starting state
+            });
 
             // Initial Load
             document.addEventListener('DOMContentLoaded', () => {
