@@ -87,7 +87,7 @@
         .input-section button:hover { background-color: #0056b3; transform: translateY(-2px); }
 
         /* Menu Styles */
-        #menuToggle { position: fixed; top: 20px; left: 20px; z-index: 1001; cursor: pointer; font-size: 2em; color: var(--spl-primary-accent); transition: color 0.3s ease; display: none; }
+        #menuToggle { position: fixed; top: 20px; left: 20px; z-index: 1001; cursor: pointer; font-size: 2em; color: var(--spl-primary-accent); display: none; }
         body.dark-mode #menuToggle { color: #fff; }
         #sidebarMenu { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background-color: var(--spl-container-bg); box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2); z-index: 1000; transition: left 0.3s ease-in-out; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
         body.dark-mode #sidebarMenu { background-color: var(--spl-container-bg); }
@@ -1086,7 +1086,6 @@
             if (saveFDRSystemMessage) { 
                 saveFDRSystemMessage.className = `message-box ${type}`; 
                 saveFDRSystemMessage.textContent = msg; 
-                saveFDRSystemMessage.style.display = 'block'; 
                 setTimeout(() => { saveFDRSystemMessage.style.display = 'none'; }, 3000); 
             }
         };
@@ -1357,6 +1356,7 @@
                 reader.readAsArrayBuffer(file);
             });
         }
+
         // Fetch Global Data (FDR, Teams, Players, Schedule)
         async function fetchGlobalFDRData() {
             const seasonId = "2025-2026"; const splRankingsDocRef = doc(db, 'splRankings', seasonId);
@@ -1635,7 +1635,7 @@
                     const fixturesForThisRound = teamFixtures[round] || [];
                     if (fixturesForThisRound.length > 0) {
                         fixturesForThisRound.forEach(fixtureString => {
-                            const fixtureDisplayItem = document.createElement('div'); // Declare fixtureDisplayItem here
+                            const fixtureDisplayItem = document.createElement('div'); 
                             fixtureDisplayItem.className = `fixture-item-display`;
                             const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
                             const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
@@ -1661,7 +1661,7 @@
             if (user) {
                 const userDocSnap = await getDoc(doc(db, "users", user.uid));
                 if (userDocSnap.exists() && userDocSnap.data().preferredFDRSystem) {
-                    preferredSystem = userDocSnap.data().preferredFdrSystem; // Corrected: Use preferredFDRSystem
+                    preferredSystem = userDocSnap.data().preferredFDRSystem; 
                 }
             }
             // Set the global variable
@@ -1724,683 +1724,396 @@
                 if (showCustomRatingsGridButton) showCustomRatingsGridButton.style.display = 'block'; // Show the "Customize Ratings" button
             }
         }
+
         // --- Transfer Planner Functions ---
 
-        /**
-         * Fetches the user's actual squad for a given round.
-         * For now, it will simulate fetching the initial squad for Round 2.
-         * In a real scenario, this would involve calling the manager history API
-         * to get the squad at the start of the specified round.
-         * @param {string} managerId The SPL Manager ID.
-         * @param {number} round The round number to fetch the squad for.
-         * @returns {Promise<Array<Object>>} An array of player objects in the squad.
-         */
-        async function fetchManagerSquadForRound(managerId, round) {
-            showTransferPlannerMessage(`Fetching your actual team for Round ${round}...`, 'info');
-            try {
-                if (globalTeamData.allPlayers.length === 0) {
-                    await fetchGlobalFDRData(); 
-                }
+        // Function to initialize or reset the transfer planner state
+        async function initializeTransferPlanner() {
+            currentPlanningRound = INITIAL_PLANNING_ROUND;
+            currentFreeTransfers = 1; // Start with 1 free transfer for Round 2
+            currentPointsHit = 0;
+            pendingTransfers = [];
+            currentSquad = []; // Reset squad
 
-                const allPlayers = globalTeamData.allPlayers;
-                if (allPlayers.length === 0) {
-                    throw new Error("No player data available to create a mock squad.");
-                }
+            // Fetch manager's current squad and funds
+            if (currentManagerId) {
+                try {
+                    showTransferPlannerMessage("Fetching your current squad and funds...", "info");
+                    const response = await fetch(`${API_MANAGER_HISTORY_BASE}${currentManagerId}`);
+                    if (!response.ok) throw new Error(`Failed to fetch manager data: ${response.statusText}`);
+                    const managerData = await response.json();
 
-                const mockSquad = [];
-                const usedPlayerIds = new Set();
-                const playersByPosition = { 'GKP': [], 'DEF': [], 'MID': [], 'FWD': [] };
-
-                allPlayers.forEach(p => {
-                    if (playersByPosition[p.position_short]) {
-                        playersByPosition[p.position_short].push(p);
-                    }
-                });
-
-                // Helper to get a random player of a specific position, ensuring uniqueness
-                const getRandomPlayer = (pos, excludeIds = new Set()) => {
-                    const availablePlayers = playersByPosition[pos].filter(p => !excludeIds.has(p.id));
-                    if (availablePlayers.length > 0) {
-                        const player = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
-                        excludeIds.add(player.id);
-                        return player;
-                    }
-                    return null;
-                };
-
-                // Define the exact slots from your HTML for pitch and bench
-                const pitchSlots = [
-                    { position: 'GKP', slotId: 1 },
-                    { position: 'DEF', slotId: 2 }, { position: 'DEF', slotId: 3 }, { position: 'DEF', slotId: 4 }, { position: 'DEF', slotId: 5 },
-                    { position: 'MID', slotId: 6 }, { position: 'MID', slotId: 7 }, { position: 'MID', slotId: 8 }, { position: 'MID', slotId: 9 },
-                    { position: 'FWD', slotId: 10 }, { position: 'FWD', slotId: 11 }
-                ];
-                const benchSlots = [
-                    { position: 'BENCH', slotId: 12 }, { position: 'BENCH', slotId: 13 }, { position: 'BENCH', slotId: 14 }, { position: 'BENCH', slotId: 15 }
-                ];
-
-                // Fill pitch players based on specific slots
-                pitchSlots.forEach(slot => {
-                    const player = getRandomPlayer(slot.position, usedPlayerIds);
-                    if (player) {
-                        mockSquad.push({ ...player, slot_id: slot.slotId, slot_type: 'pitch', buying_price: player.current_price });
+                    // Assuming managerData contains a 'squad' array and 'currentFunds'
+                    // The squad from API might be just player IDs, so we need to map to full player objects
+                    if (managerData.squad && managerData.squad.length > 0) {
+                        currentSquad = managerData.squad.map(playerInSquad => {
+                            const fullPlayer = globalTeamData.allPlayers.find(p => p.id === playerInSquad.id);
+                            if (fullPlayer) {
+                                return {
+                                    ...fullPlayer,
+                                    slot_id: playerInSquad.slot_id, // Assuming API provides this
+                                    slot_type: playerInSquad.slot_type, // Assuming API provides this
+                                    buying_price: playerInSquad.buying_price // Assuming API provides this
+                                };
+                            }
+                            return null;
+                        }).filter(Boolean); // Filter out any nulls if player not found
+                        showTransferPlannerMessage(`Squad loaded with ${currentSquad.length} players.`, "success");
                     } else {
-                        console.warn(`Could not find a unique ${slot.position} player for pitch slot ${slot.slotId}.`);
-                        // Fallback: if no unique player, try to fill with any available player
-                        const anyPlayer = getRandomPlayer('GKP', usedPlayerIds) || getRandomPlayer('DEF', usedPlayerIds) || getRandomPlayer('MID', usedPlayerIds) || getRandomPlayer('FWD', usedPlayerIds);
-                        if (anyPlayer) mockSquad.push({ ...anyPlayer, slot_id: slot.slotId, slot_type: 'pitch', buying_price: anyPlayer.current_price });
+                        showTransferPlannerMessage("No squad data found for your manager ID. Starting with an empty squad.", "warning");
+                        currentSquad = []; // Ensure it's an empty array if no squad found
                     }
-                });
 
-                // Fill bench players based on specific slots
-                benchSlots.forEach(slot => {
-                    const player = getRandomPlayer('GKP', usedPlayerIds) || getRandomPlayer('DEF', usedPlayerIds) || getRandomPlayer('MID', usedPlayerIds) || getRandomPlayer('FWD', usedPlayerIds); // Try any position for bench
-                    if (player) {
-                        mockSquad.push({ ...player, slot_id: slot.slotId, slot_type: 'bench', buying_price: player.current_price });
-                    } else {
-                        console.warn(`Could not find a unique player for bench slot ${slot.slotId}.`);
-                        // Fallback: if still no unique player, just add a random player (could be duplicate)
-                        const randomPlayer = allPlayers[Math.floor(Math.random() * allPlayers.length)];
-                        mockSquad.push({ ...randomPlayer, slot_id: slot.slotId, slot_type: 'bench', buying_price: randomPlayer.current_price });
-                    }
-                });
-
-                // Ensure exactly 15 players (should be handled by the above loops if slots are correct)
-                if (mockSquad.length !== MAX_SQUAD_SIZE) {
-                    console.error(`Generated squad size (${mockSquad.length}) does not match MAX_SQUAD_SIZE (${MAX_SQUAD_SIZE}). Adjusting.`);
-                    while (mockSquad.length < MAX_SQUAD_SIZE) {
-                        const player = allPlayers[Math.floor(Math.random() * allPlayers.length)];
-                        mockSquad.push({ ...player, slot_id: mockSquad.length + 1, slot_type: 'bench', buying_price: player.current_price }); // Assign new slot ID
-                    }
-                    while (mockSquad.length > MAX_SQUAD_SIZE) {
-                        mockSquad.pop(); // Remove excess players
-                    }
+                    currentFunds = managerData.currentFunds !== undefined ? managerData.currentFunds : 100.0; // Use API funds if available
+                    currentFreeTransfers = managerData.freeTransfers !== undefined ? managerData.freeTransfers : 1; // Use API free transfers if available
+                    // currentPointsHit is reset to 0 at the start of planning
+                    
+                } catch (error) {
+                    console.error("Error fetching manager squad:", error);
+                    showTransferPlannerMessage(`Failed to load manager squad: ${error.message}. Starting with empty squad.`, "error");
+                    currentSquad = []; // Fallback to empty squad on error
+                    currentFunds = 100.0; // Fallback funds
+                    currentFreeTransfers = 1; // Fallback free transfers
                 }
-
-                showTransferPlannerMessage(`Team loaded for Round ${round}.`, 'success');
-                return mockSquad;
-
-            } catch (error) {
-                showTransferPlannerMessage(`Failed to load team for Round ${round}: ${error.message}`, 'error');
-                console.error("Error fetching manager squad:", error);
-                return [];
+            } else {
+                showTransferPlannerMessage("No manager ID linked. Starting with an empty squad and default funds.", "warning");
             }
+
+            renderSquad(currentSquad, currentPlanningRound);
+            updateTransferSummary();
+            filterAndRenderPlayerList(); // Render available players
         }
 
-        /**
-         * Calculates the selling price of a player based on FPL rules (modified for SPL).
-         * For every 0.2m price increase, there's a 0.1m profit.
-         * @param {number} buyingPrice The price the player was bought for (e.g., 5.0).
-         * @param {number} currentMarketPrice The player's current market price (e.g., 5.5).
-         * @returns {number} The calculated selling price.
-         */
-        function calculateSellingPrice(buyingPrice, currentMarketPrice) {
-            if (currentMarketPrice <= buyingPrice) {
-                return currentMarketPrice;
-            }
-            const profit = currentMarketPrice - buyingPrice; // e.g., 0.5
-            const profitIncrements = Math.floor(profit / 0.2); // e.g., Math.floor(0.5 / 0.2) = Math.floor(2.5) = 2
-            const sellingProfit = profitIncrements * 0.1; // e.g., 2 * 0.1 = 0.2
-            return buyingPrice + sellingProfit; // e.g., 5.0 + 0.2 = 5.2
+        // Render the current squad on the pitch and bench
+        function renderSquad(squad, currentRound) {
+            // Clear existing players from slots
+            document.querySelectorAll('.player-slot').forEach(slot => {
+                slot.innerHTML = ''; // Clear content
+                slot.classList.remove('has-player'); // Remove marker class
+                slot.dataset.playerId = ''; // Clear player ID data attribute
+            });
+
+            squad.forEach(player => {
+                const slot = document.querySelector(`.player-slot[data-slot-id="${player.slot_id}"][data-slot-type="${player.slot_type}"]`);
+                if (slot) {
+                    const playerCard = createPlayerCard(player, currentRound);
+                    slot.appendChild(playerCard);
+                    slot.classList.add('has-player');
+                    slot.dataset.playerId = player.id; // Store player ID on the slot
+                }
+            });
+            updateTransferSummary(); // Ensure summary is updated after squad render
         }
 
-        /**
-         * Renders a player card HTML element.
-         * @param {Object} player The player data object.
-         * @param {number} currentRound The current planning round for opponent display.
-         * @param {boolean} showActions Whether to show remove/move to bench icons.
-         * @returns {HTMLElement} The player card div.
-         */
-        function renderPlayerCard(player, currentRound, showActions = false) {
+        // Create a player card HTML element
+        function createPlayerCard(player, currentRound) {
             const playerCard = document.createElement('div');
             playerCard.className = 'player-card';
-            playerCard.setAttribute('draggable', true);
+            playerCard.draggable = true;
             playerCard.dataset.playerId = player.id;
-            playerCard.dataset.currentPrice = player.current_price;
-            playerCard.dataset.buyingPrice = player.buying_price; 
-            playerCard.dataset.position = player.position_short; // Add position to dataset for validation
+            playerCard.dataset.positionShort = player.position_short; // Add position for filtering/validation
+            playerCard.dataset.currentPrice = player.current_price; // Add current price for transfer logic
 
-            // Placeholder image for player
-            const playerImageSrc = `https://placehold.co/50x50/cccccc/000000?text=${player.position_short}`;
-            // Placeholder image for team logo
-            const teamLogoSrc = `https://placehold.co/20x20/007bff/ffffff?text=${player.team_short_name}`;
+            // Determine opponent and FDR for the current round
+            let opponentInfo = '';
+            let fdrClass = 'fdr-na';
+            const teamFixtures = globalSeasonSchedule.fixtures[player.team_name] || {};
+            const fixturesForThisRound = teamFixtures[`R${currentRound}`] || [];
 
-            // Get opponent and FDR for the current planning round
-            let opponentDisplay = 'N/A';
-            let fdrValue = null;
-            const roundName = `R${currentRound}`;
-            const teamFixtures = globalSeasonSchedule.fixtures[player.team_name];
-            if (teamFixtures && teamFixtures[roundName] && teamFixtures[roundName].length > 0) {
-                const fixtureString = teamFixtures[roundName][0]; // Assuming one fixture per round
+            if (fixturesForThisRound.length > 0) {
+                // Assuming only one fixture per team per round for simplicity
+                const fixtureString = fixturesForThisRound[0]; 
                 const match = fixtureString.match(/(.+?)\s*(🏠|✈️)?$/);
                 const [opponentShortCode, homeAwayEmoji, isHomeGame] = [match[1].trim(), match[2] || '', (match[2] === '🏠')];
-                opponentDisplay = `${opponentShortCode} ${homeAwayEmoji}`;
-                fdrValue = getFDRValue(player.team_name, opponentShortCode, isHomeGame, selectedFDRSystem, userCustomFDRRatings);
+                
+                const fdrValue = getFDRValue(player.team_name, opponentShortCode, isHomeGame, selectedFDRSystem, userCustomFDRRatings);
+                
+                opponentInfo = `${opponentShortCode} ${homeAwayEmoji}`;
+                fdrClass = fdrValue !== null ? `fdr-${fdrValue}` : 'fdr-na';
             }
 
             playerCard.innerHTML = `
-                <img class="player-image" src="${playerImageSrc}" alt="${player.name}">
+                <img src="https://placehold.co/50x50/cccccc/000000?text=${player.position_short}" alt="${player.name}" class="player-image">
                 <div class="player-name">${player.name}</div>
                 <div class="player-details">
-                    ${player.position_short} <img class="team-logo" src="${teamLogoSrc}" alt="${player.team_short_name}">
+                    ${player.position_short} <img src="https://placehold.co/20x20/eeeeee/000000?text=${player.team_short_name}" alt="${player.team_short_name}" class="team-logo">
                 </div>
                 <div class="player-price">${player.current_price.toFixed(1)}m</div>
                 <div class="player-opponent">
-                    ${opponentDisplay} 
-                    ${fdrValue !== null ? `<span class="fdr-value-display fdr-${fdrValue}">${fdrValue}</span>` : ''}
+                    ${opponentInfo} <span class="fdr-value-display ${fdrClass}">${fdrClass.replace('fdr-', '') === 'na' ? 'N/A' : fdrClass.replace('fdr-', '')}</span>
+                </div>
+                <div class="player-actions">
+                    <span class="action-icon remove-player" data-player-id="${player.id}" title="Remove Player"><i class="fas fa-times"></i></span>
+                    <span class="action-icon move-player" data-player-id="${player.id}" title="Move Player"><i class="fas fa-arrows-alt"></i></span>
                 </div>
             `;
 
-            if (showActions) {
-                const playerActions = document.createElement('div');
-                playerActions.className = 'player-actions';
+            // Add event listeners for drag and drop
+            playerCard.addEventListener('dragstart', handleDragStart);
 
-                const removeIcon = document.createElement('div');
-                removeIcon.className = 'action-icon remove-player';
-                removeIcon.innerHTML = '&times;'; // Red 'X' icon
-                removeIcon.title = 'Remove Player';
-                removeIcon.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent dragstart if clicked
-                    removePlayerFromSquad(player.id);
-                });
-                playerActions.appendChild(removeIcon);
-
-                const moveIcon = document.createElement('div');
-                moveIcon.className = 'action-icon move-player';
-                moveIcon.innerHTML = player.slot_type === 'pitch' ? '&#8595;' : '&#8593;'; // Down arrow for pitch, up for bench
-                moveIcon.title = player.slot_type === 'pitch' ? 'Move to Bench' : 'Move to Pitch';
-                moveIcon.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent dragstart if clicked
-                    togglePlayerPosition(player.id);
-                });
-                playerActions.appendChild(moveIcon);
-
-                playerCard.appendChild(playerActions);
-            }
+            // Add event listeners for action icons
+            playerCard.querySelector('.remove-player').addEventListener('click', (e) => {
+                const playerId = parseInt(e.currentTarget.dataset.playerId);
+                handleRemovePlayer(playerId);
+            });
+            playerCard.querySelector('.move-player').addEventListener('click', (e) => {
+                const playerId = parseInt(e.currentTarget.dataset.playerId);
+                handleMovePlayerRequest(playerId);
+            });
 
             return playerCard;
         }
 
-        /**
-         * Renders the current squad on the pitch and bench.
-         * @param {Array<Object>} squad The array of player objects in the current squad.
-         * @param {number} currentRound The current planning round for opponent display.
-         */
-        function renderSquad(squad, currentRound) {
-            // Clear all slots first
-            document.querySelectorAll('.player-slot').forEach(slot => {
-                slot.innerHTML = '';
-                slot.classList.remove('has-player');
-                slot.dataset.playerId = ''; // Clear data attribute
-                slot.dataset.playerPos = ''; // Clear player position from slot
-            });
+        // Handle player removal from squad
+        function handleRemovePlayer(playerId) {
+            const playerToRemove = currentSquad.find(p => p.id === playerId);
+            if (!playerToRemove) return;
 
-            // Render Players into their assigned slots
-            squad.forEach(player => {
-                const slotElement = document.querySelector(`.player-slot[data-slot-id="${player.slot_id}"][data-slot-type="${player.slot_type}"]`);
-                if (slotElement) {
-                    const playerCard = renderPlayerCard(player, currentRound, true); // Show actions for squad players
-                    slotElement.appendChild(playerCard);
-                    slotElement.classList.add('has-player');
-                    slotElement.dataset.playerId = player.id;
-                    slotElement.dataset.playerPos = player.position_short;
-                } else {
-                    console.warn(`Could not find slot for player: ${player.name} (ID: ${player.id}) at slot ID ${player.slot_id} type ${player.slot_type}.`);
-                }
-            });
-            updateTransferSummary();
+            // Remove player from currentSquad
+            currentSquad = currentSquad.filter(p => p.id !== playerId);
+
+            // Add to pending transfers as 'out'
+            pendingTransfers.push({ type: 'out', player: playerToRemove });
+
+            renderSquad(currentSquad, currentPlanningRound); // Re-render squad
+            updateTransferSummary(); // Update summary
+            filterAndRenderPlayerList(); // Re-render player list to make removed player available
+            showTransferPlannerMessage(`${playerToRemove.name} removed from squad.`, 'info');
         }
 
-        /**
-         * Renders the list of available players in the sidebar.
-         * @param {Array<Object>} players The array of player objects to display.
-         */
-        function renderPlayerList(players) {
-            playerList.innerHTML = '';
-            players.forEach(player => {
-                const playerCard = renderPlayerCard(player, currentPlanningRound, false); // No actions for list players
-                playerCard.classList.add('player-card-list-item'); // Add a specific class for list items
+        // Handle player movement (pitch to bench, bench to pitch)
+        let playerBeingMoved = null; // Store player object during a move operation
+
+        function handleMovePlayerRequest(playerId) {
+            const player = currentSquad.find(p => p.id === playerId);
+            if (!player) return;
+
+            playerBeingMoved = player;
+            showTransferPlannerMessage(`Select an empty slot to move ${player.name} to.`, 'info');
+
+            // Highlight valid target slots (empty slots)
+            document.querySelectorAll('.player-slot:not(.has-player)').forEach(slot => {
+                slot.classList.add('highlight-move-target');
+            });
+        }
+
+        // Drag and Drop Handlers
+        function handleDragStart(e) {
+            const playerId = parseInt(e.target.dataset.playerId);
+            const player = currentSquad.find(p => p.id === playerId);
+            if (player) {
+                e.dataTransfer.setData('text/plain', JSON.stringify(player));
+                e.dataTransfer.effectAllowed = 'move';
+                playerBeingMoved = player; // Set player being moved for drop validation
+            }
+        }
+
+        document.querySelectorAll('.player-slot').forEach(slot => {
+            slot.addEventListener('dragover', handleDragOver);
+            slot.addEventListener('dragleave', handleDragLeave);
+            slot.addEventListener('drop', handleDrop);
+        });
+
+        function handleDragOver(e) {
+            e.preventDefault(); // Allow drop
+            const targetSlot = e.currentTarget;
+            if (!targetSlot.classList.contains('has-player') || playerBeingMoved?.slot_id === parseInt(targetSlot.dataset.slotId) && playerBeingMoved?.slot_type === targetSlot.dataset.slotType) {
+                targetSlot.classList.add('drag-over');
+                e.dataTransfer.dropEffect = 'move';
+            } else {
+                e.dataTransfer.dropEffect = 'none'; // Cannot drop on occupied slot unless it's the same player
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const targetSlot = e.currentTarget;
+            targetSlot.classList.remove('drag-over');
+
+            const data = e.dataTransfer.getData('text/plain');
+            let droppedPlayer;
+            try {
+                droppedPlayer = JSON.parse(data);
+            } catch (error) {
+                console.error("Failed to parse dropped data:", error);
+                showTransferPlannerMessage("Invalid player data dropped.", "error");
+                return;
+            }
+
+            // Scenario 1: Moving an existing player within the squad (pitch <-> bench)
+            if (playerBeingMoved && playerBeingMoved.id === droppedPlayer.id) {
+                // Check if the target slot is the same as the current slot (no actual move)
+                if (playerBeingMoved.slot_id === parseInt(targetSlot.dataset.slotId) && playerBeingMoved.slot_type === targetSlot.dataset.slotType) {
+                    showTransferPlannerMessage("Player is already in this slot.", "info");
+                    playerBeingMoved = null; // Reset
+                    return;
+                }
+
+                // Check if target slot is occupied by another player
+                if (targetSlot.classList.contains('has-player') && parseInt(targetSlot.dataset.playerId) !== playerBeingMoved.id) {
+                    showTransferPlannerMessage("Cannot move player to an occupied slot.", "error");
+                    playerBeingMoved = null; // Reset
+                    return;
+                }
+                
+                // Perform the move
+                const oldSlotId = playerBeingMoved.slot_id;
+                const oldSlotType = playerBeingMoved.slot_type;
+
+                // Update the player's slot in currentSquad
+                const playerIndex = currentSquad.findIndex(p => p.id === playerBeingMoved.id);
+                if (playerIndex !== -1) {
+                    currentSquad[playerIndex].slot_id = parseInt(targetSlot.dataset.slotId);
+                    currentSquad[playerIndex].slot_type = targetSlot.dataset.slotType;
+                }
+
+                // Add to pending transfers as 'move'
+                pendingTransfers.push({
+                    type: 'move',
+                    player: droppedPlayer, // Use the original player object for context
+                    originalSlotId: oldSlotId,
+                    originalSlotType: oldSlotType,
+                    newSlotId: parseInt(targetSlot.dataset.slotId),
+                    newSlotType: targetSlot.dataset.slotType
+                });
+
+                renderSquad(currentSquad, currentPlanningRound);
+                showTransferPlannerMessage(`${droppedPlayer.name} moved.`, 'success');
+                playerBeingMoved = null; // Reset
+                return;
+            }
+
+            // Scenario 2: Adding a new player from the player list to an empty slot
+            if (!targetSlot.classList.contains('has-player')) {
+                if (currentSquad.length >= MAX_SQUAD_SIZE) {
+                    showTransferPlannerMessage(`Squad is full. You must remove a player before adding another. Max ${MAX_SQUAD_SIZE} players.`, 'warning');
+                    return;
+                }
+
+                const playerToAdd = globalTeamData.allPlayers.find(p => p.id === droppedPlayer.id);
+                if (!playerToAdd) {
+                    showTransferPlannerMessage("Player not found in available players list.", "error");
+                    return;
+                }
+
+                // Check team limit
+                const playersFromSameTeam = currentSquad.filter(p => p.team_id === playerToAdd.team_id).length;
+                if (playersFromSameTeam >= MAX_PLAYERS_PER_TEAM) {
+                    showTransferPlannerMessage(`You can only have a maximum of ${MAX_PLAYERS_PER_TEAM} players from one team.`, 'warning');
+                    return;
+                }
+
+                // Add to pending transfers as 'in'
+                pendingTransfers.push({
+                    type: 'in',
+                    player: playerToAdd,
+                    newSlotId: parseInt(targetSlot.dataset.slotId),
+                    newSlotType: targetSlot.dataset.slotType
+                });
+
+                // Add player to currentSquad with new slot info and buying price
+                currentSquad.push({
+                    ...playerToAdd,
+                    slot_id: parseInt(targetSlot.dataset.slotId),
+                    slot_type: targetSlot.dataset.slotType,
+                    buying_price: playerToAdd.current_price // Buying price is current price when added
+                });
+
+                renderSquad(currentSquad, currentPlanningRound);
+                updateTransferSummary(); // Update summary
+                filterAndRenderPlayerList(); // Re-render player list to remove added player
+                showTransferPlannerMessage(`${playerToAdd.name} added to squad.`, 'success');
+            } else {
+                showTransferPlannerMessage("Cannot drop player here. Slot is occupied.", "error");
+            }
+            playerBeingMoved = null; // Reset after any drop attempt
+        }
+
+        // Update Transfer Summary (Free Transfers, Points Hit, Funds)
+        function updateTransferSummary() {
+            let transfersIn = pendingTransfers.filter(t => t.type === 'in').length;
+            let transfersOut = pendingTransfers.filter(t => t.type === 'out').length;
+            
+            // Calculate actual transfers that incur a hit
+            let actualTransfers = 0;
+            if (transfersIn > 0 || transfersOut > 0) {
+                // For simplicity, assume each 'in' or 'out' is a transfer.
+                // A 'move' within the squad (pitch/bench) does not count as a transfer hit.
+                actualTransfers = Math.max(transfersIn, transfersOut); // Or a more complex logic if 2-for-1 is allowed
+            }
+
+            let calculatedPointsHit = 0;
+            let calculatedFreeTransfers = currentFreeTransfers; // Start with current free transfers
+
+            if (actualTransfers > calculatedFreeTransfers) {
+                calculatedPointsHit = (actualTransfers - calculatedFreeTransfers) * POINTS_HIT_PER_TRANSFER;
+                calculatedFreeTransfers = 0; // All free transfers used
+            } else {
+                calculatedFreeTransfers -= actualTransfers;
+            }
+
+            // Update funds based on pending transfers
+            let fundsChange = 0;
+            pendingTransfers.forEach(t => {
+                if (t.type === 'in') {
+                    fundsChange -= t.player.current_price;
+                } else if (t.type === 'out') {
+                    // When selling, the player's selling price is usually lower than buying price (e.g., current price - 0.1m)
+                    // For simplicity, let's assume selling price is buying_price if available, else current_price
+                    fundsChange += t.player.buying_price || t.player.current_price;
+                }
+            });
+
+            currentFunds += fundsChange; // Apply funds change
+            currentPointsHit = calculatedPointsHit; // Update global points hit
+            currentFreeTransfers = calculatedFreeTransfers; // Update global free transfers
+
+            if (currentPlanningRoundDisplay) currentPlanningRoundDisplay.textContent = currentPlanningRound;
+            if (freeTransfersDisplay) freeTransfersDisplay.textContent = currentFreeTransfers;
+            if (pointsHitDisplay) pointsHitDisplay.textContent = currentPointsHit;
+            if (fundsDisplay) fundsDisplay.textContent = `${currentFunds.toFixed(1)}m`;
+        }
+
+        // Filter and Render Player List (right sidebar)
+        function filterAndRenderPlayerList() {
+            if (!playerList) return;
+            playerList.innerHTML = ''; // Clear current list
+
+            const searchTerm = playerSearchInput.value.toLowerCase();
+
+            filteredPlayers = globalTeamData.allPlayers.filter(player => {
+                const matchesSearch = player.name.toLowerCase().includes(searchTerm) || 
+                                      player.team_name.toLowerCase().includes(searchTerm) ||
+                                      player.position_short.toLowerCase().includes(searchTerm);
+                const matchesFilter = activePlayerFilter === 'ALL' || player.position_short === activePlayerFilter;
+                
+                // Exclude players already in the current squad
+                const isInSquad = currentSquad.some(squadPlayer => squadPlayer.id === player.id);
+
+                return matchesSearch && matchesFilter && !isInSquad;
+            }).sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+
+            if (filteredPlayers.length === 0) {
+                playerList.innerHTML = '<p style="text-align: center; color: var(--spl-text-medium); padding: 20px;">No players found matching your criteria.</p>';
+                return;
+            }
+
+            filteredPlayers.forEach(player => {
+                const playerCard = createPlayerCard(player, currentPlanningRound); // Re-use createPlayerCard
+                playerCard.classList.add('list-item-card'); // Add a class for specific list item styling
+                
+                // Remove action icons for players in the available list (they can only be dragged in)
+                const actions = playerCard.querySelector('.player-actions');
+                if (actions) actions.remove();
+
                 playerList.appendChild(playerCard);
             });
         }
 
-        /**
-         * Filters and renders the player list based on the active filter and search input.
-         */
-        function filterAndRenderPlayerList() {
-            let playersToDisplay = globalTeamData.allPlayers;
-
-            // Filter out players already in the current squad
-            const squadPlayerIds = new Set(currentSquad.map(p => p.id));
-            playersToDisplay = playersToDisplay.filter(p => !squadPlayerIds.has(p.id));
-
-            // Apply position filter
-            if (activePlayerFilter !== 'ALL') {
-                playersToDisplay = playersToDisplay.filter(p => p.position_short === activePlayerFilter);
-            }
-
-            // Apply search filter
-            const searchTerm = playerSearchInput.value.toLowerCase();
-            if (searchTerm) {
-                playersToDisplay = playersToDisplay.filter(p => 
-                    p.name.toLowerCase().includes(searchTerm) || 
-                    p.team_name.toLowerCase().includes(searchTerm) ||
-                    p.team_short_name.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            // Sort players (e.g., by total points descending)
-            playersToDisplay.sort((a, b) => b.total_points - a.total_points);
-
-            filteredPlayers = playersToDisplay; // Update global filteredPlayers
-            renderPlayerList(filteredPlayers);
-        }
-
-        /**
-         * Updates the transfer summary display (funds, free transfers, points hit).
-         */
-        function updateTransferSummary() {
-            // Recalculate funds and hits based on pending transfers
-            let totalCost = 0;
-            let transfersMadeCount = 0;
-            
-            // Calculate total cost and transfers made from pendingTransfers
-            // This is a simplified calculation. A full implementation would track
-            // actual buying prices for owned players and selling prices based on profit.
-            pendingTransfers.forEach(transfer => {
-                transfersMadeCount++;
-                if (transfer.type === 'in') {
-                    totalCost += transfer.player.current_price;
-                } else if (transfer.type === 'out') {
-                    // For 'out' transfers, we need the selling price
-                    // If the player was part of the original squad, use their buying_price
-                    // If they were added in a previous planning round, use their buying_price from that round
-                    const playerInSquad = currentSquad.find(p => p.id === transfer.player.id);
-                    const sellingPrice = playerInSquad ? calculateSellingPrice(playerInSquad.buying_price, transfer.player.current_price) : transfer.player.current_price;
-                    totalCost -= sellingPrice;
-                }
-            });
-
-            // Calculate free transfers and hits
-            let actualFreeTransfers = currentFreeTransfers;
-            let actualPointsHit = 0;
-
-            if (transfersMadeCount > actualFreeTransfers) {
-                actualPointsHit = (transfersMadeCount - actualFreeTransfers) * POINTS_HIT_PER_TRANSFER;
-            }
-
-            currentPlanningRoundDisplay.textContent = currentPlanningRound;
-            freeTransfersDisplay.textContent = actualFreeTransfers - transfersMadeCount < 0 ? 0 : actualFreeTransfers - transfersMadeCount;
-            pointsHitDisplay.textContent = actualPointsHit;
-            fundsDisplay.textContent = `${(currentFunds - totalCost).toFixed(1)}m`;
-        }
-
-        /**
-         * Validates the current squad formation against FPL rules.
-         * @param {Array<Object>} squad The current squad array.
-         * @returns {Object} { isValid: boolean, message: string }
-         */
-        function validateSquadFormation(squad) {
-            const pitchPlayers = squad.filter(p => p.slot_type === 'pitch');
-            const benchPlayers = squad.filter(p => p.slot_type === 'bench');
-
-            // Rule 1: Total players must be 15
-            if (squad.length !== MAX_SQUAD_SIZE) {
-                return { isValid: false, message: `Squad must have exactly ${MAX_SQUAD_SIZE} players (11 pitch, 4 bench). Current: ${squad.length}` };
-            }
-
-            // Rule 2: Positional limits (total squad)
-            const squadPositionCounts = { 'GKP': 0, 'DEF': 0, 'MID': 0, 'FWD': 0 };
-            squad.forEach(p => squadPositionCounts[p.position_short]++);
-
-            // Max players per position in total squad (common FPL rules)
-            if (squadPositionCounts['GKP'] > 2) return { isValid: false, message: "Squad: Max 2 Goalkeepers." };
-            if (squadPositionCounts['DEF'] > 5) return { isValid: false, message: "Squad: Max 5 Defenders." };
-            if (squadPositionCounts['MID'] > 5) return { isValid: false, message: "Squad: Max 5 Midfielders." };
-            if (squadPositionCounts['FWD'] > 3) return { isValid: false, message: "Squad: Max 3 Forwards." };
-
-            // Rule 3: Pitch formation rules (1 GKP, at least 3 DEF, at least 1 FWD, total 11)
-            const pitchPositionCounts = { 'GKP': 0, 'DEF': 0, 'MID': 0, 'FWD': 0 };
-            pitchPlayers.forEach(p => pitchPositionCounts[p.position_short]++);
-
-            if (pitchPlayers.length !== 11) {
-                return { isValid: false, message: `Pitch: Must have exactly 11 players. Current: ${pitchPlayers.length}` };
-            }
-            if (benchPlayers.length !== 4) {
-                return { isValid: false, message: `Bench: Must have exactly 4 players. Current: ${benchPlayers.length}` };
-            }
-
-            if (pitchPositionCounts['GKP'] !== PITCH_MIN_POSITION_COUNTS['GKP']) {
-                return { isValid: false, message: `Pitch: Must have exactly ${PITCH_MIN_POSITION_COUNTS['GKP']} Goalkeeper.` };
-            }
-            if (pitchPositionCounts['DEF'] < PITCH_MIN_POSITION_COUNTS['DEF']) {
-                return { isValid: false, message: `Pitch: Must have at least ${PITCH_MIN_POSITION_COUNTS['DEF']} Defenders.` };
-            }
-            if (pitchPositionCounts['FWD'] < PITCH_MIN_POSITION_COUNTS['FWD']) {
-                return { isValid: false, message: `Pitch: Must have at least ${PITCH_MIN_POSITION_COUNTS['FWD']} Forward.` };
-            }
-            // Midfielders don't have a minimum on pitch, as long as total 11 is met and others are valid.
-
-            // Rule 4: Max 3 players from one team
-            const teamCounts = {};
-            squad.forEach(p => {
-                teamCounts[p.team_id] = (teamCounts[p.team_id] || 0) + 1;
-                if (teamCounts[p.team_id] > MAX_PLAYERS_PER_TEAM) {
-                    return { isValid: false, message: `You can only have a maximum of ${MAX_PLAYERS_PER_TEAM} players from one team.` };
-                }
-            });
-
-            return { isValid: true, message: "Squad is valid." };
-        }
-
-        /**
-         * Initializes the Transfer Planner when it's opened.
-         * Fetches the initial squad, sets up UI, and renders.
-         */
-        async function initializeTransferPlanner() {
-            showTransferPlannerMessage('Loading Transfer Planner...', 'info');
-            currentPlanningRound = INITIAL_PLANNING_ROUND;
-            currentFreeTransfers = 1; // Start with 1 free transfer for Round 2
-            currentPointsHit = 0;
-            pendingTransfers = []; // Clear pending transfers
-
-            if (!currentManagerId) {
-                showTransferPlannerMessage('Manager ID not found. Please log in.', 'error');
-                return;
-            }
-
-            // Fetch initial squad for Round 2 (mocked for now)
-            currentSquad = await fetchManagerSquadForRound(currentManagerId, INITIAL_PLANNING_ROUND);
-            
-            // Calculate initial funds based on the mock squad's value
-            currentFunds = currentSquad.reduce((sum, player) => sum + player.current_price, 0); // Sum of current prices
-            currentFunds += 0.0; // Add some initial bank, e.g., 0.0m
-
-            renderSquad(currentSquad, currentPlanningRound);
-            filterAndRenderPlayerList(); // Render all players initially
-            updateTransferSummary();
-            showTransferPlannerMessage('Transfer Planner ready!', 'success');
-        }
-
-        /**
-         * Handles removing a player from the squad.
-         * @param {number} playerId The ID of the player to remove.
-         */
-        function removePlayerFromSquad(playerId) {
-            const playerToRemoveIndex = currentSquad.findIndex(p => p.id === playerId);
-            if (playerToRemoveIndex !== -1) {
-                const playerToRemove = currentSquad[playerToRemoveIndex];
-                
-                // Add to pending transfers as an 'out' transfer
-                pendingTransfers.push({ type: 'out', player: playerToRemove });
-
-                currentSquad.splice(playerToRemoveIndex, 1); // Remove player from squad
-                renderSquad(currentSquad, currentPlanningRound); // Re-render to show empty slot
-                showTransferPlannerMessage(`${playerToRemove.name} removed. Drag a new player into the empty slot.`, 'info');
-                filterAndRenderPlayerList(); // Re-render player list (might need to show removed player if they are now available)
-            }
-            updateTransferSummary();
-        }
-
-        /**
-         * Toggles a player's position between pitch and bench.
-         * @param {number} playerId The ID of the player to move.
-         */
-        function togglePlayerPosition(playerId) {
-            const playerToMove = currentSquad.find(p => p.id === playerId);
-            if (!playerToMove) return;
-
-            const currentSlotType = playerToMove.slot_type;
-            const currentPosition = playerToMove.position_short;
-
-            // Find an empty slot in the target area
-            let targetSlotElement = null;
-            let newSlotType = '';
-            let newSlotId = null;
-
-            if (currentSlotType === 'pitch') {
-                // Try to move to bench
-                const emptyBenchSlots = Array.from(benchArea.querySelectorAll('.player-slot:not(.has-player)'));
-                if (emptyBenchSlots.length > 0) {
-                    targetSlotElement = emptyBenchSlots[0];
-                    newSlotType = 'bench';
-                    newSlotId = parseInt(targetSlotElement.dataset.slotId);
-                } else {
-                    showTransferPlannerMessage('Bench is full. Cannot move player to bench directly.', 'warning');
-                    return;
-                }
-            } else { // currentSlotType === 'bench'
-                // Try to move to pitch
-                const emptyPitchSlots = Array.from(pitchArea.querySelectorAll(`.player-slot[data-position="${currentPosition}"]:not(.has-player)`));
-                if (emptyPitchSlots.length > 0) {
-                    targetSlotElement = emptyPitchSlots[0];
-                    newSlotType = 'pitch';
-                    newSlotId = parseInt(targetSlotElement.dataset.slotId);
-                } else {
-                    showTransferPlannerMessage(`No empty pitch slot for a ${currentPosition}.`, 'warning');
-                    return;
-                }
-            }
-
-            // Temporarily update player's slot for validation
-            const originalSlotType = playerToMove.slot_type;
-            const originalSlotId = playerToMove.slot_id;
-            playerToMove.slot_type = newSlotType;
-            playerToMove.slot_id = newSlotId;
-
-            const validationResult = validateSquadFormation(currentSquad);
-            if (!validationResult.isValid) {
-                // Revert changes if invalid
-                playerToMove.slot_type = originalSlotType;
-                playerToMove.slot_id = originalSlotId;
-                showTransferPlannerMessage(`Cannot move ${playerToMove.name}: ${validationResult.message}`, 'error');
-                return;
-            }
-
-            // If valid, update the player in the currentSquad
-            playerToMove.slot_type = newSlotType;
-            playerToMove.slot_id = newSlotId;
-
-            // No need to add to pendingTransfers for pitch/bench swaps, as they don't affect funds/hits
-            renderSquad(currentSquad, currentPlanningRound);
-            showTransferPlannerMessage(`${playerToMove.name} moved to ${newSlotType}.`, 'info');
-            updateTransferSummary();
-        }
-
-        // --- Drag and Drop Logic ---
-        let draggedPlayerId = null;
-        let draggedPlayerSourceSlot = null; // To track if dragging from list or from pitch/bench
-
-        document.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('player-card')) {
-                draggedPlayerId = parseInt(e.target.dataset.playerId);
-                // Check if dragging from a slot or from the player list
-                if (e.target.closest('.player-slot')) {
-                    draggedPlayerSourceSlot = e.target.closest('.player-slot');
-                } else if (e.target.closest('#playerList')) {
-                    draggedPlayerSourceSlot = 'playerList';
-                }
-                e.dataTransfer.setData('text/plain', draggedPlayerId);
-                e.dataTransfer.effectAllowed = 'move';
-            }
-        });
-
-        document.querySelectorAll('.player-slot').forEach(slot => {
-            slot.addEventListener('dragover', (e) => {
-                e.preventDefault(); // Allow drop
-                e.dataTransfer.dropEffect = 'move';
-                slot.classList.add('drag-over');
-            });
-
-            slot.addEventListener('dragleave', (e) => {
-                slot.classList.remove('drag-over');
-            });
-
-            slot.addEventListener('drop', (e) => {
-                e.preventDefault();
-                slot.classList.remove('drag-over');
-
-                const droppedPlayerId = parseInt(e.dataTransfer.getData('text/plain'));
-                const droppedPlayer = globalTeamData.allPlayers.find(p => p.id === droppedPlayerId);
-                if (!droppedPlayer) {
-                    showTransferPlannerMessage('Invalid player dropped.', 'error');
-                    return;
-                }
-
-                const targetSlot = e.currentTarget;
-                const targetSlotId = parseInt(targetSlot.dataset.slotId);
-                const targetSlotType = targetSlot.dataset.slotType; // 'pitch' or 'bench'
-                const targetSlotPosition = targetSlot.dataset.position; // 'GKP', 'DEF', etc.
-
-                const playerInTargetSlotId = targetSlot.dataset.playerId ? parseInt(targetSlot.dataset.playerId) : null;
-                const playerInTargetSlot = playerInTargetSlotId ? currentSquad.find(p => p.id === playerInTargetSlotId) : null;
-
-                // Scenario 1: Dragging from Player List to an empty slot
-                if (draggedPlayerSourceSlot === 'playerList' && !playerInTargetSlot) {
-                    // Check if the position matches
-                    if (targetSlotType === 'pitch' && droppedPlayer.position_short !== targetSlotPosition) {
-                        showTransferPlannerMessage(`Cannot place a ${droppedPlayer.position_short} into a ${targetSlotPosition} slot.`, 'error');
-                        return;
-                    }
-                    
-                    // Create a temporary squad for validation
-                    const tempSquad = [...currentSquad];
-                    const newPlayerForSquad = { 
-                        ...droppedPlayer, 
-                        slot_id: targetSlotId, 
-                        slot_type: targetSlotType, 
-                        buying_price: droppedPlayer.current_price // New players are bought at current price
-                    };
-                    tempSquad.push(newPlayerForSquad);
-
-                    const validationResult = validateSquadFormation(tempSquad);
-                    if (!validationResult.isValid) {
-                        showTransferPlannerMessage(`Cannot add ${droppedPlayer.name}: ${validationResult.message}`, 'error');
-                        return;
-                    }
-
-                    // If valid, apply the transfer
-                    currentSquad.push(newPlayerForSquad);
-                    pendingTransfers.push({ type: 'in', player: newPlayerForSquad, newSlotId: targetSlotId, newSlotType: targetSlotType });
-                    showTransferPlannerMessage(`${droppedPlayer.name} added.`, 'success');
-
-                }
-                // Scenario 2: Dragging from Player List to a slot with a player (swap/replace)
-                else if (draggedPlayerSourceSlot === 'playerList' && playerInTargetSlot) {
-                    // Check if positions match for pitch slots
-                    if (targetSlotType === 'pitch' && droppedPlayer.position_short !== targetSlotPosition) {
-                        showTransferPlannerMessage(`Cannot swap a ${droppedPlayer.position_short} with a ${targetSlotPosition}.`, 'error');
-                        return;
-                    }
-
-                    // Create a temporary squad for validation
-                    const tempSquad = currentSquad.filter(p => p.id !== playerInTargetSlot.id); // Remove old player
-                    const newPlayerForSquad = { 
-                        ...droppedPlayer, 
-                        slot_id: targetSlotId, 
-                        slot_type: targetSlotType, 
-                        buying_price: droppedPlayer.current_price 
-                    };
-                    tempSquad.push(newPlayerForSquad); // Add new player
-
-                    const validationResult = validateSquadFormation(tempSquad);
-                    if (!validationResult.isValid) {
-                        showTransferPlannerMessage(`Cannot swap: ${validationResult.message}`, 'error');
-                        return;
-                    }
-
-                    // If valid, apply the swap
-                    removePlayerFromSquad(playerInTargetSlot.id); // This will add to pendingTransfers as 'out'
-                    currentSquad.push(newPlayerForSquad); // Add new player
-                    pendingTransfers.push({ type: 'in', player: newPlayerForSquad, newSlotId: targetSlotId, newSlotType: targetSlotType });
-                    showTransferPlannerMessage(`${playerInTargetSlot.name} replaced by ${droppedPlayer.name}.`, 'success');
-                }
-                // Scenario 3: Dragging from one slot to another (pitch to bench, bench to pitch, or within pitch/bench)
-                else if (draggedPlayerSourceSlot && draggedPlayerSourceSlot !== 'playerList') {
-                    const sourceSlotId = parseInt(draggedPlayerSourceSlot.dataset.slotId);
-                    const sourceSlotType = draggedPlayerSourceSlot.dataset.slotType;
-
-                    const playerToMove = currentSquad.find(p => p.id === droppedPlayerId);
-                    if (!playerToMove) return;
-
-                    // If dropping onto self, do nothing
-                    if (playerToMove.slot_id === targetSlotId && playerToMove.slot_type === targetSlotType) {
-                        return;
-                    }
-
-                    // If dropping onto an empty slot
-                    if (!playerInTargetSlot) {
-                        // Check position compatibility for pitch slots
-                        if (targetSlotType === 'pitch' && playerToMove.position_short !== targetSlotPosition) {
-                            showTransferPlannerMessage(`Cannot move a ${playerToMove.position_short} to a ${targetSlotPosition} slot.`, 'error');
-                            return;
-                        }
-
-                        // Temporarily update player's slot for validation
-                        const originalPlayerSlotId = playerToMove.slot_id;
-                        const originalPlayerSlotType = playerToMove.slot_type;
-                        playerToMove.slot_id = targetSlotId;
-                        playerToMove.slot_type = targetSlotType;
-
-                        const validationResult = validateSquadFormation(currentSquad);
-                        if (!validationResult.isValid) {
-                            playerToMove.slot_id = originalPlayerSlotId; // Revert
-                            playerToMove.slot_type = originalPlayerSlotType; // Revert
-                            showTransferPlannerMessage(`Cannot move ${playerToMove.name}: ${validationResult.message}`, 'error');
-                            return;
-                        }
-
-                        // If valid, apply the move
-                        playerToMove.slot_id = targetSlotId;
-                        playerToMove.slot_type = targetSlotType;
-                        showTransferPlannerMessage(`${playerToMove.name} moved.`, 'success');
-                    }
-                    // If dropping onto a slot with another player (swap)
-                    else {
-                        // Check position compatibility for pitch slots for both players
-                        if (targetSlotType === 'pitch' && playerToMove.position_short !== targetSlotPosition) {
-                            showTransferPlannerMessage(`Cannot swap ${playerToMove.name} (${playerToMove.position_short}) with ${playerInTargetSlot.name} (${playerInTargetSlot.position_short}) in this pitch slot.`, 'error');
-                            return;
-                        }
-                        if (sourceSlotType === 'pitch' && playerInTargetSlot.position_short !== draggedPlayerSourceSlot.dataset.position) {
-                             // This case is implicitly handled by the previous check if targetSlotType is pitch
-                             // But good to keep in mind for general swaps
-                        }
-
-                        // Perform a swap: temporarily update both players' slots for validation
-                        const originalPlayerToMoveSlotId = playerToMove.slot_id;
-                        const originalPlayerToMoveSlotType = playerToMove.slot_type;
-                        const originalPlayerInTargetSlotId = playerInTargetSlot.slot_id;
-                        const originalPlayerInTargetSlotType = playerInTargetSlot.slot_type;
-
-                        playerToMove.slot_id = targetSlotId;
-                        playerToMove.slot_type = targetSlotType;
-                        playerInTargetSlot.slot_id = sourceSlotId;
-                        playerInTargetSlot.slot_type = sourceSlotType;
-
-                        const validationResult = validateSquadFormation(currentSquad);
-                        if (!validationResult.isValid) {
-                            // Revert changes if invalid
-                            playerToMove.slot_id = originalPlayerToMoveSlotId;
-                            playerToMove.slot_type = originalPlayerToMoveSlotType;
-                            playerInTargetSlot.slot_id = originalPlayerInTargetSlotId;
-                            playerInTargetSlot.slot_type = originalPlayerInTargetSlotType;
-                            showTransferPlannerMessage(`Cannot swap: ${validationResult.message}`, 'error');
-                            return;
-                        }
-
-                        // If valid, apply the swap
-                        playerToMove.slot_id = targetSlotId;
-                        playerToMove.slot_type = targetSlotType;
-                        playerInTargetSlot.slot_id = sourceSlotId;
-                        playerInTargetSlot.slot_type = sourceSlotType;
-                        showTransferPlannerMessage(`${playerToMove.name} swapped with ${playerInTargetSlot.name}.`, 'success');
-                    }
-                }
-                renderSquad(currentSquad, currentPlanningRound);
-                updateTransferSummary();
-            });
-        });
         // --- Event Listeners ---
 
         document.querySelectorAll('input[name="fdrSystem"]').forEach(radio => { radio.addEventListener('change', async () => {
