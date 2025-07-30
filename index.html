@@ -40,7 +40,7 @@
             font-family: 'Roboto', sans-serif; background-color: var(--spl-light-bg); color: var(--spl-text-dark);
             margin: 0; padding: 20px; line-height: 1.6; display: flex; flex-direction: column;
             align-items: center; min-height: 100vh; box-sizing: border-box;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color: 0.3s ease, color: 0.3s ease;
         }
 
         #logo-container { text-align: center; margin-bottom: 20px; width: 100%; }
@@ -64,10 +64,10 @@
         .container {
             background-color: var(--spl-container-bg); border-radius: 12px; box-shadow: 0 6px 12px var(--spl-shadow);
             padding: 30px; margin-bottom: 20px; width: 100%; max-width: 1200px; box-sizing: border-box;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color: 0.3s ease, box-shadow: 0.3s ease;
         }
 
-        h1, h2, h3 { font-family: 'Oswald', sans-serif; color: var(--spl-primary-accent); text-align: center; margin-top: 0; margin-bottom: 20px; transition: color 0.3s ease; }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; color: var(--spl-primary-accent); text-align: center; margin-top: 0; margin-bottom: 20px; transition: color: 0.3s ease; }
         
         .input-section { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; }
 
@@ -76,14 +76,14 @@
         #loginForm, #signupForm { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; max-width: 400px; margin: 0 auto; padding-bottom: 15px; box-sizing: border-box; }
         #loginForm input, #signupForm input { display: block; width: 100%; max-width: 300px; margin: 0 auto; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 1em; box-sizing: border-box; text-align: left; background-color: var(--spl-container-bg); color: var(--spl-text-dark); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; -moz-appearance: textfield; }
         .input-section input::-webkit-outer-spin-button, .input-section input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        #loginForm button, #signupForm button { display: block; width: 100%; max-width: 300px; margin: 0 auto; background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
+        #loginForm button, #signupForm button { display: block; width: 100%; max-width: 300px; margin: 0 auto; background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; transition: background-color: 0.3s ease, transform: 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
         #loginForm button:hover, #signupForm button:hover { background-color: #0056b3; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); }
         #loginForm p, #signupForm p { text-align: center; width: 100%; max-width: 300px; margin: 10px auto; color: var(--spl-text-dark); transition: color 0.3s ease; }
         #loginForm p a, #signupForm p a { color: var(--spl-primary-accent); text-decoration: none; font-weight: bold; transition: color 0.3s ease; }
         #loginForm p a:hover, #signupForm p a:hover { text-decoration: underline; }
 
         .input-section label { font-weight: bold; color: var(--spl-text-medium); font-size: 1.1em; transition: color 0.3s ease; }
-        .input-section button { background-color: var(--spl-primary-accent); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); display: block; margin: 0 auto; }
+        .input-section button { background-color: var(--spl-primary-accent); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); display: block; margin: 0 auto; }
         .input-section button:hover { background-color: #0056b3; transform: translateY(-2px); }
 
         /* Menu Styles */
@@ -114,7 +114,7 @@
         #adminDashboardContent h2 { color: var(--spl-primary-accent); margin-bottom: 15px; }
         .admin-search-section, .admin-edit-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .admin-search-section input, .admin-edit-section input { width: 100%; max-width: 350px; padding: 10px 12px; border: 1px solid var(--spl-border-light); border-radius: 6px; font-size: 1em; background-color: var(--spl-table-bg); color: var(--spl-text-dark); box-sizing: border-box; text-align: center; }
-        .admin-search-section button, .admin-edit-section button { background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); width: 100%; max-width: 350px; }
+        .admin-search-section button, .admin-edit-section button { background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; transition: background-color 0.3s ease, transform: 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); width: 100%; max-width: 350px; }
         .admin-search-section button:hover, .admin-edit-section button:hover { background-color: #5a6268; transform: translateY(-1px); }
         body.dark-mode .admin-search-section button, body.dark-mode .admin-edit-section button { background-color: #6f42c1; box-shadow: 0 4px 8px rgba(111, 66, 193, 0.2); }
         body.dark-mode .admin-search-section button:hover, body.dark-mode .admin-edit-section button:hover { background-color: #5e35b1; }
@@ -123,7 +123,7 @@
         #adminMessage { text-align: center; padding: 10px; border-radius: 6px; margin-top: 10px; font-weight: bold; background-color: #d1ecf1; color: #0c5460; width: 100%; max-width: 350px; box-sizing: border-box; display: none; }
         body.dark-mode #adminMessage { background-color: #1f3d54; color: #b0e0e6; }
         .admin-dashboard-nav-buttons { display: flex; justify-content: center; gap: 15px; width: 100%; margin-bottom: 20px; }
-        .admin-dashboard-nav-buttons button { background-color: var(--spl-primary-accent); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); min-width: 120px; }
+        .admin-dashboard-nav-buttons button { background-color: var(--spl-primary-accent); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); min-width: 120px; }
         .admin-dashboard-nav-buttons button:hover { background-color: #0056b3; transform: translateY(-1px); }
         body.dark-mode .admin-dashboard-nav-buttons button { background-color: #007bff; }
         body.dark-mode .admin-dashboard-nav-buttons button:hover { background-color: #0056b3; }
@@ -178,7 +178,7 @@
         .fdr-data-grid > :nth-last-child(-n + 2) { border-bottom: none; }
         .fdr-single-column-grid > :last-child { border-bottom: none; }
 
-        .upload-button-label { display: inline-block; background-color: var(--spl-primary-accent); color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1em; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-top: 10px; }
+        .upload-button-label { display: inline-block; background-color: var(--spl-primary-accent); color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1em; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-top: 10px; }
         .upload-button-label:hover { background-color: #0056b3; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); }
         .upload-button-label input[type="file"] { display: none; }
         @media (max-width: 480px) { .fdr-grid-item { font-size: 0.8em; padding: 8px 10px; min-height: 35px; } }
@@ -222,7 +222,7 @@
 
         /* Main FDR & Customize Ratings Buttons */
         .control-room-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
-        .control-room-buttons button { display: block; background-color: var(--spl-primary-accent); color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); max-width: fit-content; }
+        .control-room-buttons button { display: block; background-color: var(--spl-primary-accent); color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 1.2em; cursor: pointer; transition: background-color: 0.3s ease, transform: 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); max-width: fit-content; }
         .control-room-buttons button:hover { background-color: #0056b3; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); }
         body.dark-mode .control-room-buttons button { background-color: #007bff; }
         body.dark-mode .control-room-buttons button:hover { background-color: #0056b3; }
@@ -235,12 +235,12 @@
         #initialLoggedInDashboardContent h2 { color: var(--spl-primary-accent); }
 
         /* CSS Grid Specific Styles for the Schedule */
-        .schedule-grid-container { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid var(--spl-border-light); border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); background-color: var(--spl-container-bg); font-size: 0.9em; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        .schedule-grid-container { width: 100%; overflow-x: auto; margin-top: 15px; border: 1px solid var(--spl-border-light); border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); background-color: var(--spl-container-bg); font-size: 0.9em; transition: background-color: 0.3s ease, border-color: 0.3s ease, box-shadow: 0.3s ease; }
         body.dark-mode .schedule-grid-container { border-color: rgba(255,255,255,0.1); box-shadow: inset 0 0 5px rgba(255,255,255,0.05); }
         .schedule-grid { display: grid; grid-auto-rows: minmax(40px, auto); min-width: 600px; }
-        .grid-header-cell { background-color: var(--spl-table-header-bg); color: var(--spl-text-dark); font-weight: bold; padding: 8px 12px; text-align: center; border: 1px solid var(--spl-border-light); white-space: nowrap; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .grid-header-cell { background-color: var(--spl-table-header-bg); color: var(--spl-text-dark); font-weight: bold; padding: 8px 12px; text-align: center; border: 1px solid var(--spl-border-light); white-space: nowrap; display: flex; align-items: center; justify-content: center; transition: background-color: 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         body.dark-mode .grid-header-cell { background-color: var(--spl-table-header-bg); color: var(--spl-text-dark); }
-        .grid-row-team-cell { background-color: var(--spl-table-bg); color: var(--spl-text-dark); font-weight: bold; padding: 8px 12px; text-align: center; border: 1px solid var(--spl-border-light); white-space: nowrap; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .grid-row-team-cell { background-color: var(--spl-table-bg); color: var(--spl-text-dark); font-weight: bold; padding: 8px 12px; text-align: center; border: 1px solid var(--spl-border-light); white-space: nowrap; display: flex; align-items: center; justify-content: center; transition: background-color: 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         body.dark-mode .grid-row-team-cell { background-color: var(--spl-table-row-even); color: var(--spl-text-dark); }
         .grid-fixture-cell { padding: 5px 8px; border: 1px solid var(--spl-border-light); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 40px; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; background-color: var(--spl-container-bg); color: var(--spl-text-dark); }
         body.dark-mode .grid-fixture-cell { border-color: rgba(255,255,255,0.1); background-color: var(--spl-container-bg); color: var(--spl-text-dark); }
@@ -713,22 +713,26 @@
                     <div class="pitch-bench-area">
                         <div class="pitch" id="pitchArea">
                             <div class="pitch-gk-slots">
-                                <div class="player-slot" data-position="GKP" data-slot-type="pitch" data-slot-id="GKP_1"></div>
+                                <div class="player-slot" data-position="GKP" data-slot-type="pitch" data-slot-id="PITCH_GKP_1"></div>
                             </div>
                             <div class="pitch-def-slots">
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="DEF_1"></div>
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="DEF_2"></div>
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="DEF_3"></div>
+                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_1"></div>
+                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_2"></div>
+                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_3"></div>
+                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_4"></div>
+                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_5"></div>
                             </div>
                             <div class="pitch-mid-slots">
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="MID_1"></div>
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="MID_2"></div>
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="MID_3"></div>
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="MID_4"></div>
+                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_1"></div>
+                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_2"></div>
+                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_3"></div>
+                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_4"></div>
+                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_5"></div>
                             </div>
                             <div class="pitch-fwd-slots">
-                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="FWD_1"></div>
-                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="FWD_2"></div>
+                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="PITCH_FWD_1"></div>
+                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="PITCH_FWD_2"></div>
+                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="PITCH_FWD_3"></div>
                             </div>
                         </div>
                         <div class="bench" id="benchArea">
@@ -856,7 +860,7 @@
 
         const API_BOOTSTRAP_STATIC = '/api/spl-proxy?url=https%3A%2F%2Fen.fantasy.spl.com.sa%2Fapi%2Fbootstrap-static%2F';
         const API_FIXTURES_BASE = '/api/spl-proxy?url=https%3A%2F%2Fen.fantasy.spl.com.sa%2Fapi%2Ffixtures%2F%3Fevent%3D';
-        const API_MANAGER_HISTORY_BASE = '/.netlify/functions/fetch-spl-data?id=';
+        const API_MANAGER_SQUAD_BASE = '/.netlify/functions/get-manager-squad?id=';
 
         // Global Variables
         let isProcessingAuth = false;
@@ -887,43 +891,43 @@
         let pendingTransfers = [];
         let draggedPlayer = null;
 
-        // DOM Element References
-        const mainLogo = document.getElementById('mainLogo'); const darkModeToggle = document.getElementById('darkModeToggle');
-        const lightModeLogoSrc = 'unnamed.jpg'; const darkModeLogoSrc = 'dark mode logo.png';
-        const authSection = document.getElementById('authSection'); const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm'); const authMessageBox = document.getElementById('authMessageBox'); 
-        const loginEmailInput = document.getElementById('loginEmail'); const loginPasswordInput = document.getElementById('loginPassword');
-        const loginButton = document.getElementById('loginButton'); const showSignupLink = document.getElementById('showSignupLink'); 
-        const signupEmailInput = document.getElementById('signupEmail'); const signupPasswordInput = document.getElementById('signupPassword');
-        const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword'); const signupManagerIdInput = document.getElementById('signupManagerId'); 
-        const signupButton = document.getElementById('signupButton'); const showLoginLink = document.getElementById('showLoginLink'); 
+        // DOM Element References (condensed for brevity)
+        const mainLogo = document.getElementById('mainLogo'), darkModeToggle = document.getElementById('darkModeToggle');
+        const lightModeLogoSrc = 'unnamed.jpg', darkModeLogoSrc = 'dark mode logo.png';
+        const authSection = document.getElementById('authSection'), loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm'), authMessageBox = document.getElementById('authMessageBox'); 
+        const loginEmailInput = document.getElementById('loginEmail'), loginPasswordInput = document.getElementById('loginPassword');
+        const loginButton = document.getElementById('loginButton'), showSignupLink = document.getElementById('showSignupLink'); 
+        const signupEmailInput = document.getElementById('signupEmail'), signupPasswordInput = document.getElementById('signupPassword');
+        const signupConfirmPasswordInput = document.getElementById('signupConfirmPassword'), signupManagerIdInput = document.getElementById('signupManagerId'); 
+        const signupButton = document.getElementById('signupButton'), showLoginLink = document.getElementById('showLoginLink'); 
         const instructionsBox = document.getElementById('instructionsBox'); 
         const loggedInContent = document.getElementById('loggedInContent');
-        const menuToggle = document.getElementById('menuToggle'); const sidebarMenu = document.getElementById('sidebarMenu');
-        const overlay = document.getElementById('overlay'); const sidebarTeamName = document.getElementById('sidebarTeamName'); 
-        const menuMyControlRoom = document.getElementById('menuMyControlRoom'); const menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
-        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'); const displayLoggedInManagerId = sidebarManagerIdText.querySelector('span'); 
+        const menuToggle = document.getElementById('menuToggle'), sidebarMenu = document.getElementById('sidebarMenu');
+        const overlay = document.getElementById('overlay'), sidebarTeamName = document.getElementById('sidebarTeamName'); 
+        const menuMyControlRoom = document.getElementById('menuMyControlRoom'), menuAdminDashboard = document.getElementById('menuAdminDashboard'); 
+        const sidebarManagerIdText = document.getElementById('sidebarManagerIdText'), displayLoggedInManagerId = sidebarManagerIdText.querySelector('span'); 
         const logoutButton = document.getElementById('logoutButton'); 
         const initialLoggedInDashboardContent = document.getElementById('initialLoggedInDashboardContent'); 
         const analyzerReportContent = document.getElementById('analyzerReportContent'); 
         const myControlRoomContent = document.getElementById('myControlRoomContent'); 
         const adminDashboardContent = document.getElementById('adminDashboardContent'); 
         const adminDashboardNavButtons = document.querySelector('.admin-dashboard-nav-buttons'); 
-        const adminUsersButton = document.getElementById('adminUsersButton'); const adminDataButton = document.getElementById('adminDataButton'); 
+        const adminUsersButton = document.getElementById('adminUsersButton'), adminDataButton = document.getElementById('adminDataButton'); 
         const adminSearchSection = document.querySelector('.admin-search-section'); 
-        const adminSearchInput = document.getElementById('adminSearchInput'); const adminSearchButton = document.getElementById('adminSearchButton');
-        const adminSearchResults = document.getElementById('adminSearchResults'); const adminUserUidElem = document.getElementById('adminUserUid');
-        const adminEditEmailInput = document.getElementById('adminEditEmail'); const adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId');
-        const adminUpdateUserButton = document.getElementById('adminUpdateUserButton'); const adminMessage = document.getElementById('adminMessage');
-        const dataUploadSection = document.getElementById('dataUploadSection'); const rankingTypeSelect = document.getElementById('rankingTypeSelect');
-        const excelFileUploadInput = document.getElementById('excelFileUploadInput'); const excelUploadMessage = document.getElementById('excelUploadMessage');
-        const apiTeamNamesStatus = document.getElementById('apiTeamNamesStatus'); const apiScheduleStatus = document.getElementById('apiScheduleStatus');
+        const adminSearchInput = document.getElementById('adminSearchInput'), adminSearchButton = document.getElementById('adminSearchButton');
+        const adminSearchResults = document.getElementById('adminSearchResults'), adminUserUidElem = document.getElementById('adminUserUid');
+        const adminEditEmailInput = document.getElementById('adminEditEmail'), adminEditSplManagerIdInput = document.getElementById('adminEditSplManagerId');
+        const adminUpdateUserButton = document.getElementById('adminUpdateUserButton'), adminMessage = document.getElementById('adminMessage');
+        const dataUploadSection = document.getElementById('dataUploadSection'), rankingTypeSelect = document.getElementById('rankingTypeSelect');
+        const excelFileUploadInput = document.getElementById('excelFileUploadInput'), excelUploadMessage = document.getElementById('excelUploadMessage');
+        const apiTeamNamesStatus = document.getElementById('apiTeamNamesStatus'), apiScheduleStatus = document.getElementById('apiScheduleStatus');
         const currentRankingsDisplayAdmin = document.getElementById('currentRankingsDisplayAdmin');
-        const overallFDRSectionAdmin = document.getElementById('overallFDRSectionAdmin'); const overallFDRGridAdmin = document.getElementById('overallFDRGridAdmin');
+        const overallFDRSectionAdmin = document.getElementById('overallFDRSectionAdmin'), overallFDRGridAdmin = document.getElementById('overallFDRGridAdmin');
         const overallFDRScaleAdmin = document.getElementById('overallFDRScaleAdmin'); 
-        const homeFDRSectionAdmin = document.getElementById('homeFDRSectionAdmin'); const homeFDRGridAdmin = document.getElementById('homeFDRGridAdmin');
+        const homeFDRSectionAdmin = document.getElementById('homeFDRSectionAdmin'), homeFDRGridAdmin = document.getElementById('homeFDRGridAdmin');
         const homeFDRScaleAdmin = document.getElementById('homeFDRScaleAdmin'); 
-        const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin'); const awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
+        const awayFDRSectionAdmin = document.getElementById('awayFDRSectionAdmin'), awayFDRGridAdmin = document.getElementById('awayFDRGridAdmin');
         const awayFDRScaleAdmin = document.getElementById('awayFDRScaleAdmin');
         const showFDRButton = document.getElementById('showFDRButton'); 
         const showTeamsToTargetButton = document.getElementById('showTeamsToTargetButton'); 
@@ -931,17 +935,17 @@
         const fdrSystemsContainer = document.getElementById('fdrSystemsContainer'); 
         const teamsToTargetContainer = document.getElementById('teamsToTargetContainer'); 
         const transferPlannerContainer = document.getElementById('transferPlannerContainer');
-        const controlRoomMessageBox = document.getElementById('controlRoomMessageBox'); const fdrScaleDisplay = document.getElementById('fdrScaleDisplay'); 
-        const radioOverallFDR = document.getElementById('radioOverallFDR'); const radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
-        const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'); const saveFDRSystemButton = document.getElementById('saveFDRSystemButton'); 
+        const controlRoomMessageBox = document.getElementById('controlRoomMessageBox'), fdrScaleDisplay = document.getElementById('fdrScaleDisplay'); 
+        const radioOverallFDR = document.getElementById('radioOverallFDR'), radioHomeAwayFDR = document.getElementById('radioHomeAwayFDR'); 
+        const radioCustomizedFDR = document.getElementById('radioCustomizedFDR'), saveFDRSystemButton = document.getElementById('saveFDRSystemButton'); 
         const roundsToShowSlider = document.getElementById('roundsToShow'); 
         const roundsToShowValueSpan = document.getElementById('roundsToShowValue'); 
         const roundsToShowTeamsToTargetSlider = document.getElementById('roundsToShowTeamsToTarget'); 
         const roundsToShowValueTeamsToTargetSpan = document.getElementById('roundsToShowValueTeamsToTarget'); 
         const myControlRoomFDRDisplay = document.getElementById('myControlRoomFDRDisplay'); 
-        const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom'); const overallScheduleGrid = document.getElementById('overallScheduleGrid'); 
-        const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'); const homeAwayScheduleGrid = document.getElementById('homeAwayScheduleGrid'); 
-        const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom'); const customizedScheduleGrid = document.getElementById('customizedScheduleGrid'); 
+        const overallFDRSectionControlRoom = document.getElementById('overallFDRSectionControlRoom'), overallScheduleGrid = document.getElementById('overallScheduleGrid'); 
+        const homeAwayFDRSectionControlRoom = document.getElementById('homeAwayFDRSectionControlRoom'), homeAwayScheduleGrid = document.getElementById('homeAwayScheduleGrid'); 
+        const customizedFDRSectionControlRoom = document.getElementById('customizedFDRSectionControlRoom'), customizedScheduleGrid = document.getElementById('customizedScheduleGrid'); 
         const saveCustomFDRRatingsButton = document.getElementById('saveCustomFDRRatingsButton'); 
         const customRatingsInputGridContainer = document.getElementById('customRatingsInputGridContainer');
         const customRatingsGrid = document.getElementById('customRatingsGrid');
@@ -951,8 +955,6 @@
         const saveFDRSystemMessage = document.getElementById('saveFDRSystemMessage'); 
         const chosenFDRSystemDisplayFDR = document.getElementById('chosenFDRSystemDisplayFDR'); 
         const chosenFDRSystemDisplayTeamsToTarget = document.getElementById('chosenFDRSystemDisplayTeamsToTarget'); 
-
-        // Transfer Planner DOM Elements
         const transferPlannerMessage = document.getElementById('transferPlannerMessage');
         const currentPlanningRoundDisplay = document.getElementById('currentPlanningRoundDisplay');
         const freeTransfersDisplay = document.getElementById('freeTransfersDisplay');
@@ -970,7 +972,6 @@
         const playerList = document.getElementById('playerList');
 
         // --- Helper Functions ---
-
         const showAuthMessage = (msg, type = 'info') => { if (authMessageBox) { authMessageBox.className = `message-box ${type}`; authMessageBox.textContent = msg; authMessageBox.style.display = 'block'; }};
         const showAdminMessage = (msg, type = 'info') => { if (adminMessage) { adminMessage.className = `message-box ${type}`; adminMessage.textContent = msg; adminMessage.style.display = 'block'; }};
         const showExcelUploadMessage = (msg, type = 'info') => { if (excelUploadMessage) { excelUploadMessage.className = `message-box ${type}`; excelUploadMessage.textContent = msg; excelUploadMessage.style.display = 'block'; }};
@@ -1600,7 +1601,7 @@
         async function fetchManagerSquadForRound(managerId, round) {
             showTransferPlannerMessage(`Fetching your team for Round ${round}...`, 'info');
             try {
-                const response = await fetch(`${API_MANAGER_HISTORY_BASE}${managerId}&round=${round}`);
+                const response = await fetch(`${API_MANAGER_SQUAD_BASE}${managerId}&round=${round}`);
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(`API error: ${errorData.error || response.statusText}`);
@@ -1614,10 +1615,25 @@
                 const squad = data.picks.map(pick => {
                     const playerData = globalTeamData.allPlayers.find(p => p.id === pick.element);
                     if (!playerData) return null;
+                    
+                    const playerPosition = playerData.position_short;
+                    const isPitchPlayer = pick.position <= 11;
+                    let slotId;
+
+                    if (isPitchPlayer) {
+                        const pitchPlayersOfPosition = data.picks.filter(p => p.position <= 11 && globalTeamData.allPlayers.find(pl => pl.id === p.element)?.position_short === playerPosition);
+                        const playerIndex = pitchPlayersOfPosition.findIndex(p => p.element === pick.element);
+                        slotId = `PITCH_${playerPosition}_${playerIndex + 1}`;
+                    } else {
+                        const benchPlayers = data.picks.filter(p => p.position > 11);
+                        const playerIndex = benchPlayers.findIndex(p => p.element === pick.element);
+                        slotId = `BENCH_${playerIndex + 1}`;
+                    }
+
                     return {
                         ...playerData,
-                        slotId: `SLOT_${pick.position}`,
-                        slotType: pick.position <= 11 ? 'pitch' : 'bench',
+                        slotId: slotId,
+                        slotType: isPitchPlayer ? 'pitch' : 'bench',
                         buying_price: pick.purchase_price / 10,
                         is_captain: pick.is_captain,
                         is_vice_captain: pick.is_vice_captain
@@ -1698,11 +1714,11 @@
             if (!isListCard) {
                 playerCard.querySelector('.remove-player-icon').addEventListener('click', (e) => {
                     e.stopPropagation();
-                    removePlayerFromSquad(player.id);
+                    removePlayerFromSquad(parseInt(player.id));
                 });
                 playerCard.querySelector('.move-player-icon').addEventListener('click', (e) => {
                     e.stopPropagation();
-                    movePlayer(player.id);
+                    movePlayer(parseInt(player.id));
                 });
             }
 
