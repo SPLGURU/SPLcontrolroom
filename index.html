@@ -1299,7 +1299,7 @@
                                     processedFixtures[homeTeam.name][roundName].push(`${awayTeam.short_name} 🏠`);
                                     if (!processedFixtures[awayTeam.name]) processedFixtures[awayTeam.name] = {};
                                     if (!processedFixtures[awayTeam.name][roundName]) processedFixtures[awayTeam.name][roundName] = [];
-                                    processedFixtures[awayTeam.name][roundName].push(`${homeTeam.short_name}✈️`);
+                                    processedFixtures[awayTeam.name][roundName].push(`${homeTeam.short_name} ✈️`);
                                 }
                             }
                         });
@@ -1726,7 +1726,7 @@
                 const slotId = `PITCH_${player.position_short}_${positionCounters[player.position_short]}`;
                 const slotElement = document.querySelector(`.player-slot[data-slot-id="${slotId}"]`);
                 if (slotElement) {
-                    player.slotId = slotId;
+                    player.slotId = slotId; // Update the player's slotId
                     const playerCard = renderPlayerCard(player, currentRound);
                     slotElement.appendChild(playerCard);
                     slotElement.classList.add('has-player');
