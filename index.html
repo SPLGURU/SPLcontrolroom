@@ -322,14 +322,14 @@
             background-repeat: no-repeat;
             background-position: center;
             border-radius: 8px;
-            padding: 10px;
+            padding: 20px 10px;
             display: grid;
             grid-template-areas:
                 "gk-area gk-area gk-area gk-area"
                 "def-area def-area def-area def-area"
                 "mid-area mid-area mid-area mid-area"
                 "fwd-area fwd-area fwd-area fwd-area";
-            grid-template-rows: repeat(4, 1fr);
+            grid-template-rows: 1fr 1.1fr 1.1fr 1fr;
             gap: 10px;
             height: 450px;
             position: relative;
@@ -361,7 +361,7 @@
             min-height: 100px;
             position: relative; /* For player card positioning */
             overflow: hidden; /* Hide overflow if player card is larger */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color: 0.2s ease;
         }
         body.dark-mode .player-slot {
             border-color: rgba(255,255,255,0.2);
@@ -427,7 +427,10 @@
 
 
         .player-card img.player-image {
-            width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 5px;
+            width: 50px; height: 50px; border-radius: 50%;
+            object-fit: cover;
+            object-position: center 25%; /* Shifts the image up slightly */
+            margin-bottom: 5px;
             border: 2px solid var(--spl-primary-accent);
         }
         .player-card img.team-logo {
@@ -1261,7 +1264,7 @@
                     
                     globalTeamData.allPlayers = bootstrapData.elements.map(player => ({
                         id: player.id,
-                        code: player.code, // Added this line
+                        code: player.code,
                         name: player.web_name,
                         first_name: player.first_name,
                         second_name: player.second_name,
@@ -1901,23 +1904,31 @@
                     showTransferPlannerMessage('No players on the bench to swap with.', 'error');
                     return;
                 }
-                const playerToSwapWith = benchPlayers[0]; // Swap with the first bench player
                 
-                const tempSquad = JSON.parse(JSON.stringify(currentSquad));
-                const tempPlayerToMove = tempSquad.find(p => p.id === playerToMove.id);
-                const tempPlayerToSwap = tempSquad.find(p => p.id === playerToSwapWith.id);
-                
-                [tempPlayerToMove.slotType, tempPlayerToSwap.slotType] = [tempPlayerToSwap.slotType, tempPlayerToMove.slotType];
+                let swapped = false;
+                for (const playerToSwapWith of benchPlayers) {
+                    const tempSquad = JSON.parse(JSON.stringify(currentSquad));
+                    const tempPlayerToMove = tempSquad.find(p => p.id === playerToMove.id);
+                    const tempPlayerToSwap = tempSquad.find(p => p.id === playerToSwapWith.id);
+                    
+                    [tempPlayerToMove.slotType, tempPlayerToSwap.slotType] = [tempPlayerToSwap.slotType, tempPlayerToMove.slotType];
 
-                if (isFormationValid(tempSquad)) {
-                    [playerToMove.slotType, playerToSwapWith.slotType] = [playerToSwapWith.slotType, playerToMove.slotType];
+                    if (isFormationValid(tempSquad)) {
+                        [playerToMove.slotType, playerToSwapWith.slotType] = [playerToSwapWith.slotType, playerToMove.slotType];
+                        [playerToMove.apiPosition, playerToSwapWith.apiPosition] = [playerToSwapWith.apiPosition, playerToMove.apiPosition];
+                        swapped = true;
+                        break; 
+                    }
+                }
+
+                if (swapped) {
                     renderSquad(currentSquad, currentPlanningRound);
                 } else {
-                    showTransferPlannerMessage(`Invalid formation. A swap must result in at least 3 defenders and 1 forward.`, 'error');
+                    showTransferPlannerMessage(`Invalid formation. No valid substitute found on the bench.`, 'error');
                 }
 
             } else { // Moving to pitch
-                showTransferPlannerMessage('Select a player on the pitch to swap with.', 'info');
+                showTransferPlannerMessage('To substitute a bench player, drag them onto a pitch player.', 'info');
             }
         }
 
