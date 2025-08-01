@@ -67,7 +67,7 @@
             transition: background-color: 0.3s ease, box-shadow: 0.3s ease;
         }
 
-        h1, h2, h3 { font-family: 'Oswald', sans-serif; color: var(--spl-primary-accent); text-align: center; margin-top: 0; margin-bottom: 20px; transition: color 0.3s ease; }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; color: var(--spl-primary-accent); text-align: center; margin-top: 0; margin-bottom: 20px; transition: color: 0.3s ease; }
         
         .input-section { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; }
 
@@ -78,21 +78,21 @@
         .input-section input::-webkit-outer-spin-button, .input-section input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         #loginForm button, #signupForm button { display: block; width: 100%; max-width: 300px; margin: 0 auto; background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; transition: background-color: 0.3s ease, transform: 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
         #loginForm button:hover, #signupForm button:hover { background-color: #0056b3; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); }
-        #loginForm p, #signupForm p { text-align: center; width: 100%; max-width: 300px; margin: 10px auto; color: var(--spl-text-dark); transition: color 0.3s ease; }
+        #loginForm p, #signupForm p { text-align: center; width: 100%; max-width: 300px; margin: 10px auto; color: var(--spl-text-dark); transition: color: 0.3s ease; }
         #loginForm p a, #signupForm p a { color: var(--spl-primary-accent); text-decoration: none; font-weight: bold; transition: color: 0.3s ease; }
         #loginForm p a:hover, #signupForm p a:hover { text-decoration: underline; }
 
-        .input-section label { font-weight: bold; color: var(--spl-text-medium); font-size: 1.1em; transition: color 0.3s ease; }
+        .input-section label { font-weight: bold; color: var(--spl-text-medium); font-size: 1.1em; transition: color: 0.3s ease; }
         .input-section button { background-color: var(--spl-primary-accent); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; transition: background-color: 0.3s ease, transform: 0.2s ease, box-shadow: 0.3s ease; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); display: block; margin: 0 auto; }
         .input-section button:hover { background-color: #0056b3; transform: translateY(-2px); }
 
         /* Menu Styles */
-        #menuToggle { position: fixed; top: 20px; left: 20px; z-index: 1001; cursor: pointer; font-size: 2em; color: var(--spl-primary-accent); transition: color 0.3s ease; display: none; }
+        #menuToggle { position: fixed; top: 20px; left: 20px; z-index: 1001; cursor: pointer; font-size: 2em; color: var(--spl-primary-accent); transition: color: 0.3s ease; display: none; }
         body.dark-mode #menuToggle { color: #fff; }
         #sidebarMenu { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background-color: var(--spl-container-bg); box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2); z-index: 1000; transition: left 0.3s ease-in-out; padding-top: 20px; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
         body.dark-mode #sidebarMenu { background-color: var(--spl-container-bg); }
         #sidebarMenu.open { left: 0; }
-        #sidebarMenu a { padding: 15px 25px; text-decoration: none; color: var(--spl-text-dark); font-size: 1.1em; display: block; transition: background-color: 0.2s ease, color 0.2s ease; border-left: 5px solid transparent; }
+        #sidebarMenu a { padding: 15px 25px; text-decoration: none; color: var(--spl-text-dark); font-size: 1.1em; display: block; transition: background-color: 0.2s ease, color: 0.2s ease; border-left: 5px solid transparent; }
         #sidebarMenu a:hover { background-color: var(--spl-table-row-hover); color: var(--spl-primary-accent); }
         body.dark-mode #sidebarMenu a { color: var(--spl-text-dark); }
         body.dark-mode #sidebarMenu a:hover { background-color: var(--spl-table-row-hover); color: var(--spl-primary-accent); }
@@ -1765,13 +1765,14 @@
 
         function updatePlayerListDisplay() {
             const searchTerm = playerSearchInput.value.toLowerCase();
+            const allCheckbox = playerFilters.querySelector('input[data-filter="ALL"]');
             const checkedPositions = Array.from(playerFilters.querySelectorAll('input[data-filter]:not([data-filter="ALL"])'))
                 .filter(cb => cb.checked)
                 .map(cb => cb.dataset.filter);
             
             let filteredPlayers = globalTeamData.allPlayers;
 
-            if (checkedPositions.length > 0) {
+            if (!allCheckbox.checked && checkedPositions.length > 0) {
                 filteredPlayers = filteredPlayers.filter(p => checkedPositions.includes(p.position_short));
             }
 
