@@ -361,7 +361,7 @@
             min-height: 100px;
             position: relative; /* For player card positioning */
             overflow: hidden; /* Hide overflow if player card is larger */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color: 0.2s ease;
         }
         body.dark-mode .player-slot {
             border-color: rgba(255,255,255,0.2);
@@ -394,7 +394,7 @@
             position: absolute; /* To fit within slot */
             top: 0; left: 0;
             box-sizing: border-box;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            transition: background-color 0.2s ease, box-shadow: 0.2s ease;
         }
         body.dark-mode .player-card {
             background-color: var(--spl-table-row-even);
@@ -725,25 +725,10 @@
 
                     <div class="pitch-bench-area">
                         <div class="pitch" id="pitchArea">
-                            <div class="pitch-gk-slots">
-                                <div class="player-slot" data-position="GKP" data-slot-type="pitch" data-slot-id="PITCH_GKP_1"></div>
-                            </div>
-                            <div class="pitch-def-slots">
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_1"></div>
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_2"></div>
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_3"></div>
-                                <div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_4"></div>
-                            </div>
-                            <div class="pitch-mid-slots">
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_1"></div>
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_2"></div>
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_3"></div>
-                                <div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_4"></div>
-                            </div>
-                            <div class="pitch-fwd-slots">
-                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="PITCH_FWD_1"></div>
-                                <div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="PITCH_FWD_2"></div>
-                            </div>
+                            <div class="pitch-gk-slots"></div>
+                            <div class="pitch-def-slots"></div>
+                            <div class="pitch-mid-slots"></div>
+                            <div class="pitch-fwd-slots"></div>
                         </div>
                         <div class="bench" id="benchArea">
                             <div class="player-slot" data-position="BENCH" data-slot-type="bench" data-slot-id="BENCH_1"></div>
@@ -1314,7 +1299,7 @@
                                     processedFixtures[homeTeam.name][roundName].push(`${awayTeam.short_name} 🏠`);
                                     if (!processedFixtures[awayTeam.name]) processedFixtures[awayTeam.name] = {};
                                     if (!processedFixtures[awayTeam.name][roundName]) processedFixtures[awayTeam.name][roundName] = [];
-                                    processedFixtures[awayTeam.name][roundName].push(`${homeTeam.short_name} ✈️`);
+                                    processedFixtures[awayTeam.name][roundName].push(`${homeTeam.short_name}✈️`);
                                 }
                             }
                         });
@@ -1723,14 +1708,16 @@
         }
 
         function renderSquad(squad, currentRound) {
+            const pitchPlayers = squad.filter(p => p.slotType === 'pitch').sort((a,b) => a.apiPosition - b.apiPosition);
+            const benchPlayers = squad.filter(p => p.slotType === 'bench').sort((a,b) => a.apiPosition - b.apiPosition);
+            
+            buildPitchLayout(pitchPlayers);
+
             document.querySelectorAll('.player-slot').forEach(slot => {
                 slot.innerHTML = '';
                 slot.classList.remove('has-player');
                 delete slot.dataset.playerId;
             });
-
-            const pitchPlayers = squad.filter(p => p.slotType === 'pitch').sort((a,b) => a.apiPosition - b.apiPosition);
-            const benchPlayers = squad.filter(p => p.slotType === 'bench').sort((a,b) => a.apiPosition - b.apiPosition);
 
             const positionCounters = { GKP: 0, DEF: 0, MID: 0, FWD: 0, BENCH: 0 };
 
@@ -1739,7 +1726,7 @@
                 const slotId = `PITCH_${player.position_short}_${positionCounters[player.position_short]}`;
                 const slotElement = document.querySelector(`.player-slot[data-slot-id="${slotId}"]`);
                 if (slotElement) {
-                    player.slotId = slotId; // Update the player's slotId
+                    player.slotId = slotId;
                     const playerCard = renderPlayerCard(player, currentRound);
                     slotElement.appendChild(playerCard);
                     slotElement.classList.add('has-player');
@@ -1761,6 +1748,25 @@
             });
 
             updateTransferSummary();
+        }
+
+        function buildPitchLayout(pitchPlayers) {
+            const formation = { GKP: 0, DEF: 0, MID: 0, FWD: 0 };
+            pitchPlayers.forEach(p => {
+                formation[p.position_short]++;
+            });
+
+            const gkContainer = pitchArea.querySelector('.pitch-gk-slots');
+            const defContainer = pitchArea.querySelector('.pitch-def-slots');
+            const midContainer = pitchArea.querySelector('.pitch-mid-slots');
+            const fwdContainer = pitchArea.querySelector('.pitch-fwd-slots');
+
+            [gkContainer, defContainer, midContainer, fwdContainer].forEach(c => c.innerHTML = '');
+
+            for (let i = 1; i <= formation.GKP; i++) gkContainer.innerHTML += `<div class="player-slot" data-position="GKP" data-slot-type="pitch" data-slot-id="PITCH_GKP_${i}"></div>`;
+            for (let i = 1; i <= formation.DEF; i++) defContainer.innerHTML += `<div class="player-slot" data-position="DEF" data-slot-type="pitch" data-slot-id="PITCH_DEF_${i}"></div>`;
+            for (let i = 1; i <= formation.MID; i++) midContainer.innerHTML += `<div class="player-slot" data-position="MID" data-slot-type="pitch" data-slot-id="PITCH_MID_${i}"></div>`;
+            for (let i = 1; i <= formation.FWD; i++) fwdContainer.innerHTML += `<div class="player-slot" data-position="FWD" data-slot-type="pitch" data-slot-id="PITCH_FWD_${i}"></div>`;
         }
 
         function updatePlayerListDisplay() {
