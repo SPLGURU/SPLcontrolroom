@@ -361,7 +361,7 @@
             min-height: 100px;
             position: relative; /* For player card positioning */
             overflow: hidden; /* Hide overflow if player card is larger */
-            transition: background-color 0.2s ease, border-color: 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
         body.dark-mode .player-slot {
             border-color: rgba(255,255,255,0.2);
@@ -394,7 +394,7 @@
             position: absolute; /* To fit within slot */
             top: 0; left: 0;
             box-sizing: border-box;
-            transition: background-color 0.2s ease, box-shadow: 0.2s ease;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
         body.dark-mode .player-card {
             background-color: var(--spl-table-row-even);
@@ -1261,6 +1261,7 @@
                     
                     globalTeamData.allPlayers = bootstrapData.elements.map(player => ({
                         id: player.id,
+                        code: player.code, // Added this line
                         name: player.web_name,
                         first_name: player.first_name,
                         second_name: player.second_name,
@@ -1653,7 +1654,8 @@
             playerCard.dataset.buyingPrice = player.buying_price || player.current_price;
             playerCard.dataset.position = player.position_short;
 
-            const playerImageSrc = `https://placehold.co/50x50/cccccc/000000?text=${player.position_short}`;
+            const playerImageSrc = `https://static-files.saudi-pro-league.pulselive.com/players/headshot/p${player.code}.png`;
+            const placeholderImageSrc = `https://placehold.co/50x50/cccccc/000000?text=${player.position_short}`;
             const teamLogoSrc = `https://placehold.co/20x20/007bff/ffffff?text=${player.team_short_name}`;
 
             let opponentDisplay = 'N/A';
@@ -1681,7 +1683,7 @@
 
             playerCard.innerHTML = `
                 ${actionIcons}
-                <img class="player-image" src="${playerImageSrc}" alt="${player.name}">
+                <img class="player-image" src="${playerImageSrc}" alt="${player.name}" onerror="this.onerror=null; this.src='${placeholderImageSrc}';">
                 <div class="player-name">${player.name}</div>
                 <div class="player-details">
                     ${player.position_short} <img class="team-logo" src="${teamLogoSrc}" alt="${player.team_short_name}">
@@ -1734,9 +1736,8 @@
                 }
             });
 
-            benchPlayers.forEach(player => {
-                positionCounters.BENCH++;
-                const slotId = `BENCH_${positionCounters.BENCH}`;
+            benchPlayers.forEach((player, index) => {
+                const slotId = `BENCH_${index + 1}`;
                 const slotElement = document.querySelector(`.player-slot[data-slot-id="${slotId}"]`);
                 if(slotElement) {
                     player.slotId = slotId;
@@ -1895,32 +1896,38 @@
             const isMovingToBench = playerToMove.slotType === 'pitch';
 
             if (isMovingToBench) {
-                const pitchPlayers = currentSquad.filter(p => p.slotType === 'pitch');
-                const positionCount = pitchPlayers.filter(p => p.position_short === playerToMove.position_short).length;
-                if (positionCount <= MIN_PITCH_FORMATION[playerToMove.position_short]) {
-                    showTransferPlannerMessage(`Move failed. Must maintain minimum formation requirements.`, 'error');
+                const benchPlayers = currentSquad.filter(p => p.slotType === 'bench');
+                if (benchPlayers.length === 0) {
+                    showTransferPlannerMessage('No players on the bench to swap with.', 'error');
                     return;
                 }
-                const benchSlots = document.querySelectorAll('.player-slot[data-slot-type="bench"]');
-                const emptyBenchSlot = Array.from(benchSlots).find(slot => !slot.hasChildNodes());
-                if (!emptyBenchSlot) {
-                    showTransferPlannerMessage('Bench is full.', 'error');
-                    return;
-                }
-                playerToMove.slotType = 'bench';
-                playerToMove.slotId = emptyBenchSlot.dataset.slotId;
-            } else { // Moving to pitch
-                const pitchSlots = document.querySelectorAll(`.player-slot[data-position="${playerToMove.position_short}"]`);
-                const emptyPitchSlot = Array.from(pitchSlots).find(slot => !slot.hasChildNodes());
-                if (!emptyPitchSlot) {
-                    showTransferPlannerMessage(`No empty ${playerToMove.position_short} slots on the pitch.`, 'error');
-                    return;
-                }
-                playerToMove.slotType = 'pitch';
-                playerToMove.slotId = emptyPitchSlot.dataset.slotId;
-            }
+                const playerToSwapWith = benchPlayers[0]; // Swap with the first bench player
+                
+                const tempSquad = JSON.parse(JSON.stringify(currentSquad));
+                const tempPlayerToMove = tempSquad.find(p => p.id === playerToMove.id);
+                const tempPlayerToSwap = tempSquad.find(p => p.id === playerToSwapWith.id);
+                
+                [tempPlayerToMove.slotType, tempPlayerToSwap.slotType] = [tempPlayerToSwap.slotType, tempPlayerToMove.slotType];
 
-            renderSquad(currentSquad, currentPlanningRound);
+                if (isFormationValid(tempSquad)) {
+                    [playerToMove.slotType, playerToSwapWith.slotType] = [playerToSwapWith.slotType, playerToMove.slotType];
+                    renderSquad(currentSquad, currentPlanningRound);
+                } else {
+                    showTransferPlannerMessage(`Invalid formation. A swap must result in at least 3 defenders and 1 forward.`, 'error');
+                }
+
+            } else { // Moving to pitch
+                showTransferPlannerMessage('Select a player on the pitch to swap with.', 'info');
+            }
+        }
+
+        function isFormationValid(squad) {
+            const pitchPlayers = squad.filter(p => p.slotType === 'pitch');
+            const formation = { GKP: 0, DEF: 0, MID: 0, FWD: 0 };
+            pitchPlayers.forEach(p => {
+                formation[p.position_short]++;
+            });
+            return formation.GKP === 1 && formation.DEF >= 3 && formation.FWD >= 1;
         }
 
         async function savePlan() {
@@ -2114,71 +2121,103 @@
             if (e.target === allCheckbox && allCheckbox.checked) {
                 positionCheckboxes.forEach(cb => cb.checked = false);
             } else if (e.target !== allCheckbox) {
-                allCheckbox.checked = !Array.from(positionCheckboxes).some(cb => cb.checked);
+                const anyPositionChecked = Array.from(positionCheckboxes).some(cb => cb.checked);
+                allCheckbox.checked = !anyPositionChecked;
             }
 
             updatePlayerListDisplay();
         });
 
 
-        document.querySelectorAll('.player-slot').forEach(slot => {
-            slot.addEventListener('click', () => {
-                if (!slot.hasChildNodes()) {
-                    const position = slot.dataset.position;
-                    if (position !== 'BENCH') {
-                        const filteredPlayers = globalTeamData.allPlayers.filter(p => p.position_short === position);
-                        renderPlayerList(filteredPlayers);
-                    }
+        // Drag and Drop Event Delegation
+        transferPlannerContainer.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('player-card')) {
+                const playerId = parseInt(e.target.dataset.playerId);
+                const originList = e.target.closest('#playerList');
+                
+                if (originList) {
+                    const player = globalTeamData.allPlayers.find(p => p.id === playerId);
+                    draggedItemInfo = { origin: 'list', player: player };
+                } else {
+                    draggedItemInfo = { origin: 'squad', playerId: playerId };
                 }
-            });
+            }
+        });
 
-            slot.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                slot.classList.add('drag-over');
-            });
+        transferPlannerContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('.player-slot, .player-card');
+            if (target) {
+                target.classList.add('drag-over');
+            }
+        });
 
-            slot.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                slot.classList.remove('drag-over');
-            });
+        transferPlannerContainer.addEventListener('dragleave', (e) => {
+            const target = e.target.closest('.player-slot, .player-card');
+            if (target) {
+                target.classList.remove('drag-over');
+            }
+        });
 
-            slot.addEventListener('drop', (e) => {
-                e.preventDefault();
-                slot.classList.remove('drag-over');
-                if (!draggedItemInfo) return;
+        transferPlannerContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const targetElement = e.target.closest('.player-slot, .player-card');
+            if (targetElement) {
+                targetElement.classList.remove('drag-over');
+            }
+            if (!draggedItemInfo || !targetElement) return;
 
-                const targetSlot = e.currentTarget;
-                const targetPlayerId = targetSlot.dataset.playerId ? parseInt(targetSlot.dataset.playerId) : null;
+            const targetPlayerId = targetElement.dataset.playerId ? parseInt(targetElement.dataset.playerId) : null;
 
-                if (draggedItemInfo.origin === 'list') {
-                    // Logic for transferring a player from the list
-                    // ...
-                } else if (draggedItemInfo.origin === 'squad') {
-                    // Logic for swapping players within the squad
-                    // ...
+            if (draggedItemInfo.origin === 'list') {
+                if (!targetPlayerId) {
+                    showTransferPlannerMessage("Drop a new player onto an existing player in your squad to transfer them.", "error");
+                    return;
                 }
-            });
-        });
+                const playerToTransferIn = draggedItemInfo.player;
+                const playerToTransferOut = currentSquad.find(p => p.id === targetPlayerId);
 
-        playerList.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('player-card')) {
-                const playerId = parseInt(e.target.dataset.playerId);
-                const player = globalTeamData.allPlayers.find(p => p.id === playerId);
-                draggedItemInfo = { origin: 'list', player: player };
-            }
-        });
+                if (playerToTransferIn.position_short !== playerToTransferOut.position_short) {
+                    showTransferPlannerMessage("You can only transfer players of the same position.", "error");
+                    return;
+                }
+                
+                const sellingPrice = calculateSellingPrice(playerToTransferOut.buying_price, playerToTransferOut.current_price);
+                const fundsAfter = currentFunds + sellingPrice - playerToTransferIn.current_price;
 
-        pitchArea.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('player-card')) {
-                const playerId = parseInt(e.target.dataset.playerId);
-                draggedItemInfo = { origin: 'squad', playerId: playerId };
+                if (fundsAfter < 0) {
+                    showTransferPlannerMessage("Not enough funds for this transfer.", "error");
+                    return;
+                }
+
+                currentFunds = fundsAfter;
+                const playerIndex = currentSquad.findIndex(p => p.id === targetPlayerId);
+                const newPlayer = { ...playerToTransferIn, slotId: playerToTransferOut.slotId, slotType: playerToTransferOut.slotType, buying_price: playerToTransferIn.current_price, apiPosition: playerToTransferOut.apiPosition };
+                currentSquad.splice(playerIndex, 1, newPlayer);
+
+            } else if (draggedItemInfo.origin === 'squad') {
+                if (!targetPlayerId || draggedItemInfo.playerId === targetPlayerId) return;
+
+                const draggedPlayerIndex = currentSquad.findIndex(p => p.id === draggedItemInfo.playerId);
+                const targetPlayerIndex = currentSquad.findIndex(p => p.id === targetPlayerId);
+
+                const tempSquad = JSON.parse(JSON.stringify(currentSquad));
+                const tempDragged = tempSquad[draggedPlayerIndex];
+                const tempTarget = tempSquad[targetPlayerIndex];
+
+                [tempDragged.slotType, tempTarget.slotType] = [tempTarget.slotType, tempDragged.slotType];
+                [tempDragged.apiPosition, tempTarget.apiPosition] = [tempTarget.apiPosition, tempDragged.apiPosition];
+
+                if (isFormationValid(tempSquad)) {
+                    [currentSquad[draggedPlayerIndex].slotType, currentSquad[targetPlayerIndex].slotType] = [currentSquad[targetPlayerIndex].slotType, currentSquad[draggedPlayerIndex].slotType];
+                    [currentSquad[draggedPlayerIndex].apiPosition, currentSquad[targetPlayerIndex].apiPosition] = [currentSquad[targetPlayerIndex].apiPosition, currentSquad[draggedPlayerIndex].apiPosition];
+                } else {
+                    showTransferPlannerMessage("Invalid formation. A swap must result in at least 3 defenders and 1 forward.", "error");
+                }
             }
-        });
-        benchArea.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('player-card')) {
-                const playerId = parseInt(e.target.dataset.playerId);
-                draggedItemInfo = { origin: 'squad', playerId: playerId };
-            }
+
+            renderSquad(currentSquad, currentPlanningRound);
+            draggedItemInfo = null;
         });
 
 
