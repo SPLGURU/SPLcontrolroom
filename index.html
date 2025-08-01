@@ -322,7 +322,7 @@
             background-repeat: no-repeat;
             background-position: center;
             border-radius: 8px;
-            padding: 20px 10px;
+            padding: 15px 10px 5px 10px;
             display: grid;
             grid-template-areas:
                 "gk-area gk-area gk-area gk-area"
@@ -330,7 +330,7 @@
                 "mid-area mid-area mid-area mid-area"
                 "fwd-area fwd-area fwd-area fwd-area";
             grid-template-rows: 1fr 1.1fr 1.1fr 1fr;
-            gap: 10px;
+            gap: 5px;
             height: 450px;
             position: relative;
         }
@@ -358,10 +358,10 @@
             color: var(--spl-text-dark);
             background-color: rgba(255,255,255,0.1); /* Slightly transparent background */
             min-width: 80px;
-            min-height: 100px;
+            min-height: 110px;
             position: relative; /* For player card positioning */
             overflow: hidden; /* Hide overflow if player card is larger */
-            transition: background-color 0.2s ease, border-color: 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
         body.dark-mode .player-slot {
             border-color: rgba(255,255,255,0.2);
@@ -389,7 +389,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 5px;
+            padding: 3px 5px;
             cursor: grab;
             position: absolute; /* To fit within slot */
             top: 0; left: 0;
@@ -427,19 +427,19 @@
 
 
         .player-card img.player-image {
-            width: 50px; height: 50px; border-radius: 50%;
+            width: 45px; height: 45px; border-radius: 50%;
             object-fit: cover;
-            object-position: center 25%; /* Shifts the image up slightly */
-            margin-bottom: 5px;
+            object-position: center 20%; /* Shifts the image up slightly */
+            margin-bottom: 2px;
             border: 2px solid var(--spl-primary-accent);
         }
         .player-card img.team-logo {
             width: 20px; height: 20px; object-fit: contain; margin-left: 5px;
         }
-        .player-card .player-name { font-weight: bold; font-size: 0.9em; color: var(--spl-text-dark); }
-        .player-card .player-details { font-size: 0.75em; color: var(--spl-text-medium); display: flex; align-items: center; margin-top: 2px;}
-        .player-card .player-price { font-weight: bold; color: var(--spl-accent-green); font-size: 0.85em; margin-top: 2px; }
-        .player-card .player-opponent { font-size: 0.7em; color: var(--spl-text-medium); margin-top: 2px; }
+        .player-card .player-name { font-weight: bold; font-size: 0.8em; color: var(--spl-text-dark); margin-bottom: 1px; }
+        .player-card .player-details { font-size: 0.7em; color: var(--spl-text-medium); display: flex; align-items: center; margin-top: 1px;}
+        .player-card .player-price { font-weight: bold; color: var(--spl-accent-green); font-size: 0.8em; margin-top: 1px; }
+        .player-card .player-opponent { font-size: 0.7em; color: var(--spl-text-medium); margin-top: 1px; }
         .player-card .fdr-value-display { 
             display: inline-block; 
             padding: 2px 5px; 
@@ -1675,10 +1675,8 @@
 
             let actionIcons = '';
             if (!isListCard) {
-                const moveIconClass = player.slotType === 'pitch' ? 'fa-arrow-down' : 'fa-arrow-up';
                 actionIcons = `
                     <div class="player-card-actions">
-                        <i class="fas ${moveIconClass} move-player-icon" title="Move Player"></i>
                         <i class="fas fa-times remove-player-icon" title="Remove Player"></i>
                     </div>
                 `;
@@ -1702,10 +1700,6 @@
                 playerCard.querySelector('.remove-player-icon').addEventListener('click', (e) => {
                     e.stopPropagation();
                     removePlayerFromSquad(parseInt(player.id));
-                });
-                playerCard.querySelector('.move-player-icon').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    movePlayer(parseInt(player.id));
                 });
             }
 
@@ -1829,43 +1823,6 @@
             updateTransferSummary();
         }
 
-        function addPlayerToSquad(player, targetSlot) {
-            if (currentSquad.length >= MAX_SQUAD_SIZE) {
-                showTransferPlannerMessage('Squad is full. Remove a player first.', 'error');
-                return;
-            }
-
-            if (currentFunds < player.current_price) {
-                showTransferPlannerMessage('Not enough funds.', 'error');
-                return;
-            }
-
-            const teamCount = currentSquad.filter(p => p.team_id === player.team_id).length;
-            if (teamCount >= MAX_PLAYERS_PER_TEAM) {
-                showTransferPlannerMessage(`You can only have ${MAX_PLAYERS_PER_TEAM} players from the same team.`, 'error');
-                return;
-            }
-
-            const positionCount = currentSquad.filter(p => p.position_short === player.position_short).length;
-            if (positionCount >= POSITIONAL_LIMITS[player.position_short]) {
-                showTransferPlannerMessage(`You have reached the limit for ${player.position_short}s.`, 'error');
-                return;
-            }
-
-            currentFunds -= player.current_price;
-            
-            const newPlayer = {
-                ...player,
-                slotId: targetSlot.dataset.slotId,
-                slotType: targetSlot.dataset.slotType,
-                buying_price: player.current_price
-            };
-            currentSquad.push(newPlayer);
-            pendingTransfers.push({ type: 'in', playerIn: newPlayer.id, playerOut: null });
-            
-            renderSquad(currentSquad, currentPlanningRound);
-        }
-
         function removePlayerFromSquad(playerId) {
             const playerIndex = currentSquad.findIndex(p => p.id === playerId);
             if (playerIndex === -1) return;
@@ -1889,47 +1846,6 @@
             pendingTransfers.push({ type: 'out', playerIn: null, playerOut: playerToRemove.id });
 
             renderSquad(currentSquad, currentPlanningRound);
-        }
-
-        function movePlayer(playerId) {
-            const playerIndex = currentSquad.findIndex(p => p.id === playerId);
-            if (playerIndex === -1) return;
-
-            const playerToMove = currentSquad[playerIndex];
-            const isMovingToBench = playerToMove.slotType === 'pitch';
-
-            if (isMovingToBench) {
-                const benchPlayers = currentSquad.filter(p => p.slotType === 'bench');
-                if (benchPlayers.length === 0) {
-                    showTransferPlannerMessage('No players on the bench to swap with.', 'error');
-                    return;
-                }
-                
-                let swapped = false;
-                for (const playerToSwapWith of benchPlayers) {
-                    const tempSquad = JSON.parse(JSON.stringify(currentSquad));
-                    const tempPlayerToMove = tempSquad.find(p => p.id === playerToMove.id);
-                    const tempPlayerToSwap = tempSquad.find(p => p.id === playerToSwapWith.id);
-                    
-                    [tempPlayerToMove.slotType, tempPlayerToSwap.slotType] = [tempPlayerToSwap.slotType, tempPlayerToMove.slotType];
-
-                    if (isFormationValid(tempSquad)) {
-                        [playerToMove.slotType, playerToSwapWith.slotType] = [playerToSwapWith.slotType, playerToMove.slotType];
-                        [playerToMove.apiPosition, playerToSwapWith.apiPosition] = [playerToSwapWith.apiPosition, playerToMove.apiPosition];
-                        swapped = true;
-                        break; 
-                    }
-                }
-
-                if (swapped) {
-                    renderSquad(currentSquad, currentPlanningRound);
-                } else {
-                    showTransferPlannerMessage(`Invalid formation. No valid substitute found on the bench.`, 'error');
-                }
-
-            } else { // Moving to pitch
-                showTransferPlannerMessage('To substitute a bench player, drag them onto a pitch player.', 'info');
-            }
         }
 
         function isFormationValid(squad) {
