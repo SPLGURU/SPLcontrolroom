@@ -67,7 +67,7 @@
             transition: background-color: 0.3s ease, box-shadow: 0.3s ease;
         }
 
-        h1, h2, h3 { font-family: 'Oswald', sans-serif; color: var(--spl-primary-accent); text-align: center; margin-top: 0; margin-bottom: 20px; transition: color: 0.3s ease; }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; color: var(--spl-primary-accent); text-align: center; margin-top: 0; margin-bottom: 20px; transition: color 0.3s ease; }
         
         .input-section { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; }
 
@@ -518,7 +518,7 @@
             border-radius: 8px;
             font-size: 1em;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color: 0.3s ease, transform: 0.2s ease;
         }
         .transfer-controls button:hover {
             background-color: #0056b3;
@@ -899,7 +899,7 @@
         let currentPointsHit = 0;
         let currentFunds = 100.0;
         let pendingTransfers = [];
-        let draggedPlayer = null;
+        let draggedItemInfo = null;
 
         // DOM Element References (condensed for brevity)
         const mainLogo = document.getElementById('mainLogo'), darkModeToggle = document.getElementById('darkModeToggle');
@@ -1626,29 +1626,11 @@
                     const playerData = globalTeamData.allPlayers.find(p => p.id === pick.element);
                     if (!playerData) return null;
                     
-                    const playerPosition = playerData.position_short;
-                    const isPitchPlayer = pick.position <= 11;
-                    let slotId;
-
-                    // This logic assigns a unique, predictable slot ID based on the player's position and their order in the API response
-                    if (isPitchPlayer) {
-                        const pitchPlayersOfPosition = data.picks
-                            .filter(p => p.position <= 11 && globalTeamData.allPlayers.find(pl => pl.id === p.element)?.position_short === playerPosition)
-                            .sort((a, b) => a.position - b.position);
-                        const playerIndex = pitchPlayersOfPosition.findIndex(p => p.element === pick.element);
-                        slotId = `PITCH_${playerPosition}_${playerIndex + 1}`;
-                    } else {
-                        const benchPlayers = data.picks
-                            .filter(p => p.position > 11)
-                            .sort((a, b) => a.position - b.position);
-                        const playerIndex = benchPlayers.findIndex(p => p.element === pick.element);
-                        slotId = `BENCH_${playerIndex + 1}`;
-                    }
-
                     return {
                         ...playerData,
-                        slotId: slotId,
-                        slotType: isPitchPlayer ? 'pitch' : 'bench',
+                        apiPosition: pick.position,
+                        slotId: null, // Will be assigned by renderSquad
+                        slotType: pick.position <= 11 ? 'pitch' : 'bench',
                         buying_price: pick.purchase_price / 10,
                         is_captain: pick.is_captain,
                         is_vice_captain: pick.is_vice_captain
@@ -1747,31 +1729,57 @@
                 delete slot.dataset.playerId;
             });
 
-            squad.forEach(player => {
-                const slotElement = document.querySelector(`.player-slot[data-slot-id="${player.slotId}"]`);
+            const pitchPlayers = squad.filter(p => p.slotType === 'pitch').sort((a,b) => a.apiPosition - b.apiPosition);
+            const benchPlayers = squad.filter(p => p.slotType === 'bench').sort((a,b) => a.apiPosition - b.apiPosition);
+
+            const positionCounters = { GKP: 0, DEF: 0, MID: 0, FWD: 0, BENCH: 0 };
+
+            pitchPlayers.forEach(player => {
+                positionCounters[player.position_short]++;
+                const slotId = `PITCH_${player.position_short}_${positionCounters[player.position_short]}`;
+                const slotElement = document.querySelector(`.player-slot[data-slot-id="${slotId}"]`);
                 if (slotElement) {
+                    player.slotId = slotId; // Update the player's slotId
                     const playerCard = renderPlayerCard(player, currentRound);
                     slotElement.appendChild(playerCard);
                     slotElement.classList.add('has-player');
                     slotElement.dataset.playerId = player.id;
-                } else {
-                    // This logic finds the next available empty slot for the player's position if their specific slot isn't found
-                    // This handles cases where the user's formation (e.g., 3 defenders) differs from the default layout (e.g., 4 defender slots)
-                    const availableSlots = document.querySelectorAll(`.player-slot[data-position="${player.position_short}"]:not(.has-player)`);
-                    if(availableSlots.length > 0) {
-                        const firstAvailableSlot = availableSlots[0];
-                        const playerCard = renderPlayerCard(player, currentRound);
-                        firstAvailableSlot.appendChild(playerCard);
-                        firstAvailableSlot.classList.add('has-player');
-                        firstAvailableSlot.dataset.playerId = player.id;
-                        // Update the player's slotId in the squad data to match its new location
-                        player.slotId = firstAvailableSlot.dataset.slotId;
-                    } else {
-                        console.warn(`Could not find any available slot for player: ${player.name}`);
-                    }
                 }
             });
+
+            benchPlayers.forEach(player => {
+                positionCounters.BENCH++;
+                const slotId = `BENCH_${positionCounters.BENCH}`;
+                const slotElement = document.querySelector(`.player-slot[data-slot-id="${slotId}"]`);
+                if(slotElement) {
+                    player.slotId = slotId;
+                    const playerCard = renderPlayerCard(player, currentRound);
+                    slotElement.appendChild(playerCard);
+                    slotElement.classList.add('has-player');
+                    slotElement.dataset.playerId = player.id;
+                }
+            });
+
             updateTransferSummary();
+        }
+
+        function updatePlayerListDisplay() {
+            const searchTerm = playerSearchInput.value.toLowerCase();
+            const checkedPositions = Array.from(playerFilters.querySelectorAll('input[data-filter]:not([data-filter="ALL"])'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.dataset.filter);
+            
+            let filteredPlayers = globalTeamData.allPlayers;
+
+            if (checkedPositions.length > 0) {
+                filteredPlayers = filteredPlayers.filter(p => checkedPositions.includes(p.position_short));
+            }
+
+            if (searchTerm) {
+                filteredPlayers = filteredPlayers.filter(p => p.name.toLowerCase().includes(searchTerm));
+            }
+
+            renderPlayerList(filteredPlayers);
         }
 
         function renderPlayerList(players) {
@@ -1806,7 +1814,7 @@
             if (currentSquad.length > 0) {
                 renderSquad(currentSquad, currentPlanningRound);
             }
-            renderPlayerList(globalTeamData.allPlayers);
+            updatePlayerListDisplay();
             updateTransferSummary();
         }
 
@@ -2091,7 +2099,7 @@
         // Transfer Planner Controls
         savePlanButton.addEventListener('click', savePlan);
         resetPlanButton.addEventListener('click', initializeTransferPlanner);
-
+        playerSearchInput.addEventListener('input', updatePlayerListDisplay);
         playerFilters.addEventListener('change', (e) => {
             const allCheckbox = playerFilters.querySelector('input[data-filter="ALL"]');
             const positionCheckboxes = playerFilters.querySelectorAll('input[data-filter]:not([data-filter="ALL"])');
@@ -2099,21 +2107,10 @@
             if (e.target === allCheckbox && allCheckbox.checked) {
                 positionCheckboxes.forEach(cb => cb.checked = false);
             } else if (e.target !== allCheckbox) {
-                allCheckbox.checked = false;
+                allCheckbox.checked = !Array.from(positionCheckboxes).some(cb => cb.checked);
             }
 
-            const checkedPositions = Array.from(positionCheckboxes)
-                .filter(cb => cb.checked)
-                .map(cb => cb.dataset.filter);
-            
-            if (checkedPositions.length === 0) {
-                allCheckbox.checked = true;
-                renderPlayerList(globalTeamData.allPlayers);
-                return;
-            }
-
-            const filteredPlayers = globalTeamData.allPlayers.filter(p => checkedPositions.includes(p.position_short));
-            renderPlayerList(filteredPlayers);
+            updatePlayerListDisplay();
         });
 
 
@@ -2130,9 +2127,7 @@
 
             slot.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                if (!slot.hasChildNodes()) {
-                    slot.classList.add('drag-over');
-                }
+                slot.classList.add('drag-over');
             });
 
             slot.addEventListener('dragleave', (e) => {
@@ -2143,8 +2138,17 @@
             slot.addEventListener('drop', (e) => {
                 e.preventDefault();
                 slot.classList.remove('drag-over');
-                if (!slot.hasChildNodes() && draggedPlayer) {
-                    addPlayerToSquad(draggedPlayer, slot);
+                if (!draggedItemInfo) return;
+
+                const targetSlot = e.currentTarget;
+                const targetPlayerId = targetSlot.dataset.playerId ? parseInt(targetSlot.dataset.playerId) : null;
+
+                if (draggedItemInfo.origin === 'list') {
+                    // Logic for transferring a player from the list
+                    // ...
+                } else if (draggedItemInfo.origin === 'squad') {
+                    // Logic for swapping players within the squad
+                    // ...
                 }
             });
         });
@@ -2152,9 +2156,24 @@
         playerList.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('player-card')) {
                 const playerId = parseInt(e.target.dataset.playerId);
-                draggedPlayer = globalTeamData.allPlayers.find(p => p.id === playerId);
+                const player = globalTeamData.allPlayers.find(p => p.id === playerId);
+                draggedItemInfo = { origin: 'list', player: player };
             }
         });
+
+        pitchArea.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('player-card')) {
+                const playerId = parseInt(e.target.dataset.playerId);
+                draggedItemInfo = { origin: 'squad', playerId: playerId };
+            }
+        });
+        benchArea.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('player-card')) {
+                const playerId = parseInt(e.target.dataset.playerId);
+                draggedItemInfo = { origin: 'squad', playerId: playerId };
+            }
+        });
+
 
         // Initial Load
         document.addEventListener('DOMContentLoaded', () => {
