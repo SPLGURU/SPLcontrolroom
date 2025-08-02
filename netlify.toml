@@ -1,11 +1,10 @@
-    [build]
-      publish = "."
-      functions = "Netlify/Functions" # Ensure this matches your folder's case
-      # This command runs our script to inject the Firebase API key into index.html
-      command = "node Scripts/inject-firebase-api-key.js" 
+[build]
+  publish = "SPLcontrolroom"
+  functions = "Netlify/Functions" # Ensure this matches your folder's case
+  # This command runs our script to inject the Firebase API key into index.html
+  command = "node Scripts/inject-firebase-api-key.js" 
 
-    [[redirects]]
-      from = "/api/*"
-      to = "/.netlify/functions/:splat"
-      status = 200
-    
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
