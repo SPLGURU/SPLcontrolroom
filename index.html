@@ -5,100 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Control Room V2</title>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK - Core -->
     <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <!-- Firebase SDK - Auth -->
     <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+    <!-- Firebase SDK - Firestore -->
     <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
-    <!-- Other Libraries -->
+    <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
-    <!-- Google Fonts -->
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- Our Custom Styles -->
+    
+    <!-- Custom Stylesheet -->
+    <!-- The path is updated to point to the css folder -->
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Phosphor Icons (for the burger menu) -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/phosphor.js"></script>
 
-    <!-- Placeholders for environment variables to be injected by Netlify -->
-    <script>
-        window.config = {
-            firebaseApiKey: "___FIREBASE_API_KEY_PLACEHOLDER___",
-            bootstrapStaticApiUrl: "___BOOTSTRAP_STATIC_API_URL_PLACEHOLDER___",
-            fixturesApiBaseUrl: "___FIXTURES_API_BASE_URL_PLACEHOLDER___",
-            playerImagePath: "https://static-files.saudi-pro-league.pulselive.com/players/headshot/p"
-        };
-    </script>
 </head>
 <body>
+    <!-- Overlay for the sidebar menu -->
+    <div class="overlay"></div>
 
-    <!-- Hamburger menu toggle icon -->
-    <span class="menu-toggle" id="menuToggle">&#9776;</span>
-
-    <!-- Sidebar menu -->
-    <div class="sidebar-menu" id="sidebarMenu">
-        <a href="javascript:void(0)" class="close-btn" id="closeSidebar">&times;</a>
-        <a href="#" id="menuMyControlRoom"><i class="fas fa-home"></i> My Control Room</a>
-        <a href="#" id="menuFDR"><i class="fas fa-chart-line"></i> FDR</a>
-        <a href="#" id="menuTeamsToTarget"><i class="fas fa-bullseye"></i> Teams To Target</a>
-        <a href="#" id="menuTransferPlanner"><i class="fas fa-exchange-alt"></i> Transfer Planner</a>
-        <a href="#" id="menuAdminDashboard"><i class="fas fa-user-shield"></i> Admin Dashboard</a>
-        <a href="#" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <!-- Sidebar Menu -->
+    <div id="sidebarMenu" class="sidebar-menu">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
+        <a id="menuMyControlRoom" href="#"><i class="ph-fill ph-house"></i> My Control Room</a>
+        <a id="menuAdminDashboard" href="#"><i class="ph-fill ph-chart-bar"></i> Admin Dashboard</a>
     </div>
 
-    <!-- Overlay for the sidebar -->
-    <div class="overlay" id="overlay"></div>
+    <header>
+        <span id="menuToggle" class="menu-toggle"><i class="ph-fill ph-list"></i></span>
+        <div id="logo-container">
+            <!-- Image path is updated -->
+            <img id="logo-img" src="Pitch Background.png-7ac071ba-60b1-40e0-8e33-7ca69b15dddf" alt="Logo">
+        </div>
+        <div class="theme-switch-wrapper">
+            <span>Light Mode</span>
+            <label class="theme-switch" for="darkModeToggle">
+                <input type="checkbox" id="darkModeToggle">
+                <div class="slider round"></div>
+            </label>
+            <span>Dark Mode</span>
+        </div>
+    </header>
 
-    <div id="logo-container">
-        <img id="logo-img" src="Pitch Background.png-7ac071ba-60b1-40e0-8e33-7ca69b15dddf" alt="Logo">
-    </div>
-
-    <div class="theme-switch-wrapper">
-        <span>Light Mode</span>
-        <label class="theme-switch" for="darkModeToggle">
-            <input type="checkbox" id="darkModeToggle">
-            <div class="slider round"></div>
-        </label>
-        <span>Dark Mode</span>
-    </div>
-
-    <!-- Main content area where different views will be loaded -->
-    <main id="mainContent" class="container">
-        <!-- Content from other HTML files will be loaded here dynamically -->
+    <main class="container">
+        <!-- Content sections will be loaded here dynamically -->
+        <div id="authSection" class="content-section" style="display: none;"></div>
+        <div id="instructionsSection" class="content-section"></div>
+        <div id="controlRoomSection" class="content-section" style="display: none;"></div>
+        <div id="adminDashboardSection" class="content-section" style="display: none;"></div>
     </main>
 
-    <!-- Modals (will be used by multiple components, so they stay in the main file) -->
+    <!-- Modals -->
     <div id="loadingModal" class="modal">
         <div class="modal-content">
-            <h3>Loading...</h3>
-            <div class="spinner"></div>
-            <p>Please wait while we load the data.</p>
+            <span class="spinner"></span>
+            <p>Loading...</p>
         </div>
     </div>
     
-    <div id="confirmationModal" class="modal">
+    <div id="messageModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" id="closeConfirmationModal">&times;</span>
-            <p id="confirmationMessage"></p>
-            <div id="confirmationButtons">
-                <button id="confirmYesButton">Yes</button>
-                <button id="confirmNoButton">No</button>
-            </div>
+            <span class="close-btn" onclick="closeModal('messageModal')">&times;</span>
+            <p id="modalMessage"></p>
         </div>
     </div>
 
-    <div id="generalMessageModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeGeneralMessageModal">&times;</span>
-            <p id="generalMessage"></p>
-        </div>
-    </div>
-
-    <!-- The main script that orchestrates the entire application -->
+    <!-- Scripts -->
+    <!-- The path for all custom scripts are updated to point to the js folder -->
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/fdr.js"></script>
+    <script type="module" src="js/teams-to-target.js"></script>
+    <script type="module" src="js/transfer-planner.js"></script>
+    <script type="module" src="js/admin.js"></script>
     <script type="module" src="js/main.js"></script>
 
+    <script>
+        // Placeholder for __firebase_config, which will be injected
+        const __firebase_config = '{}';
+        const __initial_auth_token = '';
+        const __app_id = 'SPLcontrolroom-v2';
+
+        // Helper function to set the theme from local storage or system preference
+        function setTheme(theme) {
+            document.documentElement.className = theme === 'dark' ? 'dark-mode' : '';
+            localStorage.setItem('theme', theme);
+        }
+
+        function showModal(modalId, message = '', isError = false) {
+            const modal = document.getElementById(modalId);
+            if (modalId === 'messageModal') {
+                const modalMessage = document.getElementById('modalMessage');
+                modalMessage.textContent = message;
+                modalMessage.className = isError ? 'error' : 'success';
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // DOMContentLoaded is the standard for waiting for the page to load
+        document.addEventListener('DOMContentLoaded', () => {
+            const instructionsBox = document.getElementById('instructionsBox');
+            if (instructionsBox) instructionsBox.style.display = 'none';
+
+            // Theme toggle logic
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+                darkModeToggle.checked = initialTheme === 'dark';
+                setTheme(initialTheme);
+                
+                darkModeToggle.addEventListener('change', (e) => {
+                    setTheme(e.target.checked ? 'dark' : 'light');
+                });
+            }
+
+            // Sidebar menu logic
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebarMenu = document.getElementById('sidebarMenu');
+            const overlay = document.querySelector('.overlay');
+
+            if (menuToggle && sidebarMenu && overlay) {
+                menuToggle.addEventListener('click', () => {
+                    sidebarMenu.classList.toggle('open');
+                    overlay.style.display = sidebarMenu.classList.contains('open') ? 'block' : 'none';
+                });
+                overlay.addEventListener('click', () => {
+                    sidebarMenu.classList.remove('open');
+                    overlay.style.display = 'none';
+                });
+                const closeBtn = sidebarMenu.querySelector('.close-btn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        sidebarMenu.classList.remove('open');
+                        overlay.style.display = 'none';
+                    });
+                }
+            }
+
+            // Navigation links for the sidebar menu
+            const menuMyControlRoom = document.getElementById('menuMyControlRoom');
+            const menuAdminDashboard = document.getElementById('menuAdminDashboard');
+            
+            if (menuMyControlRoom) {
+                menuMyControlRoom.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContentSection('controlRoom');
+                    sidebarMenu.classList.remove('open');
+                    overlay.style.display = 'none';
+                });
+            }
+
+            if (menuAdminDashboard) {
+                menuAdminDashboard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContentSection('adminDashboard');
+                    sidebarMenu.classList.remove('open');
+                    overlay.style.display = 'none';
+                });
+            }
+
+            // Slider value displays
+            const roundsToShowSlider = document.getElementById('roundsToShowSlider');
+            const roundsToShowValueSpan = document.getElementById('roundsToShowValueSpan');
+            const roundsToShowTeamsToTargetSlider = document.getElementById('roundsToShowTeamsToTargetSlider');
+            const roundsToShowValueTeamsToTargetSpan = document.getElementById('roundsToShowValueTeamsToTargetSpan');
+
+            if (roundsToShowSlider && roundsToShowValueSpan) {
+                roundsToShowValueSpan.textContent = roundsToShowSlider.value;
+            }
+            if (roundsToShowTeamsToTargetSlider && roundsToShowValueTeamsToTargetSpan) {
+                roundsToShowValueTeamsToTargetSpan.textContent = roundsToShowTeamsToTargetSlider.value;
+            }
+        });
+    </script>
 </body>
 </html>
